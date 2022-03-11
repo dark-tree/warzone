@@ -1,9 +1,12 @@
 package net.darktree;
 
+import net.darktree.opengl.image.Font;
 import net.darktree.opengl.image.Image;
 import net.darktree.opengl.image.Texture;
 import net.darktree.opengl.shader.Program;
 import net.darktree.opengl.vertex.VertexBuffer;
+import net.darktree.util.Logger;
+import net.darktree.util.Resources;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -121,6 +124,8 @@ public class Main {
 		bufferBuilder.attribute(2);
 		this.buffer = bufferBuilder.build();
 
+		Font font = new Font("8x8font.png", 8, 8);
+
 		try( Image image = Image.of("test.png", Image.Format.RGBA) ) {
 			this.texture = image.asTexture(false);
 			this.texture.upload();
@@ -129,13 +134,15 @@ public class Main {
 		// Set the clear color
 		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
-		this.buffer.putFloat(0).putFloat(0).putFloat(0).putFloat(0);
-		this.buffer.putFloat(1).putFloat(0).putFloat(1).putFloat(0);
-		this.buffer.putFloat(0).putFloat(1).putFloat(0).putFloat(1);
+		font.draw("Hello!", buffer, 0, 0, 0.1f);
 
-		this.buffer.putFloat(1).putFloat(0).putFloat(1).putFloat(0);
-		this.buffer.putFloat(1).putFloat(1).putFloat(1).putFloat(1);
-		this.buffer.putFloat(0).putFloat(1).putFloat(0).putFloat(1);
+//		this.buffer.putFloat(0).putFloat(0).putFloat(0).putFloat(0);
+//		this.buffer.putFloat(1).putFloat(0).putFloat(1).putFloat(0);
+//		this.buffer.putFloat(0).putFloat(1).putFloat(0).putFloat(1);
+//
+//		this.buffer.putFloat(1).putFloat(0).putFloat(1).putFloat(0);
+//		this.buffer.putFloat(1).putFloat(1).putFloat(1).putFloat(1);
+//		this.buffer.putFloat(0).putFloat(1).putFloat(0).putFloat(1);
 
 		this.buffer.bind();
 

@@ -12,7 +12,7 @@ public class ImageTest {
 
 	@Test
 	public void writeAndRead() {
-		Image image = Image.of(16, 16, Image.Format.RGBA);
+		Image image = new Image(16, 16, Image.Format.RGBA);
 
 		MemoryUtil.memPutInt(image.getPointer(0, 0), 420);
 		MemoryUtil.memPutInt(image.getPointer(13, 4), 840);
@@ -29,7 +29,7 @@ public class ImageTest {
 
 	@Test
 	public void writeCopyAndRead() {
-		Image t1 = Image.of(16, 16, Image.Format.RGBA);
+		Image t1 = new Image(16, 16, Image.Format.RGBA);
 
 		for( int x = 0; x < 16; x ++ ) {
 			for( int y = 0; y < 16; y ++ ) {
@@ -64,7 +64,7 @@ public class ImageTest {
 	public void atlasBuild() {
 		Image t = Image.of("test.png", Image.Format.RGBA);
 
-		Atlas atlas = Atlas.create();
+		Atlas atlas = Atlas.createEmpty();
 		Atlas.SpriteReference s1 = atlas.add(t);
 		Atlas.SpriteReference s2 = atlas.add(t);
 		Atlas.SpriteReference s3 = atlas.add(t);

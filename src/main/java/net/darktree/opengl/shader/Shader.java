@@ -1,7 +1,7 @@
 package net.darktree.opengl.shader;
 
-import net.darktree.Logger;
-import net.darktree.Resources;
+import net.darktree.util.Logger;
+import net.darktree.util.Resources;
 import org.lwjgl.opengl.GL32;
 
 import java.io.IOException;

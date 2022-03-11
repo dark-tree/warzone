@@ -1,6 +1,6 @@
 package net.darktree.opengl.shader;
 
-import net.darktree.Logger;
+import net.darktree.util.Logger;
 import org.lwjgl.opengl.GL32;
 
 public class Program implements AutoCloseable {

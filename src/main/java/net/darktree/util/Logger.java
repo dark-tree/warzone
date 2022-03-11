@@ -1,4 +1,4 @@
-package net.darktree;
+package net.darktree.util;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;

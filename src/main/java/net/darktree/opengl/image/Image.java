@@ -1,12 +1,11 @@
 package net.darktree.opengl.image;
 
-import net.darktree.Resources;
+import net.darktree.util.Resources;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -19,6 +18,11 @@ public class Image implements AutoCloseable {
 	private final boolean stb;
 
 	private long buffer;
+
+	public Image(int width, int height, Format format) {
+		this(width, height, format, 0, false);
+		this.buffer = MemoryUtil.nmemAlloc(this.size);
+	}
 
 	protected Image(int width, int height, Format format, long buffer, boolean stb) {
 		if (width < 0 || height < 0) {
@@ -56,9 +60,9 @@ public class Image implements AutoCloseable {
 			throw new RuntimeException("Unable to make smaller copy!");
 		}
 
-		Image texture = of(width, height, this.format);
-		texture.write(this, 0, 0);
-		return texture;
+		Image image = new Image(width, height, this.format);
+		image.write(this, 0, 0);
+		return image;
 	}
 
 	public void write(Image source, int x, int y) {
@@ -81,12 +85,6 @@ public class Image implements AutoCloseable {
 		}
 	}
 
-	public static Image of(int width, int height, Format format) {
-		Image texture = new Image(width, height, format, 0, false);
-		texture.buffer = MemoryUtil.nmemAlloc(texture.size);
-		return texture;
-	}
-
 	public static Image of(String path, Format format) {
 		ByteBuffer image;
 		int width, height;
@@ -98,19 +96,14 @@ public class Image implements AutoCloseable {
 
 			image = STBImage.stbi_load(Resources.location(path).toString(), w, h, n, (int) format.channels);
 			if (image == null) {
-				throw new RuntimeException("Failed to load texture, " + STBImage.stbi_failure_reason() + "!");
+				throw new RuntimeException("Failed to load image, " + STBImage.stbi_failure_reason() + "!");
 			}
 
 			width = w.get();
 			height = h.get();
 		}
 
-		try {
-			return new Image(width, height, format, MemoryUtil.memAddress(image), true);
-		} catch (Exception e) {
-			STBImage.stbi_image_free(image);
-			throw e;
-		}
+		return new Image(width, height, format, MemoryUtil.memAddress(image), true);
 	}
 
 	public Texture asTexture(boolean useMipmaps) {
@@ -149,6 +142,10 @@ public class Image implements AutoCloseable {
 			this.channels = channels;
 			this.glFormat = glFormat;
 		}
+	}
+
+	private static class ImageLoadContext {
+
 	}
 
 }

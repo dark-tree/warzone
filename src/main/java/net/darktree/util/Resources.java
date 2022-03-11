@@ -1,4 +1,4 @@
-package net.darktree;
+package net.darktree.util;
 
 import java.io.IOException;
 import java.nio.file.Files;
