@@ -1,5 +1,6 @@
 package net.darktree.opengl.image;
 
+import net.darktree.opengl.vertex.Renderer;
 import net.darktree.util.Logger;
 import net.darktree.opengl.vertex.VertexBuffer;
 
@@ -47,21 +48,10 @@ public class Font {
 
 		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
 			Sprite sprite = this.sprite(chr);
-
-			vertex(buffer, x + offset, y, sprite.u1(), sprite.v1());
-			vertex(buffer, x + offset + size, y, sprite.u2(), sprite.v1());
-			vertex(buffer, x + offset, y + size, sprite.u1(), sprite.v2());
-
-			vertex(buffer, x + offset + size, y, sprite.u2(), sprite.v1());
-			vertex(buffer, x + offset + size, y + size, sprite.u2(), sprite.v2());
-			vertex(buffer, x + offset, y + size, sprite.u1(), sprite.v2());
+			Renderer.quad(buffer, x + offset, y, size, size, sprite);
 
 			offset += size;
 		}
-	}
-
-	private void vertex(VertexBuffer buffer, float x, float y, float u, float v) {
-		buffer.putFloat(x).putFloat(y).putFloat(u).putFloat(v);
 	}
 
 }

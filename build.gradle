@@ -22,6 +22,10 @@ switch (OperatingSystem.current()) {
 
 repositories {
     mavenCentral()
+
+    maven {
+        url 'https://jitpack.io/'
+    }
 }
 
 dependencies {
@@ -39,6 +43,8 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+
+    implementation 'com.github.Querz:NBT:6.1'
 
     implementation('io.netty:netty-all:4.1.64.Final') {
         exclude group: 'io.netty', module: 'netty-tcnative'

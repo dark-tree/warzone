@@ -1,5 +1,6 @@
 package net.darktree;
 
+import net.darktree.game.World;
 import net.darktree.opengl.image.Font;
 import net.darktree.opengl.image.Image;
 import net.darktree.opengl.image.Texture;
@@ -33,7 +34,7 @@ public class Main {
 		init();
 		loop();
 
-		this.texture.close();
+//		this.texture.close();
 		this.buffer.close();
 		this.program.close();
 
@@ -103,7 +104,7 @@ public class Main {
 
 	private Program program;
 	private VertexBuffer buffer;
-	private Texture texture;
+//	private Texture texture;
 
 	private void loop() {
 		// This line is critical for LWJGL's interoperation with GLFW's
@@ -124,26 +125,20 @@ public class Main {
 		bufferBuilder.attribute(2);
 		this.buffer = bufferBuilder.build();
 
-		Font font = new Font("8x8font.png", 8, 8);
-
-		try( Image image = Image.of("test.png", Image.Format.RGBA) ) {
-			this.texture = image.asTexture(false);
-			this.texture.upload();
-		}
+//		Font font = new Font("8x8font.png", 8, 8);
+//
+//		try( Image image = Image.of("test.png", Image.Format.RGBA) ) {
+//			this.texture = image.asTexture(false);
+//			this.texture.upload();
+//		}
 
 		// Set the clear color
 		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
-		font.draw("Hello!", buffer, 0, 0, 0.1f);
+//		font.draw("Hello!", buffer, 0, 0, 0.1f);
 
-//		this.buffer.putFloat(0).putFloat(0).putFloat(0).putFloat(0);
-//		this.buffer.putFloat(1).putFloat(0).putFloat(1).putFloat(0);
-//		this.buffer.putFloat(0).putFloat(1).putFloat(0).putFloat(1);
-//
-//		this.buffer.putFloat(1).putFloat(0).putFloat(1).putFloat(0);
-//		this.buffer.putFloat(1).putFloat(1).putFloat(1).putFloat(1);
-//		this.buffer.putFloat(0).putFloat(1).putFloat(0).putFloat(1);
-
+		World world = new World(8, 8);
+		world.draw(this.buffer);
 		this.buffer.bind();
 
 		// Run the rendering loop until the user has attempted to close
@@ -151,7 +146,7 @@ public class Main {
 		while ( !glfwWindowShouldClose(window) ) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			render();
+			glDrawArrays(this.buffer.primitive, 0, this.buffer.count());
 
 			glfwSwapBuffers(window); // swap the color buffers
 

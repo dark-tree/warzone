@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Atlas {
 
-	Texture texture;
+	public Texture texture;
 	Image image;
 	List<SpriteReference> taken;
 	boolean frozen = false;
