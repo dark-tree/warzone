@@ -2,7 +2,6 @@ package net.darktree.opengl.vertex;
 
 import net.darktree.opengl.ResizeableBuffer;
 import org.lwjgl.opengl.GL32;
-import org.lwjgl.system.MemoryUtil;
 
 import java.util.ArrayList;
 import java.util.List;

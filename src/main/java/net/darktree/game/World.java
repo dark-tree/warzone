@@ -1,12 +1,9 @@
 package net.darktree.game;
 
-import net.darktree.Main;
 import net.darktree.game.tiles.EmptyTile;
 import net.darktree.opengl.Window;
 import net.darktree.opengl.image.Atlas;
-import net.darktree.opengl.image.Image;
 import net.darktree.opengl.image.Sprite;
-import net.darktree.opengl.image.Texture;
 import net.darktree.opengl.vertex.VertexBuffer;
 
 import java.util.function.Function;

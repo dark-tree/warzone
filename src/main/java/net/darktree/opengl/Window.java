@@ -17,9 +17,9 @@ public class Window implements AutoCloseable {
 
 	private static final Map<Integer, String> ERROR_CODES = APIUtil.apiClassTokens((field, value) -> 0x10000 < value && value < 0x20000, null, org.lwjgl.glfw.GLFW.class);
 	private final Input input;
-	private int width, height;
+	private final int width, height;
 
-	private final long handle;
+	public final long handle;
 	public static Window INSTANCE = null;
 
 	/**

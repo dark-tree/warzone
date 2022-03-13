@@ -6,9 +6,13 @@ public class Input {
 
 	private final Window window;
 
-	private double prevX;
-	private double prevY;
-	public float offsetX; // TODO make not public
+	private float prevX;
+	private float prevY;
+	private float zoomMin;
+	private float zoomMax;
+
+	// TODO make not public
+	public float offsetX;
 	public float offsetY;
 	public float zoom = 0.1f;
 
@@ -16,41 +20,42 @@ public class Input {
 		this.window = window;
 	}
 
+	public void setZoomRange(float min, float max) {
+		this.zoomMin = min;
+		this.zoomMax = max;
+	}
+
 	void keyHandle(long handle, int key, int scancode, int action, int mods) {
 
 	}
 
 	void cursorHandle(long handle, double x, double y) {
-		if (GLFW.glfwGetMouseButton(handle, GLFW.GLFW_MOUSE_BUTTON_1) == GLFW.GLFW_PRESS) {
-			offsetX -= (prevX - x) / window.width() * 2;
-			offsetY += (prevY - y) / window.height() * 2;
+		if (this.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
+			var ox = (prevX - x) / window.width() * -2;
+			var oy = (prevY - y) / window.height() * 2;
+
+			offsetX += ox;
+			offsetY += oy;
 		}
 
-		prevX = x;
-		prevY = y;
+		prevX = (float) x;
+		prevY = (float) y;
 	}
 
+	// time_wasted_while_trying_to_fucking_make_this_work_again = 2h
 	void scrollHandle(long handle, double x, double y) {
-		final float min = 0.07f;
-		final float max = 1f;
+		zoom += (float) (zoom * y * 0.15f);
 
-		float border = border(zoom, min, max);
-
-		float newZoom = zoom + (float) (y * border * 0.15f);
-
-		if (border(newZoom, min, max) < border) {
-			zoom = newZoom;
-		}else{
-			zoom += (float) (y * border * 0.3f);
-		}
+		if (zoom < zoomMin) zoom = zoomMin;
+		if (zoom > zoomMax) zoom = zoomMax;
 	}
 
-	private float border(float value, float min, float max) {
-		return 1 - Math.abs(((value - min) * 2 - (max - min)) / (max - min));
+	public boolean isKeyPressed(int key) {
+		return GLFW.glfwGetKey(window.handle, key) == GLFW.GLFW_PRESS;
 	}
 
-	private float absoluteMinimum(float value, float min) {
-		return (value < 0) ? Math.max(value, -min) : Math.min(value, min);
+	public boolean isButtonPressed(int button) {
+		return GLFW.glfwGetMouseButton(window.handle, button) == GLFW.GLFW_PRESS;
 	}
 
 }

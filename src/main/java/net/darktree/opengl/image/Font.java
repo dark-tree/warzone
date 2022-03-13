@@ -1,8 +1,8 @@
 package net.darktree.opengl.image;
 
 import net.darktree.opengl.vertex.Renderer;
-import net.darktree.util.Logger;
 import net.darktree.opengl.vertex.VertexBuffer;
+import net.darktree.util.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

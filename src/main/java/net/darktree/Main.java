@@ -9,22 +9,19 @@ import net.darktree.util.Resources;
 import org.lwjgl.Version;
 import org.lwjgl.opengl.GL32;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Main {
 
 	Window window;
 
-	public static float scale = 0.1f, x=0, y=0;
-
-	public double ox, oy;
-
 	public void run() {
 		Logger.info("Using LWJGL ", Version.getVersion());
 
 		window = Window.init(300, 300, "Hello!");
+		window.input().setZoomRange(0.08f, 1f);
+
 		loop();
 
 //		this.texture.close();
