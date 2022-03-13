@@ -96,7 +96,7 @@ public class Image implements AutoCloseable {
 
 			image = STBImage.stbi_load(Resources.location(path).toString(), w, h, n, (int) format.channels);
 			if (image == null) {
-				throw new RuntimeException("Failed to load image, " + STBImage.stbi_failure_reason() + "!");
+				throw new RuntimeException("Failed to load image '" + Resources.location(path) + "', " + STBImage.stbi_failure_reason() + "!");
 			}
 
 			width = w.get();

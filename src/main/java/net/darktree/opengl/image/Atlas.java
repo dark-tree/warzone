@@ -106,10 +106,10 @@ public class Atlas {
 		public Sprite sprite() {
 			if (frozen) {
 				return new Sprite(
-						this.minX / (float) image.width(),
-						this.maxY / (float) image.height(),
-						this.maxX / (float) image.width(),
-						this.minY / (float) image.height()
+						(this.minX + 0.001f) / (float) image.width(),
+						(this.maxY + 0.999f) / (float) image.height(),
+						(this.maxX + 0.999f) / (float) image.width(),
+						(this.minY + 0.001f) / (float) image.height()
 				);
 			}else{
 				throw new RuntimeException("Unable to query sprite of unfrozen atlas!");

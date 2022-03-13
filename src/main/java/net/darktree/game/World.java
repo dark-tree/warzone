@@ -1,8 +1,12 @@
 package net.darktree.game;
 
+import net.darktree.Main;
 import net.darktree.game.tiles.EmptyTile;
+import net.darktree.opengl.Window;
 import net.darktree.opengl.image.Atlas;
+import net.darktree.opengl.image.Image;
 import net.darktree.opengl.image.Sprite;
+import net.darktree.opengl.image.Texture;
 import net.darktree.opengl.vertex.VertexBuffer;
 
 import java.util.function.Function;
@@ -14,6 +18,8 @@ public class World {
 
 	final Sprite EMPTY;
 
+	public float x, y, s;
+
 	public World(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -23,7 +29,7 @@ public class World {
 
 		// FIXME, let's not do it here
 		Atlas atlas = Atlas.createEmpty();
-		var ref = atlas.add("empty.png");
+		var ref = atlas.add("test.png");
 		atlas.freeze();
 		atlas.texture.upload();
 
@@ -44,9 +50,13 @@ public class World {
 	}
 
 	public void draw(VertexBuffer buffer) {
+		this.s = Window.INSTANCE.input().zoom;
+		this.x = Window.INSTANCE.input().offsetX;
+		this.y = Window.INSTANCE.input().offsetY;
+
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.tiles[x][y].draw(buffer, x * 0.1f, y * 0.1f, 0.1f);
+				this.tiles[x][y].draw(buffer, this.x + x * this.s, this.y + y * this.s, this.s);
 			}
 		}
 	}
