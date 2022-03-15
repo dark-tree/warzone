@@ -19,6 +19,10 @@ public class Program implements AutoCloseable {
 		return GL32.glGetUniformLocation(this.id, name);
 	}
 
+	public Uniform uniform(String name, Uniform.Sender sender) {
+		return new Uniform(location(name), sender);
+	}
+
 	@Override
 	public void close() {
 		if (this.id != 0) {

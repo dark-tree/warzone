@@ -1,6 +1,7 @@
 package net.darktree.game;
 
 import net.darktree.game.nbt.NbtSerializable;
+import net.darktree.opengl.Window;
 import net.darktree.opengl.vertex.Renderer;
 import net.darktree.opengl.vertex.VertexBuffer;
 import net.querz.nbt.tag.CompoundTag;

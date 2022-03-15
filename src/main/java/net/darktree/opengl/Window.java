@@ -17,7 +17,7 @@ public class Window implements AutoCloseable {
 
 	private static final Map<Integer, String> ERROR_CODES = APIUtil.apiClassTokens((field, value) -> 0x10000 < value && value < 0x20000, null, org.lwjgl.glfw.GLFW.class);
 	private final Input input;
-	private final int width, height;
+	private int width, height;
 
 	public final long handle;
 	public static Window INSTANCE = null;
@@ -85,7 +85,11 @@ public class Window implements AutoCloseable {
 		glEnable(GL_DEPTH_TEST);
 
 		glfwSetWindowSizeCallback(handle, (window, w, h) -> {
+			this.width = w;
+			this.height = h;
 			glViewport(0, 0, w, h);
+
+			input.resizeHandle();
 		});
 
 		this.width = width;
@@ -117,10 +121,11 @@ public class Window implements AutoCloseable {
 	}
 
 	public boolean shouldClose() {
-		return glfwWindowShouldClose(this.handle);
+		return glfwWindowShouldClose(this.handle) || input.isKeyPressed(GLFW_KEY_ESCAPE);
 	}
 
 	public void swap() {
 		glfwSwapBuffers(this.handle);
+		glfwPollEvents();
 	}
 }

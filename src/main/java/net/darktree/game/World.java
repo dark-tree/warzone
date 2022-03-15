@@ -17,6 +17,8 @@ public class World {
 
 	public float x, y, s;
 
+	Atlas atlas;
+
 	public World(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -25,7 +27,7 @@ public class World {
 		this.loadTiles(pos -> new EmptyTile(this));
 
 		// FIXME, let's not do it here
-		Atlas atlas = Atlas.createEmpty();
+		atlas = Atlas.createEmpty();
 		var ref = atlas.add("test.png");
 		atlas.freeze();
 		atlas.texture.upload();
@@ -50,6 +52,8 @@ public class World {
 		this.s = Window.INSTANCE.input().zoom;
 		this.x = Window.INSTANCE.input().offsetX;
 		this.y = Window.INSTANCE.input().offsetY;
+
+		atlas.texture.bind();
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {

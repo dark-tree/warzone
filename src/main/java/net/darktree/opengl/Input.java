@@ -10,11 +10,14 @@ public class Input {
 	private float prevY;
 	private float zoomMin;
 	private float zoomMax;
+	private float scale;
 
-	// TODO make not public
+	// TODO make not public (maybe)
 	public float offsetX;
 	public float offsetY;
 	public float zoom = 0.1f;
+	public float scaleX;
+	public float scaleY;
 
 	public Input(Window window) {
 		this.window = window;
@@ -25,14 +28,19 @@ public class Input {
 		this.zoomMax = max;
 	}
 
+	public void setScale(float scale) {
+		this.scale = scale;
+		resizeHandle();
+	}
+
 	void keyHandle(long handle, int key, int scancode, int action, int mods) {
 
 	}
 
 	void cursorHandle(long handle, double x, double y) {
 		if (this.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
-			var ox = (prevX - x) / window.width() * -2;
-			var oy = (prevY - y) / window.height() * 2;
+			var ox = (prevX - x) / window.width() * -2/scaleX;
+			var oy = (prevY - y) / window.height() * 2/scaleY;
 
 			offsetX += ox;
 			offsetY += oy;
@@ -40,6 +48,11 @@ public class Input {
 
 		prevX = (float) x;
 		prevY = (float) y;
+	}
+
+	void resizeHandle() {
+		scaleX = scale * window.height() / (float)window.width();
+		scaleY = scale * 1;
 	}
 
 	// time_wasted_while_trying_to_fucking_make_this_work_again = 2h
