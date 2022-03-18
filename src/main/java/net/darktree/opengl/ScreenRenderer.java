@@ -1,26 +1,27 @@
 package net.darktree.opengl;
 
+import net.darktree.game.rendering.Buffers;
+import net.darktree.game.rendering.Shaders;
+import net.darktree.game.rendering.Uniforms;
 import net.darktree.opengl.image.Sprite;
+import net.darktree.opengl.image.Texture;
+import net.darktree.opengl.pipeline.TexturedPipeline;
 import net.darktree.opengl.vertex.Renderer;
-import net.darktree.opengl.vertex.VertexBuffer;
-
-import static org.lwjgl.opengl.GL11.glDrawArrays;
 
 public class ScreenRenderer {
 
 	private static final ScreenRenderer INSTANCE = new ScreenRenderer();
+	private static final Input INPUT = Window.INSTANCE.input();
 
-	private final VertexBuffer buffer;
+	private final TexturedPipeline pipeline;
 	private float x, y;
 	private int ox, oy;
 	private Sprite sprite;
 
 	public ScreenRenderer() {
-		VertexBuffer.Builder builder = VertexBuffer.create();
-		builder.attribute(2); // xy
-		builder.attribute(2); // uv
-
-		this.buffer = builder.build();
+		this.pipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, (Texture) null, pipeline -> {
+			Uniforms.SCALE.putFloat(1).putFloat(1).flush();
+		});
 	}
 
 	public static ScreenRenderer from(float x, float y) {
@@ -45,16 +46,18 @@ public class ScreenRenderer {
 		return this;
 	}
 
-	public ScreenRenderer sprite(Sprite sprite) {
+	public ScreenRenderer sprite(Texture texture, Sprite sprite) {
 		this.sprite = sprite;
+		this.pipeline.texture = texture;
 		return this;
 	}
 
 	public ScreenRenderer box(int right, int top) {
-		float px = 1f / Window.INSTANCE.width();
-		float py = 1f / Window.INSTANCE.height();
+		float sc = INPUT.guiScale;
+		float px = sc / Window.INSTANCE.width();
+		float py = sc / Window.INSTANCE.height();
 
-		Renderer.quad(this.buffer, this.x + this.ox * px, this.y + this.oy * py, right * px, top * py, this.sprite);
+		Renderer.quad(this.pipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, right * px, top * py, this.sprite);
 		return this;
 	}
 
@@ -63,10 +66,7 @@ public class ScreenRenderer {
 	}
 
 	public ScreenRenderer next() {
-		this.buffer.bind();
-		glDrawArrays(this.buffer.primitive, 0, this.buffer.count());
-		this.buffer.clear();
-
+		this.pipeline.flush();
 		return this.reset();
 	}
 

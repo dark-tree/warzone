@@ -35,7 +35,6 @@ public class Pipeline implements AutoCloseable {
 	@Override
 	public void close() {
 		this.buffer.close();
-		this.program.close();
 	}
 
 }

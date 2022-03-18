@@ -97,6 +97,9 @@ public class Window implements AutoCloseable {
 
 		this.width = width;
 		this.height = height;
+
+		// needed to initialize scales
+		input.resizeHandle();
 	}
 
 

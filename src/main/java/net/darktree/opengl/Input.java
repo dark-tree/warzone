@@ -10,7 +10,6 @@ public class Input {
 	private float prevY;
 	private float zoomMin;
 	private float zoomMax;
-	private float scale;
 
 	// TODO make not public (maybe)
 	public float offsetX;
@@ -18,6 +17,7 @@ public class Input {
 	public float zoom = 0.1f;
 	public float scaleX;
 	public float scaleY;
+	public float guiScale = 1;
 
 	public Input(Window window) {
 		this.window = window;
@@ -28,9 +28,8 @@ public class Input {
 		this.zoomMax = max;
 	}
 
-	public void setScale(float scale) {
-		this.scale = scale;
-		resizeHandle();
+	public void setGuiScale(float scale) {
+		this.guiScale = scale;
 	}
 
 	void keyHandle(long handle, int key, int scancode, int action, int mods) {
@@ -51,8 +50,8 @@ public class Input {
 	}
 
 	void resizeHandle() {
-		scaleX = scale * window.height() / (float)window.width();
-		scaleY = scale * 1;
+		scaleX = window.height() / (float) window.width();
+		scaleY = 1;
 	}
 
 	// time_wasted_while_trying_to_fucking_make_this_work_again = 2h

@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 public class TexturedPipeline extends Pipeline {
 
-	public final Texture texture;
+	public Texture texture;
 
 	public TexturedPipeline(VertexBuffer buffer, Program program, Texture texture, Consumer<Pipeline> prepare) {
 		super(buffer, program, prepare);
@@ -29,7 +29,7 @@ public class TexturedPipeline extends Pipeline {
 	@Override
 	public void close() {
 		super.close();
-		this.texture.bind();
+		this.texture.close();
 	}
 
 }
