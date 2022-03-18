@@ -9,6 +9,7 @@ public class Program implements AutoCloseable {
 
 	private Program(int id) {
 		this.id = id;
+		this.bind();
 	}
 
 	public void bind() {
@@ -33,6 +34,13 @@ public class Program implements AutoCloseable {
 
 	public static Builder create() {
 		return new Builder();
+	}
+
+	public static Program from(String path) {
+		return Program.create()
+				.add(path + "/vertex.glsl", GL32.GL_VERTEX_SHADER)
+				.add(path + "/fragment.glsl", GL32.GL_FRAGMENT_SHADER)
+				.link();
 	}
 
 	// FIXME: cleanup the shaders

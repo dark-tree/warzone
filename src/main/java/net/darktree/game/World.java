@@ -13,7 +13,7 @@ public class World {
 	final private int width, height;
 	final private Tile[][] tiles;
 
-	final Sprite EMPTY;
+	final Sprite EMPTY, CIRCLE;
 
 	public float x, y, s;
 
@@ -28,12 +28,13 @@ public class World {
 
 		// FIXME, let's not do it here
 		atlas = Atlas.createEmpty();
-		var ref = atlas.add("test.png");
+		var ref1 = atlas.add("sprites/empty.png");
+		var ref2 = atlas.add("sprites/circle-2.png");
 		atlas.freeze();
 		atlas.texture.upload();
 
-		EMPTY = ref.sprite();
-
+		EMPTY = ref1.sprite();
+		CIRCLE = ref2.sprite();
 	}
 
 	public void loadTiles(Function<TilePos, Tile> generator) {

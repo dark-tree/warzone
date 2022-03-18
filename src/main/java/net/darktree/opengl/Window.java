@@ -84,6 +84,9 @@ public class Window implements AutoCloseable {
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 
+		glDepthFunc(GL_LEQUAL);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		glfwSetWindowSizeCallback(handle, (window, w, h) -> {
 			this.width = w;
 			this.height = h;

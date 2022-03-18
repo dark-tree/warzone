@@ -110,24 +110,24 @@ public class VertexBuffer implements AutoCloseable {
 		/**
 		 * Add vertex attribute
 		 */
-		public void attribute(VertexAttribute attribute) {
+		public Builder attribute(VertexAttribute attribute) {
 			this.attributes.add(attribute);
-
 			this.stride += attribute.length * attribute.type.size;
+			return this;
 		}
 
 		/**
 		 * Add simple vertex attribute
 		 */
-		public void attribute(int length, VertexAttribute.Type type) {
-			this.attribute( new VertexAttribute(length, type) );
+		public Builder attribute(int length, VertexAttribute.Type type) {
+			return this.attribute( new VertexAttribute(length, type) );
 		}
 
 		/**
 		 * Add simple vertex float attribute
 		 */
-		public void attribute(int length) {
-			this.attribute(length, VertexAttribute.Type.FLOAT);
+		public Builder attribute(int length) {
+			return this.attribute(length, VertexAttribute.Type.FLOAT);
 		}
 
 		public VertexBuffer build() {
