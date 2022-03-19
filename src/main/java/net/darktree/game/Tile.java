@@ -8,9 +8,12 @@ import net.querz.nbt.tag.CompoundTag;
 public abstract class Tile implements NbtSerializable {
 
 	protected final World world;
+	protected final int x, y;
 
-	public Tile(World world) {
+	public Tile(World world, int x, int y) {
 		this.world = world;
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -25,11 +28,14 @@ public abstract class Tile implements NbtSerializable {
 
 	public void draw(VertexBuffer buffer, float x, float y, float scale) {
 		Renderer.quad(buffer, x, y, scale, scale, this.world.EMPTY);
-		Renderer.quad(buffer, x, y, scale, scale, this.world.CIRCLE);
+	}
+
+	public void interact(int mode) {
+
 	}
 
 	public interface Factory {
-		Tile create(World world, CompoundTag tag);
+		Tile create(World world, CompoundTag tag, int x, int y);
 	}
 
 }

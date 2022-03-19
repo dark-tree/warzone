@@ -10,12 +10,13 @@ import java.util.function.Function;
 
 public class World {
 
-	final private int width, height;
+	final public int width, height;
 	final private Tile[][] tiles;
 
-	final Sprite EMPTY, CIRCLE;
+	public final Sprite EMPTY, CIRCLE, CROSS, DELETED;
 
 	public float x, y, s;
+	public boolean circle = true;
 
 	Atlas atlas;
 
@@ -24,17 +25,22 @@ public class World {
 		this.height = height;
 		this.tiles = new Tile[width][height];
 
-		this.loadTiles(pos -> new EmptyTile(this));
+		this.loadTiles(pos -> new EmptyTile(this, pos.x, pos.y));
 
 		// FIXME, let's not do it here
 		atlas = Atlas.createEmpty();
 		var ref1 = atlas.add("sprites/empty.png");
 		var ref2 = atlas.add("sprites/circle-2.png");
+		var ref3 = atlas.add("sprites/cross.png");
+		var ref4 = atlas.add("sprites/deleted.png");
 		atlas.freeze();
 		atlas.texture.upload();
 
 		EMPTY = ref1.sprite();
 		CIRCLE = ref2.sprite();
+		CROSS = ref3.sprite();
+		DELETED = ref4.sprite();
+
 	}
 
 	public void loadTiles(Function<TilePos, Tile> generator) {

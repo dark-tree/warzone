@@ -62,6 +62,7 @@ public class Window implements AutoCloseable {
 		glfwSetKeyCallback(handle, input::keyHandle);
 		glfwSetCursorPosCallback(handle, input::cursorHandle);
 		glfwSetScrollCallback(handle, input::scrollHandle);
+		glfwSetMouseButtonCallback(handle, input::clickHandle);
 
 		// try centering the window on screen
 		GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());

@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL32.glClearColor;
 public class Main {
 
 	Window window;
+	public static World world;
 
 	public void run() {
 		Logger.info("Using LWJGL ", Version.getVersion());
@@ -61,7 +62,7 @@ public class Main {
 
 //		font.draw("Hello!", buffer, 0, 0, 0.1f);
 
-		World world = new World(8, 8);
+		world = new World(8, 8);
 
 		while ( !window.shouldClose() ) {
 			Renderer.clear();

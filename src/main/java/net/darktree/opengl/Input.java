@@ -1,5 +1,7 @@
 package net.darktree.opengl;
 
+import net.darktree.Main;
+import net.darktree.util.Logger;
 import org.lwjgl.glfw.GLFW;
 
 public class Input {
@@ -37,9 +39,9 @@ public class Input {
 	}
 
 	void cursorHandle(long handle, double x, double y) {
-		if (this.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
-			var ox = (prevX - x) / window.width() * -2/scaleX;
-			var oy = (prevY - y) / window.height() * 2/scaleY;
+		if (this.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_3)) {
+			var ox = (prevX - x) / window.width() * -2 / scaleX;
+			var oy = (prevY - y) / window.height() * 2 / scaleY;
 
 			offsetX += ox;
 			offsetY += oy;
@@ -47,6 +49,21 @@ public class Input {
 
 		prevX = (float) x;
 		prevY = (float) y;
+	}
+
+	void clickHandle(long handle, int button, int action, int mods) {
+		float x = ((prevX / window.width() * 2 / scaleX) - offsetX) * scaleX * Main.world.width/2;
+		float y = ((prevY / window.height() * 2 / scaleY) + offsetY) * scaleY * Main.world.height;
+
+		try {
+			if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
+				Main.world.getTile((int) x, Main.world.height - (int) y).interact(action);
+			}
+		}catch (Exception ignored) {
+
+		}
+
+		Logger.info(x, " ", y);
 	}
 
 	void resizeHandle() {
@@ -69,5 +86,4 @@ public class Input {
 	public boolean isButtonPressed(int button) {
 		return GLFW.glfwGetMouseButton(window.handle, button) == GLFW.GLFW_PRESS;
 	}
-
 }
