@@ -2,8 +2,10 @@ plugins {
     id 'java'
     id 'com.google.osdetector' version '1.7.0'
     id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'application'
 }
 
+mainClassName = 'net.darktree.Main'
 group 'net.darktree'
 version '1.0'
 
