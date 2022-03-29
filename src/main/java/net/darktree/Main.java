@@ -51,16 +51,12 @@ public class Main {
 		}
 
 		pipeline = new Pipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, pipeline -> {
-			Uniforms.SCALE.putFloat(input.scaleX).putFloat(input.scaleY).flush();
+			Uniforms.SCALE.putFloats(input.scaleX, input.scaleY).flush();
+			Uniforms.OFFSET.putFloats(input.offsetX, input.offsetY).flush();
 		});
-
-//		Font font = new Font("8x8font.png", 8, 8);
-		Sprite sprite = Sprite.IDENTITY;
 
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
-
-//		font.draw("Hello!", buffer, 0, 0, 0.1f);
 
 		world = new World(8, 8);
 

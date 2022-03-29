@@ -37,6 +37,11 @@ public class Uniform {
 		return this;
 	}
 
+	public Uniform putFloats(float... values) {
+		this.buffer.reserve(values.length * 4).putFloats(values);
+		return this;
+	}
+
 	@FunctionalInterface
 	public interface Sender {
 		void send(int loc, ByteBuffer buf);

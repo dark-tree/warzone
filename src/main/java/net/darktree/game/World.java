@@ -56,15 +56,11 @@ public class World {
 	}
 
 	public void draw(VertexBuffer buffer) {
-		this.s = Window.INSTANCE.input().zoom;
-		this.x = Window.INSTANCE.input().offsetX;
-		this.y = Window.INSTANCE.input().offsetY;
-
 		atlas.texture.bind();
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.tiles[x][y].draw(buffer, this.x + x * this.s, this.y + y * this.s, this.s);
+				this.tiles[x][y].draw(buffer, x, y);
 			}
 		}
 	}

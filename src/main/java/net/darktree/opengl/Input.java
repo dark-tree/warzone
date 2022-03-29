@@ -66,9 +66,9 @@ public class Input {
 		Logger.info(x, " ", y);
 	}
 
-	void resizeHandle() {
-		scaleX = window.height() / (float) window.width();
-		scaleY = 1;
+	void updateScale() {
+		scaleX = zoom * window.height() / (float) window.width();
+		scaleY = zoom;
 	}
 
 	// time_wasted_while_trying_to_fucking_make_this_work_again = 2h
@@ -77,6 +77,8 @@ public class Input {
 
 		if (zoom < zoomMin) zoom = zoomMin;
 		if (zoom > zoomMax) zoom = zoomMax;
+
+		updateScale();
 	}
 
 	public boolean isKeyPressed(int key) {

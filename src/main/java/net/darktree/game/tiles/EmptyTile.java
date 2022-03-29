@@ -23,11 +23,11 @@ public class EmptyTile extends Tile {
 	}
 
 	@Override
-	public void draw(VertexBuffer buffer, float x, float y, float scale) {
-		super.draw(buffer, x, y, scale);
-		if(circle) Renderer.quad(buffer, x, y, scale, scale, this.world.CIRCLE);
-		if(cross) Renderer.quad(buffer, x, y, scale, scale, this.world.CROSS);
-		if(deleted) Renderer.quad(buffer, x, y, scale, scale, this.world.DELETED);
+	public void draw(VertexBuffer buffer, float x, float y) {
+		super.draw(buffer, x, y);
+		if(circle) Renderer.quad(buffer, x, y, 1, 1, this.world.CIRCLE);
+		if(cross) Renderer.quad(buffer, x, y, 1, 1, this.world.CROSS);
+		if(deleted) Renderer.quad(buffer, x, y, 1, 1, this.world.DELETED);
 	}
 
 	@Override

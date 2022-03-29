@@ -26,8 +26,8 @@ public abstract class Tile implements NbtSerializable {
 
 	}
 
-	public void draw(VertexBuffer buffer, float x, float y, float scale) {
-		Renderer.quad(buffer, x, y, scale, scale, this.world.EMPTY);
+	public void draw(VertexBuffer buffer, float x, float y) {
+		Renderer.quad(buffer, x, y, 1, 1, this.world.EMPTY);
 	}
 
 	public void interact(int mode) {

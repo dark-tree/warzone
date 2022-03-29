@@ -93,14 +93,14 @@ public class Window implements AutoCloseable {
 			this.height = h;
 			glViewport(0, 0, w, h);
 
-			input.resizeHandle();
+			input.updateScale();
 		});
 
 		this.width = width;
 		this.height = height;
 
 		// needed to initialize scales
-		input.resizeHandle();
+		input.updateScale();
 	}
 
 

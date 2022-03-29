@@ -20,7 +20,8 @@ public class ScreenRenderer {
 
 	public ScreenRenderer() {
 		this.pipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, (Texture) null, pipeline -> {
-			Uniforms.SCALE.putFloat(1).putFloat(1).flush();
+			Uniforms.SCALE.putFloats(1, 1).flush();
+			Uniforms.OFFSET.putFloats(0, 0).flush();
 		});
 	}
 

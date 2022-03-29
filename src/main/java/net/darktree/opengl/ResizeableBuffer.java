@@ -35,6 +35,12 @@ public class ResizeableBuffer implements AutoCloseable {
 		this.buffer.putFloat(value);
 	}
 
+	public void putFloats(float... values) {
+		for (float value : values) {
+			this.buffer.putFloat(value);
+		}
+	}
+
 	public void putInt(int value) {
 		this.buffer.putInt(value);
 	}
