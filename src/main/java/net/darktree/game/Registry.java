@@ -1,31 +1,49 @@
 package net.darktree.game;
 
-import net.darktree.game.tiles.EmptyTile;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
-public class Registry {
+public class Registry<T> {
 
-	private static final ArrayList<Tile.Factory> factories = new ArrayList<>();
-	private static final HashMap<Class<?>, Integer> ids = new HashMap<>();
+	private final Consumer<Entry<T>> listener;
+	private final ArrayList<Entry<T>> list = new ArrayList<>();
+	private final HashMap<String, Entry<T>> registry = new HashMap<>();
+	private final HashMap<T, Entry<T>> lookup = new HashMap<>();
 
-	public static <T extends Tile> void register(String name, Class<T> clazz, Tile.Factory factory) {
-		factories.add(factory);
-		ids.put(clazz, factories.size() - 1);
+	public Registry(Consumer<Entry<T>> listener) {
+		this.listener = listener;
 	}
 
-	public static Tile.Factory getFactory(int id) {
-		return factories.get(id);
+	public T register(String key, T value) {
+		Entry<T> entry = new Entry<>(list.size(), key, value);
+
+		this.list.add(entry);
+		this.registry.put(key, entry);
+		this.lookup.put(value, entry);
+		this.listener.accept(entry);
+
+		return value;
 	}
 
-	public static int getId(Class<?> clazz) {
-		return ids.get(clazz);
+	public T getElement(String key) {
+		return this.registry.get(key).value;
 	}
 
-	// TODO move this somewhere else
-	static {
-		register("empty", EmptyTile.class, EmptyTile::new);
+	public T getElement(int key) {
+		return this.list.get(key).value;
+	}
+
+	public int getIdentifier(String key) {
+		return this.registry.get(key).identifier;
+	}
+
+	public int getIdentifier(T value) {
+		return this.lookup.get(value).identifier;
+	}
+
+	public record Entry<T>(int identifier, String key, T value) {
+
 	}
 
 }

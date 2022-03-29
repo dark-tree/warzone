@@ -2,6 +2,7 @@ package net.darktree.game.tiles;
 
 import net.darktree.game.Tile;
 import net.darktree.game.World;
+import net.darktree.opengl.image.Atlas;
 import net.darktree.opengl.vertex.Renderer;
 import net.darktree.opengl.vertex.VertexBuffer;
 import net.darktree.util.Logger;
@@ -15,11 +16,12 @@ public class EmptyTile extends Tile {
 	boolean deleted = false;
 
 	public EmptyTile(World world, int x, int y) {
-		super(world, x, y);
+		super(Tiles.EMPTY, world, x, y);
 	}
 
-	public EmptyTile(World world, CompoundTag tag, int x, int y) {
-		super(world, x, y);
+	public EmptyTile(Tile.Factory factory, World world, CompoundTag tag, int x, int y) {
+		super(factory, world, x, y);
+		this.fromNbt(tag);
 	}
 
 	@Override
@@ -98,6 +100,21 @@ public class EmptyTile extends Tile {
 
 		}
 
+	}
+
+	static class Factory implements Tile.Factory {
+		@Override
+		public Tile create(Tile.Factory factory, World world, CompoundTag tag, int x, int y) {
+			return new EmptyTile(factory, world, tag, x, y);
+		}
+
+		@Override
+		public void requestSprites(Atlas atlas) {
+//			atlas.add("sprites/empty.png");
+//			atlas.add("sprites/circle-2.png");
+//			atlas.add("sprites/cross.png");
+//			atlas.add("sprites/deleted.png");
+		}
 	}
 
 }
