@@ -47,6 +47,7 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 
     implementation 'com.github.Querz:NBT:6.1'
+    implementation 'org.jetbrains:annotations:20.1.0'
 
     implementation('io.netty:netty-all:4.1.64.Final') {
         exclude group: 'io.netty', module: 'netty-tcnative'

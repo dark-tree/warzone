@@ -2,38 +2,50 @@ package net.darktree.game.tiles;
 
 import net.darktree.game.Tile;
 import net.darktree.game.World;
-import net.darktree.opengl.image.Atlas;
 import net.darktree.opengl.vertex.Renderer;
 import net.darktree.opengl.vertex.VertexBuffer;
 import net.darktree.util.Logger;
 import net.querz.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class EmptyTile extends Tile {
 
-	boolean circle = false;
-	boolean cross = false;
-	boolean deleted = false;
+	boolean circle;
+	boolean cross;
+	boolean deleted;
 
-	public EmptyTile(World world, int x, int y) {
-		super(Tiles.EMPTY, world, x, y);
-	}
-
-	public EmptyTile(Tile.Factory factory, World world, CompoundTag tag, int x, int y) {
-		super(factory, world, x, y);
-		this.fromNbt(tag);
+	public EmptyTile(Type type, World world, @Nullable CompoundTag tag, int x, int y) {
+		super(type, world, tag, x, y);
 	}
 
 	@Override
 	public void draw(VertexBuffer buffer, float x, float y) {
 		super.draw(buffer, x, y);
-		if(circle) Renderer.quad(buffer, x, y, 1, 1, this.world.CIRCLE);
-		if(cross) Renderer.quad(buffer, x, y, 1, 1, this.world.CROSS);
-		if(deleted) Renderer.quad(buffer, x, y, 1, 1, this.world.DELETED);
+		if(circle) Renderer.quad(buffer, x, y, 1, 1, World.CIRCLE);
+		if(cross) Renderer.quad(buffer, x, y, 1, 1, World.CROSS);
+		if(deleted) Renderer.quad(buffer, x, y, 1, 1, World.DELETED);
 	}
 
 	@Override
-	public void interact(int mode) {
+	public void fromNbt(@NotNull CompoundTag tag) {
+		super.fromNbt(tag);
+		circle = tag.getBoolean("circle");
+		cross = tag.getBoolean("cross");
+		deleted = tag.getBoolean("deleted");
+	}
+
+	@Override
+	public void toNbt(@NotNull CompoundTag tag) {
+		super.toNbt(tag);
+		tag.putBoolean("circle", circle);
+		tag.putBoolean("cross", cross);
+		tag.putBoolean("deleted", deleted);
+	}
+
+	@Override
+	public void onInteract(int mode) {
 		if (mode == GLFW.GLFW_PRESS && !circle && !cross) {
 			if (this.world.circle) {
 				circle = true;
@@ -100,21 +112,6 @@ public class EmptyTile extends Tile {
 
 		}
 
-	}
-
-	static class Factory implements Tile.Factory {
-		@Override
-		public Tile create(Tile.Factory factory, World world, CompoundTag tag, int x, int y) {
-			return new EmptyTile(factory, world, tag, x, y);
-		}
-
-		@Override
-		public void requestSprites(Atlas atlas) {
-//			atlas.add("sprites/empty.png");
-//			atlas.add("sprites/circle-2.png");
-//			atlas.add("sprites/cross.png");
-//			atlas.add("sprites/deleted.png");
-		}
 	}
 
 }

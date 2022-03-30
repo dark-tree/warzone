@@ -1,32 +1,27 @@
 package net.darktree.game;
 
-import net.darktree.game.tiles.EmptyTile;
-import net.darktree.opengl.Window;
+import net.darktree.game.nbt.NbtSerializable;
+import net.darktree.game.tiles.Tiles;
 import net.darktree.opengl.image.Atlas;
 import net.darktree.opengl.image.Sprite;
 import net.darktree.opengl.vertex.VertexBuffer;
+import net.querz.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class World {
+public class World implements NbtSerializable {
 
 	final public int width, height;
 	final private Tile[][] tiles;
 
-	public final Sprite EMPTY, CIRCLE, CROSS, DELETED;
+	static Atlas atlas;
 
-	public float x, y, s;
-	public boolean circle = true;
+	public static Sprite EMPTY, CIRCLE, CROSS, DELETED;
 
-	Atlas atlas;
-
-	public World(int width, int height) {
-		this.width = width;
-		this.height = height;
-		this.tiles = new Tile[width][height];
-
-		this.loadTiles(pos -> new EmptyTile(this, pos.x, pos.y));
-
+	public static void init() {
 		// FIXME, let's not do it here
 		atlas = Atlas.createEmpty();
 		var ref1 = atlas.add("sprites/empty.png");
@@ -40,19 +35,82 @@ public class World {
 		CIRCLE = ref2.sprite();
 		CROSS = ref3.sprite();
 		DELETED = ref4.sprite();
-
 	}
 
-	public void loadTiles(Function<TilePos, Tile> generator) {
+	public boolean circle = true;
+
+	public World(int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.tiles = new Tile[width][height];
+	}
+
+	@Override
+	public void toNbt(@NotNull CompoundTag tag) {
+		CompoundTag tilesTag = new CompoundTag();
+
+		TilePallet pallet = new TilePallet();
+		forEach(tile -> {
+			CompoundTag tileTag = new CompoundTag();
+
+			tileTag.putInt("id", pallet.add(tile));
+			tile.toNbt(tileTag);
+			tilesTag.put(tile.x + " " + tile.y, tileTag);
+		});
+
+		CompoundTag palletTag = new CompoundTag();
+		pallet.toNbt(palletTag);
+		tag.put("pallet", palletTag);
+
+		tag.putInt("width", this.width);
+		tag.putInt("height", this.height);
+		tag.put("tiles", tilesTag);
+	}
+
+	@Override
+	public void fromNbt(@NotNull CompoundTag tag) {
+		throw new UnsupportedOperationException("World can't be loaded after being created!");
+	}
+
+	public static World load(CompoundTag tag) {
+		TilePallet pallet = new TilePallet();
+		pallet.fromNbt(tag.getCompoundTag("pallet"));
+
+		CompoundTag tilesTag = tag.getCompoundTag("tiles");
+		World world = new World(tag.getInt("width"), tag.getInt("height"));
+
+		for (int x = 0; x < world.width; x ++) {
+			for (int y = 0; y < world.height; y ++) {
+				CompoundTag tileTag = tilesTag.getCompoundTag(x + " " + y);
+				world.tiles[x][y] = pallet.get(tileTag.getInt("id"), tileTag, world, x, y);
+			}
+		}
+
+		return world;
+	}
+
+	public void loadTiles(Function<TilePos, Tile.Type> generator) {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.tiles[x][y] = generator.apply(new TilePos(x, y));
+				this.setTile(x, y, generator.apply(new TilePos(x, y)), null);
 			}
 		}
 	}
 
 	public Tile getTile(int x, int y) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			return null;
+		}
+
 		return this.tiles[x][y];
+	}
+
+	public void setTile(int x, int y, Tile.Type type, @Nullable CompoundTag tag) {
+		if (this.tiles[x][y] != null) {
+			this.tiles[x][y].onRemoved(type);
+		}
+
+		this.tiles[x][y] = type.create(type, this, tag, x, y);
 	}
 
 	public void draw(VertexBuffer buffer) {
@@ -61,6 +119,14 @@ public class World {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
 				this.tiles[x][y].draw(buffer, x, y);
+			}
+		}
+	}
+
+	void forEach(Consumer<Tile> consumer) {
+		for (int x = 0; x < width; x ++) {
+			for (int y = 0; y < height; y ++) {
+				consumer.accept(this.tiles[x][y]);
 			}
 		}
 	}

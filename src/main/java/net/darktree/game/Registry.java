@@ -18,6 +18,10 @@ public class Registry<T> {
 	public T register(String key, T value) {
 		Entry<T> entry = new Entry<>(list.size(), key, value);
 
+		if( this.lookup.get(value) != null || this.registry.get(key) != null ) {
+			throw new IllegalStateException("Registry already contains key '%s' or entry '%s'!".formatted(key, value.hashCode()));
+		}
+
 		this.list.add(entry);
 		this.registry.put(key, entry);
 		this.lookup.put(value, entry);
@@ -40,6 +44,10 @@ public class Registry<T> {
 
 	public int getIdentifier(T value) {
 		return this.lookup.get(value).identifier;
+	}
+
+	public String getKey(T value) {
+		return this.lookup.get(value).key;
 	}
 
 	public record Entry<T>(int identifier, String key, T value) {

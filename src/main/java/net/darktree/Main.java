@@ -4,6 +4,7 @@ import net.darktree.game.World;
 import net.darktree.game.rendering.Buffers;
 import net.darktree.game.rendering.Shaders;
 import net.darktree.game.rendering.Uniforms;
+import net.darktree.game.tiles.Tiles;
 import net.darktree.opengl.Input;
 import net.darktree.opengl.ScreenRenderer;
 import net.darktree.opengl.Window;
@@ -14,6 +15,7 @@ import net.darktree.opengl.pipeline.Pipeline;
 import net.darktree.opengl.vertex.Renderer;
 import net.darktree.util.Logger;
 import net.darktree.util.Resources;
+import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.Version;
 
 import static org.lwjgl.opengl.GL32.glClearColor;
@@ -59,6 +61,8 @@ public class Main {
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
 
 		world = new World(8, 8);
+		world.loadTiles(pos -> Tiles.EMPTY);
+		World.init();
 
 		while ( !window.shouldClose() ) {
 			Renderer.clear();

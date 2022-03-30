@@ -1,8 +1,14 @@
 package net.darktree.opengl;
 
 import net.darktree.Main;
+import net.darktree.game.Tile;
+import net.darktree.game.World;
 import net.darktree.util.Logger;
+import net.querz.nbt.io.NBTUtil;
+import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
+
+import java.io.IOException;
 
 public class Input {
 
@@ -35,7 +41,23 @@ public class Input {
 	}
 
 	void keyHandle(long handle, int key, int scancode, int action, int mods) {
+		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_S) {
+			CompoundTag tag = new CompoundTag();
+			Main.world.toNbt(tag);
+			try {
+				NBTUtil.write(tag, "./map.dat", true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
+		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
+			try {
+				Main.world = World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	void cursorHandle(long handle, double x, double y) {
@@ -51,16 +73,17 @@ public class Input {
 		prevY = (float) y;
 	}
 
+	// time_wasted_while_trying_to_fucking_make_this_work_again = 3h
 	void clickHandle(long handle, int button, int action, int mods) {
 		float x = ((prevX / window.width() * 2 / scaleX) - offsetX) * scaleX * Main.world.width/2;
 		float y = ((prevY / window.height() * 2 / scaleY) + offsetY) * scaleY * Main.world.height;
 
-		try {
-			if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
-				Main.world.getTile((int) x, Main.world.height - (int) y).interact(action);
-			}
-		}catch (Exception ignored) {
+		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
+			Tile tile = Main.world.getTile((int) x, Main.world.height - (int) y);
 
+			if (tile != null) {
+				tile.onInteract(action);
+			}
 		}
 
 		Logger.info(x, " ", y);
@@ -71,7 +94,7 @@ public class Input {
 		scaleY = zoom;
 	}
 
-	// time_wasted_while_trying_to_fucking_make_this_work_again = 2h
+	// time_wasted_while_trying_to_fucking_make_this_work_again = 2.5h
 	void scrollHandle(long handle, double x, double y) {
 		zoom += (float) (zoom * y * 0.15f);
 

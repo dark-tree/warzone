@@ -4,5 +4,5 @@ import net.darktree.game.Registries;
 import net.darktree.game.Tile;
 
 public class Tiles {
-	public static Tile.Factory EMPTY = Registries.TILES.register("empty", new EmptyTile.Factory());
+	public static Tile.Type EMPTY = Registries.TILES.register("empty", EmptyTile::new);
 }
