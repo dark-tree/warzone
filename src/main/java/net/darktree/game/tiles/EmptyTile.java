@@ -2,19 +2,25 @@ package net.darktree.game.tiles;
 
 import net.darktree.game.Tile;
 import net.darktree.game.World;
+import net.darktree.game.state.BooleanProperty;
+import net.darktree.game.state.EnumProperty;
 import net.darktree.opengl.vertex.Renderer;
 import net.darktree.opengl.vertex.VertexBuffer;
 import net.darktree.util.Logger;
 import net.querz.nbt.tag.CompoundTag;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class EmptyTile extends Tile {
 
-	boolean circle;
-	boolean cross;
-	boolean deleted;
+	enum State {
+		CIRCLE,
+		CROSS,
+		EMPTY
+	}
+
+	public static EnumProperty<State> STATE = new EnumProperty<>(State.class, "state", State.EMPTY);
+	public static BooleanProperty DELETED = new BooleanProperty("deleted", false);
 
 	public EmptyTile(Type type, World world, @Nullable CompoundTag tag, int x, int y) {
 		super(type, world, tag, x, y);
@@ -23,34 +29,23 @@ public class EmptyTile extends Tile {
 	@Override
 	public void draw(VertexBuffer buffer, float x, float y) {
 		super.draw(buffer, x, y);
-		if(circle) Renderer.quad(buffer, x, y, 1, 1, World.CIRCLE);
-		if(cross) Renderer.quad(buffer, x, y, 1, 1, World.CROSS);
-		if(deleted) Renderer.quad(buffer, x, y, 1, 1, World.DELETED);
-	}
 
-	@Override
-	public void fromNbt(@NotNull CompoundTag tag) {
-		super.fromNbt(tag);
-		circle = tag.getBoolean("circle");
-		cross = tag.getBoolean("cross");
-		deleted = tag.getBoolean("deleted");
-	}
+		State state = this.state.get(STATE);
 
-	@Override
-	public void toNbt(@NotNull CompoundTag tag) {
-		super.toNbt(tag);
-		tag.putBoolean("circle", circle);
-		tag.putBoolean("cross", cross);
-		tag.putBoolean("deleted", deleted);
+		if(state == State.CIRCLE) Renderer.quad(buffer, x, y, 1, 1, World.CIRCLE);
+		if(state == State.CROSS) Renderer.quad(buffer, x, y, 1, 1, World.CROSS);
+		if(this.state.get(DELETED)) Renderer.quad(buffer, x, y, 1, 1, World.DELETED);
 	}
 
 	@Override
 	public void onInteract(int mode) {
-		if (mode == GLFW.GLFW_PRESS && !circle && !cross) {
+		State state = this.state.get(STATE);
+
+		if (mode == GLFW.GLFW_PRESS && state == State.EMPTY) {
 			if (this.world.circle) {
-				circle = true;
+				this.state.set(STATE, State.CIRCLE);
 			}else {
-				cross = true;
+				this.state.set(STATE, State.CROSS);
 			}
 
 			test();
@@ -68,7 +63,7 @@ public class EmptyTile extends Tile {
 		if(a || b || c || d) {
 			Logger.info("GAME OVER! ", this.x, " ", this.y);
 
-			this.deleted = true;
+			this.state.set(DELETED, true);
 
 			if(a) {markLine(1, 0); markLine(-1, 0);}
 			if(b) {markLine(0, 1); markLine(0, -1);}
@@ -83,7 +78,10 @@ public class EmptyTile extends Tile {
 		try {
 			for (int i = 1; i < 5; i ++) {
 				if (this.world.getTile(this.x + x * i, this.y + y * i) instanceof EmptyTile tile) {
-					if (this.circle == tile.circle && this.cross == tile.cross && !tile.deleted) {
+					State stateThis = this.state.get(STATE);
+					State stateThat = tile.state.get(STATE);
+
+					if (stateThis == stateThat && !(boolean) tile.state.get(DELETED)) {
 						c++;
 					}else{
 						break;
@@ -101,8 +99,11 @@ public class EmptyTile extends Tile {
 		try {
 			for (int i = 1; i < 5; i ++) {
 				if (this.world.getTile(this.x + x * i, this.y + y * i) instanceof EmptyTile tile) {
-					if (this.circle == tile.circle && this.cross == tile.cross && !tile.deleted) {
-						tile.deleted = true;
+					State stateThis = this.state.get(STATE);
+					State stateThat = tile.state.get(STATE);
+
+					if (stateThis == stateThat && !(boolean) tile.state.get(DELETED)) {
+						tile.state.set(DELETED, true);
 					}else{
 						break;
 					}

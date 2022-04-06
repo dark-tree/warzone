@@ -1,5 +1,8 @@
 package net.darktree;
 
+import net.darktree.game.state.EnumProperty;
+import net.darktree.game.state.Property;
+import net.darktree.game.state.TileState;
 import net.darktree.game.World;
 import net.darktree.game.rendering.Buffers;
 import net.darktree.game.rendering.Shaders;

@@ -92,7 +92,7 @@ public class World implements NbtSerializable {
 	public void loadTiles(Function<TilePos, Tile.Type> generator) {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.setTile(x, y, generator.apply(new TilePos(x, y)), null);
+				this.setTile(x, y, generator.apply(new TilePos(x, y)));
 			}
 		}
 	}
@@ -105,12 +105,12 @@ public class World implements NbtSerializable {
 		return this.tiles[x][y];
 	}
 
-	public void setTile(int x, int y, Tile.Type type, @Nullable CompoundTag tag) {
+	public Tile setTile(int x, int y, Tile.Type type) {
 		if (this.tiles[x][y] != null) {
 			this.tiles[x][y].onRemoved(type);
 		}
 
-		this.tiles[x][y] = type.create(type, this, tag, x, y);
+		return this.tiles[x][y] = type.create(type, this, null, x, y);
 	}
 
 	public void draw(VertexBuffer buffer) {

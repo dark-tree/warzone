@@ -73,10 +73,10 @@ public class Input {
 		prevY = (float) y;
 	}
 
-	// time_wasted_while_trying_to_fucking_make_this_work_again = 3h
+	// time_wasted_while_trying_to_fucking_make_this_work_again = 3.5h
 	void clickHandle(long handle, int button, int action, int mods) {
 		float x = ((prevX / window.width() * 2 / scaleX) - offsetX) * scaleX * Main.world.width/2;
-		float y = ((prevY / window.height() * 2 / scaleY) + offsetY) * scaleY * Main.world.height;
+		float y = ((prevY / window.height() * 2 / scaleY) + offsetY) * scaleY * Main.world.height/2;
 
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
 			Tile tile = Main.world.getTile((int) x, Main.world.height - (int) y);
