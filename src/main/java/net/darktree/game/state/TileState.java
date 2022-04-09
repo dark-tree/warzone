@@ -1,74 +1,55 @@
 package net.darktree.game.state;
 
-import net.darktree.game.nbt.NbtSerializable;
+import net.darktree.game.Tile;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.IntTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
-@SuppressWarnings("unchecked")
-public class TileState implements NbtSerializable {
+public class TileState {
 
-	public final static TileState DUMMY = TileState.create().alwaysBuild();
+	private final Tile tile;
+	private final PropertyTree tree;
+	private final HashMap<Property<?>, Object> state;
 
-	private final HashMap<Property<?>, Integer> defaultState;
-	private final HashMap<Property<?>, Integer> currentState;
-
-	private TileState(HashMap<Property<?>, Integer> properties) {
-		this.defaultState = properties;
-		this.currentState = (HashMap<Property<?>, Integer>) properties.clone();
+	TileState(Tile tile, HashMap<Property<?>, Object> state, PropertyTree tree) {
+		this.tile = tile;
+		this.tree = tree;
+		this.state = state;
 	}
 
-	public static Builder create() {
-		return new Builder();
-	}
-
-	public TileState set(Property<?> property, Object value) {
-		this.currentState.put(property, property.indexOf(value));
-		return this;
-	}
-
-	public <T> T get(Property<T> property) {
-		return property.values()[this.currentState.get(property)];
-	}
-
-	public TileState reset() {
-		currentState.putAll(defaultState);
-		return this;
-	}
-
-	@Override
-	public void toNbt(@NotNull CompoundTag tag) {
-		currentState.forEach((property, value) -> {
-			tag.putInt(property.name(), value);
-		});
-	}
-
-	@Override
-	public void fromNbt(@NotNull CompoundTag tag) {
-		defaultState.forEach((property, value) -> {
-			IntTag val = tag.getIntTag(property.name());
-			currentState.put(property, val == null ? value : val.asInt());
-		});
+	public static TileState createOf(Tile tile, Property<?>... properties) {
+		return new PropertyTree(tile, properties).getDefault();
 	}
 
 	@SuppressWarnings("unchecked")
-	public static class Builder {
-		private final HashMap<Property<?>, Integer> properties = new HashMap<>();
-
-		public Builder add(Property<?> property, Object value) {
-			this.properties.put(property, property.indexOf(value));
-			return this;
-		}
-
-		private TileState alwaysBuild() {
-			return new TileState((HashMap<Property<?>, Integer>) this.properties.clone());
-		}
-
-		public TileState build() {
-			return (this.properties.size() == 0) ? DUMMY : alwaysBuild();
-		}
+	public <T> T get(Property<T> property) {
+		return (T) this.state.get(property);
 	}
 
+	public <T> TileState with(Property<T> property, T value) {
+		return this.tree.get(this.state, property, value);
+	}
+
+	public Tile getTile() {
+		return tile;
+	}
+
+	public void toNbt(@NotNull CompoundTag tag) {
+		this.state.forEach((property, value) -> {
+			tag.putInt(property.name(), property.indexOf(value));
+		});
+	}
+
+	public TileState fromNbt(@NotNull CompoundTag tag) {
+		HashMap<Property<?>, Object> config = new HashMap<>();
+
+		this.state.forEach((property, value) -> {
+			IntTag val = tag.getIntTag(property.name());
+			config.put(property, val == null ? value : property.values()[val.asInt()]);
+		});
+
+		return this.tree.get(config, null, null);
+	}
 }

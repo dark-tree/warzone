@@ -6,7 +6,7 @@ public class BooleanProperty extends Property<Boolean> {
 	private final String name;
 
 	public BooleanProperty(String name, boolean fallback) {
-		super(fallback);
+//		super(fallback);
 		this.name = name;
 	}
 
