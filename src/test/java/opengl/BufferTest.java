@@ -1,6 +1,6 @@
 package opengl;
 
-import net.darktree.opengl.ResizeableBuffer;
+import net.darktree.lt2d.graphics.ResizeableBuffer;
 import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;

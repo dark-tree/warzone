@@ -1,13 +1,13 @@
 package net.darktree.game.tiles;
 
-import net.darktree.game.Tile;
-import net.darktree.game.World;
-import net.darktree.game.state.BooleanProperty;
-import net.darktree.game.state.EnumProperty;
-import net.darktree.game.state.TileInstance;
-import net.darktree.game.state.TileState;
-import net.darktree.opengl.vertex.Renderer;
-import net.darktree.opengl.vertex.VertexBuffer;
+import net.darktree.lt2d.graphics.vertex.Renderer;
+import net.darktree.lt2d.graphics.vertex.VertexBuffer;
+import net.darktree.lt2d.world.Tile;
+import net.darktree.lt2d.world.TileInstance;
+import net.darktree.lt2d.world.World;
+import net.darktree.lt2d.world.state.TileState;
+import net.darktree.lt2d.world.state.property.BooleanProperty;
+import net.darktree.lt2d.world.state.property.EnumProperty;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
