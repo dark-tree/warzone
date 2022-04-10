@@ -1,8 +1,10 @@
 package net.darktree.game;
 
+import net.darktree.game.state.TileInstance;
 import net.darktree.game.state.TileState;
 import net.darktree.opengl.vertex.Renderer;
 import net.darktree.opengl.vertex.VertexBuffer;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class Tile {
 	public final TileState state;
@@ -27,8 +29,15 @@ public abstract class Tile {
 
 	}
 
-	public void onRemoved(World world, int x, int y, TileState tile) {
+	public void onRemoved(World world, int x, int y, TileState state) {
 
+	}
+
+	/**
+	 * Return the Tile Instance for this tile, or null if there should be no tile instance
+	 */
+	public @Nullable TileInstance getInstance(World world, int x, int y) {
+		return null;
 	}
 
 }

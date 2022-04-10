@@ -1,6 +1,7 @@
 package net.darktree.game;
 
 import net.darktree.game.nbt.NbtSerializable;
+import net.darktree.game.state.TileInstance;
 import net.darktree.game.state.TileState;
 import net.darktree.opengl.image.Atlas;
 import net.darktree.opengl.image.Sprite;
@@ -45,7 +46,7 @@ public class World implements NbtSerializable {
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.tiles[x][y] = new TilePoint(null);
+				this.tiles[x][y] = new TilePoint(null, null);
 			}
 		}
 	}
@@ -53,19 +54,6 @@ public class World implements NbtSerializable {
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		CompoundTag tilesTag = new CompoundTag();
-
-//		TilePallet pallet = new TilePallet();
-//		forEach(tile -> {
-//			CompoundTag tileTag = new CompoundTag();
-//
-//			tileTag.putInt("id", pallet.add(tile.getTile()));
-//			tile.toNbt(tileTag);
-//			tilesTag.put(tile.x + " " + tile.y, tileTag);
-//		});
-//
-//		CompoundTag palletTag = new CompoundTag();
-//		pallet.toNbt(palletTag);
-//		tag.put("pallet", palletTag);
 
 		for (int x = 0; x < this.width; x ++) {
 			for (int y = 0; y < this.height; y ++) {
@@ -87,15 +75,12 @@ public class World implements NbtSerializable {
 	}
 
 	public static World load(CompoundTag tag) {
-//		TilePallet pallet = new TilePallet();
-//		pallet.fromNbt(tag.getCompoundTag("pallet"));
-
 		CompoundTag tilesTag = tag.getCompoundTag("tiles");
 		World world = new World(tag.getInt("width"), tag.getInt("height"));
 
 		for (int x = 0; x < world.width; x ++) {
 			for (int y = 0; y < world.height; y ++) {
-				world.tiles[x][y] .fromNbt(tilesTag.getCompoundTag(x + " " + y));
+				world.tiles[x][y].load(world, x, y, tilesTag);
 			}
 		}
 
@@ -110,30 +95,57 @@ public class World implements NbtSerializable {
 		}
 	}
 
-	public boolean isPositionInvalid(int x, int y) {
-		return x < 0 || y < 0 || x >= width || y >= height;
-	}
-
-	public TileState getTileState(int x, int y) {
-		if (isPositionInvalid(x, y)) {
+	public void assertPosition(int x, int y) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
 			throw new IndexOutOfBoundsException("Position (" + x + ", " + y + ") is out of world bounds!");
 		}
+	}
+
+	/**
+	 *  @throws IndexOutOfBoundsException if the given position is invalid
+	 */
+	public TileState getTileState(int x, int y) {
+		assertPosition(x, y);
 
 		return this.tiles[x][y].state;
 	}
 
+	/**
+	 *  @throws IndexOutOfBoundsException if the given position is invalid
+	 */
 	public void setTileState(int x, int y, TileState state) {
-		if (isPositionInvalid(x, y)) {
-			throw new IndexOutOfBoundsException("Position (" + x + ", " + y + ") is out of world bounds!");
-		}
+		assertPosition(x, y);
 
 		TilePoint point = this.tiles[x][y];
 
 		if (point.state != null) {
 			point.state.getTile().onRemoved(this, x, y, state);
+
+			if (point.instance != null) {
+				point.instance = null;
+			}
 		}
 
+		point.instance = state.getTile().getInstance(this, x, y);
 		point.state = state;
+	}
+
+	/**
+	 * Returns the tile instance of given type from the requested position,
+	 * or null if there is no tile instance at that position, or if it is of incorrect type.
+	 *
+	 * @throws IndexOutOfBoundsException if the given position is invalid
+	 */
+	public <T extends TileInstance> T getTileInstance(int x, int y, Class<T> clazz) {
+		assertPosition(x, y);
+
+		TileInstance instance = this.tiles[x][y].instance;
+
+		if (clazz.isInstance(instance)) {
+			return clazz.cast(instance);
+		}
+
+		return null;
 	}
 
 	public void draw(VertexBuffer buffer) {
@@ -156,22 +168,40 @@ public class World implements NbtSerializable {
 	}
 
 	static final class TilePoint implements NbtSerializable {
-		TileState state;
 
-		TilePoint(TileState state /*, TileInstance instance*/) {
+		TileState state;
+		TileInstance instance;
+
+		TilePoint(TileState state, TileInstance instance) {
 			this.state = state;
+			this.instance = instance;
 		}
 
 		@Override
 		public void toNbt(@NotNull CompoundTag tag) {
 			state.toNbt(tag);
 			tag.putString("id", Registries.TILES.getKey(state.getTile()));
+
+			if (instance != null) {
+				instance.toNbt(tag);
+			}
 		}
 
 		@Override
 		public void fromNbt(@NotNull CompoundTag tag) {
 			state = Registries.TILES.getElement(tag.getString("id")).getDefaultState().fromNbt(tag);
 		}
+
+		public void load(World world, int x, int y, CompoundTag tag) {
+			CompoundTag tile = tag.getCompoundTag(x + " " + y);
+			fromNbt(tile);
+			instance = state.getTile().getInstance(world, x, y);
+
+			if (instance != null) {
+				instance.fromNbt(tile);
+			}
+		}
+
 	}
 
 }

@@ -5,8 +5,7 @@ public class EnumProperty <T extends Enum<T>> extends Property<T> {
 	private final Class<?> clazz;
 	private final String name;
 
-	public EnumProperty(Class<T> clazz, String name, T fallback) {
-//		super(fallback);
+	public EnumProperty(Class<T> clazz, String name) {
 		this.clazz = clazz;
 		this.name = name;
 	}

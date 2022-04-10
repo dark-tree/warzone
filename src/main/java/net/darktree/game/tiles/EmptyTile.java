@@ -4,10 +4,16 @@ import net.darktree.game.Tile;
 import net.darktree.game.World;
 import net.darktree.game.state.BooleanProperty;
 import net.darktree.game.state.EnumProperty;
+import net.darktree.game.state.TileInstance;
 import net.darktree.game.state.TileState;
 import net.darktree.opengl.vertex.Renderer;
 import net.darktree.opengl.vertex.VertexBuffer;
+import net.querz.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.Random;
 
 public class EmptyTile extends Tile {
 
@@ -21,8 +27,8 @@ public class EmptyTile extends Tile {
 		EMPTY
 	}
 
-	public static EnumProperty<State> STATE = new EnumProperty<>(State.class, "state", State.EMPTY);
-	public static BooleanProperty DELETED = new BooleanProperty("deleted", false);
+	public static EnumProperty<State> STATE = new EnumProperty<>(State.class, "state");
+	public static BooleanProperty DELETED = new BooleanProperty("deleted");
 
 	@Override
 	protected TileState createDefaultState() {
@@ -112,6 +118,34 @@ public class EmptyTile extends Tile {
 			}
 		}catch (Exception ignore) {
 
+		}
+
+	}
+
+	@Override
+	public @Nullable TileInstance getInstance(World world, int x, int y) {
+		return new EmptyTileInstance(world, x, y, new Random().nextInt());
+	}
+
+	public static class EmptyTileInstance extends TileInstance {
+
+		int abc;
+
+		public EmptyTileInstance(World world, int x, int y, int abc) {
+			super(world, x, y);
+			this.abc = abc;
+		}
+
+		@Override
+		public void toNbt(@NotNull CompoundTag tag) {
+			super.toNbt(tag);
+			tag.putInt("abc", abc);
+		}
+
+		@Override
+		public void fromNbt(@NotNull CompoundTag tag) {
+			super.fromNbt(tag);
+			this.abc = tag.getInt("abc");
 		}
 
 	}

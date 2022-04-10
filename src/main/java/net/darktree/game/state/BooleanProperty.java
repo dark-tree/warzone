@@ -5,8 +5,7 @@ public class BooleanProperty extends Property<Boolean> {
 	private static final Boolean[] VALUES = new Boolean[] {false, true};
 	private final String name;
 
-	public BooleanProperty(String name, boolean fallback) {
-//		super(fallback);
+	public BooleanProperty(String name) {
 		this.name = name;
 	}
 
