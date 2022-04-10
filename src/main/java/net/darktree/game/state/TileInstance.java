@@ -1,4 +1,4 @@
 package net.darktree.game.state;
 
-public class TileEntity {
+public class TileInstance {
 }

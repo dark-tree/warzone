@@ -2,7 +2,7 @@ package net.darktree.game.state;
 
 import net.darktree.game.Tile;
 
-import java.util.*;
+import java.util.HashMap;
 
 public class PropertyTree {
 

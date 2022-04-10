@@ -2,9 +2,9 @@ package net.darktree.game.tiles;
 
 import net.darktree.game.Tile;
 import net.darktree.game.World;
-import net.darktree.game.state.TileState;
 import net.darktree.game.state.BooleanProperty;
 import net.darktree.game.state.EnumProperty;
+import net.darktree.game.state.TileState;
 import net.darktree.opengl.vertex.Renderer;
 import net.darktree.opengl.vertex.VertexBuffer;
 import org.lwjgl.glfw.GLFW;

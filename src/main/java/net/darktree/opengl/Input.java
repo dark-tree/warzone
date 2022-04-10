@@ -1,9 +1,13 @@
 package net.darktree.opengl;
 
 import net.darktree.Main;
-import net.darktree.game.state.TileState;
+import net.darktree.game.World;
 import net.darktree.util.Logger;
+import net.querz.nbt.io.NBTUtil;
+import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
+
+import java.io.IOException;
 
 public class Input {
 
@@ -36,24 +40,23 @@ public class Input {
 	}
 
 	void keyHandle(long handle, int key, int scancode, int action, int mods) {
-		// FIXME
-//		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_S) {
-//			CompoundTag tag = new CompoundTag();
-//			Main.world.toNbt(tag);
-//			try {
-//				NBTUtil.write(tag, "./map.dat", true);
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
-//			try {
-//				Main.world = World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_S) {
+			CompoundTag tag = new CompoundTag();
+			Main.world.toNbt(tag);
+			try {
+				NBTUtil.write(tag, "./map.dat", true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
+			try {
+				Main.world = World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	void cursorHandle(long handle, double x, double y) {
@@ -75,10 +78,10 @@ public class Input {
 		float y = ((prevY / window.height() * 2 / scaleY) + offsetY) * scaleY * Main.world.height/2;
 
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
-			TileState state = Main.world.getTileState((int) x, Main.world.height - (int) y);
+			try {
+				Main.world.getTileState((int) x, Main.world.height - (int) y).getTile().onInteract(Main.world, (int) x, Main.world.height - (int) y, action);;
+			}catch (IndexOutOfBoundsException ignore) {
 
-			if (state != null) {
-				state.getTile().onInteract(Main.world, (int) x, Main.world.height - (int) y, action);
 			}
 		}
 
