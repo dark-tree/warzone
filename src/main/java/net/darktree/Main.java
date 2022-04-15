@@ -62,7 +62,6 @@ public class Main {
 
 		world = new World(8, 8);
 		world.loadTiles(pos -> Tiles.EMPTY.getDefaultState());
-		World.init();
 
 		while ( !window.shouldClose() ) {
 			Renderer.clear();

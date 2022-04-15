@@ -17,26 +17,6 @@ public class World implements NbtSerializable {
 	final public int width, height;
 	final private TilePoint[][] tiles;
 
-	static Atlas atlas;
-
-	public static Sprite EMPTY, CIRCLE, CROSS, DELETED;
-
-	public static void init() {
-		// FIXME, let's not do it here
-		atlas = Atlas.createEmpty();
-		var ref1 = atlas.add("sprites/empty.png");
-		var ref2 = atlas.add("sprites/circle-2.png");
-		var ref3 = atlas.add("sprites/cross.png");
-		var ref4 = atlas.add("sprites/deleted.png");
-		atlas.freeze();
-		atlas.texture.upload();
-
-		EMPTY = ref1.sprite();
-		CIRCLE = ref2.sprite();
-		CROSS = ref3.sprite();
-		DELETED = ref4.sprite();
-	}
-
 	public static boolean circle = true;
 
 	public World(int width, int height) {
@@ -149,7 +129,7 @@ public class World implements NbtSerializable {
 	}
 
 	public void draw(VertexBuffer buffer) {
-		atlas.texture.bind();
+		Registries.ATLAS.texture.bind();
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {

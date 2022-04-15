@@ -3,17 +3,20 @@ package net.darktree.lt2d.world.state;
 import net.darktree.lt2d.world.Tile;
 import net.darktree.lt2d.world.state.property.Property;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class PropertyTree {
 
+	private final List<TileState> states = new ArrayList<>();
 	private final Property<?>[] keys;
 	private final Object tree;
 	private final int size;
 
 	public PropertyTree(Tile tile, Property<?>... properties) {
 		this.size = properties.length;
-		this.tree = properties.length > 0 ? getDefaultTree(tile, properties, 0, new HashMap<>()) : new TileState(tile, new HashMap<>(), this);
+		this.tree = properties.length > 0 ? getDefaultTree(tile, properties, 0, new HashMap<>()) : produceState(tile, new HashMap<>());
 		this.keys = properties;
 	}
 
@@ -30,12 +33,18 @@ public class PropertyTree {
 			if (next < size) {
 				map.put(value, getDefaultTree(tile, properties, next, current));
 			} else {
-				map.put(value, new TileState(tile, current, this));
+				map.put(value, produceState(tile, current));
 			}
 
 		}
 
 		return map;
+	}
+
+	private TileState produceState(Tile tile, HashMap<Property<?>, Object> config) {
+		TileState state = new TileState(tile, config, this);
+		states.add(state);
+		return state;
 	}
 
 	TileState get(HashMap<Property<?>, Object> config, Property<?> key, Object value) {
@@ -62,4 +71,7 @@ public class PropertyTree {
 		return this.keys;
 	}
 
+	public List<TileState> getStates() {
+		return states;
+	}
 }

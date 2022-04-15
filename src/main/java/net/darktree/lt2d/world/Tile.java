@@ -1,5 +1,6 @@
 package net.darktree.lt2d.world;
 
+import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.Renderer;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.world.state.TileState;
@@ -7,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class Tile {
 	public final TileState state;
+	protected String name = null;
 
 	public Tile() {
 		this.state = createDefaultState();
@@ -21,7 +23,7 @@ public abstract class Tile {
 	}
 
 	public void draw(World world, int x, int y, VertexBuffer buffer) {
-		Renderer.quad(buffer, x, y, 1, 1, World.EMPTY);
+		Renderer.quad(buffer, x, y, 1, 1, Registries.TILE_SPRITES.get(this.name));
 	}
 
 	public void onInteract(World world, int x, int y, int mode) {
@@ -32,11 +34,18 @@ public abstract class Tile {
 
 	}
 
+	public void setName(String name) {
+		if (this.name == null) {
+			this.name = name;
+		}else{
+			throw new RuntimeException("Tile name already set!");
+		}
+	}
+
 	/**
 	 * Return the Tile Instance for this tile, or null if there should be no tile instance
 	 */
 	public @Nullable TileInstance getInstance(World world, int x, int y) {
 		return null;
 	}
-
 }

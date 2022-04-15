@@ -1,18 +1,20 @@
 package net.darktree.lt2d.graphics.image;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Atlas {
 
 	public Texture texture;
 	Image image;
 	List<SpriteReference> taken;
+	Map<String, SpriteReference> sprites;
 	boolean frozen = false;
 
 	private Atlas(Image image) {
 		this.image = image;
 		this.taken = new ArrayList<>();
+		this.sprites = new HashMap<>();
 	}
 
 	public static Atlas createEmpty() {
@@ -33,7 +35,7 @@ public class Atlas {
 		return new SpriteReference(x, y, x + w - 1, y + h - 1).sprite();
 	}
 
-	public SpriteReference add(Image sprite) {
+	public SpriteReference add(String identifier, Image sprite) {
 		if (this.frozen) {
 			throw new RuntimeException("This atlas is frozen!");
 		}
@@ -54,6 +56,7 @@ public class Atlas {
 
 					this.image.write(sprite, x, y);
 					this.taken.add(reference);
+					this.sprites.put(identifier, reference);
 					return reference;
 				}
 			}
@@ -64,18 +67,23 @@ public class Atlas {
 		this.image.close();
 		this.image = atlas;
 
-		return add(sprite);
+		return add(identifier, sprite);
 	}
 
-	public SpriteReference add(String resource) {
+	public SpriteReference add(String resource, String identifier) {
 		try (Image texture = Image.of(resource, image.format)) {
-			return add(texture);
+			return add(identifier, texture);
 		}
 	}
 
-	public void freeze() {
+	public SpriteReference add(String resource) {
+		return add(resource, resource);
+	}
+
+	public List<Map.Entry<String, Sprite>> freeze() {
 		this.frozen = true;
 		this.texture = this.image.asTexture(false);
+		return this.sprites.entrySet().stream().map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue().sprite())).collect(Collectors.toList());
 	}
 
 	private boolean contains(int x, int y, Image image) {

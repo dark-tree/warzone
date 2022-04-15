@@ -7,12 +7,14 @@ import java.util.function.Consumer;
 public class Registry<T> {
 
 	private final Consumer<Entry<T>> listener;
+	private final Consumer<Registry<T>> finalizer;
 	private final ArrayList<Entry<T>> list = new ArrayList<>();
 	private final HashMap<String, Entry<T>> registry = new HashMap<>();
 	private final HashMap<T, Entry<T>> lookup = new HashMap<>();
 
-	public Registry(Consumer<Entry<T>> listener) {
+	public Registry(Consumer<Entry<T>> listener, Consumer<Registry<T>> finalizer) {
 		this.listener = listener;
+		this.finalizer = finalizer;
 	}
 
 	public T register(String key, T value) {
@@ -48,6 +50,10 @@ public class Registry<T> {
 
 	public String getKey(T value) {
 		return this.lookup.get(value).key;
+	}
+
+	public void freeze() {
+		this.finalizer.accept(this);
 	}
 
 	public record Entry<T>(int identifier, String key, T value) {

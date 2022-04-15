@@ -3,6 +3,7 @@ package net.darktree.lt2d.util;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class Resources {
 
@@ -14,13 +15,19 @@ public class Resources {
 	}
 
 	public static Path location(String path) {
-		Path location = Path.of(LOADER.getResource(path).getPath());
+		try {
+			Path location = Path.of(Objects.requireNonNull(LOADER.getResource(path)).getPath());
 
-		if( Files.exists(location) ) {
-			return location;
-		}else{
-			return Path.of(WORKPLACE + "/" + path);
+			if( Files.exists(location) ) {
+				return location;
+			}else{
+				return Path.of(WORKPLACE + "/" + path);
+			}
+		}catch (Exception exception) {
+			Logger.warn("Failed to locate resource ", path);
 		}
+
+		return null;
 	}
 
 	public static String contents(String path) throws IOException {
