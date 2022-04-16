@@ -2,7 +2,10 @@ package net.darktree.lt2d.graphics;
 
 import net.darktree.Main;
 import net.darktree.lt2d.util.Logger;
+import net.darktree.lt2d.world.path.Pathfinder;
 import net.darktree.lt2d.world.World;
+import net.darktree.lt2d.world.entities.MovingEntity;
+import net.darktree.lt2d.world.path.Path;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
@@ -56,6 +59,14 @@ public class Input {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+
+		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_SPACE) {
+			Pathfinder pathfinder = new Pathfinder(Main.world, 0, 0, 50);
+			Logger.info("canReach: ", pathfinder.canReach(5, 5));
+			Path path = pathfinder.getPathTo(5, 5);
+
+			((MovingEntity) Main.world.getEntities().get(0)).follow(path);
 		}
 	}
 

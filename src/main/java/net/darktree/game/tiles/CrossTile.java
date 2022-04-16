@@ -13,6 +13,8 @@ public class CrossTile extends Tile {
 		return TileState.createOf(this, DELETED).with(DELETED, false);
 	}
 
-
+	public boolean canPathfindThrough() {
+		return false;
+	}
 
 }

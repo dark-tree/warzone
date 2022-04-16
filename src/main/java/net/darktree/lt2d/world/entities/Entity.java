@@ -1,8 +1,9 @@
-package net.darktree.lt2d.world;
+package net.darktree.lt2d.world.entities;
 
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
+import net.darktree.lt2d.world.World;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 

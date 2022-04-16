@@ -3,6 +3,7 @@ package net.darktree.lt2d.world;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
+import net.darktree.lt2d.world.entities.Entity;
 import net.darktree.lt2d.world.state.TileState;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -106,6 +107,10 @@ public class World implements NbtSerializable {
 
 	public Entity getEntity(int x, int y) {
 		return this.entities.stream().filter(entity -> entity.isAt(x, y)).findFirst().orElse(null);
+	}
+
+	public List<Entity> getEntities() {
+		return entities;
 	}
 
 	/**

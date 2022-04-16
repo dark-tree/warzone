@@ -42,6 +42,10 @@ public abstract class Tile {
 		}
 	}
 
+	public boolean canPathfindThrough() {
+		return true;
+	}
+
 	/**
 	 * Return the Tile Instance for this tile, or null if there should be no tile instance
 	 */
