@@ -1,14 +1,14 @@
 package net.darktree.lt2d.world;
 
 import net.darktree.lt2d.Registries;
-import net.darktree.lt2d.graphics.image.Atlas;
-import net.darktree.lt2d.graphics.image.Sprite;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
 import net.darktree.lt2d.world.state.TileState;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -16,6 +16,7 @@ public class World implements NbtSerializable {
 
 	final public int width, height;
 	final private TilePoint[][] tiles;
+	final private List<Entity> entities = new ArrayList<>();
 
 	public static boolean circle = true;
 
@@ -43,9 +44,18 @@ public class World implements NbtSerializable {
 			}
 		}
 
+		CompoundTag entitiesTag = new CompoundTag();
+
+		for (int i = 0; i < this.entities.size(); i ++) {
+			CompoundTag entityTag = new CompoundTag();
+			this.entities.get(i).toNbt(entityTag);
+			entitiesTag.put(String.valueOf(i), entityTag);
+		}
+
 		tag.putInt("width", this.width);
 		tag.putInt("height", this.height);
 		tag.put("tiles", tilesTag);
+		tag.put("entities", entitiesTag);
 	}
 
 	// should we implement NbtSerializable if that operation is unsupported?
@@ -56,6 +66,7 @@ public class World implements NbtSerializable {
 
 	public static World load(CompoundTag tag) {
 		CompoundTag tilesTag = tag.getCompoundTag("tiles");
+		CompoundTag entitiesTag = tag.getCompoundTag("entities");
 		World world = new World(tag.getInt("width"), tag.getInt("height"));
 
 		for (int x = 0; x < world.width; x ++) {
@@ -63,6 +74,10 @@ public class World implements NbtSerializable {
 				world.tiles[x][y].load(world, x, y, tilesTag);
 			}
 		}
+
+		entitiesTag.forEach(entry -> {
+			world.addEntity(Entity.load(world, (CompoundTag) entry.getValue()));
+		});
 
 		return world;
 	}
@@ -79,6 +94,18 @@ public class World implements NbtSerializable {
 		if (x < 0 || y < 0 || x >= width || y >= height) {
 			throw new IndexOutOfBoundsException("Position (" + x + ", " + y + ") is out of world bounds!");
 		}
+	}
+
+	public void addEntity(Entity entity) {
+		this.entities.add(entity);
+	}
+
+	public void addEntity(int x, int y, Entity.Type type) {
+		this.entities.add(type.construct(this, x, y));
+	}
+
+	public Entity getEntity(int x, int y) {
+		return this.entities.stream().filter(entity -> entity.isAt(x, y)).findFirst().orElse(null);
 	}
 
 	/**
@@ -129,13 +156,17 @@ public class World implements NbtSerializable {
 	}
 
 	public void draw(VertexBuffer buffer) {
+		this.entities.removeIf(entity -> entity.removed);
+
 		Registries.ATLAS.texture.bind();
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.tiles[x][y].state.getTile().draw(this, x, y, buffer);
+				this.tiles[x][y].state.getTile().draw(x, y, buffer);
 			}
 		}
+
+		this.entities.forEach(entity -> entity.draw(buffer));
 	}
 
 	@Deprecated

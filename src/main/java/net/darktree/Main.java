@@ -63,6 +63,8 @@ public class Main {
 		world = new World(8, 8);
 		world.loadTiles(pos -> Tiles.EMPTY.getDefaultState());
 
+		world.addEntity(0, 0, Tiles.TEST);
+
 		while ( !window.shouldClose() ) {
 			Renderer.clear();
 

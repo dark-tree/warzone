@@ -22,7 +22,7 @@ public abstract class Tile {
 		return this.state;
 	}
 
-	public void draw(World world, int x, int y, VertexBuffer buffer) {
+	public void draw(int x, int y, VertexBuffer buffer) {
 		Renderer.quad(buffer, x, y, 1, 1, Registries.TILE_SPRITES.get(this.name));
 	}
 

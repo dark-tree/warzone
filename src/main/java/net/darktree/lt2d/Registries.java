@@ -3,6 +3,7 @@ package net.darktree.lt2d;
 import net.darktree.lt2d.graphics.image.Atlas;
 import net.darktree.lt2d.graphics.image.Sprite;
 import net.darktree.lt2d.util.Registry;
+import net.darktree.lt2d.world.Entity;
 import net.darktree.lt2d.world.Tile;
 
 import java.util.HashMap;
@@ -22,4 +23,7 @@ public class Registries {
 		});
 		ATLAS.texture.upload();
 	});
+
+	public static Registry<Entity.Type<?>> ENTITIES = new Registry<>(entry -> {}, registry -> {});
+
 }
