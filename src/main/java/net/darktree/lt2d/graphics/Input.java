@@ -85,18 +85,29 @@ public class Input {
 
 	// time_wasted_while_trying_to_fucking_make_this_work_again = 3.5h
 	void clickHandle(long handle, int button, int action, int mods) {
-		float x = ((prevX / window.width() * 2 / scaleX) - offsetX) * scaleX * Main.world.width/2;
-		float y = ((prevY / window.height() * 2 / scaleY) + offsetY) * scaleY * Main.world.height/2;
+
+		float screenSpaceX = prevX / window.width() * 2 - 1;
+		float screenSpaceY = prevY / window.height() * -2 + 1;
+
+		float worldSpaceX = screenSpaceX / scaleX;
+		float worldSpaceY = screenSpaceY / scaleY;
+
+		int mapSpaceX = (int) Math.floor(worldSpaceX - offsetX);
+		int mapSpaceY = (int) Math.floor(worldSpaceY - offsetY);
+
+		Logger.info(" -- MOUSE CLICK EVENT -- ");
+		Logger.info("Raw: ", prevX, " ", prevY);
+		Logger.info("ScreenSpace: ", screenSpaceX, " ", screenSpaceY);
+		Logger.info("WorldSpace: ", worldSpaceX, " ", worldSpaceY);
+		Logger.info("MapSpace: ", mapSpaceX, " ", mapSpaceY);
 
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
 			try {
-				Main.world.getTileState((int) x, Main.world.height - (int) y).getTile().onInteract(Main.world, (int) x, Main.world.height - (int) y, action);;
+				Main.world.getTileState(mapSpaceX, mapSpaceY).getTile().onInteract(Main.world, mapSpaceX, mapSpaceY, action);
 			}catch (IndexOutOfBoundsException ignore) {
 
 			}
 		}
-
-		Logger.info(x, " ", y);
 	}
 
 	void updateScale() {
