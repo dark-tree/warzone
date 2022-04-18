@@ -58,7 +58,7 @@ public class ScreenRenderer {
 		float px = sc / Window.INSTANCE.width();
 		float py = sc / Window.INSTANCE.height();
 
-		Renderer.quad(this.pipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, right * px, top * py, this.sprite);
+		Renderer.quad(this.pipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, right * px, top * py, this.sprite, 1, 1, 1, 0);
 		return this;
 	}
 

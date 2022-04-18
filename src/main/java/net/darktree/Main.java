@@ -1,5 +1,6 @@
 package net.darktree;
 
+import net.darktree.game.FunnyOverlay;
 import net.darktree.game.rendering.Buffers;
 import net.darktree.game.rendering.Shaders;
 import net.darktree.game.rendering.Uniforms;
@@ -64,6 +65,7 @@ public class Main {
 		world.loadTiles(pos -> Tiles.EMPTY.getDefaultState());
 
 		world.addEntity(0, 0, Tiles.TEST);
+		world.setOverlay(new FunnyOverlay());
 
 		while ( !window.shouldClose() ) {
 			Renderer.clear();

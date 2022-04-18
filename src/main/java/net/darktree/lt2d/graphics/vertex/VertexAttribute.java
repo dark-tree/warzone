@@ -9,7 +9,7 @@ public class VertexAttribute {
 
 	/**
 	 * Helper for setting VAO attributes,
-	 * learn more here: https://learnopengl.com/Getting-started/Hello-Triangle
+	 * learn more here: <a href="https://learnopengl.com/Getting-started/Hello-Triangle">https://learnopengl.com/Getting-started/Hello-Triangle</a>
 	 *
 	 * This method provides no way to normalize the data
 	 *

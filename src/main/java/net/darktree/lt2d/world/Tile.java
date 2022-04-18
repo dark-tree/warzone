@@ -23,7 +23,7 @@ public abstract class Tile {
 	}
 
 	public void draw(int x, int y, VertexBuffer buffer) {
-		Renderer.quad(buffer, x, y, 1, 1, Registries.TILE_SPRITES.get(this.name));
+		Renderer.tile(buffer, x, y, Registries.TILE_SPRITES.get(this.name));
 	}
 
 	public void onInteract(World world, int x, int y, int mode) {

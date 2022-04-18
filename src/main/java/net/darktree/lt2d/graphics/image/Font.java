@@ -48,7 +48,7 @@ public class Font {
 
 		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
 			Sprite sprite = this.sprite(chr);
-			Renderer.quad(buffer, x + offset, y, size, size, sprite);
+			Renderer.quad(buffer, x + offset, y, size, size, sprite, 1, 1, 1, 0);
 
 			offset += size;
 		}

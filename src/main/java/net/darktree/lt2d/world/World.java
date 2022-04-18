@@ -4,6 +4,7 @@ import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
 import net.darktree.lt2d.world.entities.Entity;
+import net.darktree.lt2d.world.overlay.Overlay;
 import net.darktree.lt2d.world.state.TileState;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +19,7 @@ public class World implements NbtSerializable {
 	final public int width, height;
 	final private TilePoint[][] tiles;
 	final private List<Entity> entities = new ArrayList<>();
+	private Overlay overlay = null;
 
 	public static boolean circle = true;
 
@@ -183,7 +185,15 @@ public class World implements NbtSerializable {
 		}
 	}
 
-	static final class TilePoint implements NbtSerializable {
+	public Overlay getOverlay() {
+		return this.overlay;
+	}
+
+	public void setOverlay(Overlay overlay) {
+		this.overlay = overlay;
+	}
+
+	static final public class TilePoint implements NbtSerializable {
 
 		TileState state;
 		TileInstance instance;
