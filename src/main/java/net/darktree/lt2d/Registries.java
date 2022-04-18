@@ -3,8 +3,8 @@ package net.darktree.lt2d;
 import net.darktree.lt2d.graphics.image.Atlas;
 import net.darktree.lt2d.graphics.image.Sprite;
 import net.darktree.lt2d.util.Registry;
-import net.darktree.lt2d.world.entities.Entity;
 import net.darktree.lt2d.world.Tile;
+import net.darktree.lt2d.world.entities.Entity;
 
 import java.util.HashMap;
 import java.util.Map;

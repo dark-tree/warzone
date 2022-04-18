@@ -2,10 +2,10 @@ package net.darktree.lt2d.graphics;
 
 import net.darktree.Main;
 import net.darktree.lt2d.util.Logger;
-import net.darktree.lt2d.world.path.Pathfinder;
 import net.darktree.lt2d.world.World;
 import net.darktree.lt2d.world.entities.MovingEntity;
 import net.darktree.lt2d.world.path.Path;
+import net.darktree.lt2d.world.path.Pathfinder;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
@@ -83,27 +83,14 @@ public class Input {
 		prevY = (float) y;
 	}
 
-	// time_wasted_while_trying_to_fucking_make_this_work_again = 3.5h
 	void clickHandle(long handle, int button, int action, int mods) {
+		int x = (int) ((prevX / window.width() * 2 - 1) / scaleX - offsetX);
+		int y = (int) ((prevY / window.height() * -2 + 1) / scaleY - offsetY);
 
-		float screenSpaceX = prevX / window.width() * 2 - 1;
-		float screenSpaceY = prevY / window.height() * -2 + 1;
-
-		float worldSpaceX = screenSpaceX / scaleX;
-		float worldSpaceY = screenSpaceY / scaleY;
-
-		int mapSpaceX = (int) Math.floor(worldSpaceX - offsetX);
-		int mapSpaceY = (int) Math.floor(worldSpaceY - offsetY);
-
-		Logger.info(" -- MOUSE CLICK EVENT -- ");
-		Logger.info("Raw: ", prevX, " ", prevY);
-		Logger.info("ScreenSpace: ", screenSpaceX, " ", screenSpaceY);
-		Logger.info("WorldSpace: ", worldSpaceX, " ", worldSpaceY);
-		Logger.info("MapSpace: ", mapSpaceX, " ", mapSpaceY);
-
+		// TODO make better
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
 			try {
-				Main.world.getTileState(mapSpaceX, mapSpaceY).getTile().onInteract(Main.world, mapSpaceX, mapSpaceY, action);
+				Main.world.getTileState(x, y).getTile().onInteract(Main.world, x, y, action);
 			}catch (IndexOutOfBoundsException ignore) {
 
 			}
@@ -115,7 +102,6 @@ public class Input {
 		scaleY = zoom;
 	}
 
-	// time_wasted_while_trying_to_fucking_make_this_work_again = 2.5h
 	void scrollHandle(long handle, double x, double y) {
 		zoom += (float) (zoom * y * 0.15f);
 

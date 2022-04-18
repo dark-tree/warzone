@@ -3,7 +3,6 @@ package net.darktree.lt2d.world.path;
 import net.darktree.lt2d.world.TilePos;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

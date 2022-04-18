@@ -101,7 +101,7 @@ public class World implements NbtSerializable {
 		this.entities.add(entity);
 	}
 
-	public void addEntity(int x, int y, Entity.Type type) {
+	public void addEntity(int x, int y, Entity.Type<?> type) {
 		this.entities.add(type.construct(this, x, y));
 	}
 
