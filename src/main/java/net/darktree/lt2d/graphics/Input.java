@@ -1,7 +1,6 @@
 package net.darktree.lt2d.graphics;
 
 import net.darktree.Main;
-import net.darktree.lt2d.util.Logger;
 import net.darktree.lt2d.world.World;
 import net.darktree.lt2d.world.entities.MovingEntity;
 import net.darktree.lt2d.world.path.Path;

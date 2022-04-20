@@ -67,11 +67,7 @@ public class VertexBuffer implements AutoCloseable {
 	}
 
 	public static Builder create() {
-		return create(Primitive.TRIANGLES);
-	}
-
-	public static Builder create(Primitive primitive) {
-		return new Builder(primitive.type);
+		return new Builder();
 	}
 
 	@Override
@@ -92,8 +88,8 @@ public class VertexBuffer implements AutoCloseable {
 
 		int stride = 0;
 
-		private Builder(int primitive) {
-			this.primitive = primitive;
+		private Builder() {
+			this.primitive = GL32.GL_TRIANGLES;
 		}
 
 		private void apply() {
@@ -103,7 +99,7 @@ public class VertexBuffer implements AutoCloseable {
 				attribute.apply(index, this.stride, offset);
 
 				index ++;
-				offset += attribute.length * attribute.type.size;
+				offset += attribute.length;
 			}
 		}
 
@@ -112,22 +108,15 @@ public class VertexBuffer implements AutoCloseable {
 		 */
 		public Builder attribute(VertexAttribute attribute) {
 			this.attributes.add(attribute);
-			this.stride += attribute.length * attribute.type.size;
+			this.stride += attribute.length;
 			return this;
 		}
 
 		/**
-		 * Add simple vertex attribute
-		 */
-		public Builder attribute(int length, VertexAttribute.Type type) {
-			return this.attribute( new VertexAttribute(length, type) );
-		}
-
-		/**
-		 * Add simple vertex float attribute
+		 * Add simple float vertex attribute
 		 */
 		public Builder attribute(int length) {
-			return this.attribute(length, VertexAttribute.Type.FLOAT);
+			return this.attribute(new VertexAttribute(length));
 		}
 
 		public VertexBuffer build() {
