@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PropertyTree {
 
-	private final List<TileState> states = new ArrayList<>();
+	private final List<TileVariant> states = new ArrayList<>();
 	private final Property<?>[] keys;
 	private final Object tree;
 	private final int size;
@@ -41,23 +41,23 @@ public class PropertyTree {
 		return map;
 	}
 
-	private TileState produceState(Tile tile, HashMap<Property<?>, Object> config) {
-		TileState state = new TileState(tile, config, this);
+	private TileVariant produceState(Tile tile, HashMap<Property<?>, Object> config) {
+		TileVariant state = new TileVariant(tile, config, this);
 		states.add(state);
 		return state;
 	}
 
-	TileState get(HashMap<Property<?>, Object> config, Property<?> key, Object value) {
+	TileVariant get(HashMap<Property<?>, Object> config, Property<?> key, Object value) {
 		Object current = this.tree;
 
 		for (int i = 0; i < this.size; i ++) {
 			current = (keys[i] == key ? ((HashMap<?, ?>) current).get(value) : ((HashMap<?, ?>) current).get(config.get(keys[i])));
 		}
 
-		return (TileState) current;
+		return (TileVariant) current;
 	}
 
-	TileState getDefault() {
+	TileVariant getDefault() {
 		HashMap<Property<?>, Object> config = new HashMap<>();
 
 		for (Property<?> property : this.keys) {
@@ -71,7 +71,7 @@ public class PropertyTree {
 		return this.keys;
 	}
 
-	public List<TileState> getStates() {
+	public List<TileVariant> getStates() {
 		return states;
 	}
 }

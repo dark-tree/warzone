@@ -63,8 +63,7 @@ public class Input {
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_SPACE) {
 			Pathfinder pathfinder = new Pathfinder(Main.world, 0, 0, 50);
-			Logger.info("canReach: ", pathfinder.canReach(5, 5));
-			Path path = pathfinder.getPathTo(5, 5);
+			Path path = pathfinder.getPathTo(7, 7);
 
 			((MovingEntity) Main.world.getEntities().get(0)).follow(path);
 		}

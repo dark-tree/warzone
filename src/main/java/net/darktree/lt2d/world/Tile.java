@@ -3,22 +3,22 @@ package net.darktree.lt2d.world;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.Renderer;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
-import net.darktree.lt2d.world.state.TileState;
+import net.darktree.lt2d.world.state.TileVariant;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Tile {
-	public final TileState state;
+	public final TileVariant state;
 	protected String name = null;
 
 	public Tile() {
 		this.state = createDefaultState();
 	}
 
-	protected TileState createDefaultState() {
-		return TileState.createOf(this);
+	protected TileVariant createDefaultState() {
+		return TileVariant.createOf(this);
 	}
 
-	public TileState getDefaultState() {
+	public TileVariant getDefaultState() {
 		return this.state;
 	}
 
@@ -30,7 +30,7 @@ public abstract class Tile {
 
 	}
 
-	public void onRemoved(World world, int x, int y, TileState state) {
+	public void onRemoved(World world, int x, int y, TileVariant state) {
 
 	}
 

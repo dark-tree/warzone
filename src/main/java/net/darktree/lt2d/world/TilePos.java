@@ -1,6 +1,5 @@
 package net.darktree.lt2d.world;
 
-@Deprecated
 public class TilePos {
 	public final int x, y;
 
