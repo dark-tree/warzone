@@ -2,6 +2,7 @@ package net.darktree.lt2d.graphics.vertex;
 
 import net.darktree.Main;
 import net.darktree.lt2d.graphics.image.Sprite;
+import net.darktree.lt2d.world.TileState;
 import net.darktree.lt2d.world.overlay.Color;
 import net.darktree.lt2d.world.overlay.Overlay;
 import org.lwjgl.opengl.GL32;
@@ -11,11 +12,11 @@ public class Renderer {
 
 	private final static Color COLOR = new Color();
 
-	public static void tile(VertexBuffer buffer, int x, int y, Sprite sprite) {
+	public static void tile(VertexBuffer buffer, int x, int y, TileState state, Sprite sprite) {
 		Overlay overlay = Main.world.getOverlay();
 
 		if (overlay != null) {
-			overlay.getColor(x, y, Main.world, COLOR);
+			overlay.getColor(Main.world, x, y, state, COLOR);
 		}else{
 			COLOR.clear();
 		}

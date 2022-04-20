@@ -22,8 +22,8 @@ public abstract class Tile {
 		return this.state;
 	}
 
-	public void draw(int x, int y, VertexBuffer buffer) {
-		Renderer.tile(buffer, x, y, Registries.TILE_SPRITES.get(this.name));
+	public void draw(int x, int y, TileState state, VertexBuffer buffer) {
+		Renderer.tile(buffer, x, y, state, Registries.TILE_SPRITES.get(this.name));
 	}
 
 	public void onInteract(World world, int x, int y, int mode) {

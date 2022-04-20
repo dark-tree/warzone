@@ -156,7 +156,8 @@ public class World implements NbtSerializable {
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.tiles[x][y].getTile().draw(x, y, buffer);
+				TileState state = this.tiles[x][y];
+				state.getTile().draw(x, y, state, buffer);
 			}
 		}
 
