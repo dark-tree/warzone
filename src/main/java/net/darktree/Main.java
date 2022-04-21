@@ -61,16 +61,16 @@ public class Main {
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
 
 		world = new World(8, 8);
-		world.loadTiles(pos -> Tiles.EMPTY.getDefaultState());
+		world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
 
 		world.addEntity(0, 0, Tiles.TEST);
-		world.setOverlay((world1, x, y, state, color) -> {
-			if (y % 2 == 0) {
-				color.set(0.8f, 0.2f, 0.2f, 0.2f);
-			}else{
-				color.clear();
-			}
-		});
+//		world.setOverlay((world1, x, y, state, color) -> {
+//			if (y % 2 == 0) {
+//				color.set(0.8f, 0.2f, 0.2f, 0.2f);
+//			}else{
+//				color.clear();
+//			}
+//		});
 
 		while ( !window.shouldClose() ) {
 			Renderer.clear();

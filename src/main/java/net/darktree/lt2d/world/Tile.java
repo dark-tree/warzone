@@ -7,19 +7,19 @@ import net.darktree.lt2d.world.state.TileVariant;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Tile {
-	public final TileVariant state;
+	public final TileVariant variant;
 	protected String name = null;
 
 	public Tile() {
-		this.state = createDefaultState();
+		this.variant = createDefaultVariant();
 	}
 
-	protected TileVariant createDefaultState() {
+	protected TileVariant createDefaultVariant() {
 		return TileVariant.createOf(this);
 	}
 
-	public TileVariant getDefaultState() {
-		return this.state;
+	public TileVariant getDefaultVariant() {
+		return this.variant;
 	}
 
 	public void draw(int x, int y, TileState state, VertexBuffer buffer) {

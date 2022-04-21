@@ -21,8 +21,6 @@ public class World implements NbtSerializable {
 	final private List<Entity> entities = new ArrayList<>();
 	private Overlay overlay = null;
 
-	public static boolean circle = true;
-
 	public World(int width, int height) {
 		this.width = width;
 		this.height = height;

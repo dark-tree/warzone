@@ -14,7 +14,7 @@ public class TestEntity extends MovingEntity {
 
 	public void draw(VertexBuffer buffer) {
 		super.draw(buffer);
-		Renderer.quad(buffer, x, y, 1, 1, Registries.TILE_SPRITES.get("circle"), 1, 1, 1, 0);
+		Renderer.quad(buffer, x, y, 1, 1, Registries.TILE_SPRITES.get("material_ore"), 1, 1, 1, 0);
 	}
 
 }

@@ -33,7 +33,7 @@ final public class TileState implements NbtSerializable {
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
-		variant = Registries.TILES.getElement(tag.getString("id")).getDefaultState().fromNbt(tag);
+		variant = Registries.TILES.getElement(tag.getString("id")).getDefaultVariant().fromNbt(tag);
 		owner.fromNbt(tag);
 	}
 

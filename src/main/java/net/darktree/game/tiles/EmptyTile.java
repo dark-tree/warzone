@@ -1,5 +1,6 @@
 package net.darktree.game.tiles;
 
+import net.darktree.lt2d.graphics.Window;
 import net.darktree.lt2d.world.Tile;
 import net.darktree.lt2d.world.TileInstance;
 import net.darktree.lt2d.world.World;
@@ -21,11 +22,8 @@ public class EmptyTile extends Tile {
 
 	@Override
 	public void onInteract(World world, int x, int y, int mode) {
-		Tile tile = world.getTileState(x, y).getTile();
-
-		if (mode == GLFW.GLFW_PRESS && tile == Tiles.EMPTY) {
-			world.setTileState(x, y, World.circle ? Tiles.CIRCLE.state : Tiles.CROSS.state);
-			World.circle = !World.circle;
+		if (mode == GLFW.GLFW_PRESS) {
+			world.setTileState(x, y, Window.INSTANCE.input().isKeyPressed(GLFW.GLFW_KEY_W) ? Tiles.WATER.getDefaultVariant() : Tiles.MATERIAL.getDefaultVariant());
 		}
 	}
 
