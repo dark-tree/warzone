@@ -40,10 +40,10 @@ public class Pathfinder {
 		TilePos pos = new TilePos(x, y);
 		path.addTarget(pos);
 
-		do {
+		while (this.field[pos.x][pos.y] != 1) {
 			pos = getLowerNeighbour(pos.x, pos.y);
 			path.addTarget(pos);
-		} while (this.field[pos.x][pos.y] != 1);
+		}
 
 		path.reverseAll();
 		return path;

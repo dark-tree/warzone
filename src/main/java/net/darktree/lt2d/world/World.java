@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class World implements NbtSerializable {
@@ -160,6 +161,10 @@ public class World implements NbtSerializable {
 		}
 
 		this.entities.forEach(entity -> entity.draw(buffer));
+	}
+
+	public void getPatternTiles(Pattern pattern, int x, int y, Consumer<TileState> consumer) {
+		pattern.iterate(this, x, y, pos -> consumer.accept(this.tiles[pos.x][pos.y]));
 	}
 
 	public Overlay getOverlay() {

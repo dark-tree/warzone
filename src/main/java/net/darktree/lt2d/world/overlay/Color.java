@@ -10,6 +10,13 @@ public class Color {
 		this.a = a;
 	}
 
+	public void set(float r, float g, float b) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.a = 0.2f;
+	}
+
 	public void clear() {
 		this.a = 0;
 	}

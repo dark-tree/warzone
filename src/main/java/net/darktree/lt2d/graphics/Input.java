@@ -1,8 +1,11 @@
 package net.darktree.lt2d.graphics;
 
 import net.darktree.Main;
+import net.darktree.game.country.Symbol;
+import net.darktree.lt2d.world.Pattern;
 import net.darktree.lt2d.world.World;
 import net.darktree.lt2d.world.entities.MovingEntity;
+import net.darktree.lt2d.world.overlay.PathfinderOverlay;
 import net.darktree.lt2d.world.path.Path;
 import net.darktree.lt2d.world.path.Pathfinder;
 import net.querz.nbt.io.NBTUtil;
@@ -60,11 +63,28 @@ public class Input {
 			}
 		}
 
-		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_SPACE) {
-			Pathfinder pathfinder = new Pathfinder(Main.world, 0, 0, 50);
-			Path path = pathfinder.getPathTo(7, 7);
+		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
+			Main.world.setOverlay((world, x, y, state, color) -> {
+				if (state.getOwner().getSymbol() != Symbol.UNOWNED) {
+					color.set(1, 1, 1);
+				}else{
+					color.set(0, 0, 0);
+				}
+			});
+		}
 
-			((MovingEntity) Main.world.getEntities().get(0)).follow(path);
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
+			if (entity != null) {
+				Symbol symbol = Main.world.getTileState(entity.getX(), entity.getY()).getOwner().getSymbol();
+
+				Main.world.getPatternTiles(Pattern.nextColonizationPattern(), entity.getX(), entity.getY(), state -> {
+					state.getOwner().setSymbol(symbol);
+				});
+			}
+		}
+
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
+			Main.world.getTileState(2, 2).getOwner().setSymbol(Symbol.CIRCLE);
 		}
 	}
 
@@ -81,15 +101,51 @@ public class Input {
 		prevY = (float) y;
 	}
 
+	/**
+	 * Just for shits and giggles (and testing), pathfinding ofc won't be done here later on
+	 * TODO: Remove this
+	 */
+	private Pathfinder pathfinder = null;
+	private MovingEntity entity = null;
+
+	void pathfinderBegin(int x, int y) {
+		pathfinder = new Pathfinder(Main.world, x, y, 5);
+		Main.world.setOverlay(new PathfinderOverlay(pathfinder));
+	}
+
+	void pathfinderApply(MovingEntity entity, int x, int y) {
+		if (pathfinder != null) {
+			if (pathfinder.canReach(x, y)) {
+				Path path = pathfinder.getPathTo(x, y);
+				entity.follow(path);
+			}
+		}
+	}
+
 	void clickHandle(long handle, int button, int action, int mods) {
 		int x = (int) ((prevX / window.width() * 2 - 1) / scaleX - offsetX);
 		int y = (int) ((prevY / window.height() * -2 + 1) / scaleY - offsetY);
 
-		// TODO make better
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
-			try {
-				Main.world.getTileState(x, y).getTile().onInteract(Main.world, x, y, action);
-			}catch (IndexOutOfBoundsException ignore) {
+			if (Main.world.isPositionValid(x, y)) {
+
+				if (action == GLFW.GLFW_PRESS && isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
+					if (pathfinder == null) {
+						entity = (MovingEntity) Main.world.getEntity(x, y);
+
+						if (entity != null) {
+							pathfinderBegin(x, y);
+						}
+					}else{
+						pathfinderApply(entity, x, y);
+						pathfinder = null;
+						entity = null;
+						Main.world.setOverlay(null);
+					}
+				}else{
+					// TODO: map GLFW event to some event class/enum, don't pass raw 'action' as-is
+					Main.world.getTileState(x, y).getTile().onInteract(Main.world, x, y, action);
+				}
 
 			}
 		}

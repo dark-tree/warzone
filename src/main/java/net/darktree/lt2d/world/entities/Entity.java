@@ -26,6 +26,14 @@ public class Entity implements NbtSerializable {
 		return this.tx == x && this.ty == y;
 	}
 
+	public int getX() {
+		return tx;
+	}
+
+	public int getY() {
+		return ty;
+	}
+
 	public void setPos(int x, int y) {
 		this.x = this.tx = x;
 		this.y = this.ty = y;

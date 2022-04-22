@@ -64,6 +64,7 @@ public class Main {
 		world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
 
 		world.addEntity(0, 0, Tiles.TEST);
+
 //		world.setOverlay((world1, x, y, state, color) -> {
 //			if (y % 2 == 0) {
 //				color.set(0.8f, 0.2f, 0.2f, 0.2f);

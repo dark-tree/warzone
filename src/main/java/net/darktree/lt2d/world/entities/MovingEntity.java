@@ -7,7 +7,7 @@ import net.darktree.lt2d.world.path.Path;
 
 public class MovingEntity extends Entity {
 
-	float sx, sy;
+	private float sx, sy;
 	private Path path = null;
 
 	public MovingEntity(World world, int x, int y, Type<?> type) {
