@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class MaterialMineTile extends Tile {
 
-	public boolean canPathfindThrough() {
+	public boolean canPathfindThrough(World world, int x, int y) {
 		return false;
 	}
 

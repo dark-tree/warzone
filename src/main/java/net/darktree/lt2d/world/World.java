@@ -1,9 +1,11 @@
 package net.darktree.lt2d.world;
 
+import net.darktree.game.buildings.Building;
 import net.darktree.game.country.TileOwner;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
+import net.darktree.lt2d.util.Type;
 import net.darktree.lt2d.world.entities.Entity;
 import net.darktree.lt2d.world.overlay.Overlay;
 import net.darktree.lt2d.world.state.TileVariant;
@@ -11,6 +13,7 @@ import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -20,6 +23,7 @@ public class World implements NbtSerializable {
 	final public int width, height;
 	final private TileState[][] tiles;
 	final private List<Entity> entities = new ArrayList<>();
+	final private HashMap<TilePos, Building> buildings = new HashMap<>();
 	private Overlay overlay = null;
 
 	public World(int width, int height) {
@@ -100,7 +104,7 @@ public class World implements NbtSerializable {
 		this.entities.add(entity);
 	}
 
-	public void addEntity(int x, int y, Entity.Type<?> type) {
+	public void addEntity(int x, int y, Type<Entity> type) {
 		this.entities.add(type.construct(this, x, y));
 	}
 
@@ -175,4 +179,11 @@ public class World implements NbtSerializable {
 		this.overlay = overlay;
 	}
 
+	public Building getBuildingAt(int x, int y) {
+		return buildings.get(new TilePos(x, y));
+	}
+
+	public void setBuildingAt(int x, int y, Building building) {
+		buildings.put(new TilePos(x, y), building);
+	}
 }

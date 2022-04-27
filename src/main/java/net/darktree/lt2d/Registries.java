@@ -1,10 +1,12 @@
 package net.darktree.lt2d;
 
+import net.darktree.game.buildings.Building;
 import net.darktree.lt2d.graphics.image.Atlas;
 import net.darktree.lt2d.graphics.image.Image;
 import net.darktree.lt2d.graphics.image.Sprite;
 import net.darktree.lt2d.util.Logger;
 import net.darktree.lt2d.util.Registry;
+import net.darktree.lt2d.util.Type;
 import net.darktree.lt2d.world.Tile;
 import net.darktree.lt2d.world.entities.Entity;
 
@@ -33,6 +35,8 @@ public class Registries {
 		ATLAS.texture.upload();
 	});
 
-	public static Registry<Entity.Type<?>> ENTITIES = new Registry<>(entry -> {}, registry -> {});
+	public static Registry<Type<Entity>> ENTITIES = new Registry<>(entry -> {}, registry -> {});
+
+	public static Registry<Type<Building>> BUILDINGS = new Registry<>(entry -> {}, registry -> {});
 
 }

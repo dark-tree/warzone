@@ -1,6 +1,7 @@
 package net.darktree.lt2d.world.entities;
 
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
+import net.darktree.lt2d.util.Type;
 import net.darktree.lt2d.world.TilePos;
 import net.darktree.lt2d.world.World;
 import net.darktree.lt2d.world.path.Path;
@@ -10,7 +11,7 @@ public class MovingEntity extends Entity {
 	private float sx, sy;
 	private Path path = null;
 
-	public MovingEntity(World world, int x, int y, Type<?> type) {
+	public MovingEntity(World world, int x, int y, Type<Entity> type) {
 		super(world, x, y, type);
 	}
 

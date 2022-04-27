@@ -67,7 +67,7 @@ public class Pathfinder {
 	}
 
 	private boolean shouldPropagate(int x, int y) {
-		return world.getTileState(x, y).getTile().canPathfindThrough();
+		return world.getTileState(x, y).getTile().canPathfindThrough(world, x, y);
 	}
 
 	private void propagate(int x, int y, int value) {

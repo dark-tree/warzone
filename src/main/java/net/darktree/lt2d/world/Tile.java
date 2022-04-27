@@ -6,7 +6,7 @@ import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.world.state.TileVariant;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class Tile {
+public abstract class Tile implements WorldComponent {
 	public final TileVariant variant;
 	protected String name = null;
 
@@ -42,7 +42,7 @@ public abstract class Tile {
 		}
 	}
 
-	public boolean canPathfindThrough() {
+	public boolean canPathfindThrough(World world, int x, int y) {
 		return true;
 	}
 
