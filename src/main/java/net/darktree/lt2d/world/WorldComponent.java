@@ -10,6 +10,13 @@ public interface WorldComponent {
 	boolean canPathfindThrough(World world, int x, int y);
 
 	/**
+	 * Defines whether a pathfinder can create a path to this location
+	 */
+	default boolean canPathfindOnto(World world, int x, int y) {
+		return canPathfindThrough(world, x, y);
+	}
+
+	/**
 	 * Called when a component is clicked
 	 */
 	void onInteract(World world, int x, int y, int mode);

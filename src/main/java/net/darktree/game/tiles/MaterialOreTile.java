@@ -13,4 +13,8 @@ public class MaterialOreTile extends Tile {
 		}
 	}
 
+	@Override
+	public boolean canPathfindOnto(World world, int x, int y) {
+		return false;
+	}
 }

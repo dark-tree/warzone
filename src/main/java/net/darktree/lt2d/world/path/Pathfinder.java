@@ -29,7 +29,7 @@ public class Pathfinder {
 	 * Check if the pathfinder found a path to the given tile
 	 */
 	public boolean canReach(int x, int y) {
-		return this.field[x][y] != 0;
+		return this.field[x][y] != 0 && world.getTileState(x, y).getTile().canPathfindOnto(world, x, y) && world.getEntity(x, y) == null;
 	}
 
 	/**
