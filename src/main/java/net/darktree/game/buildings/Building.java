@@ -5,6 +5,7 @@ import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
 import net.darktree.lt2d.util.Type;
+import net.darktree.lt2d.world.Pattern;
 import net.darktree.lt2d.world.TileInstance;
 import net.darktree.lt2d.world.World;
 import net.darktree.lt2d.world.WorldComponent;
@@ -57,6 +58,10 @@ public class Building implements NbtSerializable, WorldComponent {
 
 	}
 
+	public Pattern getPattern() {
+		return Pattern.SQUARE;
+	}
+
 	public void draw(int x, int y, VertexBuffer buffer) {
 		// TODO: render something
 	}
@@ -70,7 +75,12 @@ public class Building implements NbtSerializable, WorldComponent {
 			super(world, x, y);
 		}
 
-		private boolean isOrigin() {
+		public void linkWith(int bx, int by) {
+			this.bx = bx;
+			this.by = by;
+		}
+
+		public boolean isOrigin() {
 			return bx == x && by == y;
 		}
 

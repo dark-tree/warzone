@@ -12,6 +12,18 @@ import java.util.function.Consumer;
  */
 public class Pattern {
 
+	public static final Pattern EMPTY = new Pattern(new int[][]{
+			// Nothing
+	});
+
+	public static final Pattern IDENTITY = new Pattern(new int[][]{
+			{0, 0}
+	});
+
+	public static final Pattern SQUARE = new Pattern(new int[][]{
+			{0, 0}, {1, 0}, {0, 1}, {1, 1}
+	});
+
 	public static final Pattern SMALL_CROSS = new Pattern(new int[][]{
 			{-1, 0}, {0, 0}, {1, 0}, {0, 1}, {0, -1}
 	});

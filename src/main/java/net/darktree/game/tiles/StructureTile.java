@@ -35,7 +35,17 @@ public class StructureTile extends Tile {
 	}
 
 	@Override
-	public void draw(int x, int y, TileState state, VertexBuffer buffer) {
-		getBuilding(Main.world, x, y).draw(x, y, buffer);
+	public boolean canPathfindOnto(World world, int x, int y) {
+		return getBuilding(world, x, y).canPathfindOnto(world, x, y);
 	}
+
+	@Override
+	public void draw(int x, int y, TileState state, VertexBuffer buffer) {
+		Building.Link link = Main.world.getTileInstance(x, y, Building.Link.class);
+
+		if (link.isOrigin()) {
+			link.getBuilding().draw(x, y, buffer);
+		}
+	}
+
 }

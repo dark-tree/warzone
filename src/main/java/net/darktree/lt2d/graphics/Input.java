@@ -2,6 +2,7 @@ package net.darktree.lt2d.graphics;
 
 import net.darktree.Main;
 import net.darktree.game.country.Symbol;
+import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.world.Pattern;
 import net.darktree.lt2d.world.World;
 import net.darktree.lt2d.world.entities.MovingEntity;
@@ -84,7 +85,7 @@ public class Input {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
-			Main.world.getTileState(2, 2).getOwner().setSymbol(Symbol.CIRCLE);
+			Main.world.placeBuilding(1, 1, Tiles.BUILD);
 		}
 	}
 

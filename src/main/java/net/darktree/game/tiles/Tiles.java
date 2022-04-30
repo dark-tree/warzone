@@ -12,10 +12,11 @@ public class Tiles {
 	public static Tile MATERIAL = Registries.TILES.register("material_ore", new MaterialOreTile());
 	public static Tile MATERIAL_MINE = Registries.TILES.register("material_mine", new MaterialMineTile());
 	public static Tile WATER = Registries.TILES.register("water", new WaterTile());
+	public static Tile STRUCTURE = Registries.TILES.register("structure", new StructureTile());
 
 	public static Type<Entity> TEST = Registries.ENTITIES.register("circle", new Type<>(TestEntity::new));
 
-	public static Type<Building> BUILD = Registries.BUILDINGS.register("build", new Type<>(Building::new));
+	public static Type<Building> BUILD = Registries.BUILDINGS.register("build", new Type<>(TestBuilding::new));
 
 	static {
 		Registries.TILES.freeze();

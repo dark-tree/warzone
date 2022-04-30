@@ -2,6 +2,7 @@ package net.darktree.lt2d.world;
 
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.TileOwner;
+import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
@@ -152,6 +153,18 @@ public class World implements NbtSerializable {
 		return null;
 	}
 
+	public void placeBuilding(int x, int y, Type<Building> type) {
+		Building building = type.construct(this, x, y);
+
+		building.getPattern().iterate(this, x, y, (pos) -> {
+			TileState state = this.getTileState(pos.x, pos.y);
+			state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant());
+			((Building.Link) state.getInstance()).linkWith(x, y);
+		});
+
+		setBuildingAt(x, y, building);
+	}
+
 	public void draw(VertexBuffer buffer) {
 		this.entities.removeIf(entity -> entity.removed);
 
@@ -186,4 +199,5 @@ public class World implements NbtSerializable {
 	public void setBuildingAt(int x, int y, Building building) {
 		buildings.put(new TilePos(x, y), building);
 	}
+
 }

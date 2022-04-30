@@ -12,4 +12,20 @@ public class TilePos {
 	public String toString() {
 		return x + " " + y;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (o instanceof TilePos pos) {
+			return x == pos.x && y == pos.y;
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * x + y;
+	}
 }
