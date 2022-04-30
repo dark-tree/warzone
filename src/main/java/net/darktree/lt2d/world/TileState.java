@@ -1,7 +1,10 @@
 package net.darktree.lt2d.world;
 
+import net.darktree.game.country.Symbol;
 import net.darktree.game.country.TileOwner;
+import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.Registries;
+import net.darktree.lt2d.util.Logger;
 import net.darktree.lt2d.util.NbtSerializable;
 import net.darktree.lt2d.world.state.TileVariant;
 import net.querz.nbt.tag.CompoundTag;
@@ -27,7 +30,9 @@ final public class TileState implements NbtSerializable {
 		tag.putString("id", Registries.TILES.getKey(variant.getTile()));
 
 		if (instance != null) {
-			instance.toNbt(tag);
+			CompoundTag data = new CompoundTag();
+			instance.toNbt(data);
+			tag.put("data", data);
 		}
 	}
 
@@ -38,12 +43,21 @@ final public class TileState implements NbtSerializable {
 	}
 
 	public void load(World world, int x, int y, CompoundTag tag) {
-		CompoundTag tile = tag.getCompoundTag(x + " " + y);
-		fromNbt(tile);
-		instance = variant.getTile().getInstance(world, x, y);
+		try {
+			CompoundTag tile = tag.getCompoundTag(x + " " + y);
+			fromNbt(tile);
+			instance = variant.getTile().getInstance(world, x, y);
 
-		if (instance != null) {
-			instance.fromNbt(tile);
+			if (instance != null) {
+				instance.fromNbt(tile.getCompoundTag("data"));
+			}
+		}catch (Exception e) {
+			Logger.warn("Loading of tile at: ", x, " ", y, " failed! Reverting to default...");
+
+			// TODO make better
+			setVariant(world, x, y, Tiles.EMPTY.getDefaultVariant());
+			owner.setSymbol(Symbol.UNOWNED);
+			owner.setControl(false);
 		}
 	}
 

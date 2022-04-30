@@ -1,5 +1,6 @@
 package net.darktree.lt2d.world;
 
+import net.darktree.Main;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.TileOwner;
 import net.darktree.game.tiles.Tiles;
@@ -71,10 +72,12 @@ public class World implements NbtSerializable {
 		throw new UnsupportedOperationException("World can't be loaded after being created!");
 	}
 
-	public static World load(CompoundTag tag) {
+	public static void load(CompoundTag tag) {
 		CompoundTag tilesTag = tag.getCompoundTag("tiles");
 		CompoundTag entitiesTag = tag.getCompoundTag("entities");
 		World world = new World(tag.getInt("width"), tag.getInt("height"));
+
+		Main.world = world;
 
 		for (int x = 0; x < world.width; x ++) {
 			for (int y = 0; y < world.height; y ++) {
@@ -85,8 +88,6 @@ public class World implements NbtSerializable {
 		entitiesTag.forEach(entry -> {
 			world.addEntity(Entity.load(world, (CompoundTag) entry.getValue()));
 		});
-
-		return world;
 	}
 
 	public void loadTiles(Function<TilePos, TileVariant> generator) {

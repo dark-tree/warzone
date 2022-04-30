@@ -58,7 +58,7 @@ public class Input {
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
 			try {
-				Main.world = World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
+				World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

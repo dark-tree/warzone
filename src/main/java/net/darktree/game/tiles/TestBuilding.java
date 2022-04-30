@@ -4,6 +4,7 @@ import net.darktree.game.buildings.Building;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.Renderer;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
+import net.darktree.lt2d.util.Logger;
 import net.darktree.lt2d.util.Type;
 import net.darktree.lt2d.world.World;
 
@@ -21,6 +22,11 @@ public class TestBuilding extends Building {
 	@Override
 	public boolean canPathfindThrough(World world, int x, int y) {
 		return true;
+	}
+
+	@Override
+	public void onInteract(World world, int x, int y, int mode) {
+		Logger.info("You clicked me!");
 	}
 
 	@Override
