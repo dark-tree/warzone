@@ -14,7 +14,7 @@ public class TileOwner implements NbtSerializable {
 	}
 
 	public TileOwner() {
-		this(Symbol.UNOWNED, false);
+		this(Symbol.NONE, false);
 	}
 
 	@Override

@@ -66,7 +66,7 @@ public class Input {
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
 			Main.world.setOverlay((world, x, y, state, color) -> {
-				if (state.getOwner().getSymbol() != Symbol.UNOWNED) {
+				if (state.getOwner().getSymbol() != Symbol.NONE) {
 					color.set(1, 1, 1);
 				}else{
 					color.set(0, 0, 0);

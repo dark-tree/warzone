@@ -4,7 +4,6 @@ import net.darktree.lt2d.graphics.Window;
 import net.darktree.lt2d.world.Tile;
 import net.darktree.lt2d.world.TileInstance;
 import net.darktree.lt2d.world.World;
-import net.darktree.lt2d.world.state.property.BooleanProperty;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,8 +12,6 @@ import org.lwjgl.glfw.GLFW;
 import java.util.Random;
 
 public class EmptyTile extends Tile {
-
-	public static BooleanProperty DELETED = new BooleanProperty("deleted");
 
 	public EmptyTile() {
 

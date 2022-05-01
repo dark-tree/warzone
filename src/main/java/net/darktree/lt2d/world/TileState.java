@@ -56,7 +56,7 @@ final public class TileState implements NbtSerializable {
 
 			// TODO make better
 			setVariant(world, x, y, Tiles.EMPTY.getDefaultVariant());
-			owner.setSymbol(Symbol.UNOWNED);
+			owner.setSymbol(Symbol.NONE);
 			owner.setControl(false);
 		}
 	}

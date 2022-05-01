@@ -1,6 +1,7 @@
 package net.darktree.game.tiles;
 
 import net.darktree.game.buildings.Building;
+import net.darktree.game.country.Symbol;
 import net.darktree.game.entites.TestEntity;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.util.Type;
@@ -19,6 +20,7 @@ public class Tiles {
 	public static Type<Building> BUILD = Registries.BUILDINGS.register("build", new Type<>(TestBuilding::new));
 
 	static {
+		Symbol.values(); // load class
 		Registries.TILES.freeze();
 	}
 }
