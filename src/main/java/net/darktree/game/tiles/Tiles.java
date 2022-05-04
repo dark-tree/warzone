@@ -2,8 +2,9 @@ package net.darktree.game.tiles;
 
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Symbol;
-import net.darktree.game.entites.TestEntity;
+import net.darktree.game.entities.UnitEntity;
 import net.darktree.lt2d.Registries;
+import net.darktree.lt2d.graphics.image.Sprite;
 import net.darktree.lt2d.util.Type;
 import net.darktree.lt2d.world.Tile;
 import net.darktree.lt2d.world.entities.Entity;
@@ -15,12 +16,18 @@ public class Tiles {
 	public static Tile WATER = Registries.TILES.register("water", new WaterTile());
 	public static Tile STRUCTURE = Registries.TILES.register("structure", new StructureTile());
 
-	public static Type<Entity> TEST = Registries.ENTITIES.register("circle", new Type<>(TestEntity::new));
+	public static Type<Entity> TEST = Registries.ENTITIES.register("circle", new Type<>(UnitEntity::new));
 
 	public static Type<Building> BUILD = Registries.BUILDINGS.register("build", new Type<>(TestBuilding::new));
 
+	public static Sprite BASIC_TEST_BUILD;
+
 	static {
+		var ref = Registries.ATLAS.add("tile/center-build.png");
+
 		Symbol.values(); // load class
 		Registries.TILES.freeze();
+
+		BASIC_TEST_BUILD = ref.sprite();
 	}
 }

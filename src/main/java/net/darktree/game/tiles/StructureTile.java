@@ -2,7 +2,9 @@ package net.darktree.game.tiles;
 
 import net.darktree.Main;
 import net.darktree.game.buildings.Building;
+import net.darktree.game.country.TileOwner;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
+import net.darktree.lt2d.util.Direction;
 import net.darktree.lt2d.world.Tile;
 import net.darktree.lt2d.world.TileInstance;
 import net.darktree.lt2d.world.TileState;
@@ -37,6 +39,16 @@ public class StructureTile extends Tile {
 	@Override
 	public boolean canPathfindOnto(World world, int x, int y) {
 		return getBuilding(world, x, y).canPathfindOnto(world, x, y);
+	}
+
+	@Override
+	public void onOwnerUpdate(World world, int x, int y, TileOwner previous, TileOwner current) {
+		getBuilding(world, x, y).onOwnerUpdate(world, x, y, previous, current);
+	}
+
+	@Override
+	public void onNeighbourUpdate(World world, int x, int y, Direction direction) {
+		getBuilding(world, x + direction.x, y + direction.y).onNeighbourUpdate(world, x, y, direction);
 	}
 
 	@Override

@@ -4,13 +4,21 @@ import net.darktree.lt2d.util.NbtSerializable;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
+import javax.naming.OperationNotSupportedException;
+import java.util.Objects;
+
 public class TileOwner implements NbtSerializable {
-	private Symbol symbol;
-	private boolean control;
+	public final Symbol symbol;
+	public final boolean control;
 
 	public TileOwner(Symbol symbol, boolean controlled) {
 		this.symbol = symbol;
 		this.control = controlled;
+	}
+
+	public TileOwner(@NotNull CompoundTag tag) {
+		this.symbol = Symbol.values()[tag.getByte("symbol")];
+		this.control = tag.getBoolean("owner");
 	}
 
 	public TileOwner() {
@@ -25,24 +33,27 @@ public class TileOwner implements NbtSerializable {
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
-		this.symbol = Symbol.values()[tag.getByte("symbol")];
-		this.control = tag.getBoolean("owner");
-	}
-
-	public void setSymbol(Symbol symbol) {
-		this.symbol = symbol;
-	}
-
-	public Symbol getSymbol() {
-		return symbol;
-	}
-
-	public void setControl(boolean control) {
-		this.control = control;
+		throw new RuntimeException("Unable to load from tag after init!");
 	}
 
 	public Country getCountry() {
 		return Country.of(this.symbol);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) return true;
+
+		if (object instanceof TileOwner owner) {
+			return control == owner.control && symbol == owner.symbol;
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(symbol, control);
 	}
 
 	/**

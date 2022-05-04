@@ -53,11 +53,6 @@ public class Building implements NbtSerializable, WorldComponent {
 
 	}
 
-	@Override
-	public void onRemoved(World world, int x, int y, TileVariant state) {
-
-	}
-
 	public Pattern getPattern() {
 		return Pattern.SQUARE;
 	}

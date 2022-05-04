@@ -4,6 +4,7 @@ import net.darktree.game.country.Symbol;
 import net.darktree.game.country.TileOwner;
 import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.Registries;
+import net.darktree.lt2d.util.Direction;
 import net.darktree.lt2d.util.Logger;
 import net.darktree.lt2d.util.NbtSerializable;
 import net.darktree.lt2d.world.state.TileVariant;
@@ -39,7 +40,7 @@ final public class TileState implements NbtSerializable {
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
 		variant = Registries.TILES.getElement(tag.getString("id")).getDefaultVariant().fromNbt(tag);
-		owner.fromNbt(tag);
+		owner = new TileOwner(tag);
 	}
 
 	public void load(World world, int x, int y, CompoundTag tag) {
@@ -55,19 +56,29 @@ final public class TileState implements NbtSerializable {
 			Logger.warn("Loading of tile at: ", x, " ", y, " failed! Reverting to default...");
 
 			// TODO make better
-			setVariant(world, x, y, Tiles.EMPTY.getDefaultVariant());
-			owner.setSymbol(Symbol.NONE);
-			owner.setControl(false);
+			setVariant(world, x, y, Tiles.EMPTY.getDefaultVariant(), false);
+			owner = new TileOwner();
 		}
 	}
 
-	public void setVariant(World world, int x, int y, TileVariant variant) {
+	public void setVariant(World world, int x, int y, TileVariant variant, boolean notify) {
 		if (this.variant != null) {
 			this.variant.getTile().onRemoved(world, x, y, variant);
 		}
 
 		this.variant = variant;
 		this.instance = variant.getTile().getInstance(world, x, y);
+
+		if(notify) {
+			for (Direction direction : Direction.values()) {
+				int nx = x + direction.x;
+				int ny = y + direction.y;
+
+				if (world.isPositionValid(nx, ny)) {
+					world.getTileState(nx, ny).getTile().onNeighbourUpdate(world, x, y, direction);
+				}
+			}
+		}
 	}
 
 	public Tile getTile() {
@@ -80,6 +91,13 @@ final public class TileState implements NbtSerializable {
 
 	public TileOwner getOwner() {
 		return this.owner;
+	}
+
+	public void setOwner(World world, int x, int y, TileOwner owner) {
+		if (!this.owner.equals(owner)) {
+			this.owner = owner;
+			getTile().onOwnerUpdate(world, x, y, this.owner, owner);
+		}
 	}
 
 	public TileInstance getInstance() {

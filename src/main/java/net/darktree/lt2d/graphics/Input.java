@@ -2,6 +2,7 @@ package net.darktree.lt2d.graphics;
 
 import net.darktree.Main;
 import net.darktree.game.country.Symbol;
+import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.world.Pattern;
 import net.darktree.lt2d.world.World;
@@ -66,7 +67,7 @@ public class Input {
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
 			Main.world.setOverlay((world, x, y, state, color) -> {
-				if (state.getOwner().getSymbol() != Symbol.NONE) {
+				if (state.getOwner().symbol != Symbol.NONE) {
 					color.set(1, 1, 1);
 				}else{
 					color.set(0, 0, 0);
@@ -75,12 +76,8 @@ public class Input {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
-			if (entity != null) {
-				Symbol symbol = Main.world.getTileState(entity.getX(), entity.getY()).getOwner().getSymbol();
-
-				Main.world.getPatternTiles(Pattern.nextColonizationPattern(), entity.getX(), entity.getY(), state -> {
-					state.getOwner().setSymbol(symbol);
-				});
+			if (this.entity instanceof UnitEntity unit) {
+				unit.colonize();
 			}
 		}
 

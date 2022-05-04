@@ -93,7 +93,7 @@ public class World implements NbtSerializable {
 	public void loadTiles(Function<TilePos, TileVariant> generator) {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.setTileState(x, y, generator.apply(new TilePos(x, y)));
+				this.getTileState(x, y).setVariant(this, x, y, generator.apply(new TilePos(x, y)), false);
 			}
 		}
 	}
@@ -133,7 +133,7 @@ public class World implements NbtSerializable {
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
 	public void setTileState(int x, int y, TileVariant variant) {
-		getTileState(x, y).setVariant(this, x, y, variant);
+		getTileState(x, y).setVariant(this, x, y, variant, true);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class World implements NbtSerializable {
 
 		building.getPattern().iterate(this, x, y, (pos) -> {
 			TileState state = this.getTileState(pos.x, pos.y);
-			state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant());
+			state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant(), true);
 			((Building.Link) state.getInstance()).linkWith(x, y);
 		});
 
