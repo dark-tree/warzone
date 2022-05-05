@@ -9,7 +9,6 @@ import net.darktree.lt2d.world.Pattern;
 import net.darktree.lt2d.world.TileInstance;
 import net.darktree.lt2d.world.World;
 import net.darktree.lt2d.world.WorldComponent;
-import net.darktree.lt2d.world.state.TileVariant;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,25 +1,23 @@
 package net.darktree.game.country;
 
-import java.util.HashMap;
+import net.darktree.lt2d.util.NbtSerializable;
+import net.querz.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
 
-public class Country {
-	private static final HashMap<Symbol, Country> COUNTRIES = new HashMap<>();
-
+public class Country implements NbtSerializable {
 	private final Symbol symbol;
 
-	private Country(Symbol symbol) {
+	public Country(Symbol symbol) {
 		this.symbol = symbol;
 	}
 
-	public static Country create(Symbol symbol) {
-		return COUNTRIES.put(symbol, new Country(symbol));
+	@Override
+	public void toNbt(@NotNull CompoundTag tag) {
+		tag.putByte("symbol", (byte) symbol.ordinal());
 	}
 
-	public static Country of(Symbol symbol) {
-		return COUNTRIES.get(symbol);
-	}
+	@Override
+	public void fromNbt(@NotNull CompoundTag tag) {
 
-	public static void reset() {
-		COUNTRIES.clear();
 	}
 }

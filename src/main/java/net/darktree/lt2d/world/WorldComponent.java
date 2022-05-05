@@ -1,6 +1,6 @@
 package net.darktree.lt2d.world;
 
-import net.darktree.game.country.TileOwner;
+import net.darktree.game.country.Symbol;
 import net.darktree.lt2d.util.Direction;
 import net.darktree.lt2d.world.state.TileVariant;
 
@@ -33,7 +33,7 @@ public interface WorldComponent {
 	/**
 	 * Called when tile ownership changes
 	 */
-	default void onOwnerUpdate(World world, int x, int y, TileOwner previous, TileOwner current) {
+	default void onOwnerUpdate(World world, int x, int y, Symbol previous, Symbol current) {
 
 	}
 

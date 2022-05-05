@@ -2,7 +2,7 @@ package net.darktree.game.tiles;
 
 import net.darktree.Main;
 import net.darktree.game.buildings.Building;
-import net.darktree.game.country.TileOwner;
+import net.darktree.game.country.Symbol;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.Direction;
 import net.darktree.lt2d.world.Tile;
@@ -42,7 +42,7 @@ public class StructureTile extends Tile {
 	}
 
 	@Override
-	public void onOwnerUpdate(World world, int x, int y, TileOwner previous, TileOwner current) {
+	public void onOwnerUpdate(World world, int x, int y, Symbol previous, Symbol current) {
 		getBuilding(world, x, y).onOwnerUpdate(world, x, y, previous, current);
 	}
 

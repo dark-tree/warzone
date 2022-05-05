@@ -1,7 +1,6 @@
 package net.darktree.game.entities;
 
 import net.darktree.game.country.Symbol;
-import net.darktree.game.country.TileOwner;
 import net.darktree.lt2d.graphics.vertex.Renderer;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.Type;
@@ -28,11 +27,9 @@ public class UnitEntity extends MovingEntity {
 	}
 
 	public void colonize() {
-		TileOwner owner = world.getTileState(tx, ty).getOwner();
-
-		if(owner.symbol == this.symbol && owner.control) {
+		if (world.getTileState(tx, ty).getOwner() == this.symbol) {
 			Pattern.nextColonizationPattern().iterate(world, tx, ty, pos -> {
-				world.getTileState(pos.x, pos.y).setOwner(world, pos.x, pos.y, new TileOwner(this.symbol, true));
+				world.getTileState(pos.x, pos.y).setOwner(world, pos.x, pos.y, this.symbol);
 			});
 		}
 	}

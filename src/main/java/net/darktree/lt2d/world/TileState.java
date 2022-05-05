@@ -1,7 +1,6 @@
 package net.darktree.lt2d.world;
 
 import net.darktree.game.country.Symbol;
-import net.darktree.game.country.TileOwner;
 import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.util.Direction;
@@ -15,9 +14,9 @@ final public class TileState implements NbtSerializable {
 
 	private TileVariant variant;
 	private TileInstance instance;
-	private TileOwner owner;
+	private Symbol owner;
 
-	TileState(TileVariant variant, TileInstance instance, TileOwner owner) {
+	TileState(TileVariant variant, TileInstance instance, Symbol owner) {
 		this.variant = variant;
 		this.instance = instance;
 		this.owner = owner;
@@ -26,7 +25,7 @@ final public class TileState implements NbtSerializable {
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		variant.toNbt(tag);
-		owner.toNbt(tag);
+		tag.putByte("owner", (byte) owner.ordinal());
 
 		tag.putString("id", Registries.TILES.getKey(variant.getTile()));
 
@@ -40,7 +39,7 @@ final public class TileState implements NbtSerializable {
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
 		variant = Registries.TILES.getElement(tag.getString("id")).getDefaultVariant().fromNbt(tag);
-		owner = new TileOwner(tag);
+		owner = Symbol.values()[tag.getByte("owner")];
 	}
 
 	public void load(World world, int x, int y, CompoundTag tag) {
@@ -57,7 +56,7 @@ final public class TileState implements NbtSerializable {
 
 			// TODO make better
 			setVariant(world, x, y, Tiles.EMPTY.getDefaultVariant(), false);
-			owner = new TileOwner();
+			owner = Symbol.NONE;
 		}
 	}
 
@@ -89,11 +88,11 @@ final public class TileState implements NbtSerializable {
 		return variant;
 	}
 
-	public TileOwner getOwner() {
+	public Symbol getOwner() {
 		return this.owner;
 	}
 
-	public void setOwner(World world, int x, int y, TileOwner owner) {
+	public void setOwner(World world, int x, int y, Symbol owner) {
 		if (!this.owner.equals(owner)) {
 			this.owner = owner;
 			getTile().onOwnerUpdate(world, x, y, this.owner, owner);

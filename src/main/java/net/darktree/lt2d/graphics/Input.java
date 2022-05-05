@@ -4,7 +4,6 @@ import net.darktree.Main;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.tiles.Tiles;
-import net.darktree.lt2d.world.Pattern;
 import net.darktree.lt2d.world.World;
 import net.darktree.lt2d.world.entities.MovingEntity;
 import net.darktree.lt2d.world.overlay.PathfinderOverlay;
@@ -67,7 +66,7 @@ public class Input {
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
 			Main.world.setOverlay((world, x, y, state, color) -> {
-				if (state.getOwner().symbol != Symbol.NONE) {
+				if (state.getOwner() != Symbol.NONE) {
 					color.set(1, 1, 1);
 				}else{
 					color.set(0, 0, 0);

@@ -2,7 +2,8 @@ package net.darktree.lt2d.world;
 
 import net.darktree.Main;
 import net.darktree.game.buildings.Building;
-import net.darktree.game.country.TileOwner;
+import net.darktree.game.country.Country;
+import net.darktree.game.country.Symbol;
 import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
@@ -26,6 +27,7 @@ public class World implements NbtSerializable {
 	final private TileState[][] tiles;
 	final private List<Entity> entities = new ArrayList<>();
 	final private HashMap<TilePos, Building> buildings = new HashMap<>();
+	final private HashMap<Symbol, Country> countries = new HashMap<>();
 	private Overlay overlay = null;
 
 	public World(int width, int height) {
@@ -35,7 +37,7 @@ public class World implements NbtSerializable {
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.tiles[x][y] = new TileState(null, null, new TileOwner());
+				this.tiles[x][y] = new TileState(null, null, Symbol.NONE);
 			}
 		}
 	}
@@ -75,6 +77,7 @@ public class World implements NbtSerializable {
 	public static void load(CompoundTag tag) {
 		CompoundTag tilesTag = tag.getCompoundTag("tiles");
 		CompoundTag entitiesTag = tag.getCompoundTag("entities");
+		CompoundTag countriesTag = tag.getCompoundTag("countries");
 		World world = new World(tag.getInt("width"), tag.getInt("height"));
 
 		Main.world = world;
@@ -84,6 +87,11 @@ public class World implements NbtSerializable {
 				world.tiles[x][y].load(world, x, y, tilesTag);
 			}
 		}
+
+		countriesTag.forEach(entry -> {
+			CompoundTag countryTag = (CompoundTag) entry.getValue();
+			world.defineCountry(Symbol.values()[countryTag.getByte("symbol")]).fromNbt(countryTag);
+		});
 
 		entitiesTag.forEach(entry -> {
 			world.addEntity(Entity.load(world, (CompoundTag) entry.getValue()));
@@ -183,6 +191,14 @@ public class World implements NbtSerializable {
 
 	public void getPatternTiles(Pattern pattern, int x, int y, Consumer<TileState> consumer) {
 		pattern.iterate(this, x, y, pos -> consumer.accept(this.tiles[pos.x][pos.y]));
+	}
+
+	public Country defineCountry(Symbol symbol) {
+		return countries.put(symbol, new Country(symbol));
+	}
+
+	public Country getCountry(Symbol symbol) {
+		return countries.get(symbol);
 	}
 
 	public Overlay getOverlay() {

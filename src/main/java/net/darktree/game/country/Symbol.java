@@ -1,5 +1,6 @@
 package net.darktree.game.country;
 
+import net.darktree.Main;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.image.Atlas;
 import net.darktree.lt2d.graphics.image.Sprite;
@@ -19,5 +20,10 @@ public enum Symbol {
 
 	public Sprite getSprite() {
 		return ref.sprite();
+	}
+
+	@Deprecated
+	public Country getCountry() {
+		return Main.world.getCountry(this);
 	}
 }
