@@ -6,7 +6,7 @@ import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.util.Direction;
 import net.darktree.lt2d.util.Logger;
 import net.darktree.lt2d.util.NbtSerializable;
-import net.darktree.lt2d.world.state.TileVariant;
+import net.darktree.lt2d.world.variant.TileVariant;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 

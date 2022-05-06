@@ -8,10 +8,11 @@ import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
+import net.darktree.lt2d.util.TileStateConsumer;
 import net.darktree.lt2d.util.Type;
 import net.darktree.lt2d.world.entities.Entity;
 import net.darktree.lt2d.world.overlay.Overlay;
-import net.darktree.lt2d.world.state.TileVariant;
+import net.darktree.lt2d.world.variant.TileVariant;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,9 +27,12 @@ public class World implements NbtSerializable {
 	final public int width, height;
 	final private TileState[][] tiles;
 	final private List<Entity> entities = new ArrayList<>();
+	final private List<Symbol> symbols = new ArrayList<>();
 	final private HashMap<TilePos, Building> buildings = new HashMap<>();
 	final private HashMap<Symbol, Country> countries = new HashMap<>();
+
 	private Overlay overlay = null;
+	private int turn;
 
 	public World(int width, int height) {
 		this.width = width;
@@ -76,6 +80,7 @@ public class World implements NbtSerializable {
 
 		tag.putInt("width", this.width);
 		tag.putInt("height", this.height);
+		tag.putByte("turn", (byte) turn);
 		tag.put("tiles", tilesTag);
 		tag.put("entities", entitiesTag);
 		tag.put("countries", countriesTag);
@@ -92,6 +97,7 @@ public class World implements NbtSerializable {
 		CompoundTag entitiesTag = tag.getCompoundTag("entities");
 		CompoundTag countriesTag = tag.getCompoundTag("countries");
 		World world = new World(tag.getInt("width"), tag.getInt("height"));
+		world.turn = tag.getByte("turn");
 
 		Main.world = world;
 
@@ -101,10 +107,14 @@ public class World implements NbtSerializable {
 			}
 		}
 
-		countriesTag.forEach(entry -> {
-			CompoundTag countryTag = (CompoundTag) entry.getValue();
-			world.defineCountry(Symbol.values()[countryTag.getByte("symbol")]).fromNbt(countryTag);
-		});
+		for (Symbol symbol : Symbol.values()) {
+			CompoundTag countryTag = countriesTag.getCompoundTag(symbol.name());
+
+			if (countryTag != null) {
+				world.defineCountry(symbol).fromNbt(countryTag);
+				world.symbols.add(symbol);
+			}
+		}
 
 		entitiesTag.forEach(entry -> {
 			world.addEntity(Entity.load(world, (CompoundTag) entry.getValue()));
@@ -175,8 +185,14 @@ public class World implements NbtSerializable {
 		return null;
 	}
 
+	/**
+	 * Method used for placing buildings on the map, it takes care
+	 * of all the required setup.
+	 */
 	public void placeBuilding(int x, int y, Type<Building> type) {
 		Building building = type.construct(this, x, y);
+
+		// FIXME: verify that the placement position is valid (enough space for the whole building)
 
 		building.getPattern().iterate(this, x, y, (pos) -> {
 			TileState state = this.getTileState(pos.x, pos.y);
@@ -184,7 +200,7 @@ public class World implements NbtSerializable {
 			((Building.Link) state.getInstance()).linkWith(x, y);
 		});
 
-		setBuildingAt(x, y, building);
+		setLinkedBuildingAt(x, y, building);
 	}
 
 	public void draw(VertexBuffer buffer) {
@@ -212,6 +228,45 @@ public class World implements NbtSerializable {
 		return country;
 	}
 
+	/**
+	 * Get the symbol of current active player,
+	 * returns null if there was an issue.
+	 */
+	public Symbol getCurrentSymbol() {
+		try {
+			return this.symbols.get(turn);
+		}catch (IndexOutOfBoundsException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Advance the game to the next player and sends map updates
+	 */
+	public void nextPlayerTurn() {
+		int len = this.symbols.size();
+
+		Symbol oldSymbol = getCurrentSymbol();
+		forEach((state, x, y) -> state.getTile().onPlayerTurnEnd(this, x, y, oldSymbol));
+
+		turn = (turn + 1) % len;
+		Symbol newSymbol = getCurrentSymbol();
+
+		if (turn == 0) {
+			forEach((state, x, y) -> state.getTile().onTurnCycleEnd(this, x, y));
+		}
+
+		forEach((state, x, y) -> state.getTile().onPlayerTurnStart(this, x, y, newSymbol));
+	}
+
+	public void forEach(TileStateConsumer consumer) {
+		for (int x = 0; x < width; x ++) {
+			for (int y = 0; y < height; y ++) {
+				consumer.accept(this.tiles[x][y], x, y);
+			}
+		}
+	}
+
 	public Country getCountry(Symbol symbol) {
 		return countries.get(symbol);
 	}
@@ -224,12 +279,11 @@ public class World implements NbtSerializable {
 		this.overlay = overlay;
 	}
 
-	public Building getBuildingAt(int x, int y) {
+	public Building getLinkedBuildingAt(int x, int y) {
 		return buildings.get(new TilePos(x, y));
 	}
 
-	public void setBuildingAt(int x, int y, Building building) {
+	public void setLinkedBuildingAt(int x, int y, Building building) {
 		buildings.put(new TilePos(x, y), building);
 	}
-
 }

@@ -11,6 +11,13 @@ import net.darktree.lt2d.world.TileState;
 import net.darktree.lt2d.world.World;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * TODO: reconsider this
+ *
+ * Should we pass the events here or maybe call them on the buildings array in world?
+ * That's not a perfect solution either so for now i will leave it as-is.
+ */
+
 public class StructureTile extends Tile {
 
 	@Override
@@ -49,6 +56,21 @@ public class StructureTile extends Tile {
 	@Override
 	public void onNeighbourUpdate(World world, int x, int y, Direction direction) {
 		getBuilding(world, x + direction.x, y + direction.y).onNeighbourUpdate(world, x, y, direction);
+	}
+
+	@Override
+	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
+		getBuilding(world, x, y).onPlayerTurnStart(world, x, y, symbol);
+	}
+
+	@Override
+	public void onPlayerTurnEnd(World world, int x, int y, Symbol symbol) {
+		getBuilding(world, x, y).onPlayerTurnEnd(world, x, y, symbol);
+	}
+
+	@Override
+	public void onTurnCycleEnd(World world, int x, int y) {
+		getBuilding(world, x, y).onTurnCycleEnd(world, x, y);
 	}
 
 	@Override

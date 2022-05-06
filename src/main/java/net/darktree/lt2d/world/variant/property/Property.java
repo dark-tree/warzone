@@ -1,4 +1,4 @@
-package net.darktree.lt2d.world.state.property;
+package net.darktree.lt2d.world.variant.property;
 
 import java.util.Arrays;
 

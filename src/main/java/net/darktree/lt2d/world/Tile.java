@@ -3,7 +3,7 @@ package net.darktree.lt2d.world;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.Renderer;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
-import net.darktree.lt2d.world.state.TileVariant;
+import net.darktree.lt2d.world.variant.TileVariant;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Tile implements WorldComponent {

@@ -1,4 +1,4 @@
-package net.darktree.lt2d.world.state.property;
+package net.darktree.lt2d.world.variant.property;
 
 public class EnumProperty <T extends Enum<T>> extends Property<T> {
 

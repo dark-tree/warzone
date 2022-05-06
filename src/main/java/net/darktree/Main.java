@@ -6,10 +6,8 @@ import net.darktree.game.rendering.Shaders;
 import net.darktree.game.rendering.Uniforms;
 import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.graphics.Input;
-import net.darktree.lt2d.graphics.ScreenRenderer;
 import net.darktree.lt2d.graphics.Window;
 import net.darktree.lt2d.graphics.image.Image;
-import net.darktree.lt2d.graphics.image.Sprite;
 import net.darktree.lt2d.graphics.image.Texture;
 import net.darktree.lt2d.graphics.pipeline.Pipeline;
 import net.darktree.lt2d.graphics.vertex.Renderer;
@@ -68,14 +66,6 @@ public class Main {
 
 		world.addEntity(0, 0, Tiles.TEST);
 
-//		world.setOverlay((world1, x, y, state, color) -> {
-//			if (y % 2 == 0) {
-//				color.set(0.8f, 0.2f, 0.2f, 0.2f);
-//			}else{
-//				color.clear();
-//			}
-//		});
-
 		while ( !window.shouldClose() ) {
 			Renderer.clear();
 
@@ -83,7 +73,6 @@ public class Main {
 			pipeline.flush();
 
 			PlayUserInterface.draw();
-			ScreenRenderer.from(0, -1).offset(0, 10).sprite(texture, Sprite.IDENTITY).box(100, 100, 100, 0).next();
 
 			window.swap();
 		}

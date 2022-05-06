@@ -83,6 +83,10 @@ public class Input {
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
 			Main.world.placeBuilding(1, 1, Tiles.BUILD);
 		}
+
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_SPACE) {
+			Main.world.nextPlayerTurn();
+		}
 	}
 
 	void cursorHandle(long handle, double x, double y) {

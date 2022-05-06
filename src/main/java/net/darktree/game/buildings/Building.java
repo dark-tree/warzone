@@ -1,6 +1,5 @@
 package net.darktree.game.buildings;
 
-import net.darktree.Main;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
@@ -28,7 +27,7 @@ public class Building implements NbtSerializable, WorldComponent {
 	public static Building from(int x, int y, World world, @NotNull CompoundTag tag) {
 		Building building = Registries.BUILDINGS.getElement(tag.getString("id")).construct(world, x, y);
 		building.fromNbt(tag);
-		world.setBuildingAt(x, y, building);
+		world.setLinkedBuildingAt(x, y, building);
 		return building;
 	}
 
@@ -94,13 +93,13 @@ public class Building implements NbtSerializable, WorldComponent {
 			by = tag.getInt("by");
 
 			if (isOrigin()) {
-				building = Building.from(bx, by, Main.world, tag);
+				building = Building.from(bx, by, world, tag);
 			}
 		}
 
 		public Building getBuilding() {
 			if (building == null) {
-				building = Main.world.getBuildingAt(bx, by);
+				building = world.getLinkedBuildingAt(bx, by);
 			}
 
 			return building;

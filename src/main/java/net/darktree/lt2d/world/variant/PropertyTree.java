@@ -1,7 +1,7 @@
-package net.darktree.lt2d.world.state;
+package net.darktree.lt2d.world.variant;
 
 import net.darktree.lt2d.world.Tile;
-import net.darktree.lt2d.world.state.property.Property;
+import net.darktree.lt2d.world.variant.property.Property;
 
 import java.util.ArrayList;
 import java.util.HashMap;
