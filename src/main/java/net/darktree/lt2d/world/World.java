@@ -62,10 +62,23 @@ public class World implements NbtSerializable {
 			entitiesTag.put(String.valueOf(i), entityTag);
 		}
 
+		CompoundTag countriesTag = new CompoundTag();
+
+		for (Symbol symbol : Symbol.values()) {
+			CompoundTag countryTag = new CompoundTag();
+
+			Country country = this.countries.get(symbol);
+			if (country != null) {
+				country.toNbt(countryTag);
+				countriesTag.put(symbol.name(), countryTag);
+			}
+		}
+
 		tag.putInt("width", this.width);
 		tag.putInt("height", this.height);
 		tag.put("tiles", tilesTag);
 		tag.put("entities", entitiesTag);
+		tag.put("countries", countriesTag);
 	}
 
 	// should we implement NbtSerializable if that operation is unsupported?
@@ -194,7 +207,9 @@ public class World implements NbtSerializable {
 	}
 
 	public Country defineCountry(Symbol symbol) {
-		return countries.put(symbol, new Country(symbol));
+		Country country = new Country(symbol);
+		countries.put(symbol, country);
+		return country;
 	}
 
 	public Country getCountry(Symbol symbol) {

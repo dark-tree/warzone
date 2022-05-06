@@ -7,6 +7,7 @@ import net.darktree.lt2d.graphics.image.Sprite;
 import net.darktree.lt2d.graphics.image.Texture;
 import net.darktree.lt2d.graphics.pipeline.TexturedPipeline;
 import net.darktree.lt2d.graphics.vertex.Renderer;
+import org.jetbrains.annotations.ApiStatus;
 
 public class ScreenRenderer {
 
@@ -17,6 +18,9 @@ public class ScreenRenderer {
 	private float x, y;
 	private int ox, oy;
 	private Sprite sprite;
+
+	private boolean repeating = false;
+	private float fx, fy;
 
 	public ScreenRenderer() {
 		this.pipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, (Texture) null, pipeline -> {
@@ -50,6 +54,15 @@ public class ScreenRenderer {
 	public ScreenRenderer sprite(Texture texture, Sprite sprite) {
 		this.sprite = sprite;
 		this.pipeline.texture = texture;
+		this.repeating = false;
+		return this;
+	}
+
+	@ApiStatus.Experimental
+	public ScreenRenderer repeating(float fx, float fy) {
+		this.fx = fx;
+		this.fy = fy;
+		this.repeating = true;
 		return this;
 	}
 
@@ -58,7 +71,13 @@ public class ScreenRenderer {
 		float px = sc / Window.INSTANCE.width();
 		float py = sc / Window.INSTANCE.height();
 
-		Renderer.quad(this.pipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, right * px, top * py, this.sprite, 1, 1, 1, 0);
+		Sprite target = this.sprite;
+
+		if (repeating) {
+			target = new Sprite(this.sprite.u1(), this.sprite.v1(), this.sprite.u2() * this.fx, this.sprite.v2() * this.fy);
+		}
+
+		Renderer.quad(this.pipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, right * px, top * py, target, 1, 1, 1, 0);
 		return this;
 	}
 

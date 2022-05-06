@@ -1,5 +1,6 @@
 package net.darktree;
 
+import net.darktree.game.gui.PlayUserInterface;
 import net.darktree.game.rendering.Buffers;
 import net.darktree.game.rendering.Shaders;
 import net.darktree.game.rendering.Uniforms;
@@ -42,12 +43,14 @@ public class Main {
 		window.close();
 	}
 
+	public static Texture texture;
+
 	private static void loop() {
 
 		Input input = window.input();
-		Texture texture;
 
-		try( Image image = Image.of("grid.png", Image.Format.RGBA) ) {
+
+		try( Image image = Image.of("top.png", Image.Format.RGBA) ) {
 			texture = image.asTexture(false);
 			texture.upload();
 		}
@@ -79,6 +82,7 @@ public class Main {
 			world.draw(pipeline.buffer);
 			pipeline.flush();
 
+			PlayUserInterface.draw();
 			ScreenRenderer.from(0, -1).offset(0, 10).sprite(texture, Sprite.IDENTITY).box(100, 100, 100, 0).next();
 
 			window.swap();
