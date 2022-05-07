@@ -84,7 +84,7 @@ public class Input {
 			Main.world.placeBuilding(1, 1, Tiles.BUILD);
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_SPACE) {
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
 			Main.world.nextPlayerTurn();
 		}
 	}

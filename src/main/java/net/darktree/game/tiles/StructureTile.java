@@ -55,7 +55,8 @@ public class StructureTile extends Tile {
 
 	@Override
 	public void onNeighbourUpdate(World world, int x, int y, Direction direction) {
-		getBuilding(world, x + direction.x, y + direction.y).onNeighbourUpdate(world, x, y, direction);
+		// FIXME this causes a crash, not unexpected but it's weird that it used to work before
+		//getBuilding(world, x + direction.x, y + direction.y).onNeighbourUpdate(world, x, y, direction);
 	}
 
 	@Override
