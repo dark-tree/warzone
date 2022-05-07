@@ -38,20 +38,28 @@ public class Pattern {
 		this.offsets = offsets;
 	}
 
-	public void iterate(World world, int ox, int oy, Consumer<TilePos> consumer) {
+	public boolean iterate(World world, int ox, int oy, Consumer<TilePos> consumer) {
+		boolean perfect = true;
+
 		for (int[] pos : this.offsets) {
 			int x = pos[0] + ox;
 			int y = pos[1] + oy;
 
 			if (world.isPositionValid(x, y)) {
 				consumer.accept(new TilePos(x, y));
-			}
+			}else perfect = false;
 		}
+
+		return perfect;
 	}
 
-	public List<TilePos> list(World world, int ox, int oy) {
+	public List<TilePos> list(World world, int ox, int oy, boolean required) {
 		List<TilePos> tiles = new ArrayList<>();
-		iterate(world, ox, oy, tiles::add);
+
+		if (required && !iterate(world, ox, oy, tiles::add)) {
+			throw new RuntimeException("The pattern did not match perfectly!");
+		}
+
 		return tiles;
 	}
 

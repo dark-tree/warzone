@@ -187,20 +187,25 @@ public class World implements NbtSerializable {
 
 	/**
 	 * Method used for placing buildings on the map, it takes care
-	 * of all the required setup.
+	 * of all the required setup. Returns true on success, false otherwise.
 	 */
-	public void placeBuilding(int x, int y, Type<Building> type) {
+	public boolean placeBuilding(int x, int y, Type<Building> type) {
 		Building building = type.construct(this, x, y);
 
-		// FIXME: verify that the placement position is valid (enough space for the whole building)
+		List<TilePos> tiles = building.getPattern().list(this, x, y, true);
 
-		building.getPattern().iterate(this, x, y, (pos) -> {
-			TileState state = this.getTileState(pos.x, pos.y);
-			state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant(), true);
-			((Building.Link) state.getInstance()).linkWith(x, y);
-		});
+		if (tiles.stream().allMatch(pos -> this.tiles[pos.x][pos.y].getTile().isReplaceable())) {
+			tiles.forEach(pos -> {
+				TileState state = this.tiles[pos.x][pos.y];
+				state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant(), true);
+				((Building.Link) state.getInstance()).linkWith(x, y);
+			});
 
-		setLinkedBuildingAt(x, y, building);
+			setLinkedBuildingAt(x, y, building);
+			return true;
+		}
+
+		return false;
 	}
 
 	public void draw(VertexBuffer buffer) {

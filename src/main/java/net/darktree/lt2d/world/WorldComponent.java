@@ -72,4 +72,11 @@ public interface WorldComponent {
 
 	}
 
+	/**
+	 * Can be replaced by another tile, used by buildings
+	 */
+	default boolean isReplaceable() {
+		return false;
+	}
+
 }

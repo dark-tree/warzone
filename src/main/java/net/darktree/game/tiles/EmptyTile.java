@@ -13,10 +13,6 @@ import java.util.Random;
 
 public class EmptyTile extends Tile {
 
-	public EmptyTile() {
-
-	}
-
 	@Override
 	public void onInteract(World world, int x, int y, int mode) {
 		if (mode == GLFW.GLFW_PRESS) {
@@ -52,4 +48,8 @@ public class EmptyTile extends Tile {
 
 	}
 
+	@Override
+	public boolean isReplaceable() {
+		return true;
+	}
 }
