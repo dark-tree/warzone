@@ -1,7 +1,9 @@
 package net.darktree.lt2d.world.path;
 
+import net.darktree.game.country.Symbol;
 import net.darktree.lt2d.world.TilePos;
 import net.darktree.lt2d.world.World;
+import net.darktree.lt2d.world.entities.Entity;
 
 // TODO slightly shit make less bad
 public class Pathfinder {
@@ -9,18 +11,20 @@ public class Pathfinder {
 	private final int[][] field;
 	private final World world;
 	private final int width, height;
+	private final Symbol symbol;
 
 	private final static int[][] OFFSETS = {
 			{-1, +0}, {+0, -1}, {-1, -1}, {+1, +0},
 			{+0, +1}, {+1, +1}, {+1, -1}, {-1, +1}
 	};
 
-	public Pathfinder(World world, int x, int y, int max) {
+	public Pathfinder(World world, int x, int y, int max, Symbol symbol) {
 		this.world = world;
 		this.width = world.width;
 		this.height = world.height;
 		this.field = new int[this.width][this.height];
 		this.field[x][y] = 1;
+		this.symbol = symbol;
 
 		compute(max);
 	}
@@ -67,7 +71,12 @@ public class Pathfinder {
 	}
 
 	private boolean shouldPropagate(int x, int y) {
-		return world.getTileState(x, y).getTile().canPathfindThrough(world, x, y);
+		if (!world.getTileState(x, y).getTile().canPathfindThrough(world, x, y)) {
+			return false;
+		}
+
+		Entity entity = world.getEntity(x, y);
+		return entity == null || entity.canPathfindThrough(this.symbol);
 	}
 
 	private void propagate(int x, int y, int value) {

@@ -1,6 +1,7 @@
 package net.darktree.game.tiles;
 
 import net.darktree.Main;
+import net.darktree.event.TurnEvent;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Symbol;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
@@ -60,18 +61,8 @@ public class StructureTile extends Tile {
 	}
 
 	@Override
-	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
-		getBuilding(world, x, y).onPlayerTurnStart(world, x, y, symbol);
-	}
-
-	@Override
-	public void onPlayerTurnEnd(World world, int x, int y, Symbol symbol) {
-		getBuilding(world, x, y).onPlayerTurnEnd(world, x, y, symbol);
-	}
-
-	@Override
-	public void onTurnCycleEnd(World world, int x, int y) {
-		getBuilding(world, x, y).onTurnCycleEnd(world, x, y);
+	public void onPlayerTurnEvent(World world, int x, int y, TurnEvent event, Symbol symbol) {
+		getBuilding(world, x, y).onPlayerTurnEvent(world, x, y, event, symbol);
 	}
 
 	@Override

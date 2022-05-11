@@ -1,5 +1,6 @@
 package net.darktree.lt2d.world.entities;
 
+import net.darktree.game.country.Symbol;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.Type;
 import net.darktree.lt2d.world.TilePos;
@@ -10,9 +11,13 @@ public class MovingEntity extends Entity {
 
 	private float sx, sy;
 	private Path path = null;
+	private int px, py;
 
 	public MovingEntity(World world, int x, int y, Type<Entity> type) {
 		super(world, x, y, type);
+
+		this.px = x;
+		this.py = y;
 	}
 
 	public void move(int x, int y, float speed) {
@@ -56,8 +61,18 @@ public class MovingEntity extends Entity {
 		}
 	}
 
+	@Override
+	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
+		this.px = this.tx;
+		this.py = this.ty;
+	}
+
 	public void onTargetReached() {
 		followNext();
+	}
+
+	public void revert() {
+		move(px, py, 0.05f);
 	}
 
 }

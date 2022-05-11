@@ -4,7 +4,7 @@ import net.darktree.game.country.Symbol;
 import net.darktree.lt2d.util.Direction;
 import net.darktree.lt2d.world.variant.TileVariant;
 
-public interface WorldComponent {
+public interface WorldComponent extends WorldListener {
 
 	/**
 	 * Defines whether a pathfinder can create a path node through this component
@@ -49,27 +49,6 @@ public interface WorldComponent {
 	 */
 	default boolean canColonize(World world, int x, int y) {
 		return true;
-	}
-
-	/**
-	 * Called when a turn of 'symbol' player starts
-	 */
-	default void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
-
-	}
-
-	/**
-	 * Called when a turn of 'symbol' player end
-	 */
-	default void onPlayerTurnEnd(World world, int x, int y, Symbol symbol) {
-
-	}
-
-	/**
-	 * Called when a turn cycle has ended
-	 */
-	default void onTurnCycleEnd(World world, int x, int y) {
-
 	}
 
 	/**

@@ -84,6 +84,14 @@ public class Input {
 			Main.world.placeBuilding(1, 1, Tiles.BUILD);
 		}
 
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_X) {
+			if (this.entity instanceof UnitEntity unit) {
+				if (unit.getSymbol() == Main.world.getCurrentSymbol()) {
+					unit.revert();
+				}
+			}
+		}
+
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
 			Main.world.nextPlayerTurn();
 		}
@@ -110,7 +118,7 @@ public class Input {
 	private MovingEntity entity = null;
 
 	void pathfinderBegin(int x, int y) {
-		pathfinder = new Pathfinder(Main.world, x, y, 5);
+		pathfinder = new Pathfinder(Main.world, x, y, 5, Main.world.getCurrentSymbol());
 		Main.world.setOverlay(new PathfinderOverlay(pathfinder));
 	}
 
@@ -134,10 +142,23 @@ public class Input {
 					if (pathfinder == null) {
 						entity = (MovingEntity) Main.world.getEntity(x, y);
 
+						if (entity instanceof UnitEntity unit) {
+							if (unit.getSymbol() != Main.world.getCurrentSymbol()) {
+								return;
+							}
+						}
+
 						if (entity != null) {
 							pathfinderBegin(x, y);
 						}
 					}else{
+
+						if (entity instanceof UnitEntity unit) {
+							if (unit.getSymbol() != Main.world.getCurrentSymbol()) {
+								return;
+							}
+						}
+
 						pathfinderApply(entity, x, y);
 						pathfinder = null;
 						entity = null;

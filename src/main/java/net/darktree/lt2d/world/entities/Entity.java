@@ -1,14 +1,16 @@
 package net.darktree.lt2d.world.entities;
 
+import net.darktree.game.country.Symbol;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
 import net.darktree.lt2d.util.Type;
 import net.darktree.lt2d.world.World;
+import net.darktree.lt2d.world.WorldListener;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public class Entity implements NbtSerializable {
+public class Entity implements NbtSerializable, WorldListener {
 
 	protected final World world;
 	protected final Type<Entity> type;
@@ -38,6 +40,10 @@ public class Entity implements NbtSerializable {
 	public void setPos(int x, int y) {
 		this.x = this.tx = x;
 		this.y = this.ty = y;
+	}
+
+	public boolean canPathfindThrough(Symbol symbol) {
+		return true;
 	}
 
 	public void draw(VertexBuffer buffer) {

@@ -1,6 +1,7 @@
 package net.darktree.lt2d.world;
 
 import net.darktree.Main;
+import net.darktree.event.TurnEvent;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
@@ -13,6 +14,7 @@ import net.darktree.lt2d.util.Type;
 import net.darktree.lt2d.world.entities.Entity;
 import net.darktree.lt2d.world.overlay.Overlay;
 import net.darktree.lt2d.world.variant.TileVariant;
+import net.darktree.lt2d.world.view.WorldEntityView;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +24,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class World implements NbtSerializable {
+public class World implements NbtSerializable, WorldEntityView {
 
 	final public int width, height;
 	final private TileState[][] tiles;
@@ -133,23 +135,13 @@ public class World implements NbtSerializable {
 		return x >= 0 && y >= 0 && x < width && y < height;
 	}
 
-	public void addEntity(Entity entity) {
-		this.entities.add(entity);
-	}
-
-	public void addEntity(int x, int y, Type<Entity> type) {
-		this.entities.add(type.construct(this, x, y));
-	}
-
-	public Entity getEntity(int x, int y) {
-		return this.entities.stream().filter(entity -> entity.isAt(x, y)).findFirst().orElse(null);
-	}
-
 	public List<Entity> getEntities() {
 		return entities;
 	}
 
 	/**
+	 * Get TileState at given position
+	 *
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
 	public TileState getTileState(int x, int y) {
@@ -161,6 +153,8 @@ public class World implements NbtSerializable {
 	}
 
 	/**
+	 * Set tile variant at the given position
+	 *
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
 	public void setTileState(int x, int y, TileVariant variant) {
@@ -251,17 +245,21 @@ public class World implements NbtSerializable {
 	public void nextPlayerTurn() {
 		int len = this.symbols.size();
 
-		Symbol oldSymbol = getCurrentSymbol();
-		forEach((state, x, y) -> state.getTile().onPlayerTurnEnd(this, x, y, oldSymbol));
+		Symbol symbol = getCurrentSymbol();
+		sendPlayerTurnEvent(TurnEvent.TURN_END, symbol);
 
 		turn = (turn + 1) % len;
-		Symbol newSymbol = getCurrentSymbol();
 
 		if (turn == 0) {
-			forEach((state, x, y) -> state.getTile().onTurnCycleEnd(this, x, y));
+			sendPlayerTurnEvent(TurnEvent.TURN_CYCLE_END, symbol);
 		}
 
-		forEach((state, x, y) -> state.getTile().onPlayerTurnStart(this, x, y, newSymbol));
+		sendPlayerTurnEvent(TurnEvent.TURN_START, getCurrentSymbol());
+	}
+
+	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {
+		forEach((state, x, y) -> state.getTile().onPlayerTurnEvent(this, x, y, event, symbol));
+		getEntities().forEach(entity -> entity.onPlayerTurnEvent(this, entity.getX(), entity.getY(), event, symbol));
 	}
 
 	public void forEach(TileStateConsumer consumer) {
