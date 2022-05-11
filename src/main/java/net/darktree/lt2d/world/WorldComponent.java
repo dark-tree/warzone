@@ -1,5 +1,6 @@
 package net.darktree.lt2d.world;
 
+import net.darktree.event.ClickEvent;
 import net.darktree.game.country.Symbol;
 import net.darktree.lt2d.util.Direction;
 import net.darktree.lt2d.world.variant.TileVariant;
@@ -21,7 +22,7 @@ public interface WorldComponent extends WorldListener {
 	/**
 	 * Called when a component is clicked
 	 */
-	void onInteract(World world, int x, int y, int mode);
+	void onInteract(World world, int x, int y, ClickEvent event);
 
 	/**
 	 * Called right before a component is removed

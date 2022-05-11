@@ -1,9 +1,11 @@
 package net.darktree.lt2d.graphics;
 
 import net.darktree.Main;
+import net.darktree.event.ClickEvent;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.tiles.Tiles;
+import net.darktree.lt2d.input.MouseButton;
 import net.darktree.lt2d.world.World;
 import net.darktree.lt2d.world.entities.MovingEntity;
 import net.darktree.lt2d.world.overlay.PathfinderOverlay;
@@ -98,7 +100,7 @@ public class Input {
 	}
 
 	void cursorHandle(long handle, double x, double y) {
-		if (this.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_3)) {
+		if (isButtonPressed(MouseButton.MIDDLE)) {
 			var ox = (prevX - x) / window.width() * -2 / scaleX;
 			var oy = (prevY - y) / window.height() * 2 / scaleY;
 
@@ -132,6 +134,8 @@ public class Input {
 	}
 
 	void clickHandle(long handle, int button, int action, int mods) {
+		ClickEvent event = new ClickEvent(button, action);
+
 		int x = (int) ((prevX / window.width() * 2 - 1) / scaleX - offsetX);
 		int y = (int) ((prevY / window.height() * -2 + 1) / scaleY - offsetY);
 
@@ -165,8 +169,7 @@ public class Input {
 						Main.world.setOverlay(null);
 					}
 				}else{
-					// TODO: map GLFW event to some event class/enum, don't pass raw 'action' as-is
-					Main.world.getTileState(x, y).getTile().onInteract(Main.world, x, y, action);
+					Main.world.getTileState(x, y).getTile().onInteract(Main.world, x, y, event);
 				}
 
 			}
@@ -191,7 +194,7 @@ public class Input {
 		return GLFW.glfwGetKey(window.handle, key) == GLFW.GLFW_PRESS;
 	}
 
-	public boolean isButtonPressed(int button) {
-		return GLFW.glfwGetMouseButton(window.handle, button) == GLFW.GLFW_PRESS;
+	public boolean isButtonPressed(MouseButton button) {
+		return GLFW.glfwGetMouseButton(window.handle, button.code) == GLFW.GLFW_PRESS;
 	}
 }

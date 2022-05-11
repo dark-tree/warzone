@@ -1,5 +1,6 @@
 package net.darktree.game.tiles;
 
+import net.darktree.event.ClickEvent;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Symbol;
 import net.darktree.lt2d.graphics.vertex.Renderer;
@@ -25,7 +26,7 @@ public class TestBuilding extends Building {
 	}
 
 	@Override
-	public void onInteract(World world, int x, int y, int mode) {
+	public void onInteract(World world, int x, int y, ClickEvent event) {
 		Logger.info("You clicked me!");
 	}
 

@@ -1,6 +1,7 @@
 package net.darktree.game.tiles;
 
 import net.darktree.Main;
+import net.darktree.event.ClickEvent;
 import net.darktree.event.TurnEvent;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Symbol;
@@ -35,8 +36,8 @@ public class StructureTile extends Tile {
 	}
 
 	@Override
-	public void onInteract(World world, int x, int y, int mode) {
-		getBuilding(world, x, y).onInteract(world, x, y, mode);
+	public void onInteract(World world, int x, int y, ClickEvent event) {
+		getBuilding(world, x, y).onInteract(world, x, y, event);
 	}
 
 	@Override

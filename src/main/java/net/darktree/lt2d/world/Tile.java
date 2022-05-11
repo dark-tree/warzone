@@ -1,5 +1,6 @@
 package net.darktree.lt2d.world;
 
+import net.darktree.event.ClickEvent;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.Renderer;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
@@ -26,7 +27,7 @@ public abstract class Tile implements WorldComponent {
 		Renderer.tile(buffer, x, y, state, Registries.TILE_SPRITES.get(this.name));
 	}
 
-	public void onInteract(World world, int x, int y, int mode) {
+	public void onInteract(World world, int x, int y, ClickEvent event) {
 
 	}
 

@@ -1,5 +1,6 @@
 package net.darktree.game.tiles;
 
+import net.darktree.event.ClickEvent;
 import net.darktree.lt2d.graphics.Window;
 import net.darktree.lt2d.world.Tile;
 import net.darktree.lt2d.world.TileInstance;
@@ -14,8 +15,8 @@ import java.util.Random;
 public class EmptyTile extends Tile {
 
 	@Override
-	public void onInteract(World world, int x, int y, int mode) {
-		if (mode == GLFW.GLFW_PRESS) {
+	public void onInteract(World world, int x, int y, ClickEvent event) {
+		if (event.isPressed()) {
 			world.setTileState(x, y, Window.INSTANCE.input().isKeyPressed(GLFW.GLFW_KEY_W) ? Tiles.WATER.getDefaultVariant() : Tiles.MATERIAL.getDefaultVariant());
 		}
 	}

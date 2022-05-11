@@ -1,5 +1,6 @@
 package net.darktree.game.buildings;
 
+import net.darktree.event.ClickEvent;
 import net.darktree.lt2d.Registries;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
 import net.darktree.lt2d.util.NbtSerializable;
@@ -47,7 +48,7 @@ public class Building implements NbtSerializable, WorldComponent {
 	}
 
 	@Override
-	public void onInteract(World world, int x, int y, int mode) {
+	public void onInteract(World world, int x, int y, ClickEvent event) {
 
 	}
 
