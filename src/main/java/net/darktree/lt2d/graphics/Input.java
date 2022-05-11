@@ -25,11 +25,11 @@ public class Input {
 	private float prevY;
 	private float zoomMin;
 	private float zoomMax;
+	private float zoom = 0.1f;
 
 	// TODO make not public (maybe)
 	public float offsetX;
 	public float offsetY;
-	public float zoom = 0.1f;
 	public float scaleX;
 	public float scaleY;
 	public float guiScale = 1;
@@ -136,8 +136,8 @@ public class Input {
 	void clickHandle(long handle, int button, int action, int mods) {
 		ClickEvent event = new ClickEvent(button, action);
 
-		int x = (int) ((prevX / window.width() * 2 - 1) / scaleX - offsetX);
-		int y = (int) ((prevY / window.height() * -2 + 1) / scaleY - offsetY);
+		int x = getMouseMapX();
+		int y = getMouseMapY();
 
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
 			if (Main.world.isPositionValid(x, y)) {
@@ -190,6 +190,22 @@ public class Input {
 		updateScale();
 	}
 
+	public float getMouseScreenX() {
+		return (prevX / window.width() * 2 - 1);
+	}
+
+	public float getMouseScreenY() {
+		return (prevY / window.height() * -2 + 1);
+	}
+
+	public int getMouseMapX() {
+		return (int) (getMouseScreenX() / scaleX - offsetX);
+	}
+
+	public int getMouseMapY() {
+		return (int) (getMouseScreenY() / scaleY - offsetY);
+	}
+
 	public boolean isKeyPressed(int key) {
 		return GLFW.glfwGetKey(window.handle, key) == GLFW.GLFW_PRESS;
 	}
@@ -197,4 +213,5 @@ public class Input {
 	public boolean isButtonPressed(MouseButton button) {
 		return GLFW.glfwGetMouseButton(window.handle, button.code) == GLFW.GLFW_PRESS;
 	}
+
 }

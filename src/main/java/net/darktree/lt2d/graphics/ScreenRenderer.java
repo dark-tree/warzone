@@ -29,8 +29,24 @@ public class ScreenRenderer {
 		});
 	}
 
+	public static float projectMapIntoScreenX(int x) {
+		return (x + INPUT.offsetX) * INPUT.scaleX;
+	}
+
+	public static float projectMapIntoScreenY(int y) {
+		return (y + INPUT.offsetY) * INPUT.scaleY;
+	}
+
 	public static ScreenRenderer from(float x, float y) {
 		return INSTANCE.at(x, y);
+	}
+
+	public static ScreenRenderer fromMouse() {
+		return INSTANCE.at(INPUT.getMouseScreenX(), INPUT.getMouseScreenY());
+	}
+
+	public static ScreenRenderer fromTile(int x, int y) {
+		return INSTANCE.at(projectMapIntoScreenX(x), projectMapIntoScreenY(y));
 	}
 
 	public ScreenRenderer at(float x, float y) {
