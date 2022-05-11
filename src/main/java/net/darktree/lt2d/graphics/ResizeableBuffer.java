@@ -66,6 +66,7 @@ public class ResizeableBuffer implements AutoCloseable {
 		MemoryUtil.memFree(this.buffer);
 	}
 
+	@Deprecated
 	public void print() {
 		System.out.println(this.position() + " - pos");
 
