@@ -1,8 +1,8 @@
 package net.darktree.game.tiles;
 
-import net.darktree.event.ClickEvent;
-import net.darktree.lt2d.world.Tile;
-import net.darktree.lt2d.world.World;
+import net.darktree.core.event.ClickEvent;
+import net.darktree.core.world.tile.Tile;
+import net.darktree.core.world.World;
 
 public class MaterialMineTile extends Tile {
 

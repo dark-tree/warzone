@@ -1,7 +1,7 @@
 package opengl;
 
-import net.darktree.lt2d.graphics.image.Atlas;
-import net.darktree.lt2d.graphics.image.Image;
+import net.darktree.core.client.render.image.Atlas;
+import net.darktree.core.client.render.image.Image;
 import org.junit.jupiter.api.Test;
 import org.lwjgl.system.MemoryUtil;
 

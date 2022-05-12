@@ -1,6 +1,6 @@
 package net.darktree.game.country;
 
-import net.darktree.lt2d.util.NbtSerializable;
+import net.darktree.core.util.NbtSerializable;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,8 +1,8 @@
 package net.darktree.game.country;
 
-import net.darktree.lt2d.Registries;
-import net.darktree.lt2d.graphics.image.Atlas;
-import net.darktree.lt2d.graphics.image.Sprite;
+import net.darktree.core.Registries;
+import net.darktree.core.client.render.image.Atlas;
+import net.darktree.core.client.render.image.Sprite;
 
 public enum Symbol {
 	NONE(null),

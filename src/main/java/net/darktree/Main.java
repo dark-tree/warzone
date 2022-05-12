@@ -1,21 +1,21 @@
 package net.darktree;
 
 import net.darktree.game.gui.PlayUserInterface;
-import net.darktree.game.rendering.Buffers;
-import net.darktree.game.rendering.Shaders;
-import net.darktree.game.rendering.Uniforms;
+import net.darktree.core.client.Buffers;
+import net.darktree.core.client.Shaders;
+import net.darktree.core.client.Uniforms;
 import net.darktree.game.tiles.Tiles;
-import net.darktree.lt2d.graphics.Input;
-import net.darktree.lt2d.graphics.ScreenRenderer;
-import net.darktree.lt2d.graphics.Window;
-import net.darktree.lt2d.graphics.image.Font;
-import net.darktree.lt2d.graphics.image.Image;
-import net.darktree.lt2d.graphics.image.Texture;
-import net.darktree.lt2d.graphics.pipeline.Pipeline;
-import net.darktree.lt2d.graphics.vertex.Renderer;
-import net.darktree.lt2d.util.Logger;
-import net.darktree.lt2d.util.Resources;
-import net.darktree.lt2d.world.World;
+import net.darktree.core.client.window.Input;
+import net.darktree.core.client.render.ScreenRenderer;
+import net.darktree.core.client.window.Window;
+import net.darktree.core.client.render.image.Font;
+import net.darktree.core.client.render.image.Image;
+import net.darktree.core.client.render.image.Texture;
+import net.darktree.core.client.render.pipeline.Pipeline;
+import net.darktree.core.client.render.vertex.Renderer;
+import net.darktree.core.util.Logger;
+import net.darktree.core.util.Resources;
+import net.darktree.core.world.World;
 import org.lwjgl.Version;
 
 import static org.lwjgl.opengl.GL32.glClearColor;
@@ -86,10 +86,12 @@ public class Main {
 				string.append(c);
 			}
 
-			font.draw("\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, pipeline.buffer, 0, 0, 1, 1, 1, 1, 1, 0);
-			pipeline.flush();
+			ScreenRenderer.from(-1, 1).offset(0, -40).text(font, window.profiler.getFrameRate() + " FPS", 30, 0, 0, 0, 1);
 
-//			ScreenRenderer.fromMouse().text(font, "\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, 50, 0, 0, 0, 1).endText();
+//			font.draw("\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, pipeline.buffer, 0, 0, 1, 1, 1, 1, 1, 0);
+//			pipeline.flush();
+
+			ScreenRenderer.fromTile(0, 0).text(font, "\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, 50, 0, 0, 0, 1).endText();
 
 			window.swap();
 		}
