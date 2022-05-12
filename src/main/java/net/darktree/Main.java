@@ -6,7 +6,9 @@ import net.darktree.game.rendering.Shaders;
 import net.darktree.game.rendering.Uniforms;
 import net.darktree.game.tiles.Tiles;
 import net.darktree.lt2d.graphics.Input;
+import net.darktree.lt2d.graphics.ScreenRenderer;
 import net.darktree.lt2d.graphics.Window;
+import net.darktree.lt2d.graphics.image.Font;
 import net.darktree.lt2d.graphics.image.Image;
 import net.darktree.lt2d.graphics.image.Texture;
 import net.darktree.lt2d.graphics.pipeline.Pipeline;
@@ -66,6 +68,10 @@ public class Main {
 
 		world.addEntity(0, 0, Tiles.TEST);
 
+		Font font = new Font("scribble.png", 32, 32);
+
+//		ScreenRenderer.fromMouse().box(100, 100).sprite(font)
+
 		while ( !window.shouldClose() ) {
 			Renderer.clear();
 
@@ -73,6 +79,16 @@ public class Main {
 			pipeline.flush();
 
 			PlayUserInterface.draw();
+
+			StringBuilder string = new StringBuilder();
+
+			for(char c = 1; c <= '~'; c ++) {
+				string.append(c);
+			}
+
+			font.draw("\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, pipeline.buffer, 0, 0, 1, -0.2f);
+			pipeline.flush();
+
 
 			window.swap();
 		}

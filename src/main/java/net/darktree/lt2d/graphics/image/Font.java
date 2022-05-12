@@ -40,7 +40,7 @@ public class Font {
 		return this.sprites.get(chr);
 	}
 
-	public void draw(String text, VertexBuffer buffer, float x, float y, float size) {
+	public void draw(String text, VertexBuffer buffer, float x, float y, float size, float spacing) {
 		float offset = 0;
 
 		this.atlas.texture.bind();
@@ -50,7 +50,12 @@ public class Font {
 			Sprite sprite = this.sprite(chr);
 			Renderer.quad(buffer, x + offset, y, size, size, sprite, 1, 1, 1, 0);
 
-			offset += size;
+			offset += size + spacing;
+
+			if (chr == '\n') {
+				y -= size;
+				offset = 0;
+			}
 		}
 	}
 
