@@ -12,9 +12,10 @@ import java.nio.IntBuffer;
 public class Image implements AutoCloseable {
 
 	public final Format format;
+	public final int width;
+	public final int height;
+
 	private final long size;
-	private final int width;
-	private final int height;
 	private final boolean stb;
 
 	private long buffer;
@@ -51,7 +52,7 @@ public class Image implements AutoCloseable {
 
 	public void assertBounds(int x, int y) {
 		if (!checkBounds(x, y)) {
-			throw new ArrayIndexOutOfBoundsException("(%sx%s) is out of bounds for texture (%sx%s)!".formatted(x, y, width, height));
+			throw new ArrayIndexOutOfBoundsException("(%sx%s) is out of bounds for image (%sx%s)!".formatted(x, y, width, height));
 		}
 	}
 
@@ -106,8 +107,8 @@ public class Image implements AutoCloseable {
 		return new Image(width, height, format, MemoryUtil.memAddress(image), true);
 	}
 
-	public Texture asTexture(boolean useMipmaps) {
-		return new Texture(this, useMipmaps);
+	public Texture asTexture() {
+		return new Texture(this);
 	}
 
 	@Override
@@ -123,14 +124,6 @@ public class Image implements AutoCloseable {
 		this.buffer = 0;
 	}
 
-	public int width() {
-		return width;
-	}
-
-	public int height() {
-		return height;
-	}
-
 	public enum Format {
 		RGB(3, GL32.GL_RGB),
 		RGBA(4, GL32.GL_RGBA);
@@ -142,10 +135,6 @@ public class Image implements AutoCloseable {
 			this.channels = channels;
 			this.glFormat = glFormat;
 		}
-	}
-
-	private static class ImageLoadContext {
-
 	}
 
 }

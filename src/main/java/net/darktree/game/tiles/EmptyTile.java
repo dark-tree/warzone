@@ -1,10 +1,10 @@
 package net.darktree.game.tiles;
 
-import net.darktree.core.event.ClickEvent;
 import net.darktree.core.client.window.Window;
+import net.darktree.core.event.ClickEvent;
+import net.darktree.core.world.World;
 import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.tile.TileInstance;
-import net.darktree.core.world.World;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

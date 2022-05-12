@@ -1,12 +1,12 @@
 package net.darktree.core.world.entity;
 
-import net.darktree.game.country.Symbol;
 import net.darktree.core.Registries;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.util.Type;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldListener;
+import net.darktree.game.country.Symbol;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 

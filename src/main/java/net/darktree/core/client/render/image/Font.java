@@ -10,20 +10,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Font {
+public class Font implements AutoCloseable {
 
 	private final Atlas atlas;
 	private final List<Sprite> sprites;
 	private final float spacing;
 
 	public Font(String bitmap, int w, int h, float spacing) {
-
-		this.atlas = Atlas.createBaked(Image.of(bitmap, Image.Format.RGBA));
+		this.atlas = Atlas.bakedOf(Image.of(bitmap, Image.Format.RGBA));
 		this.sprites = new ArrayList<>();
 		this.spacing = spacing;
 
-		int iw = this.atlas.image.width();
-		int ih = this.atlas.image.height();
+		Image image = this.atlas.getImage();
+		int iw = image.width;
+		int ih = image.height;
 
 		if (iw % w != 0 || ih % h != 0) {
 			Logger.error("Unable to load the requested image as a font of desired glyph size! (", iw, "x", ih, ") is not divisible into: (", w, "x", h, ")");
@@ -56,11 +56,9 @@ public class Font {
 		return this.sprites.get(chr);
 	}
 
+	@Deprecated
 	public void draw(String text, VertexBuffer buffer, float x, float y, float size, float sizey, int r, int g, int b, int a) {
 		float offset = 0;
-
-		this.atlas.texture.bind();
-		this.atlas.texture.upload();
 
 		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
 			if (chr == '\n') {
@@ -76,8 +74,13 @@ public class Font {
 		}
 	}
 
-	public Texture getTexture() {
-		return atlas.texture;
+	public Atlas getAtlas() {
+		return atlas;
+	}
+
+	@Override
+	public void close() throws Exception {
+		atlas.close();
 	}
 
 }

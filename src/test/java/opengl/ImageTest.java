@@ -68,7 +68,7 @@ public class ImageTest {
 	public void atlasBuild() {
 		Image t = Image.of("test.png", Image.Format.RGBA);
 
-		Atlas atlas = Atlas.createEmpty();
+		Atlas atlas = new Atlas();
 		Atlas.SpriteReference s1 = atlas.add("s1", t);
 		Atlas.SpriteReference s2 = atlas.add("s2", t);
 		Atlas.SpriteReference s3 = atlas.add("s3", t);

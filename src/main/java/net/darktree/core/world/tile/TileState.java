@@ -1,13 +1,13 @@
 package net.darktree.core.world.tile;
 
-import net.darktree.game.country.Symbol;
-import net.darktree.game.tiles.Tiles;
 import net.darktree.core.Registries;
 import net.darktree.core.util.Direction;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.World;
 import net.darktree.core.world.tile.variant.TileVariant;
+import net.darktree.game.country.Symbol;
+import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +17,7 @@ final public class TileState implements NbtSerializable {
 	private TileInstance instance;
 	private Symbol owner;
 
-	TileState(TileVariant variant, TileInstance instance, Symbol owner) {
+	public TileState(TileVariant variant, TileInstance instance, Symbol owner) {
 		this.variant = variant;
 		this.instance = instance;
 		this.owner = owner;

@@ -1,8 +1,8 @@
 package net.darktree.game.tiles;
 
 import net.darktree.core.event.ClickEvent;
-import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.World;
+import net.darktree.core.world.tile.Tile;
 
 public class WaterTile extends Tile {
 

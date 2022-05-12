@@ -2,9 +2,9 @@ package net.darktree.core.client.render.vertex;
 
 import net.darktree.Main;
 import net.darktree.core.client.render.image.Sprite;
-import net.darktree.core.world.tile.TileState;
 import net.darktree.core.util.Color;
 import net.darktree.core.world.overlay.Overlay;
+import net.darktree.core.world.tile.TileState;
 import org.lwjgl.opengl.GL32;
 
 

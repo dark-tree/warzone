@@ -3,9 +3,9 @@ package net.darktree.core.client.render;
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
 import net.darktree.core.client.Uniforms;
+import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.client.render.image.Texture;
-import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.pipeline.TexturedPipeline;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.window.Input;
@@ -76,7 +76,7 @@ public class ScreenRenderer {
 
 	public ScreenRenderer sprite(Texture texture, Sprite sprite) {
 		this.sprite = sprite;
-		this.texturedPipeline.texture = texture;
+		this.texturedPipeline.setTexture(texture);
 		this.repeating = false;
 		return this;
 	}
@@ -110,7 +110,7 @@ public class ScreenRenderer {
 		float py = sc / Window.INSTANCE.height();
 
 		font.draw(text, this.textPipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, size * px, size * py, r, g, b, a);
-		this.textPipeline.texture = font.getTexture();
+		this.textPipeline.setTexture(font.getAtlas().getTexture());
 		return this;
 	}
 

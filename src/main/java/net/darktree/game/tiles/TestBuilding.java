@@ -1,13 +1,13 @@
 package net.darktree.game.tiles;
 
-import net.darktree.core.event.ClickEvent;
-import net.darktree.game.buildings.Building;
-import net.darktree.game.country.Symbol;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.event.ClickEvent;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Type;
 import net.darktree.core.world.World;
+import net.darktree.game.buildings.Building;
+import net.darktree.game.country.Symbol;
 
 public class TestBuilding extends Building {
 

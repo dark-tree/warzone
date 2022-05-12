@@ -1,13 +1,13 @@
 package net.darktree.game.tiles;
 
-import net.darktree.game.buildings.Building;
-import net.darktree.game.country.Symbol;
-import net.darktree.game.entities.UnitEntity;
 import net.darktree.core.Registries;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.util.Type;
-import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.tile.Tile;
+import net.darktree.game.buildings.Building;
+import net.darktree.game.country.Symbol;
+import net.darktree.game.entities.UnitEntity;
 
 public class Tiles {
 	public static Tile EMPTY = Registries.TILES.register("empty", new EmptyTile());

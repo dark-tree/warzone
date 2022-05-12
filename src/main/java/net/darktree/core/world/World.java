@@ -1,23 +1,23 @@
 package net.darktree.core.world;
 
 import net.darktree.Main;
-import net.darktree.core.event.TurnEvent;
-import net.darktree.game.buildings.Building;
-import net.darktree.game.country.Country;
-import net.darktree.game.country.Symbol;
-import net.darktree.game.tiles.Tiles;
 import net.darktree.core.Registries;
 import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
-import net.darktree.core.world.tile.TileStateConsumer;
 import net.darktree.core.util.Type;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.tile.TileInstance;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
+import net.darktree.core.world.tile.TileStateConsumer;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.core.world.view.WorldEntityView;
+import net.darktree.game.buildings.Building;
+import net.darktree.game.country.Country;
+import net.darktree.game.country.Symbol;
+import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -208,7 +208,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	public void draw(VertexBuffer buffer) {
 		this.entities.removeIf(entity -> entity.removed);
 
-		Registries.ATLAS.texture.bind();
+		Registries.ATLAS.getTexture().bind();
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {

@@ -1,21 +1,21 @@
 package net.darktree;
 
-import net.darktree.game.gui.PlayUserInterface;
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
 import net.darktree.core.client.Uniforms;
-import net.darktree.game.tiles.Tiles;
-import net.darktree.core.client.window.Input;
 import net.darktree.core.client.render.ScreenRenderer;
-import net.darktree.core.client.window.Window;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Image;
 import net.darktree.core.client.render.image.Texture;
 import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.vertex.Renderer;
+import net.darktree.core.client.window.Input;
+import net.darktree.core.client.window.Window;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
 import net.darktree.core.world.World;
+import net.darktree.game.gui.PlayUserInterface;
+import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
 
 import static org.lwjgl.opengl.GL32.glClearColor;
@@ -51,7 +51,7 @@ public class Main {
 
 
 		try( Image image = Image.of("top.png", Image.Format.RGBA) ) {
-			texture = image.asTexture(false);
+			texture = image.asTexture();
 			texture.upload();
 		}
 

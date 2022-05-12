@@ -1,9 +1,9 @@
 package net.darktree.core.world.tile;
 
-import net.darktree.core.event.ClickEvent;
 import net.darktree.core.Registries;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.event.ClickEvent;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldComponent;
 import net.darktree.core.world.tile.variant.TileVariant;

@@ -1,7 +1,7 @@
 package net.darktree.core.client.render.pipeline;
 
-import net.darktree.core.client.render.image.Texture;
 import net.darktree.core.client.render.image.Atlas;
+import net.darktree.core.client.render.image.Texture;
 import net.darktree.core.client.render.shader.Program;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 
@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 public class TexturedPipeline extends Pipeline {
 
-	public Texture texture;
+	private Texture texture;
 
 	public TexturedPipeline(VertexBuffer buffer, Program program, Texture texture, Consumer<Pipeline> prepare) {
 		super(buffer, program, prepare);
@@ -17,7 +17,11 @@ public class TexturedPipeline extends Pipeline {
 	}
 
 	public TexturedPipeline(VertexBuffer buffer, Program program, Atlas atlas, Consumer<Pipeline> prepare) {
-		this(buffer, program, atlas.texture, prepare);
+		this(buffer, program, atlas.getTexture(), prepare);
+	}
+
+	public void setTexture(Texture texture) {
+		this.texture = texture;
 	}
 
 	@Override
@@ -29,7 +33,6 @@ public class TexturedPipeline extends Pipeline {
 	@Override
 	public void close() {
 		super.close();
-		this.texture.close();
 	}
 
 }

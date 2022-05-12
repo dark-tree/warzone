@@ -1,9 +1,9 @@
 package net.darktree.core.world.overlay;
 
 import net.darktree.core.util.Color;
-import net.darktree.core.world.tile.TileState;
 import net.darktree.core.world.World;
 import net.darktree.core.world.path.Pathfinder;
+import net.darktree.core.world.tile.TileState;
 
 public class PathfinderOverlay implements Overlay {
 

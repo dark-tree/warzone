@@ -1,9 +1,9 @@
 package net.darktree.core.world;
 
 import net.darktree.core.event.ClickEvent;
-import net.darktree.game.country.Symbol;
 import net.darktree.core.util.Direction;
 import net.darktree.core.world.tile.variant.TileVariant;
+import net.darktree.game.country.Symbol;
 
 public interface WorldComponent extends WorldListener {
 

@@ -4,10 +4,10 @@ import org.lwjgl.opengl.GL32;
 
 public class Texture implements AutoCloseable {
 
-	public final Image image;
-	public final int id;
+	private final Image image;
+	private final int id;
 
-	protected Texture(Image image, boolean mipmaps) {
+	protected Texture(Image image) {
 		this.image = image;
 		this.id = GL32.glGenTextures();
 
@@ -17,10 +17,6 @@ public class Texture implements AutoCloseable {
 		GL32.glTexParameteri(GL32.GL_TEXTURE_2D, GL32.GL_TEXTURE_WRAP_T, GL32.GL_REPEAT);
 		GL32.glTexParameteri(GL32.GL_TEXTURE_2D, GL32.GL_TEXTURE_MIN_FILTER, GL32.GL_NEAREST);
 		GL32.glTexParameteri(GL32.GL_TEXTURE_2D, GL32.GL_TEXTURE_MAG_FILTER, GL32.GL_NEAREST);
-
-//		if (mipmaps) {
-//			GL32.glGenerateMipmap(GL32.GL_TEXTURE_2D);
-//		}
 	}
 
 	public void bind() {
@@ -29,12 +25,7 @@ public class Texture implements AutoCloseable {
 
 	public void upload() {
 		this.bind();
-		GL32.glTexImage2D(GL32.GL_TEXTURE_2D, 0, image.format.glFormat, image.width(), image.height(), 0, image.format.glFormat, GL32.GL_UNSIGNED_BYTE, image.getPointer(0,0));
-	}
-
-	public void uploadAndClose() {
-		this.upload();
-		this.image.close();
+		GL32.glTexImage2D(GL32.GL_TEXTURE_2D, 0, image.format.glFormat, image.width, image.height, 0, image.format.glFormat, GL32.GL_UNSIGNED_BYTE, image.getPointer(0,0));
 	}
 
 	@Override
@@ -42,4 +33,5 @@ public class Texture implements AutoCloseable {
 		GL32.glDeleteTextures(this.id);
 		this.image.close();
 	}
+
 }

@@ -1,21 +1,21 @@
 package net.darktree.core;
 
-import net.darktree.game.buildings.Building;
 import net.darktree.core.client.render.image.Atlas;
 import net.darktree.core.client.render.image.Image;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Registry;
 import net.darktree.core.util.Type;
-import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.tile.Tile;
+import net.darktree.game.buildings.Building;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Registries {
 
-	static public final Atlas ATLAS = Atlas.createEmpty();
+	static public final Atlas ATLAS = new Atlas();
 	static public final Map<String, Sprite> TILE_SPRITES = new HashMap<>();
 
 	static public final Image MISSINGNO = Image.of("tile/missing.png", Image.Format.RGBA);
@@ -32,7 +32,6 @@ public class Registries {
 		ATLAS.freeze().forEach(entry -> {
 			TILE_SPRITES.put(entry.getKey(), entry.getValue());
 		});
-		ATLAS.texture.upload();
 	});
 
 	public static Registry<Type<Entity>> ENTITIES = new Registry<>(entry -> {}, registry -> {});

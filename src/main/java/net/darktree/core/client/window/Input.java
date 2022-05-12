@@ -1,16 +1,16 @@
 package net.darktree.core.client.window;
 
 import net.darktree.Main;
-import net.darktree.core.event.ClickEvent;
-import net.darktree.game.country.Symbol;
-import net.darktree.game.entities.UnitEntity;
-import net.darktree.game.tiles.Tiles;
 import net.darktree.core.client.window.input.MouseButton;
+import net.darktree.core.event.ClickEvent;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.MovingEntity;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.path.Pathfinder;
+import net.darktree.game.country.Symbol;
+import net.darktree.game.entities.UnitEntity;
+import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
