@@ -3,6 +3,7 @@ package net.darktree.lt2d.graphics;
 import net.darktree.game.rendering.Buffers;
 import net.darktree.game.rendering.Shaders;
 import net.darktree.game.rendering.Uniforms;
+import net.darktree.lt2d.graphics.image.Font;
 import net.darktree.lt2d.graphics.image.Sprite;
 import net.darktree.lt2d.graphics.image.Texture;
 import net.darktree.lt2d.graphics.pipeline.TexturedPipeline;
@@ -14,7 +15,7 @@ public class ScreenRenderer {
 	private static final ScreenRenderer INSTANCE = new ScreenRenderer();
 	private static final Input INPUT = Window.INSTANCE.input();
 
-	private final TexturedPipeline pipeline;
+	private final TexturedPipeline texturedPipeline, textPipeline;
 	private float x, y;
 	private int ox, oy;
 	private Sprite sprite;
@@ -23,9 +24,13 @@ public class ScreenRenderer {
 	private float fx, fy;
 
 	public ScreenRenderer() {
-		this.pipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, (Texture) null, pipeline -> {
+		this.texturedPipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, (Texture) null, pipeline -> {
 			Uniforms.SCALE.putFloats(1, 1).flush();
 			Uniforms.OFFSET.putFloats(0, 0).flush();
+		});
+
+		this.textPipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXT, (Texture) null, pipeline -> {
+			// nothing to bind
 		});
 	}
 
@@ -69,7 +74,7 @@ public class ScreenRenderer {
 
 	public ScreenRenderer sprite(Texture texture, Sprite sprite) {
 		this.sprite = sprite;
-		this.pipeline.texture = texture;
+		this.texturedPipeline.texture = texture;
 		this.repeating = false;
 		return this;
 	}
@@ -93,7 +98,17 @@ public class ScreenRenderer {
 			target = new Sprite(this.sprite.u1(), this.sprite.v1(), this.sprite.u2() * this.fx, this.sprite.v2() * this.fy);
 		}
 
-		Renderer.quad(this.pipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, right * px, top * py, target, 1, 1, 1, 0);
+		Renderer.quad(this.texturedPipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, right * px, top * py, target, 1, 1, 1, 0);
+		return this;
+	}
+
+	public ScreenRenderer text(Font font, String text, float size, int r, int g, int b, int a) {
+		float sc = INPUT.guiScale;
+		float px = sc / Window.INSTANCE.width();
+		float py = sc / Window.INSTANCE.height();
+
+		font.draw(text, this.textPipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, size * px, size * py, r, g, b, a);
+		this.textPipeline.texture = font.getTexture();
 		return this;
 	}
 
@@ -101,8 +116,13 @@ public class ScreenRenderer {
 		return this.offset(-left, -bottom).box(right + left, top + bottom);
 	}
 
-	public ScreenRenderer next() {
-		this.pipeline.flush();
+	public ScreenRenderer endQuads() {
+		this.texturedPipeline.flush();
+		return this.reset();
+	}
+
+	public ScreenRenderer endText() {
+		this.textPipeline.flush();
 		return this.reset();
 	}
 

@@ -2,7 +2,9 @@ package net.darktree.lt2d.graphics.image;
 
 import net.darktree.lt2d.graphics.vertex.Renderer;
 import net.darktree.lt2d.graphics.vertex.VertexBuffer;
+import net.darktree.lt2d.json.FontJsonObject;
 import net.darktree.lt2d.util.Logger;
+import net.darktree.lt2d.util.Resources;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -12,11 +14,13 @@ public class Font {
 
 	private final Atlas atlas;
 	private final List<Sprite> sprites;
+	private final float spacing;
 
-	public Font(String font, int w, int h) {
+	public Font(String bitmap, int w, int h, float spacing) {
 
-		this.atlas = Atlas.createBaked(Image.of(font, Image.Format.RGBA));
+		this.atlas = Atlas.createBaked(Image.of(bitmap, Image.Format.RGBA));
 		this.sprites = new ArrayList<>();
+		this.spacing = spacing;
 
 		int iw = this.atlas.image.width();
 		int ih = this.atlas.image.height();
@@ -36,27 +40,44 @@ public class Font {
 		}
 	}
 
+	public static Font load(String name) {
+		try {
+			FontJsonObject object = Resources.json("font/" + name + ".json", FontJsonObject.class);
+			Font font = new Font("font/" + object.bitmap, object.x, object.y, object.separation);
+
+			Logger.info("Loaded font: '", object.name, "'");
+			return font;
+		}catch (Exception e) {
+			return null;
+		}
+	}
+
 	public Sprite sprite(byte chr) {
 		return this.sprites.get(chr);
 	}
 
-	public void draw(String text, VertexBuffer buffer, float x, float y, float size, float spacing) {
+	public void draw(String text, VertexBuffer buffer, float x, float y, float size, float sizey, int r, int g, int b, int a) {
 		float offset = 0;
 
 		this.atlas.texture.bind();
 		this.atlas.texture.upload();
 
 		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
-			Sprite sprite = this.sprite(chr);
-			Renderer.quad(buffer, x + offset, y, size, size, sprite, 1, 1, 1, 0);
-
-			offset += size + spacing;
-
 			if (chr == '\n') {
-				y -= size;
+				y -= sizey;
 				offset = 0;
+				continue;
 			}
+
+			Sprite sprite = this.sprite(chr);
+			Renderer.quad(buffer, x + offset, y, size, sizey, sprite, r, g, b, a);
+
+			offset += this.spacing * size;
 		}
+	}
+
+	public Texture getTexture() {
+		return atlas.texture;
 	}
 
 }

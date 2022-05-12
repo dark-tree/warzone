@@ -68,7 +68,7 @@ public class Main {
 
 		world.addEntity(0, 0, Tiles.TEST);
 
-		Font font = new Font("scribble.png", 32, 32);
+		Font font = Font.load("scribble");
 
 //		ScreenRenderer.fromMouse().box(100, 100).sprite(font)
 
@@ -86,9 +86,10 @@ public class Main {
 				string.append(c);
 			}
 
-			font.draw("\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, pipeline.buffer, 0, 0, 1, -0.2f);
+			font.draw("\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, pipeline.buffer, 0, 0, 1, 1, 1, 1, 1, 0);
 			pipeline.flush();
 
+//			ScreenRenderer.fromMouse().text(font, "\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, 50, 0, 0, 0, 1).endText();
 
 			window.swap();
 		}

@@ -1,0 +1,7 @@
+{
+  "name": "Scribble Normal",
+  "bitmap": "scribble.png",
+  "x": 32,
+  "y": 32,
+  "separation": 0.8
+}
