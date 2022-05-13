@@ -23,11 +23,11 @@ public class Tiles {
 	public static Sprite BASIC_TEST_BUILD;
 
 	static {
-		var ref = Registries.ATLAS.add("tile/center-build.png");
+//		var ref = Registries.ATLAS.add("tile/center-build.png");
 
 		Symbol.values(); // load class
-		Registries.TILES.freeze();
+//		Registries.TILES.freeze();
 
-		BASIC_TEST_BUILD = ref.sprite();
+//		BASIC_TEST_BUILD = ref.sprite();
 	}
 }

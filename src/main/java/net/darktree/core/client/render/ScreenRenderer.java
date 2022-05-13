@@ -2,7 +2,6 @@ package net.darktree.core.client.render;
 
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
-import net.darktree.core.client.Uniforms;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.client.render.image.Texture;

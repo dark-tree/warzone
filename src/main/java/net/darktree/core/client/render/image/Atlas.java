@@ -1,7 +1,9 @@
 package net.darktree.core.client.render.image;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Atlas implements AutoCloseable {
 
@@ -9,7 +11,7 @@ public class Atlas implements AutoCloseable {
 	private Image image;
 
 	private final List<SpriteReference> taken = new ArrayList<>();
-	private final Map<String, SpriteReference> sprites = new HashMap<>();
+	private final Map<Object, SpriteConvertible> sprites = new IdentityHashMap<>();
 	boolean frozen = false;
 
 	protected Atlas(Image image) {
@@ -32,7 +34,7 @@ public class Atlas implements AutoCloseable {
 		return new SpriteReference(x, y, x + w - 1, y + h - 1).sprite();
 	}
 
-	public SpriteReference add(String identifier, Image sprite) {
+	public SpriteReference addImage(Object identifier, Image sprite) {
 		assertFrozen(false);
 
 		for (int x = 0; x < this.image.width; x ++) {
@@ -62,26 +64,29 @@ public class Atlas implements AutoCloseable {
 		this.image.close();
 		this.image = atlas;
 
-		return add(identifier, sprite);
+		return addImage(identifier, sprite);
 	}
 
-	public SpriteReference add(String resource, String identifier) {
+	public SpriteReference addPath(String resource, Object identifier) {
 		try (Image texture = Image.of(resource, image.format)) {
-			return add(identifier, texture);
+			return addImage(identifier, texture);
 		}
 	}
 
-	public SpriteReference add(String resource) {
-		return add(resource, resource);
+	@Deprecated
+	public SpriteReference addPath(String resource) {
+		return addPath(resource, resource);
 	}
 
-	public List<Map.Entry<String, Sprite>> freeze() {
+	public void freeze() {
 		this.frozen = true;
 		this.texture = this.image.asTexture();
 		this.texture.upload();
-		return this.sprites.entrySet().stream().map(entry -> new AbstractMap.SimpleEntry<>(
-				entry.getKey(), entry.getValue().sprite())
-		).collect(Collectors.toList());
+
+		this.sprites.keySet().forEach(key -> {
+			SpriteConvertible convertible = this.sprites.get(key);
+			this.sprites.put(key, convertible.sprite());
+		});
 	}
 
 	public void assertFrozen(boolean value) {
@@ -98,6 +103,10 @@ public class Atlas implements AutoCloseable {
 		return image;
 	}
 
+	public Sprite getSprite(Object identifier) {
+		return this.sprites.get(identifier).sprite();
+	}
+
 	@Override
 	public void close() throws Exception {
 		if (texture != null) {
@@ -107,7 +116,7 @@ public class Atlas implements AutoCloseable {
 		}
 	}
 
-	public class SpriteReference {
+	public class SpriteReference implements SpriteConvertible {
 
 		public final int minX, minY, maxX, maxY;
 

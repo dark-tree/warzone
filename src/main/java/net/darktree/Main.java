@@ -1,5 +1,6 @@
 package net.darktree;
 
+import net.darktree.core.Registries;
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
 import net.darktree.core.client.Uniforms;
@@ -14,6 +15,7 @@ import net.darktree.core.client.window.Window;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
 import net.darktree.core.world.World;
+import net.darktree.game.country.Symbol;
 import net.darktree.game.gui.PlayUserInterface;
 import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
@@ -46,6 +48,12 @@ public class Main {
 	public static Texture texture;
 
 	private static void loop() {
+
+		Symbol.values();
+		Tiles.EMPTY.toString();
+		var ref = Registries.ATLAS.addPath("tile/center-build.png");
+		Registries.ATLAS.freeze();
+		Tiles.BASIC_TEST_BUILD = ref.sprite();
 
 		Input input = window.input();
 

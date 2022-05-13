@@ -1,6 +1,6 @@
 package net.darktree.core.client.render.image;
 
-public class Sprite {
+public class Sprite implements SpriteConvertible {
 
 	public static final Sprite IDENTITY = new Sprite(0, 1, 1, 0);
 	private final float u1, v1, u2, v2;
@@ -26,6 +26,11 @@ public class Sprite {
 
 	public float v2() {
 		return v2;
+	}
+
+	@Override
+	public Sprite sprite() {
+		return this;
 	}
 
 }

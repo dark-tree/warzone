@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class Tile implements WorldComponent {
 	public final TileVariant variant;
-	protected String name = null;
 
 	public Tile() {
 		this.variant = createDefaultVariant();
@@ -26,7 +25,7 @@ public abstract class Tile implements WorldComponent {
 	}
 
 	public void draw(int x, int y, TileState state, VertexBuffer buffer) {
-		Renderer.tile(buffer, x, y, state, Registries.TILE_SPRITES.get(this.name));
+		Renderer.tile(buffer, x, y, state, Registries.ATLAS.getSprite(this));
 	}
 
 	public void onInteract(World world, int x, int y, ClickEvent event) {
@@ -35,14 +34,6 @@ public abstract class Tile implements WorldComponent {
 
 	public void onRemoved(World world, int x, int y, TileVariant state) {
 
-	}
-
-	public void setName(String name) {
-		if (this.name == null) {
-			this.name = name;
-		}else{
-			throw new RuntimeException("Tile name already set!");
-		}
 	}
 
 	public boolean canPathfindThrough(World world, int x, int y) {
