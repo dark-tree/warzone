@@ -2,15 +2,19 @@ package net.darktree.core.client.window;
 
 public class FrameCounter {
 
-	private long frames;
-	private long time;
+	private long frames, time;
+	private long timer, nanos;
 	private int rate, count;
 
 	public void next() {
 		long now = System.currentTimeMillis();
 
-		if (now - time >= 1000) {
-			time = now;
+		long stamp = System.nanoTime();
+		time = (int) (stamp - nanos);
+		nanos = stamp;
+
+		if (now - timer >= 1000) {
+			timer = now;
 			rate = count;
 			count = 0;
 		}
@@ -25,6 +29,10 @@ public class FrameCounter {
 
 	public long getFrameCount() {
 		return frames;
+	}
+
+	public long getFrameTime() {
+		return time;
 	}
 
 }

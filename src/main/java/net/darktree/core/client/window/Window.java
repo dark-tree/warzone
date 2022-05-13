@@ -81,7 +81,7 @@ public class Window implements AutoCloseable {
 		}
 
 		glfwMakeContextCurrent(handle);
-		glfwSwapInterval(0);
+		glfwSwapInterval(1);
 		glfwShowWindow(handle);
 
 		// load OpenGL

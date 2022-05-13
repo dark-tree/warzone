@@ -34,7 +34,7 @@ public class Building implements NbtSerializable, WorldComponent {
 
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
-		tag.putString("id", Registries.BUILDINGS.getKey(this.type));
+		tag.putString("id", Registries.BUILDINGS.keyOf(this.type));
 	}
 
 	@Override

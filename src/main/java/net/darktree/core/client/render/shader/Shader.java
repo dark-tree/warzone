@@ -34,8 +34,6 @@ public class Shader implements AutoCloseable {
 	}
 
 	public static Shader of(String path, int type) {
-		Logger.info("Loading shader '", path, "'");
-
 		try {
 			return new Shader(Resources.contents(path), type);
 		} catch (IOException e) {

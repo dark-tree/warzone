@@ -1,6 +1,7 @@
 package net.darktree.core.client.render.vertex;
 
 import net.darktree.Main;
+import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.util.Color;
@@ -58,7 +59,13 @@ public class Renderer {
 		}
 	}
 
-	public static void clear() {
+	/**
+	 * Complete all pending OpenGL operations, measure frame times
+	 * swap frames and get ready for the next frame.
+	 */
+	public static void next() {
+		ScreenRenderer.flush();
+		Main.window.swap();
 		GL32.glClear(GL32.GL_COLOR_BUFFER_BIT | GL32.GL_DEPTH_BUFFER_BIT);
 	}
 

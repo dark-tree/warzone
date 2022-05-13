@@ -21,10 +21,10 @@ public class Registries {
 			Logger.warn("Failed to load texture for tile '", entry.key(), "' using missing texture!");
 			ATLAS.addImage(entry.value(), MISSINGNO);
 		}
-	}, registry -> {});
+	});
 
-	public static Registry<Type<Entity>> ENTITIES = new Registry<>(entry -> {}, registry -> {});
+	public static Registry<Type<Entity>> ENTITIES = new Registry<>(entry -> {});
 
-	public static Registry<Type<Building>> BUILDINGS = new Registry<>(entry -> {}, registry -> {});
+	public static Registry<Type<Building>> BUILDINGS = new Registry<>(entry -> {});
 
 }

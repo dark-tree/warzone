@@ -52,7 +52,7 @@ public class Entity implements NbtSerializable, WorldListener {
 
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
-		tag.putString("id", Registries.ENTITIES.getKey(this.type));
+		tag.putString("id", Registries.ENTITIES.keyOf(this.type));
 		tag.putInt("x", tx);
 		tag.putInt("y", ty);
 	}

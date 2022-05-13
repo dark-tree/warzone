@@ -41,6 +41,8 @@ public class Program implements AutoCloseable {
 	}
 
 	public static Program from(String path) {
+		Logger.info("Loading shader program '", path, "'");
+
 		try {
 			ShaderJsonBlob blob = Resources.json("shader/" + path + ".json", ShaderJsonBlob.class);
 

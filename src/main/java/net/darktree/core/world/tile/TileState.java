@@ -28,7 +28,7 @@ final public class TileState implements NbtSerializable {
 		variant.toNbt(tag);
 		tag.putByte("owner", (byte) owner.ordinal());
 
-		tag.putString("id", Registries.TILES.getKey(variant.getTile()));
+		tag.putString("id", Registries.TILES.keyOf(variant.getTile()));
 
 		if (instance != null) {
 			CompoundTag data = new CompoundTag();
