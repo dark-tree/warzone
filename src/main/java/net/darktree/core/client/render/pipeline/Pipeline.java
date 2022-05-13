@@ -25,11 +25,13 @@ public class Pipeline implements AutoCloseable {
 	}
 
 	public void flush() {
-		bind();
+		if (!this.buffer.isEmpty()) {
+			bind();
 
-		this.prepare.accept(this);
-		GL32.glDrawArrays(this.buffer.primitive, 0, this.buffer.count());
-		this.buffer.clear();
+			this.prepare.accept(this);
+			GL32.glDrawArrays(this.buffer.primitive, 0, this.buffer.count());
+			this.buffer.clear();
+		}
 	}
 
 	@Override

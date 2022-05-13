@@ -1,12 +1,10 @@
 package net.darktree.core.client.render.image;
 
-import net.darktree.core.client.render.vertex.Renderer;
-import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.json.FontJsonObject;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +12,7 @@ public class Font implements AutoCloseable {
 
 	private final Atlas atlas;
 	private final List<Sprite> sprites;
-	private final float spacing;
+	public final float spacing;
 
 	public Font(String bitmap, int w, int h, float spacing) {
 		this.atlas = Atlas.bakedOf(Image.of(bitmap, Image.Format.RGBA));
@@ -45,6 +43,9 @@ public class Font implements AutoCloseable {
 			FontJsonObject object = Resources.json("font/" + name + ".json", FontJsonObject.class);
 			Font font = new Font("font/" + object.bitmap, object.x, object.y, object.separation);
 
+			ScreenRenderer.registerFontPipeline(font);
+			ScreenRenderer.setFont(font);
+
 			Logger.info("Loaded font: '", object.name, "'");
 			return font;
 		}catch (Exception e) {
@@ -54,24 +55,6 @@ public class Font implements AutoCloseable {
 
 	public Sprite sprite(byte chr) {
 		return this.sprites.get(chr);
-	}
-
-	@Deprecated
-	public void draw(String text, VertexBuffer buffer, float x, float y, float size, float sizey, int r, int g, int b, int a) {
-		float offset = 0;
-
-		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
-			if (chr == '\n') {
-				y -= sizey;
-				offset = 0;
-				continue;
-			}
-
-			Sprite sprite = this.sprite(chr);
-			Renderer.quad(buffer, x + offset, y, size, sizey, sprite, r, g, b, a);
-
-			offset += this.spacing * size;
-		}
 	}
 
 	public Atlas getAtlas() {

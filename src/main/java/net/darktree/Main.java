@@ -68,9 +68,13 @@ public class Main {
 
 		world.addEntity(0, 0, Tiles.TEST);
 
-		Font font = Font.load("scribble");
+		// load and set font
+		Font scribble = Font.load("scribble");
 
-//		ScreenRenderer.fromMouse().box(100, 100).sprite(font)
+		StringBuilder string = new StringBuilder();
+		for(char c = 1; c <= '~'; c ++) {
+			string.append(c);
+		}
 
 		while ( !window.shouldClose() ) {
 			Renderer.clear();
@@ -80,19 +84,14 @@ public class Main {
 
 			PlayUserInterface.draw();
 
-			StringBuilder string = new StringBuilder();
+			ScreenRenderer.centerAt(-1, 1);
+			ScreenRenderer.setOffset(0, -40);
+			ScreenRenderer.text(window.profiler.getFrameRate() + " FPS", 30);
 
-			for(char c = 1; c <= '~'; c ++) {
-				string.append(c);
-			}
+			ScreenRenderer.centerAtTile(0, 0);
+			ScreenRenderer.text("\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, 50);
 
-			ScreenRenderer.from(-1, 1).offset(0, -40).text(font, window.profiler.getFrameRate() + " FPS", 30, 0, 0, 0, 1);
-
-//			font.draw("\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, pipeline.buffer, 0, 0, 1, 1, 1, 1, 1, 0);
-//			pipeline.flush();
-
-			ScreenRenderer.fromTile(0, 0).text(font, "\n\nWarzone WARZONE \nQUICK BROWN FOX JUMPS OVER THE LAZY DOG? \nQuick Brown Fox Jumps Over The Lazy Dog! \nquick brown fox jumps over the lazy dog!" + string, 50, 0, 0, 0, 1).endText();
-
+			ScreenRenderer.flush();
 			window.swap();
 		}
 	}

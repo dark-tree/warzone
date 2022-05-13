@@ -1,11 +1,14 @@
 package net.darktree.core.client.render.vertex;
 
 import net.darktree.Main;
+import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.util.Color;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.tile.TileState;
 import org.lwjgl.opengl.GL32;
+
+import java.nio.charset.StandardCharsets;
 
 
 public class Renderer {
@@ -36,6 +39,23 @@ public class Renderer {
 
 	public static void vertex(VertexBuffer buffer, float x, float y, float u, float v, float r, float g, float b, float a) {
 		buffer.putFloat(x).putFloat(y).putFloat(u).putFloat(v).putFloat(r).putFloat(g).putFloat(b).putFloat(a);
+	}
+
+	public static void text(String text, Font font, VertexBuffer buffer, float x, float y, float width, float height, float r, float g, float b, float a) {
+		float offset = 0;
+
+		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
+			if (chr == '\n') {
+				y -= height;
+				offset = 0;
+				continue;
+			}
+
+			Sprite sprite = font.sprite(chr);
+			Renderer.quad(buffer, x + offset, y, width, height, sprite, r, g, b, a);
+
+			offset += font.spacing * width;
+		}
 	}
 
 	public static void clear() {

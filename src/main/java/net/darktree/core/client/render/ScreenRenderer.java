@@ -6,126 +6,172 @@ import net.darktree.core.client.Uniforms;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.client.render.image.Texture;
+import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.pipeline.TexturedPipeline;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
-import org.jetbrains.annotations.ApiStatus;
+
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 public class ScreenRenderer {
 
-	private static final ScreenRenderer INSTANCE = new ScreenRenderer();
 	private static final Input INPUT = Window.INSTANCE.input();
+	private static final Map<Object, Pipeline> pipelines = new IdentityHashMap<>();
 
-	private final TexturedPipeline texturedPipeline, textPipeline;
-	private float x, y;
-	private int ox, oy;
-	private Sprite sprite;
+	// register universal pipeline for quad rendering
+	private static final TexturedPipeline quadPipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, (Texture) null, pipeline -> {
+		Uniforms.SCALE.putFloats(1, 1).flush();
+		Uniforms.OFFSET.putFloats(0, 0).flush();
+	});
 
-	private boolean repeating = false;
-	private float fx, fy;
+	private static float psx, psy;
+	private static float x, y;
+	private static int ox, oy;
+	private static float cr, cg, cb, ca;
+	private static Sprite quadSprite;
+	private static Font currentFont;
 
-	public ScreenRenderer() {
-		this.texturedPipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, (Texture) null, pipeline -> {
-			Uniforms.SCALE.putFloats(1, 1).flush();
-			Uniforms.OFFSET.putFloats(0, 0).flush();
-		});
-
-		this.textPipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXT, (Texture) null, pipeline -> {
-			// nothing to bind
-		});
-	}
-
-	public static float projectMapIntoScreenX(int x) {
+	private static float projectMapIntoScreenX(int x) {
 		return (x + INPUT.offsetX) * INPUT.scaleX;
 	}
 
-	public static float projectMapIntoScreenY(int y) {
+	private static float projectMapIntoScreenY(int y) {
 		return (y + INPUT.offsetY) * INPUT.scaleY;
 	}
 
-	public static ScreenRenderer from(float x, float y) {
-		return INSTANCE.at(x, y);
+	public static void registerFontPipeline(Font font) {
+		pipelines.put(font, new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXT, font, pipeline -> {}));
 	}
 
-	public static ScreenRenderer fromMouse() {
-		return INSTANCE.at(INPUT.getMouseScreenX(), INPUT.getMouseScreenY());
-	}
+	/**
+	 * Flush all geometry for rendering, and update screen size
+	 */
+	public static void flush() {
+		float scale = INPUT.guiScale;
+		psx = scale / Window.INSTANCE.width();
+		psy = scale / Window.INSTANCE.height();
 
-	public static ScreenRenderer fromTile(int x, int y) {
-		return INSTANCE.at(projectMapIntoScreenX(x), projectMapIntoScreenY(y));
-	}
+		quadPipeline.flush();
 
-	public ScreenRenderer at(float x, float y) {
-		this.x = x;
-		this.y = y;
-		return this;
-	}
-
-	public ScreenRenderer offset(int x, int y) {
-		this.ox += x;
-		this.oy += y;
-		return this;
-	}
-
-	public ScreenRenderer reset() {
-		this.ox = 0;
-		this.oy = 0;
-		return this;
-	}
-
-	public ScreenRenderer sprite(Texture texture, Sprite sprite) {
-		this.sprite = sprite;
-		this.texturedPipeline.setTexture(texture);
-		this.repeating = false;
-		return this;
-	}
-
-	@ApiStatus.Experimental
-	public ScreenRenderer repeating(float fx, float fy) {
-		this.fx = fx;
-		this.fy = fy;
-		this.repeating = true;
-		return this;
-	}
-
-	public ScreenRenderer box(int right, int top) {
-		float sc = INPUT.guiScale;
-		float px = sc / Window.INSTANCE.width();
-		float py = sc / Window.INSTANCE.height();
-
-		Sprite target = this.sprite;
-
-		if (repeating) {
-			target = new Sprite(this.sprite.u1(), this.sprite.v1(), this.sprite.u2() * this.fx, this.sprite.v2() * this.fy);
+		for (Pipeline pipeline : pipelines.values()) {
+			pipeline.flush();
 		}
-
-		Renderer.quad(this.texturedPipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, right * px, top * py, target, 1, 1, 1, 0);
-		return this;
 	}
 
-	public ScreenRenderer text(Font font, String text, float size, int r, int g, int b, int a) {
-		float sc = INPUT.guiScale;
-		float px = sc / Window.INSTANCE.width();
-		float py = sc / Window.INSTANCE.height();
-
-		font.draw(text, this.textPipeline.buffer, this.x + this.ox * px, this.y + this.oy * py, size * px, size * py, r, g, b, a);
-		this.textPipeline.setTexture(font.getAtlas().getTexture());
-		return this;
+	/**
+	 * Center the renderer using screen space coordinates
+	 */
+	public static void centerAt(float sx, float sy) {
+		x = sx;
+		y = sy;
+		ox = 0;
+		oy = 0;
 	}
 
-	public ScreenRenderer box(int left, int right, int top, int bottom) {
-		return this.offset(-left, -bottom).box(right + left, top + bottom);
+	/**
+	 * Center the renderer at the mouse
+	 */
+	public static void centerAtMouse() {
+		centerAt(INPUT.getMouseScreenX(), INPUT.getMouseScreenY());
 	}
 
-	public ScreenRenderer endQuads() {
-		this.texturedPipeline.flush();
-		return this.reset();
+	public static void centerAtTile(int x, int y) {
+		centerAt(projectMapIntoScreenX(x), projectMapIntoScreenY(y));
 	}
 
-	public ScreenRenderer endText() {
-		this.textPipeline.flush();
-		return this.reset();
+	/**
+	 * Set the pixel offset for the renderer using GUI pixel coordinates
+	 */
+	public static void setOffset(int px, int py) {
+		ox = px;
+		oy = py;
+	}
+
+	/**
+	 * Offset the renderer using GUI pixel coordinates
+	 */
+	public static void offset(int px, int py) {
+		ox += px;
+		oy += py;
+	}
+
+	/**
+	 * Set output color, used for tinting textures and text coloring
+	 */
+	public static void setColor(float r, float g, float b, float a) {
+		cr = r;
+		cg = g;
+		cb = b;
+		ca = a;
+	}
+
+	/**
+	 * Set output color with full alpha, used for text coloring
+	 * for tinting quads use {@link #setColor(float r, float g, float b, float a)} and set alpha to >0
+	 */
+	public static void setColor(float r, float g, float b) {
+		setColor(r, g, b, 0);
+	}
+
+	/**
+	 * Set font for text renderer
+	 */
+	public static void setFont(Font font) {
+		currentFont = font;
+	}
+
+	/**
+	 * Set sprite for quad renderer
+	 */
+	public static void setSprite(Sprite sprite) {
+		quadSprite = sprite;
+	}
+
+	/**
+	 * Set texture for quad renderer
+	 *
+	 * <p><b>
+	 * Warning: This operation will also force all previously written quads to be rendered
+	 */
+	// FIXME: put all gui textures into an atlas so that this doesn't need to flush
+	public static void setTexture(Texture texture) {
+		quadPipeline.flush();
+		quadPipeline.setTexture(texture);
+	}
+
+	/**
+	 * Set texture-sprite pair for quad renderer
+	 *
+	 * <p><b>
+	 * Warning: This operation will also force all previously written quads to be rendered
+	 */
+	public static void setTexture(Texture texture, Sprite sprite) {
+		setTexture(texture);
+		setSprite(sprite);
+	}
+
+	/**
+	 * Render textured box
+	 */
+	public static void box(int right, int top) {
+		Renderer.quad(quadPipeline.buffer, x + ox * psx, y + oy * psy, right * psx, top * psy, quadSprite, cr, cg, cb, ca);
+	}
+
+	/**
+	 * Render textured box
+	 */
+	public static void box(int left, int right, int top, int bottom) {
+		offset(-left, -bottom);
+		box(right + left, top + bottom);
+	}
+
+	/**
+	 * Render text
+	 */
+	public static void text(String text, float size) {
+		Renderer.text(text, currentFont, pipelines.get(currentFont).buffer, x + ox * psx, y + oy * psy, size * psx, size * psy, cr, cg, cb, ca);
 	}
 
 }

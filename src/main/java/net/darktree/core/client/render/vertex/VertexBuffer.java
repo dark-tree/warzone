@@ -30,6 +30,10 @@ public class VertexBuffer implements AutoCloseable {
 		return this.buffer.position() / this.vertexSize;
 	}
 
+	public boolean isEmpty() {
+		return this.buffer.position() == 0;
+	}
+
 	public void bind() {
 		GL32.glBindVertexArray(this.vao);
 
