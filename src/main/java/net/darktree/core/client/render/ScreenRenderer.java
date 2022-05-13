@@ -21,10 +21,7 @@ public class ScreenRenderer {
 	private static final Map<Object, Pipeline> pipelines = new IdentityHashMap<>();
 
 	// register universal pipeline for quad rendering
-	private static final TexturedPipeline quadPipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, (Texture) null, pipeline -> {
-		Uniforms.SCALE.putFloats(1, 1).flush();
-		Uniforms.OFFSET.putFloats(0, 0).flush();
-	});
+	private static final TexturedPipeline quadPipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.GUI, (Texture) null, pipeline -> {}, true);
 
 	private static float psx, psy;
 	private static float x, y;
@@ -42,7 +39,7 @@ public class ScreenRenderer {
 	}
 
 	public static void registerFontPipeline(Font font) {
-		pipelines.put(font, new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXT, font, pipeline -> {}));
+		pipelines.put(font, new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXT, font, pipeline -> {}, true));
 	}
 
 	/**

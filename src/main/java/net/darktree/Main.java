@@ -55,10 +55,10 @@ public class Main {
 			texture.upload();
 		}
 
-		pipeline = new Pipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, pipeline -> {
+		pipeline = new Pipeline(Buffers.TEXTURED.build(), Shaders.WORLD, pipeline -> {
 			Uniforms.SCALE.putFloats(input.scaleX, input.scaleY).flush();
 			Uniforms.OFFSET.putFloats(input.offsetX, input.offsetY).flush();
-		});
+		}, true);
 
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);

@@ -12,17 +12,17 @@ public class TexturedPipeline extends Pipeline {
 
 	private Texture texture;
 
-	public TexturedPipeline(VertexBuffer buffer, Program program, Texture texture, Consumer<Pipeline> prepare) {
-		super(buffer, program, prepare);
+	public TexturedPipeline(VertexBuffer buffer, Program program, Texture texture, Consumer<Pipeline> prepare, boolean immediate) {
+		super(buffer, program, prepare, immediate);
 		this.texture = texture;
 	}
 
-	public TexturedPipeline(VertexBuffer buffer, Program program, Atlas atlas, Consumer<Pipeline> prepare) {
-		this(buffer, program, atlas.getTexture(), prepare);
+	public TexturedPipeline(VertexBuffer buffer, Program program, Atlas atlas, Consumer<Pipeline> prepare, boolean immediate) {
+		this(buffer, program, atlas.getTexture(), prepare, immediate);
 	}
 
-	public TexturedPipeline(VertexBuffer buffer, Program program, Font font, Consumer<Pipeline> prepare) {
-		this(buffer, program, font.getAtlas(), prepare);
+	public TexturedPipeline(VertexBuffer buffer, Program program, Font font, Consumer<Pipeline> prepare, boolean immediate) {
+		this(buffer, program, font.getAtlas(), prepare, immediate);
 	}
 
 	public void setTexture(Texture texture) {

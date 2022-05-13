@@ -1,6 +1,6 @@
 package net.darktree.core.json;
 
-public class FontJsonObject {
+public class FontJsonBlob {
 	public String name;
 	public String bitmap;
 	public int x, y;

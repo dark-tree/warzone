@@ -9,14 +9,16 @@ import java.util.function.Consumer;
 public class Pipeline implements AutoCloseable {
 
 	private final Consumer<Pipeline> prepare;
+	private final boolean immediate;
 
 	public final VertexBuffer buffer;
 	public final Program program;
 
-	public Pipeline(VertexBuffer buffer, Program program, Consumer<Pipeline> prepare) {
+	public Pipeline(VertexBuffer buffer, Program program, Consumer<Pipeline> prepare, boolean immediate) {
 		this.prepare = prepare;
 		this.buffer = buffer;
 		this.program = program;
+		this.immediate = immediate;
 	}
 
 	protected void bind() {
@@ -30,7 +32,7 @@ public class Pipeline implements AutoCloseable {
 
 			this.prepare.accept(this);
 			GL32.glDrawArrays(this.buffer.primitive, 0, this.buffer.count());
-			this.buffer.clear();
+			if(immediate) this.buffer.clear();
 		}
 	}
 

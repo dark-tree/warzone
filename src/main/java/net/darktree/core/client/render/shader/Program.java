@@ -1,7 +1,11 @@
 package net.darktree.core.client.render.shader;
 
+import net.darktree.core.json.ShaderJsonBlob;
 import net.darktree.core.util.Logger;
+import net.darktree.core.util.Resources;
 import org.lwjgl.opengl.GL32;
+
+import java.io.IOException;
 
 public class Program implements AutoCloseable {
 
@@ -37,10 +41,17 @@ public class Program implements AutoCloseable {
 	}
 
 	public static Program from(String path) {
-		return Program.create()
-				.add(path + "/vertex.glsl", GL32.GL_VERTEX_SHADER)
-				.add(path + "/fragment.glsl", GL32.GL_FRAGMENT_SHADER)
-				.link();
+		try {
+			ShaderJsonBlob blob = Resources.json("shader/" + path + ".json", ShaderJsonBlob.class);
+
+			return Program.create()
+					.add("shader/" + blob.vertex, GL32.GL_VERTEX_SHADER)
+					.add("shader/" + blob.fragment, GL32.GL_FRAGMENT_SHADER)
+					.link();
+
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	// FIXME: cleanup the shaders

@@ -1,7 +1,7 @@
 package net.darktree.core.client.render.image;
 
 import net.darktree.core.client.render.ScreenRenderer;
-import net.darktree.core.json.FontJsonObject;
+import net.darktree.core.json.FontJsonBlob;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
 
@@ -40,7 +40,7 @@ public class Font implements AutoCloseable {
 
 	public static Font load(String name) {
 		try {
-			FontJsonObject object = Resources.json("font/" + name + ".json", FontJsonObject.class);
+			FontJsonBlob object = Resources.json("font/" + name + ".json", FontJsonBlob.class);
 			Font font = new Font("font/" + object.bitmap, object.x, object.y, object.separation);
 
 			ScreenRenderer.registerFontPipeline(font);
