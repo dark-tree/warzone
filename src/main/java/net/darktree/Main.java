@@ -9,11 +9,12 @@ import net.darktree.core.client.render.image.Image;
 import net.darktree.core.client.render.image.Texture;
 import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.vertex.Renderer;
+import net.darktree.core.client.sound.AudioBuffer;
+import net.darktree.core.client.sound.AudioManager;
+import net.darktree.core.client.sound.AudioSource;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
-import net.darktree.core.json.ModelJsonBlob;
 import net.darktree.core.util.Logger;
-import net.darktree.core.util.ModelLoader;
 import net.darktree.core.util.Resources;
 import net.darktree.core.world.World;
 import net.darktree.game.gui.PlayUserInterface;
@@ -35,6 +36,18 @@ public class Main {
 
 		window = Window.init(800, 500, "Game");
 
+		AudioManager.enable();
+
+		AudioBuffer song = new AudioBuffer();
+		song.load("sound/test_song.ogg");
+
+		AudioSource source = new AudioSource();
+		source.setBuffer(song);
+		source.setLoop(true);
+		source.setVolume(0.8f);
+
+		source.play();
+
 		Input input = window.input();
 		input.setZoomRange(0.07f, 1f);
 		input.setGuiScale(1);
@@ -43,6 +56,7 @@ public class Main {
 
 		pipeline.close();
 		window.close();
+		AudioManager.disable();
 	}
 
 	public static Texture texture;
