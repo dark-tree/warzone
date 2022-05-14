@@ -11,7 +11,9 @@ import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
+import net.darktree.core.json.ModelJsonBlob;
 import net.darktree.core.util.Logger;
+import net.darktree.core.util.ModelLoader;
 import net.darktree.core.util.Resources;
 import net.darktree.core.world.World;
 import net.darktree.game.gui.PlayUserInterface;
@@ -31,7 +33,7 @@ public class Main {
 		Logger.info("Current working directory: ", Resources.path());
 		Logger.info("Using LWJGL ", Version.getVersion());
 
-		window = Window.init(800, 500, "Tic-Tac-Toe (Advanced) v0.1");
+		window = Window.init(800, 500, "Game");
 
 		Input input = window.input();
 		input.setZoomRange(0.07f, 1f);
@@ -78,7 +80,7 @@ public class Main {
 
 			ScreenRenderer.centerAt(-1, 1);
 			ScreenRenderer.setOffset(0, -40);
-			ScreenRenderer.text(window.profiler.getFrameRate() + " FPS (" + String.format("%.2f", window.profiler.getFrameTime()/1000000f) + " ms)", 30);
+			ScreenRenderer.text(window.profiler.getFrameRate() + " FPS", 30);
 
 			Renderer.next();
 		}

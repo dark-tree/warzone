@@ -1,0 +1,12 @@
+{
+  "sprites": [
+    "water"
+  ],
+  "variants": {
+    "": [
+      {
+        "sprite": 0, "angle": 0
+      }
+    ]
+  }
+}

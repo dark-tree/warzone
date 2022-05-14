@@ -7,17 +7,20 @@ import net.querz.nbt.tag.IntTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class TileVariant {
 
 	private final Tile tile;
 	private final PropertyTree tree;
 	private final HashMap<Property<?>, Object> state;
+	private final int index;
 
-	TileVariant(Tile tile, HashMap<Property<?>, Object> state, PropertyTree tree) {
+	TileVariant(Tile tile, HashMap<Property<?>, Object> state, PropertyTree tree, int index) {
 		this.tile = tile;
 		this.tree = tree;
 		this.state = state;
+		this.index = index;
 	}
 
 	public static TileVariant createOf(Tile tile, Property<?>... properties) {
@@ -38,19 +41,16 @@ public class TileVariant {
 	}
 
 	public void toNbt(@NotNull CompoundTag tag) {
-		this.state.forEach((property, value) -> {
-			tag.putInt(property.name(), property.indexOf(value));
-		});
+		if (this.index != 0) tag.putInt("state", this.index);
 	}
 
 	public TileVariant fromNbt(@NotNull CompoundTag tag) {
-		HashMap<Property<?>, Object> config = new HashMap<>();
-
-		this.state.forEach((property, value) -> {
-			IntTag val = tag.getIntTag(property.name());
-			config.put(property, val == null ? value : property.values()[val.asInt()]);
-		});
-
-		return this.tree.get(config, null, null);
+		return this.tree.getStates().get(tag.getInt("state"));
 	}
+
+	@Override
+	public String toString() {
+		return this.state.entrySet().stream().map(entry -> entry.getKey().name() + "=" + entry.getValue().toString()).collect(Collectors.joining(","));
+	}
+
 }

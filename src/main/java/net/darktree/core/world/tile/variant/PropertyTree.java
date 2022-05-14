@@ -42,7 +42,7 @@ public class PropertyTree {
 	}
 
 	private TileVariant produceState(Tile tile, HashMap<Property<?>, Object> config) {
-		TileVariant state = new TileVariant(tile, config, this);
+		TileVariant state = new TileVariant(tile, config, this, states.size());
 		states.add(state);
 		return state;
 	}

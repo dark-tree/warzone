@@ -1,6 +1,8 @@
 package net.darktree.core.util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -42,17 +44,17 @@ public class Resources {
 		}
 	}
 
-//	public static JsonElement json(String path) throws Exception {
-//		try {
-//			Reader reader = Files.newBufferedReader(Objects.requireNonNull(location(path)));
-//			JsonElement element = JsonParser.parseReader(reader);
-//			reader.close();
-//			return element;
-//		}catch (IOException exception) {
-//			Logger.error("Requested resource '", path, "' could not be found!");
-//			throw exception;
-//		}
-//	}
+	public static JsonElement json(String path) throws IOException {
+		try {
+			Reader reader = Files.newBufferedReader(Objects.requireNonNull(location(path)));
+			JsonElement element = JsonParser.parseReader(reader);
+			reader.close();
+			return element;
+		}catch (IOException exception) {
+			Logger.error("Requested resource '", path, "' could not be found!");
+			throw exception;
+		}
+	}
 
 	public static <T> T json(String path, Class<T> clazz) throws IOException {
 		try {
