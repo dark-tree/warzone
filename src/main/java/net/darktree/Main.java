@@ -10,7 +10,7 @@ import net.darktree.core.client.render.image.Texture;
 import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.sound.AudioBuffer;
-import net.darktree.core.client.sound.AudioManager;
+import net.darktree.core.client.sound.SoundSystem;
 import net.darktree.core.client.sound.AudioSource;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
@@ -27,6 +27,7 @@ public class Main {
 
 	public static Window window;
 	public static World world;
+	public static Texture texture;
 
 	private static Pipeline pipeline;
 
@@ -34,36 +35,22 @@ public class Main {
 		Logger.info("Current working directory: ", Resources.path());
 		Logger.info("Using LWJGL ", Version.getVersion());
 
+		long start = System.currentTimeMillis();
+
 		window = Window.init(800, 500, "Game");
 
-		AudioManager.enable();
+		SoundSystem.enable();
 
-		AudioBuffer song = new AudioBuffer();
-		song.load("sound/test_song.ogg");
+		AudioBuffer song = SoundSystem.createBuffer("sound/test_song.ogg");
 
-		AudioSource source = new AudioSource();
-		source.setBuffer(song);
+		AudioSource source = SoundSystem.createSource(song);
 		source.setLoop(true);
 		source.setVolume(0.8f);
-
 		source.play();
 
 		Input input = window.input();
 		input.setZoomRange(0.07f, 1f);
 		input.setGuiScale(1);
-
-		loop();
-
-		pipeline.close();
-		window.close();
-		AudioManager.disable();
-	}
-
-	public static Texture texture;
-
-	private static void loop() {
-
-		Input input = window.input();
 
 		try( Image image = Image.of("top.png", Image.Format.RGBA) ) {
 			texture = image.asTexture();
@@ -81,10 +68,19 @@ public class Main {
 		world = new World(8, 8);
 		world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
 
-		world.addEntity(0, 0, Tiles.TEST);
-
 		// load and set font
 		Font scribble = Font.load("scribble");
+
+		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
+
+		loop();
+
+		pipeline.close();
+		window.close();
+		SoundSystem.disable();
+	}
+
+	private static void loop() {
 
 		while ( !window.shouldClose() ) {
 			world.draw(pipeline.buffer);

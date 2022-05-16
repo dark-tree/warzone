@@ -9,16 +9,16 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-public class AudioBuffer implements AutoCloseable {
+public class AudioBuffer {
 
-	int buffer;
+	private int buffer;
 
-	public AudioBuffer() {
+	AudioBuffer(String path) {
 		buffer = AL10.alGenBuffers();
+		load(path);
 	}
 
-	@Override
-	public void close() throws Exception {
+	void close() {
 		if (buffer != 0) {
 			AL10.alDeleteBuffers(buffer);
 			buffer = 0;
@@ -26,8 +26,12 @@ public class AudioBuffer implements AutoCloseable {
 	}
 
 	private int formatOf(int channels, int sampleRate) {
-//		boolean stereo = channels > 1;
-//
+		boolean stereo = channels > 1;
+
+		if (stereo) {
+			Logger.warn("Stereo audio detected, attenuation is not supported!");
+		}
+
 //		if (sampleRate == 16) {
 //			return stereo ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
 //		}
@@ -39,10 +43,10 @@ public class AudioBuffer implements AutoCloseable {
 //		throw new RuntimeException("Unknown sound format!");
 
 		// TODO figure out why STBVorbis tells me that my sound file has sampleRate=48000
-		return AL10.AL_FORMAT_STEREO16;
+		return AL10.AL_FORMAT_MONO16;
 	}
 
-	public void load(String path) {
+	private void load(String path) {
 		Logger.info("Loading sound file: ", path);
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -66,6 +70,10 @@ public class AudioBuffer implements AutoCloseable {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public int getHandle() {
+		return buffer;
 	}
 
 }

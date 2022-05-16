@@ -25,7 +25,6 @@ public class Input {
 	private float prevY;
 	private float zoomMin;
 	private float zoomMax;
-	private float zoom = 0.1f;
 
 	// TODO make not public (maybe)
 	public float offsetX;
@@ -33,6 +32,7 @@ public class Input {
 	public float scaleX;
 	public float scaleY;
 	public float guiScale = 1;
+	public float zoom = 0.1f;
 
 	public Input(Window window) {
 		this.window = window;
