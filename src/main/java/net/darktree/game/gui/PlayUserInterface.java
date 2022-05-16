@@ -15,11 +15,11 @@ public class PlayUserInterface {
 
 		ScreenRenderer.centerAt(0, 1);
 		ScreenRenderer.setTexture(Main.texture, Sprite.IDENTITY);
-		ScreenRenderer.box(85 * i, 85 * i, 0, 30 * i);
+		ScreenRenderer.box(60 * i, 60 * i, 0, 30 * i);
 
 		if (symbol != null) {
 			ScreenRenderer.setTexture(Registries.ATLAS.getTexture(), symbol.getSprite());
-			ScreenRenderer.setOffset(-79 * i, -23 * i);
+			ScreenRenderer.setOffset(-55 * i, -98);
 			ScreenRenderer.box(20 * i, 20 * i);
 		}
 

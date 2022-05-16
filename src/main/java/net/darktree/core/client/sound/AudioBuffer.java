@@ -25,24 +25,14 @@ public class AudioBuffer {
 		}
 	}
 
-	private int formatOf(int channels, int sampleRate) {
+	private int formatOf(int channels) {
 		boolean stereo = channels > 1;
 
 		if (stereo) {
 			Logger.warn("Stereo audio detected, attenuation is not supported!");
+			return AL10.AL_FORMAT_STEREO16;
 		}
 
-//		if (sampleRate == 16) {
-//			return stereo ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
-//		}
-//
-//		if (sampleRate == 8) {
-//			return stereo ? AL10.AL_FORMAT_STEREO8 : AL10.AL_FORMAT_MONO8;
-//		}
-//
-//		throw new RuntimeException("Unknown sound format!");
-
-		// TODO figure out why STBVorbis tells me that my sound file has sampleRate=48000
 		return AL10.AL_FORMAT_MONO16;
 	}
 
@@ -50,21 +40,18 @@ public class AudioBuffer {
 		Logger.info("Loading sound file: ", path);
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer channelsBuffer = stack.mallocInt(1);
-			IntBuffer sampleRateBuffer = stack.mallocInt(1);
+			IntBuffer channelCount = stack.mallocInt(1);
+			IntBuffer sampleRate = stack.mallocInt(1);
 
-			ShortBuffer data = STBVorbis.stb_vorbis_decode_filename(Resources.location(path).toString(), channelsBuffer, sampleRateBuffer);
+			ShortBuffer data = STBVorbis.stb_vorbis_decode_filename(Resources.location(path).toString(), channelCount, sampleRate);
 
 			if (data == null) {
 				Logger.warn("Failed to decode sound file: ", path);
 				return;
 			}
 
-			int channels = channelsBuffer.get();
-			int rate = sampleRateBuffer.get();
-
 			try {
-				AL10.alBufferData(buffer, formatOf(channels, rate), data, rate);
+				AL10.alBufferData(buffer, formatOf(channelCount.get()), data, sampleRate.get());
 			}catch (Exception e) {
 				Logger.warn("Failed to upload sound file: ", path);
 				e.printStackTrace();

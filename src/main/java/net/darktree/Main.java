@@ -9,9 +9,7 @@ import net.darktree.core.client.render.image.Image;
 import net.darktree.core.client.render.image.Texture;
 import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.vertex.Renderer;
-import net.darktree.core.client.sound.AudioBuffer;
 import net.darktree.core.client.sound.SoundSystem;
-import net.darktree.core.client.sound.AudioSource;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
 import net.darktree.core.util.Logger;
@@ -37,16 +35,15 @@ public class Main {
 
 		long start = System.currentTimeMillis();
 
-		window = Window.init(800, 500, "Game");
+		window = Window.init(800, 500, "Warzone (Test)");
 
 		SoundSystem.enable();
 
-		AudioBuffer song = SoundSystem.createBuffer("sound/test_song.ogg");
-
-		AudioSource source = SoundSystem.createSource(song);
-		source.setLoop(true);
-		source.setVolume(0.8f);
-		source.play();
+//		AudioBuffer song = SoundSystem.createBuffer("sound/test_song.ogg");
+//		AudioSource source = SoundSystem.createSource(song);
+//		source.setLoop(true);
+//		source.setVolume(0.8f);
+//		source.play();
 
 		Input input = window.input();
 		input.setZoomRange(0.07f, 1f);
@@ -73,7 +70,12 @@ public class Main {
 
 		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
 
-		loop();
+		try {
+			loop();
+		}catch (Exception e) {
+			Logger.fatal("Main thread has thrown an exception and crashed!");
+			e.printStackTrace();
+		}
 
 		pipeline.close();
 		window.close();
@@ -81,7 +83,6 @@ public class Main {
 	}
 
 	private static void loop() {
-
 		while ( !window.shouldClose() ) {
 			world.draw(pipeline.buffer);
 			pipeline.flush();

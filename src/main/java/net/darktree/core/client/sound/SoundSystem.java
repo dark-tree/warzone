@@ -3,10 +3,7 @@ package net.darktree.core.client.sound;
 import net.darktree.Main;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.util.Logger;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALC10;
-import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -110,7 +107,7 @@ public class SoundSystem {
 	}
 
 	/**
-	 * Stop all sounds started through the SoundManager
+	 * Stop all sounds
 	 */
 	public static void stopAll() {
 		synchronized (sources) {
@@ -123,6 +120,13 @@ public class SoundSystem {
 	 */
 	public static int getSourceCount() {
 		return sources.size();
+	}
+
+	/**
+	 * Set the master volume
+	 */
+	public static void setMasterVolume(float volume) {
+		AL10.alListenerf(AL10.AL_GAIN, volume);
 	}
 
 }

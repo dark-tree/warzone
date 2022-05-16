@@ -3,7 +3,6 @@ package net.darktree.core.world.tile.variant;
 import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.tile.variant.property.Property;
 import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.IntTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
