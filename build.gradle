@@ -53,7 +53,7 @@ dependencies {
     implementation('io.netty:netty-all:4.1.64.Final') {
         exclude group: 'io.netty', module: 'netty-tcnative'
     }
-    implementation 'io.netty:netty-tcnative:2.0.39.Final:' + osdetector.classifier
+    //implementation 'io.netty:netty-tcnative:2.0.39.Final:' + osdetector.classifier
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'

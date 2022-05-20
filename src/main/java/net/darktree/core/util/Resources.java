@@ -21,7 +21,7 @@ public class Resources {
 
 	public static Path location(String path) {
 		try {
-			Path location = Path.of(Objects.requireNonNull(LOADER.getResource(path)).getPath());
+			Path location = Path.of(Objects.requireNonNull(LOADER.getResource(path)).toURI());
 
 			if( Files.exists(location) ) {
 				return location;

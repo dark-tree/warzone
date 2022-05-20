@@ -98,7 +98,7 @@ public class SoundSystem {
 	public static AudioSource createSource(AudioBuffer buffer) {
 		AudioSource source = new AudioSource();
 		source.setBuffer(buffer);
-
+		
 		synchronized (sources) {
 			sources.add(source);
 		}
