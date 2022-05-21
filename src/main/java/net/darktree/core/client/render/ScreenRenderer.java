@@ -28,6 +28,7 @@ public class ScreenRenderer {
 	private static float cr, cg, cb, ca;
 	private static Sprite quadSprite;
 	private static Font currentFont;
+	private static Alignment currentAlignment = Alignment.LEFT;
 
 	private static float projectMapIntoScreenX(int x) {
 		return (x + INPUT.offsetX) * INPUT.scaleX;
@@ -149,6 +150,13 @@ public class ScreenRenderer {
 	}
 
 	/**
+	 * Sets the alignment for all subsequently rendered texts
+	 */
+	public static void setAlignment(Alignment alignment) {
+		currentAlignment = alignment;
+	}
+
+	/**
 	 * Render textured box
 	 */
 	public static void box(int right, int top) {
@@ -167,7 +175,7 @@ public class ScreenRenderer {
 	 * Render text
 	 */
 	public static void text(String text, float size) {
-		Renderer.text(text, currentFont, pipelines.get(currentFont).buffer, x + ox * psx, y + oy * psy, size * psx, size * psy, cr, cg, cb, ca);
+		Renderer.text(text, currentFont, pipelines.get(currentFont).buffer, x + ox * psx, y + oy * psy, size * psx, size * psy, cr, cg, cb, ca, currentAlignment);
 	}
 
 }

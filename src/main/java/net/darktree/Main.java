@@ -3,6 +3,7 @@ package net.darktree;
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
 import net.darktree.core.client.Uniforms;
+import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Image;

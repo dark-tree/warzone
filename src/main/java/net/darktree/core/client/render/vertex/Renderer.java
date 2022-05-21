@@ -1,6 +1,7 @@
 package net.darktree.core.client.render.vertex;
 
 import net.darktree.Main;
+import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
@@ -42,8 +43,8 @@ public class Renderer {
 		buffer.putFloat(x).putFloat(y).putFloat(u).putFloat(v).putFloat(r).putFloat(g).putFloat(b).putFloat(a);
 	}
 
-	public static void text(String text, Font font, VertexBuffer buffer, float x, float y, float width, float height, float r, float g, float b, float a) {
-		float offset = 0;
+	public static void text(String text, Font font, VertexBuffer buffer, float x, float y, float width, float height, float r, float g, float b, float a, Alignment alignment) {
+		float offset = alignment.getOffset(text.length(), width, font.spacing);
 
 		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
 			if (chr == '\n') {
