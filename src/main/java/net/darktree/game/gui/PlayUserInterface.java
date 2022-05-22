@@ -4,6 +4,7 @@ import net.darktree.Main;
 import net.darktree.core.Registries;
 import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.render.image.Sprite;
+import net.darktree.core.util.Logger;
 import net.darktree.game.country.Symbol;
 
 public class PlayUserInterface {
@@ -13,8 +14,15 @@ public class PlayUserInterface {
 
 		Symbol symbol = Main.world.getCurrentSymbol();
 
-		ScreenRenderer.centerAt(0, 1);
 		ScreenRenderer.setTexture(Main.texture, Sprite.IDENTITY);
+
+		ScreenRenderer.centerAt(0, 0);
+		if (ScreenRenderer.button(100, 100)) {
+			Logger.info("Button pressed!");
+		}
+
+		ScreenRenderer.centerAt(0, 1);
+
 		ScreenRenderer.box(60 * i, 60 * i, 0, 30 * i);
 
 		if (symbol != null) {

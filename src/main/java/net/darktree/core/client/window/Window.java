@@ -140,6 +140,7 @@ public class Window implements AutoCloseable {
 
 	public void swap() {
 		glfwSwapBuffers(this.handle);
+		input.frameHandle();
 		glfwPollEvents();
 		profiler.next();
 	}

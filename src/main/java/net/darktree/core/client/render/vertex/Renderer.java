@@ -30,13 +30,17 @@ public class Renderer {
 	}
 
 	public static void quad(VertexBuffer buffer, float x, float y, float w, float h, Sprite sprite, float r, float g, float b, float a) {
-		vertex(buffer, x, y, sprite.u1(), sprite.v1(), r, g, b, a);
-		vertex(buffer, x + w, y, sprite.u2(), sprite.v1(), r, g, b, a);
-		vertex(buffer, x, y + h, sprite.u1(), sprite.v2(), r, g, b, a);
+		quad(buffer, x, y, x + w, y, x + w, y + h, x, y + h, sprite, r, g, b, a);
+	}
 
-		vertex(buffer, x + w, y, sprite.u2(), sprite.v1(), r, g, b, a);
-		vertex(buffer, x + w, y + h, sprite.u2(), sprite.v2(), r, g, b, a);
-		vertex(buffer, x, y + h, sprite.u1(), sprite.v2(), r, g, b, a);
+	public static void quad(VertexBuffer buffer, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, Sprite sprite, float r, float g, float b, float a) {
+		vertex(buffer, x1, y1, sprite.u1(), sprite.v1(), r, g, b, a);
+		vertex(buffer, x2, y2, sprite.u2(), sprite.v1(), r, g, b, a);
+		vertex(buffer, x4, y4, sprite.u1(), sprite.v2(), r, g, b, a);
+
+		vertex(buffer, x2, y2, sprite.u2(), sprite.v1(), r, g, b, a);
+		vertex(buffer, x3, y3, sprite.u2(), sprite.v2(), r, g, b, a);
+		vertex(buffer, x4, y4, sprite.u1(), sprite.v2(), r, g, b, a);
 	}
 
 	public static void vertex(VertexBuffer buffer, float x, float y, float u, float v, float r, float g, float b, float a) {
@@ -44,7 +48,7 @@ public class Renderer {
 	}
 
 	public static void text(String text, Font font, VertexBuffer buffer, float x, float y, float width, float height, float r, float g, float b, float a, Alignment alignment) {
-		float offset = alignment.getOffset(text.length(), width, font.spacing);
+		float offset = alignment.getOffset(text.length() * width * font.spacing);
 
 		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
 			if (chr == '\n') {

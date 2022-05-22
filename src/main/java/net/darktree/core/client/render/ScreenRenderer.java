@@ -10,6 +10,7 @@ import net.darktree.core.client.render.pipeline.TexturedPipeline;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
+import net.darktree.core.client.window.input.MouseButton;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -36,6 +37,22 @@ public class ScreenRenderer {
 
 	private static float projectMapIntoScreenY(int y) {
 		return (y + INPUT.offsetY) * INPUT.scaleY;
+	}
+
+	static float getOffsetX() {
+		return x + ox * psx;
+	}
+
+	static float getOffsetY() {
+		return y + oy * psy;
+	}
+
+	static float getExtendX(float ex) {
+		return ex * psx;
+	}
+
+	static float getExtendY(float ey) {
+		return ey * psy;
 	}
 
 	public static void registerFontPipeline(Font font) {
@@ -105,7 +122,7 @@ public class ScreenRenderer {
 	}
 
 	/**
-	 * Set output color with full alpha, used for text coloring
+	 * Set output color with no alpha, used for text coloring
 	 * for tinting quads use {@link #setColor(float r, float g, float b, float a)} and set alpha to >0
 	 */
 	public static void setColor(float r, float g, float b) {
@@ -176,6 +193,36 @@ public class ScreenRenderer {
 	 */
 	public static void text(String text, float size) {
 		Renderer.text(text, currentFont, pipelines.get(currentFont).buffer, x + ox * psx, y + oy * psy, size * psx, size * psy, cr, cg, cb, ca, currentAlignment);
+	}
+
+	public static boolean isMouseOver(int right, int top) {
+		float bx = x + ox * psx;
+		float by = y + oy * psy;
+		float mx = INPUT.getMouseScreenX();
+		float my = INPUT.getMouseScreenY();
+
+		if (mx < bx || my < by) {
+			return false;
+		}
+
+		return !(mx > bx + right * psx || my > by + top * psy);
+	}
+
+	public static boolean button(int right, int top) {
+		boolean hover = isMouseOver(right, top);
+
+		if (hover) {
+			setColor(0, 0, 0, 0.2f);
+
+			if (INPUT.isButtonPressed(MouseButton.LEFT)) {
+				setColor(0, 0, 0, 0.4f);
+			}
+		}
+
+		box(right, top);
+		setColor(0, 0, 0, 0);
+
+		return hover && INPUT.hasClicked();
 	}
 
 }

@@ -1,9 +1,16 @@
 package net.darktree.core.client.render.image;
 
+import net.darktree.core.util.Logger;
+import net.darktree.core.util.Resources;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class Atlas implements AutoCloseable {
 
@@ -11,7 +18,7 @@ public class Atlas implements AutoCloseable {
 	private Image image;
 
 	private final List<SpriteReference> taken = new ArrayList<>();
-	private final Map<Object, SpriteConvertible> sprites = new IdentityHashMap<>();
+	private final Map<Object, SpriteConvertible> sprites = new HashMap<>();
 	boolean frozen = false;
 
 	protected Atlas(Image image) {
@@ -20,6 +27,38 @@ public class Atlas implements AutoCloseable {
 
 	public Atlas() {
 		this(new Image(16, 16, Image.Format.RGBA));
+	}
+
+	public Atlas(String path) {
+		Path root = Resources.location(path);
+
+		if (root == null) {
+			Logger.error("Unable to locate atlas directory '", path, "'!");
+			throw new RuntimeException("Unable to load atlas!");
+		}
+
+		loadAll(path, root);
+	}
+
+	private void loadAll(String resource, Path root) {
+		try {
+			Stream<Path> paths = Resources.listing(resource);
+
+			paths.forEach(path -> {
+				if (Files.isDirectory(path)) {
+					loadAll(resource + "/" + path.getFileName(), root);
+				}
+
+				String identifier = root.relativize(path).toString();
+				Logger.info("Loaded '", identifier, "'");
+
+				if (path.toString().endsWith(".png")) {
+					addPath(path.toString(), identifier);
+				}
+			});
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static Atlas bakedOf(Image image) {

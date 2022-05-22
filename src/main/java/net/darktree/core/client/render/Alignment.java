@@ -11,7 +11,7 @@ public enum Alignment {
 		this.multiplier = multiplier;
 	}
 
-	public float getOffset(int length, float width, float spacing) {
-		return -multiplier * length * width * spacing;
+	public float getOffset(float size) {
+		return -multiplier * size;
 	}
 }

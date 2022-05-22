@@ -4,11 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class Resources {
 
@@ -42,6 +45,10 @@ public class Resources {
 			Logger.error("Requested resource '", path, "' could not be found!");
 			throw exception;
 		}
+	}
+
+	public static Stream<Path> listing(String path) throws IOException {
+		return Files.list(Objects.requireNonNull(location(path)));
 	}
 
 	public static JsonElement json(String path) throws IOException {

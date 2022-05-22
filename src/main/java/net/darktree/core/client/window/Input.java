@@ -25,6 +25,7 @@ public class Input {
 	private float prevY;
 	private float zoomMin;
 	private float zoomMax;
+	private boolean clicked;
 
 	// TODO make not public (maybe)
 	public float offsetX;
@@ -139,6 +140,9 @@ public class Input {
 		int x = getMouseMapX();
 		int y = getMouseMapY();
 
+		// if button was RELEASED the click is complete
+		clicked = (button == GLFW.GLFW_MOUSE_BUTTON_1 && action == GLFW.GLFW_RELEASE);
+
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
 			if (Main.world.isPositionValid(x, y)) {
 
@@ -190,6 +194,10 @@ public class Input {
 		updateScale();
 	}
 
+	void frameHandle() {
+		clicked = false;
+	}
+
 	public float getMouseScreenX() {
 		return (prevX / window.width() * 2 - 1);
 	}
@@ -212,6 +220,10 @@ public class Input {
 
 	public boolean isButtonPressed(MouseButton button) {
 		return GLFW.glfwGetMouseButton(window.handle, button.code) == GLFW.GLFW_PRESS;
+	}
+
+	public boolean hasClicked() {
+		return clicked;
 	}
 
 }
