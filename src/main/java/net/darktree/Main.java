@@ -3,33 +3,34 @@ package net.darktree;
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
 import net.darktree.core.client.Uniforms;
-import net.darktree.core.client.render.Alignment;
-import net.darktree.core.client.render.ScreenRenderer;
-import net.darktree.core.client.render.image.Atlas;
+import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Image;
 import net.darktree.core.client.render.image.Texture;
 import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.sound.SoundSystem;
-import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
 import net.darktree.core.world.World;
-import net.darktree.game.gui.PlayUserInterface;
+import net.darktree.game.screens.PlayScreen;
 import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
+
+import java.util.Stack;
 
 import static org.lwjgl.opengl.GL32.glClearColor;
 
 public class Main {
 
+	public static Stack<Screen> screens = new Stack<>();
+
 	public static Window window;
 	public static World world;
 	public static Texture texture;
 
-	private static Pipeline pipeline;
+	public static Pipeline pipeline;
 
 	public static void main(String[] args) {
 		Logger.info("Current working directory: ", Resources.path());
@@ -47,18 +48,14 @@ public class Main {
 //		source.setVolume(0.8f);
 //		source.play();
 
-		Input input = window.input();
-		input.setZoomRange(0.07f, 1f);
-		input.setGuiScale(1);
-
 		try( Image image = Image.of("top.png", Image.Format.RGBA) ) {
 			texture = image.asTexture();
 			texture.upload();
 		}
 
 		pipeline = new Pipeline(Buffers.TEXTURED.build(), Shaders.WORLD, pipeline -> {
-			Uniforms.SCALE.putFloats(input.scaleX, input.scaleY).flush();
-			Uniforms.OFFSET.putFloats(input.offsetX, input.offsetY).flush();
+			Uniforms.SCALE.putFloats(world.scaleX, world.scaleY).flush();
+			Uniforms.OFFSET.putFloats(world.offsetX, world.offsetY).flush();
 		}, true);
 
 		// Set the clear color, evil blue from LT3D (patent pending)
@@ -71,6 +68,8 @@ public class Main {
 		Font scribble = Font.load("scribble");
 
 		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
+
+		screens.push(new PlayScreen(world));
 
 		try {
 			loop();
@@ -85,16 +84,9 @@ public class Main {
 	}
 
 	private static void loop() {
-		while ( !window.shouldClose() ) {
-			world.draw(pipeline.buffer);
-			pipeline.flush();
-
-			PlayUserInterface.draw();
-
-			ScreenRenderer.centerAt(-1, 1);
-			ScreenRenderer.setOffset(0, -40);
-			ScreenRenderer.text(window.profiler.getFrameRate() + " FPS", 30);
-
+		while (!window.shouldClose()) {
+			screens.forEach(Screen::draw);
+			screens.removeIf(Screen::isClosed);
 			Renderer.next();
 		}
 	}

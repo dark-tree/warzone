@@ -3,6 +3,7 @@ package net.darktree.core.world;
 import net.darktree.Main;
 import net.darktree.core.Registries;
 import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.client.window.Input;
 import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.util.Type;
@@ -39,6 +40,12 @@ public class World implements NbtSerializable, WorldEntityView {
 	private Overlay overlay = null;
 	private int turn;
 
+	public float offsetX;
+	public float offsetY;
+	public float scaleX;
+	public float scaleY;
+	public float zoom;
+
 	public World(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -49,6 +56,22 @@ public class World implements NbtSerializable, WorldEntityView {
 				this.tiles[x][y] = new TileState(null, null, Symbol.NONE);
 			}
 		}
+
+		setZoom(Input.MAP_ZOOM_MIN * 1.8f);
+
+		offsetX = width / -2f;
+		offsetY = height / -2f;
+	}
+
+	public void drag(float x, float y) {
+		this.offsetX += x / scaleX;
+		this.offsetY += y / scaleY;
+	}
+
+	public void setZoom(float zoom) {
+		this.scaleX = zoom * Main.window.height() / (float) Main.window.width();
+		this.scaleY = zoom;
+		this.zoom = zoom;
 	}
 
 	@Override

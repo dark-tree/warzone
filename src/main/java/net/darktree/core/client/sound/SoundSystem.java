@@ -1,8 +1,8 @@
 package net.darktree.core.client.sound;
 
 import net.darktree.Main;
-import net.darktree.core.client.window.Input;
 import net.darktree.core.util.Logger;
+import net.darktree.core.world.World;
 import org.lwjgl.openal.*;
 
 import java.nio.ByteBuffer;
@@ -45,10 +45,10 @@ public class SoundSystem {
 
 		thread = new Thread(() -> {
 			while (true) {
-				Input input = Main.window.input();
+				World world = Main.world;
 
 				synchronized (sources) {
-					sources.removeIf(source -> source.update(input));
+					sources.removeIf(source -> source.update(world));
 				}
 
 				try {

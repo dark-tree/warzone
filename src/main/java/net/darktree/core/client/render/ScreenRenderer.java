@@ -1,5 +1,6 @@
 package net.darktree.core.client.render;
 
+import net.darktree.Main;
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
 import net.darktree.core.client.render.image.Font;
@@ -32,27 +33,11 @@ public class ScreenRenderer {
 	private static Alignment currentAlignment = Alignment.LEFT;
 
 	private static float projectMapIntoScreenX(int x) {
-		return (x + INPUT.offsetX) * INPUT.scaleX;
+		return (x + Main.world.offsetX) * Main.world.scaleX;
 	}
 
 	private static float projectMapIntoScreenY(int y) {
-		return (y + INPUT.offsetY) * INPUT.scaleY;
-	}
-
-	static float getOffsetX() {
-		return x + ox * psx;
-	}
-
-	static float getOffsetY() {
-		return y + oy * psy;
-	}
-
-	static float getExtendX(float ex) {
-		return ex * psx;
-	}
-
-	static float getExtendY(float ey) {
-		return ey * psy;
+		return (y + Main.world.offsetY) * Main.world.scaleY;
 	}
 
 	public static void registerFontPipeline(Font font) {
@@ -91,6 +76,9 @@ public class ScreenRenderer {
 		centerAt(INPUT.getMouseScreenX(), INPUT.getMouseScreenY());
 	}
 
+	/**
+	 * Center the renderer at the specified map tile
+	 */
 	public static void centerAtTile(int x, int y) {
 		centerAt(projectMapIntoScreenX(x), projectMapIntoScreenY(y));
 	}
@@ -176,16 +164,17 @@ public class ScreenRenderer {
 	/**
 	 * Render textured box
 	 */
-	public static void box(int right, int top) {
+	public static boolean box(int right, int top) {
 		Renderer.quad(quadPipeline.buffer, x + ox * psx, y + oy * psy, right * psx, top * psy, quadSprite, cr, cg, cb, ca);
+		return isMouseOver(right, top);
 	}
 
 	/**
 	 * Render textured box
 	 */
-	public static void box(int left, int right, int top, int bottom) {
+	public static boolean box(int left, int right, int top, int bottom) {
 		offset(-left, -bottom);
-		box(right + left, top + bottom);
+		return box(right + left, top + bottom);
 	}
 
 	/**

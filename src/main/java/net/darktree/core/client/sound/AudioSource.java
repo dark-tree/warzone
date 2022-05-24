@@ -1,7 +1,7 @@
 package net.darktree.core.client.sound;
 
 import net.darktree.Main;
-import net.darktree.core.client.window.Input;
+import net.darktree.core.world.World;
 import org.lwjgl.openal.AL10;
 
 public class AudioSource {
@@ -25,9 +25,9 @@ public class AudioSource {
 		}
 	}
 
-	boolean update(Input input) {
+	boolean update(World world) {
 		if (attenuation) {
-			updatePosition(input);
+			updatePosition(world);
 		}
 
 		if (!isPlaying()) {
@@ -38,9 +38,9 @@ public class AudioSource {
 		return false;
 	}
 
-	private void updatePosition(Input input) {
-		float oz = 1 - input.zoom;
-		AL10.alSource3f(source, AL10.AL_POSITION, (input.offsetX + x) * input.scaleX, (input.offsetY + y) * input.scaleY, (z + oz) * 10);
+	private void updatePosition(World world) {
+		float oz = 1 - Main.world.zoom;
+		AL10.alSource3f(source, AL10.AL_POSITION, (world.offsetX + x) * Main.world.scaleX, (world.offsetY + y) * Main.world.scaleY, (z + oz) * 10);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class AudioSource {
 		AL10.alSourcePlay(source);
 
 		if (attenuation) {
-			updatePosition(Main.window.input());
+			updatePosition(Main.world);
 		}
 	}
 
