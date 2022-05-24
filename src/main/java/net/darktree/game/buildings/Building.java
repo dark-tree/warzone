@@ -57,7 +57,7 @@ public class Building implements NbtSerializable, WorldComponent {
 	}
 
 	public void draw(int x, int y, VertexBuffer buffer) {
-		// TODO: render something
+
 	}
 
 	public static class Link extends TileInstance {

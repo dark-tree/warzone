@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
 
-// TODO: cleanup
 public class Atlas implements AutoCloseable, TextureConvertible {
 
 	private Texture texture;
@@ -17,17 +16,20 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 
 	private final List<SpriteReference> taken = new ArrayList<>();
 	private final Map<Object, SpriteConvertible> sprites = new HashMap<>();
-	boolean frozen = false;
+	private boolean frozen = false;
 
 	protected Atlas(Image image) {
 		this.image = image;
 	}
 
-	public Atlas() {
+	protected Atlas() {
 		this(new Image(16, 16, Image.Format.RGBA));
 	}
 
-	public static Atlas of(String path) {
+	/**
+	 * Used for creating an atlas from multiple smaller images
+	 */
+	public static Atlas stitchedOf(String path) {
 		Atlas atlas = new Atlas();
 
 		Path root = Resources.location(path);
@@ -42,44 +44,36 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 		atlas.loadAll(path, path, root);
 		atlas.freeze();
 
-		Logger.info("Texture atlas '", path, "' loaded! (took ", System.currentTimeMillis() - start, "ms)");
+		Logger.info("Texture atlas '", path, "' stitched! (took ", System.currentTimeMillis() - start, "ms)");
 
 		return atlas;
 	}
 
-	private void loadAll(String source, String resource, Path root) {
-		try {
-			Stream<Path> paths = Resources.listing(resource);
-
-			paths.forEach(path -> {
-				if (Files.isDirectory(path)) {
-					loadAll(source, resource + "/" + path.getFileName(), root);
-				}
-
-				String identifier = root.relativize(path).toString();
-
-				if (identifier.endsWith(".png")) {
-					addPath(source + "/" + identifier, identifier);
-				}
-			});
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static Atlas bakedOf(Image image) {
+	/**
+	 * Used for creating an atlas from a single (atlas) image
+	 */
+	public static Atlas identityOf(Image image) {
 		Atlas atlas = new Atlas(image);
 		atlas.freeze();
+
 		return atlas;
 	}
 
+	/**
+	 * Get sprite from atlas by its coordinates, the result of this method call should be cached and reused
+	 */
 	public Sprite at(int x, int y, int w, int h) {
-		assertFrozen(true);
-
 		return new SpriteReference(x, y, x + w - 1, y + h - 1).sprite();
 	}
 
-	public void addImage(Object identifier, Image sprite) {
+	/**
+	 * Get sprite from atlas by its identifier (in stitched atlases this is the relative file path)
+	 */
+	public Sprite getSprite(Object identifier) {
+		return Objects.requireNonNull(this.sprites.get(identifier)).sprite();
+	}
+
+	protected void addImage(Object identifier, Image sprite) {
 		assertFrozen(false);
 
 		for (int x = 0; x < this.image.width; x ++) {
@@ -112,16 +106,37 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 		addImage(identifier, sprite);
 	}
 
-	public void addPath(String resource, Object identifier) {
+	protected void addPath(String resource, Object identifier) {
 		try (Image texture = Image.of(resource, image.format)) {
 			addImage(identifier, texture);
 		}
 	}
 
-	public void freeze() {
+	private void loadAll(String source, String resource, Path root) {
+		try {
+			Stream<Path> paths = Resources.listing(resource);
+
+			paths.forEach(path -> {
+				if (Files.isDirectory(path)) {
+					loadAll(source, resource + "/" + path.getFileName(), root);
+				}
+
+				String identifier = root.relativize(path).toString();
+
+				if (identifier.endsWith(".png")) {
+					addPath(source + "/" + identifier, identifier);
+				}
+			});
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected void freeze() {
 		this.frozen = true;
 		this.texture = this.image.asTexture();
 		this.texture.upload();
+		this.taken.clear();
 
 		this.sprites.keySet().forEach(key -> {
 			SpriteConvertible convertible = this.sprites.get(key);
@@ -129,7 +144,7 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 		});
 	}
 
-	public void assertFrozen(boolean value) {
+	protected void assertFrozen(boolean value) {
 		if (this.frozen != value) {
 			throw new RuntimeException(value ? "Atlas is not frozen!" : "Atlas is frozen!");
 		}
@@ -138,14 +153,6 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 	@Override
 	public Texture getTexture() {
 		return texture;
-	}
-
-	public Image getImage() {
-		return image;
-	}
-
-	public Sprite getSprite(Object identifier) {
-		return Objects.requireNonNull(this.sprites.get(identifier)).sprite();
 	}
 
 	@Override
@@ -157,7 +164,7 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 		}
 	}
 
-	public class SpriteReference implements SpriteConvertible {
+	protected class SpriteReference implements SpriteConvertible {
 
 		public final int minX, minY, maxX, maxY;
 

@@ -64,49 +64,4 @@ public class ImageTest {
 		image.close();
 	}
 
-	@Test
-	public void atlasBuild() {
-		Image t = Image.of("test.png", Image.Format.RGBA);
-
-		Atlas atlas = new Atlas();
-		Atlas.SpriteReference s1 = atlas.add("s1", t);
-		Atlas.SpriteReference s2 = atlas.add("s2", t);
-		Atlas.SpriteReference s3 = atlas.add("s3", t);
-		Atlas.SpriteReference s4 = atlas.add("s4", t);
-
-		assertEquals(0, s1.minX);
-		assertEquals(0, s1.minY);
-		assertEquals(7, s1.maxX);
-		assertEquals(7, s1.maxY);
-		assertEquals(0, s2.minX);
-		assertEquals(8, s2.minY);
-		assertEquals(8, s3.minX);
-		assertEquals(0, s3.minY);
-		assertEquals(8, s4.minX);
-		assertEquals(8, s4.minY);
-
-		// test atlas expansion
-		Atlas.SpriteReference s5 = atlas.add("s5", t);
-
-		assertEquals(0, s5.minX);
-		assertEquals(16, s5.minY);
-
-		assertThrowsExactly(RuntimeException.class, s1::sprite);
-		assertThrowsExactly(RuntimeException.class, s2::sprite);
-		assertThrowsExactly(RuntimeException.class, s3::sprite);
-		assertThrowsExactly(RuntimeException.class, s4::sprite);
-
-		// atlas.freeze() calls OpenGL now thus is unusable in tests
-		// TODO fix or remove
-//		atlas.freeze();
-//		assertThrowsExactly(RuntimeException.class, () -> {
-//			atlas.add("test", (Image) null);
-//		});
-
-		// ... and this fails as the atlas is not frozen
-		// TODO fix or remove
-//		// no exception expected
-//		s1.sprite();
-	}
-
 }

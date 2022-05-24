@@ -8,6 +8,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 public class Image implements AutoCloseable {
 
@@ -95,7 +96,7 @@ public class Image implements AutoCloseable {
 			IntBuffer h = stack.mallocInt(1);
 			IntBuffer n = stack.mallocInt(1);
 
-			image = STBImage.stbi_load(Resources.location(path).toString(), w, h, n, (int) format.channels);
+			image = STBImage.stbi_load(Objects.requireNonNull(Resources.location(path)).toString(), w, h, n, (int) format.channels);
 			if (image == null) {
 				throw new RuntimeException("Failed to load image '" + path + "', " + STBImage.stbi_failure_reason() + "!");
 			}

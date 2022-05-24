@@ -5,7 +5,6 @@ import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.country.Symbol;
 
-// TODO slightly shit make less bad
 public class Pathfinder {
 
 	private final int[][] field;

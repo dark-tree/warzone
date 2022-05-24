@@ -15,11 +15,12 @@ public class Font implements AutoCloseable, TextureConvertible {
 	public final float spacing;
 
 	public Font(String bitmap, int w, int h, float spacing) {
-		this.atlas = Atlas.bakedOf(Image.of(bitmap, Image.Format.RGBA));
+		Image image = Image.of(bitmap, Image.Format.RGBA);
+
+		this.atlas = Atlas.identityOf(image);
 		this.sprites = new ArrayList<>();
 		this.spacing = spacing;
 
-		Image image = this.atlas.getImage();
 		int iw = image.width;
 		int ih = image.height;
 

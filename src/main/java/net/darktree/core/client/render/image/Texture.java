@@ -38,4 +38,5 @@ public class Texture implements AutoCloseable, TextureConvertible {
 	public Texture getTexture() {
 		return this;
 	}
+
 }

@@ -6,7 +6,7 @@ import net.darktree.core.util.Logger;
 
 public class Sprites {
 
-	public final static Atlas ATLAS = Atlas.of("sprites");
+	public final static Atlas ATLAS = Atlas.stitchedOf("sprites");
 	public final static Sprite MISSINGNO = ATLAS.getSprite("missingno.png");
 
 	public static Sprite getSprite(String identifier) {

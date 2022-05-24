@@ -6,6 +6,8 @@ import net.darktree.core.util.Resources;
 import org.lwjgl.opengl.GL32;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Program implements AutoCloseable {
 
@@ -55,11 +57,10 @@ public class Program implements AutoCloseable {
 			throw new RuntimeException(e);
 		}
 	}
-
-	// FIXME: cleanup the shaders
 	public static class Builder {
 
 		private final int id;
+		private final List<Shader> shaders = new ArrayList<>();
 
 		private Builder() {
 			this.id = GL32.glCreateProgram();
@@ -67,6 +68,7 @@ public class Program implements AutoCloseable {
 
 		public Builder add(Shader shader) {
 			GL32.glAttachShader(this.id, shader.id());
+			shaders.add(shader);
 			return this;
 		}
 
@@ -81,6 +83,8 @@ public class Program implements AutoCloseable {
 				Logger.error(GL32.glGetProgramInfoLog(this.id));
 				throw new RuntimeException("Failed to link program!");
 			}
+
+			shaders.forEach(Shader::close);
 
 			return new Program(this.id);
 		}

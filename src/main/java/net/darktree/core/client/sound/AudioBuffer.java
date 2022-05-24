@@ -8,6 +8,7 @@ import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
+import java.util.Objects;
 
 public class AudioBuffer {
 
@@ -43,7 +44,7 @@ public class AudioBuffer {
 			IntBuffer channelCount = stack.mallocInt(1);
 			IntBuffer sampleRate = stack.mallocInt(1);
 
-			ShortBuffer data = STBVorbis.stb_vorbis_decode_filename(Resources.location(path).toString(), channelCount, sampleRate);
+			ShortBuffer data = STBVorbis.stb_vorbis_decode_filename(Objects.requireNonNull(Resources.location(path)).toString(), channelCount, sampleRate);
 
 			if (data == null) {
 				Logger.warn("Failed to decode sound file: ", path);
