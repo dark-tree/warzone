@@ -5,8 +5,6 @@ import net.darktree.core.client.Shaders;
 import net.darktree.core.client.Uniforms;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.image.Font;
-import net.darktree.core.client.render.image.Image;
-import net.darktree.core.client.render.image.Texture;
 import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.sound.SoundSystem;
@@ -28,7 +26,6 @@ public class Main {
 
 	public static Window window;
 	public static World world;
-	public static Texture texture;
 
 	public static Pipeline pipeline;
 
@@ -47,11 +44,6 @@ public class Main {
 //		source.setLoop(true);
 //		source.setVolume(0.8f);
 //		source.play();
-
-		try( Image image = Image.of("top.png", Image.Format.RGBA) ) {
-			texture = image.asTexture();
-			texture.upload();
-		}
 
 		pipeline = new Pipeline(Buffers.TEXTURED.build(), Shaders.WORLD, pipeline -> {
 			Uniforms.SCALE.putFloats(world.scaleX, world.scaleY).flush();

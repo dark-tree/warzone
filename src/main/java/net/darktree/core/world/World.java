@@ -1,7 +1,7 @@
 package net.darktree.core.world;
 
 import net.darktree.Main;
-import net.darktree.core.Registries;
+import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.event.TurnEvent;
@@ -231,7 +231,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	public void draw(VertexBuffer buffer) {
 		this.entities.removeIf(entity -> entity.removed);
 
-		Registries.ATLAS.getTexture().bind();
+		Sprites.ATLAS.getTexture().bind();
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {

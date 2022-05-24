@@ -1,12 +1,10 @@
 package net.darktree.game.tiles;
 
 import net.darktree.core.Registries;
-import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.util.Type;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.tile.Tile;
 import net.darktree.game.buildings.Building;
-import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 
 public class Tiles {
@@ -19,15 +17,4 @@ public class Tiles {
 	public static Type<Entity> TEST = Registries.ENTITIES.register("circle", new Type<>(UnitEntity::new));
 
 	public static Type<Building> BUILD = Registries.BUILDINGS.register("build", new Type<>(TestBuilding::new));
-
-	public static Sprite BASIC_TEST_BUILD;
-
-	static {
-		var ref = Registries.ATLAS.addPath("tile/center-build.png");
-
-		Symbol.values(); // load class
-		Registries.ATLAS.freeze();
-
-		BASIC_TEST_BUILD = ref.sprite();
-	}
 }

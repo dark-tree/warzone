@@ -26,13 +26,16 @@ public class Resources {
 
 			if( Files.exists(location) ) {
 				return location;
-			}else{
-				return Path.of(WORKPLACE + "/" + path);
 			}
-		}catch (Exception exception) {
-			Logger.warn("Failed to locate resource ", path);
+		}catch (Exception ignored) {
 		}
 
+		Path of = Path.of(WORKPLACE + "/" + path);
+		if (Files.exists(of)) {
+			return of;
+		}
+
+		Logger.warn("Failed to locate resource ", path);
 		return null;
 	}
 

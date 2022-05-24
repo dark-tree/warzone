@@ -3,9 +3,10 @@ package net.darktree.core.client.render;
 import net.darktree.Main;
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
+import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
-import net.darktree.core.client.render.image.Texture;
+import net.darktree.core.client.render.image.TextureConvertible;
 import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.pipeline.TexturedPipeline;
 import net.darktree.core.client.render.vertex.Renderer;
@@ -19,10 +20,9 @@ import java.util.Map;
 public class ScreenRenderer {
 
 	private static final Input INPUT = Window.INSTANCE.input();
-	private static final Map<Object, Pipeline> pipelines = new IdentityHashMap<>();
+	private static final Map<TextureConvertible, Pipeline> pipelines = new IdentityHashMap<>();
 
-	// register universal pipeline for quad rendering
-	private static final TexturedPipeline quadPipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.GUI, (Texture) null, pipeline -> {}, true);
+	private static final Pipeline quads = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.GUI, Sprites.ATLAS, pipeline -> {}, true);
 
 	private static float psx, psy;
 	private static float x, y;
@@ -40,8 +40,8 @@ public class ScreenRenderer {
 		return (y + Main.world.offsetY) * Main.world.scaleY;
 	}
 
-	public static void registerFontPipeline(Font font) {
-		pipelines.put(font, new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXT, font, pipeline -> {}, true));
+	public static void registerFontPipeline(TextureConvertible texture) {
+		pipelines.put(texture, new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXT, texture, pipeline -> {}, true));
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class ScreenRenderer {
 		psx = scale / Window.INSTANCE.width();
 		psy = scale / Window.INSTANCE.height();
 
-		quadPipeline.flush();
+		quads.flush();
 
 		for (Pipeline pipeline : pipelines.values()) {
 			pipeline.flush();
@@ -132,29 +132,6 @@ public class ScreenRenderer {
 	}
 
 	/**
-	 * Set texture for quad renderer
-	 *
-	 * <p><b>
-	 * Warning: This operation will also force all previously written quads to be rendered
-	 */
-	// FIXME: put all gui textures into an atlas so that this doesn't need to flush
-	public static void setTexture(Texture texture) {
-		quadPipeline.flush();
-		quadPipeline.setTexture(texture);
-	}
-
-	/**
-	 * Set texture-sprite pair for quad renderer
-	 *
-	 * <p><b>
-	 * Warning: This operation will also force all previously written quads to be rendered
-	 */
-	public static void setTexture(Texture texture, Sprite sprite) {
-		setTexture(texture);
-		setSprite(sprite);
-	}
-
-	/**
 	 * Sets the alignment for all subsequently rendered texts
 	 */
 	public static void setAlignment(Alignment alignment) {
@@ -165,7 +142,7 @@ public class ScreenRenderer {
 	 * Render textured box
 	 */
 	public static boolean box(int right, int top) {
-		Renderer.quad(quadPipeline.buffer, x + ox * psx, y + oy * psy, right * psx, top * psy, quadSprite, cr, cg, cb, ca);
+		Renderer.quad(quads.buffer, x + ox * psx, y + oy * psy, right * psx, top * psy, quadSprite, cr, cg, cb, ca);
 		return isMouseOver(right, top);
 	}
 

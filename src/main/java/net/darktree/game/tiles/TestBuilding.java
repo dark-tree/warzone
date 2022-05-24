@@ -1,5 +1,6 @@
 package net.darktree.game.tiles;
 
+import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.ClickEvent;
@@ -32,7 +33,7 @@ public class TestBuilding extends Building {
 
 	@Override
 	public void draw(int x, int y, VertexBuffer buffer) {
-		Renderer.quad(buffer, x, y, 2, 2, Tiles.BASIC_TEST_BUILD, 1, 1, 1, 0);
+		Renderer.quad(buffer, x, y, 2, 2, Sprites.BASIC_TEST_BUILD, 1, 1, 1, 0);
 		Renderer.quad(buffer, x + 0.5f, y + 0.5f, 1, 1, Symbol.TRIANGLE.getSprite(), 1, 1, 1, 0);
 	}
 }

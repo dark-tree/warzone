@@ -8,7 +8,7 @@ import net.darktree.core.util.Resources;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Font implements AutoCloseable {
+public class Font implements AutoCloseable, TextureConvertible {
 
 	private final Atlas atlas;
 	private final List<Sprite> sprites;
@@ -57,13 +57,13 @@ public class Font implements AutoCloseable {
 		return this.sprites.get(chr);
 	}
 
-	public Atlas getAtlas() {
-		return atlas;
-	}
-
 	@Override
 	public void close() throws Exception {
 		atlas.close();
 	}
 
+	@Override
+	public Texture getTexture() {
+		return atlas.getTexture();
+	}
 }

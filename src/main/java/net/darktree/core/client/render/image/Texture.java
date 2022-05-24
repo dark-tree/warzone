@@ -2,7 +2,7 @@ package net.darktree.core.client.render.image;
 
 import org.lwjgl.opengl.GL32;
 
-public class Texture implements AutoCloseable {
+public class Texture implements AutoCloseable, TextureConvertible {
 
 	private final Image image;
 	private final int id;
@@ -34,4 +34,8 @@ public class Texture implements AutoCloseable {
 		this.image.close();
 	}
 
+	@Override
+	public Texture getTexture() {
+		return this;
+	}
 }

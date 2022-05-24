@@ -1,6 +1,5 @@
 package net.darktree.core.world.tile;
 
-import net.darktree.core.Registries;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.ClickEvent;
@@ -25,7 +24,7 @@ public abstract class Tile implements WorldComponent {
 	}
 
 	public void draw(int x, int y, TileState state, VertexBuffer buffer) {
-		Renderer.tile(buffer, x, y, state, Registries.ATLAS.getSprite(this));
+		Renderer.tile(buffer, x, y, state, SpriteBridge.getSprite(this));
 	}
 
 	public void onInteract(World world, int x, int y, ClickEvent event) {

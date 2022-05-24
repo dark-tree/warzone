@@ -6,13 +6,11 @@ import net.darktree.core.util.Resources;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
-public class Atlas implements AutoCloseable {
+// TODO: cleanup
+public class Atlas implements AutoCloseable, TextureConvertible {
 
 	private Texture texture;
 	private Image image;
@@ -29,7 +27,9 @@ public class Atlas implements AutoCloseable {
 		this(new Image(16, 16, Image.Format.RGBA));
 	}
 
-	public Atlas(String path) {
+	public static Atlas of(String path) {
+		Atlas atlas = new Atlas();
+
 		Path root = Resources.location(path);
 
 		if (root == null) {
@@ -37,23 +37,29 @@ public class Atlas implements AutoCloseable {
 			throw new RuntimeException("Unable to load atlas!");
 		}
 
-		loadAll(path, root);
+		long start = System.currentTimeMillis();
+
+		atlas.loadAll(path, path, root);
+		atlas.freeze();
+
+		Logger.info("Texture atlas '", path, "' loaded! (took ", System.currentTimeMillis() - start, "ms)");
+
+		return atlas;
 	}
 
-	private void loadAll(String resource, Path root) {
+	private void loadAll(String source, String resource, Path root) {
 		try {
 			Stream<Path> paths = Resources.listing(resource);
 
 			paths.forEach(path -> {
 				if (Files.isDirectory(path)) {
-					loadAll(resource + "/" + path.getFileName(), root);
+					loadAll(source, resource + "/" + path.getFileName(), root);
 				}
 
 				String identifier = root.relativize(path).toString();
-				Logger.info("Loaded '", identifier, "'");
 
-				if (path.toString().endsWith(".png")) {
-					addPath(path.toString(), identifier);
+				if (identifier.endsWith(".png")) {
+					addPath(source + "/" + identifier, identifier);
 				}
 			});
 		} catch (IOException e) {
@@ -73,7 +79,7 @@ public class Atlas implements AutoCloseable {
 		return new SpriteReference(x, y, x + w - 1, y + h - 1).sprite();
 	}
 
-	public SpriteReference addImage(Object identifier, Image sprite) {
+	public void addImage(Object identifier, Image sprite) {
 		assertFrozen(false);
 
 		for (int x = 0; x < this.image.width; x ++) {
@@ -93,7 +99,7 @@ public class Atlas implements AutoCloseable {
 					this.image.write(sprite, x, y);
 					this.taken.add(ref);
 					this.sprites.put(identifier, ref);
-					return ref;
+					return;
 				}
 			}
 		}
@@ -103,18 +109,13 @@ public class Atlas implements AutoCloseable {
 		this.image.close();
 		this.image = atlas;
 
-		return addImage(identifier, sprite);
+		addImage(identifier, sprite);
 	}
 
-	public SpriteReference addPath(String resource, Object identifier) {
+	public void addPath(String resource, Object identifier) {
 		try (Image texture = Image.of(resource, image.format)) {
-			return addImage(identifier, texture);
+			addImage(identifier, texture);
 		}
-	}
-
-	@Deprecated
-	public SpriteReference addPath(String resource) {
-		return addPath(resource, resource);
 	}
 
 	public void freeze() {
@@ -134,6 +135,7 @@ public class Atlas implements AutoCloseable {
 		}
 	}
 
+	@Override
 	public Texture getTexture() {
 		return texture;
 	}
@@ -143,7 +145,7 @@ public class Atlas implements AutoCloseable {
 	}
 
 	public Sprite getSprite(Object identifier) {
-		return this.sprites.get(identifier).sprite();
+		return Objects.requireNonNull(this.sprites.get(identifier)).sprite();
 	}
 
 	@Override

@@ -1,10 +1,9 @@
 package net.darktree.game.screens;
 
 import net.darktree.Main;
-import net.darktree.core.Registries;
+import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.ScreenRenderer;
-import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.input.MouseButton;
 import net.darktree.core.event.ClickEvent;
@@ -43,7 +42,7 @@ public class PlayScreen extends Screen {
 		// render hud
 		Symbol symbol = world.getCurrentSymbol();
 
-		ScreenRenderer.setTexture(Main.texture, Sprite.IDENTITY);
+		ScreenRenderer.setSprite(Sprites.TOP);
 
 //		ScreenRenderer.centerAt(0, 0);
 //		if (ScreenRenderer.button(100, 100)) {
@@ -57,7 +56,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if (symbol != null) {
-			ScreenRenderer.setTexture(Registries.ATLAS.getTexture(), symbol.getSprite());
+			ScreenRenderer.setSprite(symbol.getSprite());
 			ScreenRenderer.setOffset(-220, -98);
 			ScreenRenderer.box(80, 80);
 		}
