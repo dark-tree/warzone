@@ -1,16 +1,15 @@
 package net.darktree.game.tiles;
 
 import net.darktree.Main;
-import net.darktree.event.ClickEvent;
-import net.darktree.event.TurnEvent;
+import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.event.ClickEvent;
+import net.darktree.core.event.TurnEvent;
+import net.darktree.core.world.World;
+import net.darktree.core.world.tile.Tile;
+import net.darktree.core.world.tile.TileInstance;
+import net.darktree.core.world.tile.TileState;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Symbol;
-import net.darktree.lt2d.graphics.vertex.VertexBuffer;
-import net.darktree.lt2d.util.Direction;
-import net.darktree.lt2d.world.Tile;
-import net.darktree.lt2d.world.TileInstance;
-import net.darktree.lt2d.world.TileState;
-import net.darktree.lt2d.world.World;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -53,12 +52,6 @@ public class StructureTile extends Tile {
 	@Override
 	public void onOwnerUpdate(World world, int x, int y, Symbol previous, Symbol current) {
 		getBuilding(world, x, y).onOwnerUpdate(world, x, y, previous, current);
-	}
-
-	@Override
-	public void onNeighbourUpdate(World world, int x, int y, Direction direction) {
-		// FIXME this causes a crash, not unexpected but it's weird that it used to work before
-		//getBuilding(world, x + direction.x, y + direction.y).onNeighbourUpdate(world, x, y, direction);
 	}
 
 	@Override

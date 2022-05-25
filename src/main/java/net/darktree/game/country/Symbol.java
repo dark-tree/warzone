@@ -1,8 +1,7 @@
 package net.darktree.game.country;
 
-import net.darktree.lt2d.Registries;
-import net.darktree.lt2d.graphics.image.Atlas;
-import net.darktree.lt2d.graphics.image.Sprite;
+import net.darktree.core.client.Sprites;
+import net.darktree.core.client.render.image.Sprite;
 
 public enum Symbol {
 	NONE(null),
@@ -11,13 +10,13 @@ public enum Symbol {
 	TRIANGLE("triangle"),
 	SQUARE("square");
 
-	private final Atlas.SpriteReference ref;
+	private final Sprite sprite;
 
 	Symbol(String path) {
-		ref = (path != null) ? Registries.ATLAS.add("tile/" + path + ".png") : null;
+		sprite = path == null ? null : Sprites.ATLAS.getSprite("symbol/" + path + ".png");
 	}
 
 	public Sprite getSprite() {
-		return ref.sprite();
+		return sprite;
 	}
 }

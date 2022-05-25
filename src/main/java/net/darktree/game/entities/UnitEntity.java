@@ -1,13 +1,13 @@
 package net.darktree.game.entities;
 
+import net.darktree.core.client.render.vertex.Renderer;
+import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.util.Type;
+import net.darktree.core.world.Pattern;
+import net.darktree.core.world.World;
+import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.entity.MovingEntity;
 import net.darktree.game.country.Symbol;
-import net.darktree.lt2d.graphics.vertex.Renderer;
-import net.darktree.lt2d.graphics.vertex.VertexBuffer;
-import net.darktree.lt2d.util.Type;
-import net.darktree.lt2d.world.Pattern;
-import net.darktree.lt2d.world.World;
-import net.darktree.lt2d.world.entities.Entity;
-import net.darktree.lt2d.world.entities.MovingEntity;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,62 +1,54 @@
 package net.darktree;
 
-import net.darktree.game.gui.PlayUserInterface;
-import net.darktree.game.rendering.Buffers;
-import net.darktree.game.rendering.Shaders;
-import net.darktree.game.rendering.Uniforms;
+import net.darktree.core.client.Buffers;
+import net.darktree.core.client.Shaders;
+import net.darktree.core.client.Uniforms;
+import net.darktree.core.client.render.Screen;
+import net.darktree.core.client.render.image.Font;
+import net.darktree.core.client.render.pipeline.Pipeline;
+import net.darktree.core.client.render.vertex.Renderer;
+import net.darktree.core.client.sound.SoundSystem;
+import net.darktree.core.client.window.Window;
+import net.darktree.core.util.Logger;
+import net.darktree.core.util.Resources;
+import net.darktree.core.world.World;
+import net.darktree.game.screens.PlayScreen;
 import net.darktree.game.tiles.Tiles;
-import net.darktree.lt2d.graphics.Input;
-import net.darktree.lt2d.graphics.Window;
-import net.darktree.lt2d.graphics.image.Image;
-import net.darktree.lt2d.graphics.image.Texture;
-import net.darktree.lt2d.graphics.pipeline.Pipeline;
-import net.darktree.lt2d.graphics.vertex.Renderer;
-import net.darktree.lt2d.util.Logger;
-import net.darktree.lt2d.util.Resources;
-import net.darktree.lt2d.world.World;
 import org.lwjgl.Version;
+
+import java.util.Stack;
 
 import static org.lwjgl.opengl.GL32.glClearColor;
 
 public class Main {
 
+	public static Stack<Screen> screens = new Stack<>();
+
 	public static Window window;
 	public static World world;
 
-	private static Pipeline pipeline;
+	public static Pipeline pipeline;
 
 	public static void main(String[] args) {
 		Logger.info("Current working directory: ", Resources.path());
 		Logger.info("Using LWJGL ", Version.getVersion());
 
-		window = Window.init(800, 500, "Tic-Tac-Toe (Advanced) v0.1");
+		long start = System.currentTimeMillis();
 
-		Input input = window.input();
-		input.setZoomRange(0.07f, 1f);
-		input.setGuiScale(1);
+		window = Window.init(800, 500, "Warzone (Test)");
 
-		loop();
+		SoundSystem.enable();
 
-		pipeline.close();
-		window.close();
-	}
+//		AudioBuffer song = SoundSystem.createBuffer("sound/test_song.ogg");
+//		AudioSource source = SoundSystem.createSource(song);
+//		source.setLoop(true);
+//		source.setVolume(0.8f);
+//		source.play();
 
-	public static Texture texture;
-
-	private static void loop() {
-
-		Input input = window.input();
-
-
-		try( Image image = Image.of("top.png", Image.Format.RGBA) ) {
-			texture = image.asTexture(false);
-			texture.upload();
-		}
-
-		pipeline = new Pipeline(Buffers.TEXTURED.build(), Shaders.TEXTURED, pipeline -> {
-			Uniforms.SCALE.putFloats(input.scaleX, input.scaleY).flush();
-			Uniforms.OFFSET.putFloats(input.offsetX, input.offsetY).flush();
-		});
+		pipeline = new Pipeline(Buffers.TEXTURED.build(), Shaders.WORLD, pipeline -> {
+			Uniforms.SCALE.putFloats(world.scaleX, world.scaleY).flush();
+			Uniforms.OFFSET.putFloats(world.offsetX, world.offsetY).flush();
+		}, true);
 
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
@@ -64,17 +56,30 @@ public class Main {
 		world = new World(8, 8);
 		world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
 
-		world.addEntity(0, 0, Tiles.TEST);
+		// load and set font
+		Font scribble = Font.load("scribble");
 
-		while ( !window.shouldClose() ) {
-			Renderer.clear();
+		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
 
-			world.draw(pipeline.buffer);
-			pipeline.flush();
+		screens.push(new PlayScreen(world));
 
-			PlayUserInterface.draw();
+		try {
+			loop();
+		}catch (Exception e) {
+			Logger.fatal("Main thread has thrown an exception and crashed!");
+			e.printStackTrace();
+		}
 
-			window.swap();
+		pipeline.close();
+		window.close();
+		SoundSystem.disable();
+	}
+
+	private static void loop() {
+		while (!window.shouldClose()) {
+			screens.forEach(Screen::draw);
+			screens.removeIf(Screen::isClosed);
+			Renderer.next();
 		}
 	}
 

@@ -1,14 +1,14 @@
 package net.darktree.game.buildings;
 
-import net.darktree.event.ClickEvent;
-import net.darktree.lt2d.Registries;
-import net.darktree.lt2d.graphics.vertex.VertexBuffer;
-import net.darktree.lt2d.util.NbtSerializable;
-import net.darktree.lt2d.util.Type;
-import net.darktree.lt2d.world.Pattern;
-import net.darktree.lt2d.world.TileInstance;
-import net.darktree.lt2d.world.World;
-import net.darktree.lt2d.world.WorldComponent;
+import net.darktree.core.Registries;
+import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.event.ClickEvent;
+import net.darktree.core.util.NbtSerializable;
+import net.darktree.core.util.Type;
+import net.darktree.core.world.Pattern;
+import net.darktree.core.world.World;
+import net.darktree.core.world.WorldComponent;
+import net.darktree.core.world.tile.TileInstance;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +34,7 @@ public class Building implements NbtSerializable, WorldComponent {
 
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
-		tag.putString("id", Registries.BUILDINGS.getKey(this.type));
+		tag.putString("id", Registries.BUILDINGS.keyOf(this.type));
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class Building implements NbtSerializable, WorldComponent {
 	}
 
 	public void draw(int x, int y, VertexBuffer buffer) {
-		// TODO: render something
+
 	}
 
 	public static class Link extends TileInstance {
