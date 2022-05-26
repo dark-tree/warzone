@@ -35,7 +35,7 @@ public class Main {
 
 		long start = System.currentTimeMillis();
 
-		window = Window.init(800, 500, "Warzone (Test)");
+		window = Window.init(800, 500, "Game");
 
 		SoundSystem.enable();
 

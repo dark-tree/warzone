@@ -55,6 +55,11 @@ public class PlayScreen extends Screen {
 			isMapFocused = false;
 		}
 
+		ScreenRenderer.offset(300, 20);
+		if (ScreenRenderer.button("END", 2, 38, 80)) {
+			world.nextPlayerTurn();
+		}
+
 		if (symbol != null) {
 			ScreenRenderer.setSprite(symbol.getSprite());
 			ScreenRenderer.setOffset(-220, -98);
@@ -82,6 +87,7 @@ public class PlayScreen extends Screen {
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
 			try {
 				World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
+				Main.screens.clear();
 				Main.screens.push(new PlayScreen(Main.world));
 			} catch (IOException e) {
 				e.printStackTrace();

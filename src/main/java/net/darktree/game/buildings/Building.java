@@ -12,7 +12,7 @@ import net.darktree.core.world.tile.TileInstance;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public class Building implements NbtSerializable, WorldComponent {
+public abstract class Building implements NbtSerializable, WorldComponent {
 
 	protected final int x, y;
 	protected final World world;

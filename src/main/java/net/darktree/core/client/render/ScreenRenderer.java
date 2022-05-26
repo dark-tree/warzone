@@ -174,8 +174,12 @@ public class ScreenRenderer {
 		return !(mx > bx + right * psx || my > by + top * psy);
 	}
 
-	public static boolean button(int right, int top) {
-		boolean hover = isMouseOver(right, top);
+	public static boolean button(String text, int count, int size, int height) {
+		int width = height / 2;
+		boolean hover = isMouseOver(width * (count + 2), height);
+
+		int sx = ox;
+		Alignment alignment = currentAlignment;
 
 		if (hover) {
 			setColor(0, 0, 0, 0.2f);
@@ -185,7 +189,26 @@ public class ScreenRenderer {
 			}
 		}
 
-		box(right, top);
+		setSprite(Sprites.BUTTON_LEFT);
+		box(width, height);
+
+		for (int i = 0; i < count; i ++) {
+			setSprite(Sprites.BUTTON_CENTER);
+			offset(width, 0);
+			box(width, height);
+		}
+
+		setSprite(Sprites.BUTTON_RIGHT);
+		offset(width, 0);
+		box(width, height);
+
+		ox = (int) (sx + ((2 + count) * width) / 2f) - 5;
+		oy += (height - size) / 2f;
+
+		setAlignment(Alignment.CENTER);
+		text(text, size);
+
+		setAlignment(alignment);
 		setColor(0, 0, 0, 0);
 
 		return hover && INPUT.hasClicked();

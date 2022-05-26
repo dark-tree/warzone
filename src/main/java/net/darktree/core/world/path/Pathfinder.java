@@ -2,12 +2,15 @@ package net.darktree.core.world.path;
 
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.country.Symbol;
 
 public class Pathfinder {
 
 	private final int[][] field;
+	private final float[][] distance;
+
 	private final World world;
 	private final int width, height;
 	private final Symbol symbol;
@@ -23,6 +26,8 @@ public class Pathfinder {
 		this.height = world.height;
 		this.field = new int[this.width][this.height];
 		this.field[x][y] = 1;
+		this.distance = new float[this.width][this.height];
+		this.distance[x][y] = max;
 		this.symbol = symbol;
 
 		compute(max);
@@ -69,8 +74,8 @@ public class Pathfinder {
 		}
 	}
 
-	private boolean shouldPropagate(int x, int y) {
-		if (!world.getTileState(x, y).getTile().canPathfindThrough(world, x, y)) {
+	private boolean shouldPropagate(int x, int y, Tile tile) {
+		if (!tile.canPathfindThrough(world, x, y)) {
 			return false;
 		}
 
@@ -80,14 +85,21 @@ public class Pathfinder {
 
 	private void propagate(int x, int y, int value) {
 		for (int[] pair : OFFSETS) {
-			set(x + pair[0], y + pair[1], value);
+			set(x + pair[0], y + pair[1], value, this.distance[x][y]);
 		}
 	}
 
-	private void set(int x, int y, int value) {
+	private void set(int x, int y, int value, float distance) {
 		if (x >= 0 && y >= 0 && x < width && y < height) {
-			if (this.field[x][y] == 0 && shouldPropagate(x, y)) {
-				this.field[x][y] = value;
+
+			Tile tile = world.getTileState(x, y).getTile();
+			float weight = distance - ((this.symbol != world.getTileState(x, y).getOwner()) ? 2.0f : 1.0f);
+
+			if (this.field[x][y] == 0 && shouldPropagate(x, y, tile)) {
+				if (weight > 0) {
+					this.field[x][y] = value;
+					this.distance[x][y] = weight;
+				}
 			}
 		}
 	}
