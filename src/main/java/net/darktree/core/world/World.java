@@ -2,6 +2,7 @@ package net.darktree.core.world;
 
 import net.darktree.Main;
 import net.darktree.core.client.Sprites;
+import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.event.TurnEvent;
@@ -9,10 +10,8 @@ import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.util.Type;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
-import net.darktree.core.world.tile.TileInstance;
-import net.darktree.core.world.tile.TilePos;
-import net.darktree.core.world.tile.TileState;
-import net.darktree.core.world.tile.TileStateConsumer;
+import net.darktree.core.world.task.TaskManager;
+import net.darktree.core.world.tile.*;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.core.world.view.WorldEntityView;
 import net.darktree.game.buildings.Building;
@@ -36,6 +35,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	final private List<Symbol> symbols = new ArrayList<>();
 	final private HashMap<TilePos, Building> buildings = new HashMap<>();
 	final private HashMap<Symbol, Country> countries = new HashMap<>();
+	final private TaskManager manager = new TaskManager(this);
 
 	private Overlay overlay = null;
 	private int turn;
@@ -209,29 +209,19 @@ public class World implements NbtSerializable, WorldEntityView {
 	 * Method used for placing buildings on the map, it takes care
 	 * of all the required setup. Returns true on success, false otherwise.
 	 */
-	public boolean placeBuilding(int x, int y, Type<Building> type) {
-		Building building = type.construct(this, x, y);
-
+	public void placeBuilding(int x, int y, Building building) {
 		List<TilePos> tiles = building.getPattern().list(this, x, y, true);
 
-		if (tiles.stream().allMatch(pos -> this.tiles[pos.x][pos.y].getTile().isReplaceable())) {
-			tiles.forEach(pos -> {
-				TileState state = this.tiles[pos.x][pos.y];
-				state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant(), true);
-				((Building.Link) state.getInstance()).linkWith(x, y);
-			});
+		tiles.forEach(pos -> {
+			TileState state = this.tiles[pos.x][pos.y];
+			state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant(), true);
+			((Building.Link) state.getInstance()).linkWith(x, y);
+		});
 
-			setLinkedBuildingAt(x, y, building);
-			return true;
-		}
-
-		return false;
+		setLinkedBuildingAt(x, y, building);
 	}
-
 	public void draw(VertexBuffer buffer) {
 		this.entities.removeIf(entity -> entity.removed);
-
-		Sprites.ATLAS.getTexture().bind();
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
@@ -308,11 +298,23 @@ public class World implements NbtSerializable, WorldEntityView {
 		this.overlay = overlay;
 	}
 
+	public TileState[][] getTiles() {
+		return tiles;
+	}
+
 	public Building getLinkedBuildingAt(int x, int y) {
 		return buildings.get(new TilePos(x, y));
 	}
 
 	public void setLinkedBuildingAt(int x, int y, Building building) {
 		buildings.put(new TilePos(x, y), building);
+	}
+
+	public TaskManager getManager() {
+		return manager;
+	}
+
+	public TileState getTileState(TilePos pos) {
+		return getTileState(pos.x, pos.y);
 	}
 }

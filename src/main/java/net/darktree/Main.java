@@ -2,10 +2,12 @@ package net.darktree;
 
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
+import net.darktree.core.client.Sprites;
 import net.darktree.core.client.Uniforms;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.pipeline.Pipeline;
+import net.darktree.core.client.render.pipeline.TexturedPipeline;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.sound.SoundSystem;
 import net.darktree.core.client.window.Window;
@@ -45,7 +47,7 @@ public class Main {
 //		source.setVolume(0.8f);
 //		source.play();
 
-		pipeline = new Pipeline(Buffers.TEXTURED.build(), Shaders.WORLD, pipeline -> {
+		pipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.WORLD, Sprites.ATLAS, pipeline -> {
 			Uniforms.SCALE.putFloats(world.scaleX, world.scaleY).flush();
 			Uniforms.OFFSET.putFloats(world.offsetX, world.offsetY).flush();
 		}, true);

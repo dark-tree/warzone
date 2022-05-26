@@ -1,5 +1,7 @@
 package net.darktree.core.world.path;
 
+import net.darktree.core.client.render.vertex.Renderer;
+import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.world.tile.TilePos;
 
 import java.util.ArrayList;
@@ -29,6 +31,23 @@ public class Path {
 		}
 
 		return this.positions.get(index ++);
+	}
+
+	/**
+	 * Draw this path as a series of lines and boxes
+	 */
+	public void draw(VertexBuffer buffer) {
+
+		TilePos prev = positions.get(0);
+
+		for (int i = 1; i < positions.size(); i ++) {
+			TilePos pos = positions.get(i);
+
+			Renderer.line(buffer, prev.x + 0.5f, prev.y + 0.5f, pos.x + 0.5f, pos.y + 0.5f, 0.05f, 1, 1, 1, 1f);
+
+			prev = pos;
+		}
+
 	}
 
 }

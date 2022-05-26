@@ -36,4 +36,14 @@ public class CapitolBuilding extends Building {
 		Renderer.quad(buffer, x + 0.5f, y + 0.5f, 1, 1, Symbol.TRIANGLE.getSprite(), 1, 1, 1, 0);
 	}
 
+	@Override
+	public int getCost() {
+		return 0;
+	}
+
+	@Override
+	public boolean canAbolish() {
+		return false;
+	}
+
 }

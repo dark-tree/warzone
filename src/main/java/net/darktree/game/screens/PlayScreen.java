@@ -12,6 +12,7 @@ import net.darktree.core.world.entity.MovingEntity;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.path.Pathfinder;
+import net.darktree.core.world.task.BuildTask;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.tiles.Tiles;
@@ -37,6 +38,16 @@ public class PlayScreen extends Screen {
 
 		// render map
 		world.draw(Main.pipeline.buffer);
+
+		if (pathfinder != null) {
+			int x = Main.window.input().getMouseMapX();
+			int y = Main.window.input().getMouseMapY();
+
+			if (pathfinder.canReach(x, y)) {
+				pathfinder.getPathTo(x, y).draw(Main.pipeline.buffer);
+			}
+		}
+
 		Main.pipeline.flush();
 
 		// render hud
@@ -111,7 +122,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
-			world.placeBuilding(1, 1, Tiles.BUILD);
+			world.getManager().apply(world.getCurrentSymbol(), new BuildTask(Tiles.BUILD, 2, 2));
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_X) {
@@ -124,6 +135,10 @@ public class PlayScreen extends Screen {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
 			world.nextPlayerTurn();
+		}
+
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_BACKSPACE) {
+			world.getManager().undo(world.getCurrentSymbol());
 		}
 	}
 

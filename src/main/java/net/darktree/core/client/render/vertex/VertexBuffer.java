@@ -1,6 +1,7 @@
 package net.darktree.core.client.render.vertex;
 
 import net.darktree.core.client.render.ResizeableBuffer;
+import net.darktree.game.buildings.Building;
 import org.lwjgl.opengl.GL32;
 
 import java.util.ArrayList;
@@ -121,6 +122,13 @@ public class VertexBuffer implements AutoCloseable {
 		 */
 		public Builder attribute(int length) {
 			return this.attribute(new VertexAttribute(length));
+		}
+
+		/**
+		 * Add simple named float vertex attribute
+		 */
+		public Builder attribute(String name) {
+			return this.attribute(name.length());
 		}
 
 		public VertexBuffer build() {

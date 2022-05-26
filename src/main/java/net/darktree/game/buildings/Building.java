@@ -9,6 +9,8 @@ import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldComponent;
 import net.darktree.core.world.tile.TileInstance;
+import net.darktree.core.world.tile.TileState;
+import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,8 +58,27 @@ public abstract class Building implements NbtSerializable, WorldComponent {
 		return Pattern.SQUARE;
 	}
 
+	public boolean canAbolish() {
+		return true;
+	}
+
 	public void draw(int x, int y, VertexBuffer buffer) {
 
+	}
+
+	public void removed() {
+		getPattern().list(world, x, y, true).forEach(pos -> {
+			TileState state = world.getTileState(pos);
+			state.setVariant(world, x, y, Tiles.EMPTY.getDefaultVariant(), true);
+		});
+
+		world.setLinkedBuildingAt(x, y, null);
+	}
+
+	public abstract int getCost();
+
+	public int getProfit() {
+		return (int) (0.4f * getCost());
 	}
 
 	public static class Link extends TileInstance {

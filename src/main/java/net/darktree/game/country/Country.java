@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Country implements NbtSerializable {
 	private final Symbol symbol;
+	private int local = 0;
 
 	public Country(Symbol symbol) {
 		this.symbol = symbol;
@@ -19,5 +20,13 @@ public class Country implements NbtSerializable {
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
 
+	}
+
+	public int getTotalMaterials() {
+		return local;
+	}
+
+	public void addMaterials(int amount) {
+		local += amount;
 	}
 }

@@ -1,11 +1,13 @@
 package net.darktree.core.client.render.vertex;
 
 import net.darktree.Main;
+import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.util.Color;
+import net.darktree.core.util.Logger;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.tile.TileState;
 import org.lwjgl.opengl.GL32;
@@ -62,6 +64,35 @@ public class Renderer {
 
 			offset += font.spacing * width;
 		}
+	}
+
+	public static void line(VertexBuffer buffer, float x1, float y1, float x2, float y2, float w, float cr, float cg, float cb, float ca) {
+		float a = -1/((y1 - y2)/(x1 - x2));
+		float d = (float) Math.sqrt((4 * w * w) / (1 + a * a));
+
+		if (d == 0) {
+			float uy1 = y1 - w;
+			float uy2 = y2 + w;
+
+			quad(buffer, x1, uy1, x2, uy1, x2, uy2, x1, uy2, Sprites.NULL, cr, cg, cb, ca);
+			return;
+		}
+
+		// this doesn't respect the winding order for some directions
+		// (when the line is pointing to the lest and/or downwards)
+		// it would be a good idea to fix this, for now I disabled back face culling to mitigate this
+
+		float ax1 = ((2 * x1) + d) / 2;
+		float ax2 = ((2 * x1) - d) / 2;
+		float bx1 = ((2 * x2) + d) / 2;
+		float bx2 = ((2 * x2) - d) / 2;
+
+		float ay1 = a * (ax1 - x1) + y1;
+		float ay2 = a * (ax2 - x1) + y1;
+		float by1 = a * (bx1 - x2) + y2;
+		float by2 = a * (bx2 - x2) + y2;
+
+		quad(buffer, ax1, ay1, bx1, by1, bx2, by2, ax2, ay2, Sprites.NULL, cr, cg, cb, ca);
 	}
 
 	/**

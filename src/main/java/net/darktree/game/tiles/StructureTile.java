@@ -60,6 +60,11 @@ public class StructureTile extends Tile {
 	}
 
 	@Override
+	public boolean isReplaceable() {
+		return false;
+	}
+
+	@Override
 	public void draw(int x, int y, TileState state, VertexBuffer buffer) {
 		Building.Link link = Main.world.getTileInstance(x, y, Building.Link.class);
 
