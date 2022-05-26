@@ -10,6 +10,7 @@ import net.darktree.core.world.World;
 import net.darktree.core.world.WorldComponent;
 import net.darktree.core.world.tile.TileInstance;
 import net.darktree.core.world.tile.TileState;
+import net.darktree.game.country.Symbol;
 import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,7 @@ public abstract class Building implements NbtSerializable, WorldComponent {
 		Building building = Registries.BUILDINGS.getElement(tag.getString("id")).construct(world, x, y);
 		building.fromNbt(tag);
 		world.setLinkedBuildingAt(x, y, building);
+		world.getCountry(world.getTileState(x, y).getOwner()).addBuilding(building);
 		return building;
 	}
 
@@ -66,6 +68,16 @@ public abstract class Building implements NbtSerializable, WorldComponent {
 
 	}
 
+	@Override
+	public void onOwnerUpdate(World world, int x, int y, Symbol previous, Symbol current) {
+		getPattern().iterate(world, this.x, this.y, pos -> {
+			world.getTileState(pos.x, pos.y).setOwner(world, pos.x, pos.y, current);
+		});
+
+		world.getCountry(previous).removeBuilding(this);
+		world.getCountry(current).addBuilding(this);
+	}
+
 	public void removed() {
 		getPattern().list(world, x, y, true).forEach(pos -> {
 			TileState state = world.getTileState(pos);
@@ -73,12 +85,17 @@ public abstract class Building implements NbtSerializable, WorldComponent {
 		});
 
 		world.setLinkedBuildingAt(x, y, null);
+		world.getCountry(world.getTileState(x, y).getOwner()).removeBuilding(this);
 	}
 
 	public abstract int getCost();
 
 	public int getProfit() {
 		return (int) (0.4f * getCost());
+	}
+
+	public int getStored() {
+		return 0;
 	}
 
 	public static class Link extends TileInstance {

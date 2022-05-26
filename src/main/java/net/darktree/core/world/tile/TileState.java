@@ -94,7 +94,7 @@ final public class TileState implements NbtSerializable {
 	}
 
 	public void setOwner(World world, int x, int y, Symbol owner) {
-		if (!this.owner.equals(owner)) {
+		if (this.owner != owner) {
 			this.owner = owner;
 			getTile().onOwnerUpdate(world, x, y, this.owner, owner);
 		}

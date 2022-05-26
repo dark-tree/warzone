@@ -124,16 +124,11 @@ public class World implements NbtSerializable, WorldEntityView {
 		CompoundTag tilesTag = tag.getCompoundTag("tiles");
 		CompoundTag entitiesTag = tag.getCompoundTag("entities");
 		CompoundTag countriesTag = tag.getCompoundTag("countries");
+
 		World world = new World(tag.getInt("width"), tag.getInt("height"));
 		world.turn = tag.getByte("turn");
 
 		Main.world = world;
-
-		for (int x = 0; x < world.width; x ++) {
-			for (int y = 0; y < world.height; y ++) {
-				world.tiles[x][y].load(world, x, y, tilesTag);
-			}
-		}
 
 		for (Symbol symbol : Symbol.values()) {
 			CompoundTag countryTag = countriesTag.getCompoundTag(symbol.name());
@@ -141,6 +136,12 @@ public class World implements NbtSerializable, WorldEntityView {
 			if (countryTag != null) {
 				world.defineCountry(symbol).fromNbt(countryTag);
 				world.symbols.add(symbol);
+			}
+		}
+
+		for (int x = 0; x < world.width; x ++) {
+			for (int y = 0; y < world.height; y ++) {
+				world.tiles[x][y].load(world, x, y, tilesTag);
 			}
 		}
 
