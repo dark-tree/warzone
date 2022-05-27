@@ -1,6 +1,7 @@
 package net.darktree.core.world;
 
 import net.darktree.Main;
+import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.event.TurnEvent;
@@ -38,6 +39,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	final private TaskManager manager = new TaskManager(this);
 
 	private Overlay overlay = null;
+	private boolean ownershipDirty = true;
 	private int turn;
 
 	public float offsetX;
@@ -184,8 +186,17 @@ public class World implements NbtSerializable, WorldEntityView {
 	 *
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
-	public void setTileState(int x, int y, TileVariant variant) {
+	public void setTileVariant(int x, int y, TileVariant variant) {
 		getTileState(x, y).setVariant(this, x, y, variant, true);
+	}
+
+	/**
+	 * Set tile owner at the given position
+	 *
+	 *  @throws IndexOutOfBoundsException if the given position is invalid
+	 */
+	public void setTileOwner(int x, int y, Symbol variant) {
+		getTileState(x, y).setOwner(this, x, y, variant, true);
 	}
 
 	/**
@@ -221,17 +232,38 @@ public class World implements NbtSerializable, WorldEntityView {
 
 		setLinkedBuildingAt(x, y, building);
 	}
+
 	public void draw(VertexBuffer buffer) {
 		this.entities.removeIf(entity -> entity.removed);
+
+		// TODO: bake country borders
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
 				TileState state = this.tiles[x][y];
 				state.getTile().draw(x, y, state, buffer);
+
+				drawBorders(buffer, x, y);
 			}
 		}
 
 		this.entities.forEach(entity -> entity.draw(buffer));
+		ownershipDirty = false;
+	}
+
+	private void drawBorders(VertexBuffer buffer, int x, int y) {
+		Symbol self = tiles[x][y].getOwner();
+		float w = 0.02f;
+		float c = 0.4f;
+
+		if (x != 0 && tiles[x - 1][y].getOwner() != self) {
+			Renderer.line(buffer, x, y, x, y + 1, w, c, c, c, 1f);
+		}
+
+		if (y != 0 && tiles[x][y - 1].getOwner() != self) {
+			Renderer.line(buffer, x, y, x + 1, y, w, c, c, c, 1f);
+		}
+
 	}
 
 	public void getPatternTiles(Pattern pattern, int x, int y, Consumer<TileState> consumer) {
@@ -318,5 +350,9 @@ public class World implements NbtSerializable, WorldEntityView {
 
 	public TileState getTileState(TilePos pos) {
 		return getTileState(pos.x, pos.y);
+	}
+
+	public void onOwnershipChanged() {
+		ownershipDirty = true;
 	}
 }

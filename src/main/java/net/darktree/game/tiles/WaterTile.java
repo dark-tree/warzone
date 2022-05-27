@@ -9,7 +9,7 @@ public class WaterTile extends Tile {
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
 		if (event.isPressed()) {
-			world.setTileState(x, y, Tiles.EMPTY.getDefaultVariant());
+			world.setTileVariant(x, y, Tiles.EMPTY.getDefaultVariant());
 		}
 	}
 

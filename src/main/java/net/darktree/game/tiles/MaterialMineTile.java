@@ -5,6 +5,7 @@ import net.darktree.core.world.World;
 import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.core.world.tile.variant.property.BooleanProperty;
+import net.darktree.game.country.Symbol;
 
 public class MaterialMineTile extends Tile {
 
@@ -18,7 +19,14 @@ public class MaterialMineTile extends Tile {
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
 		if (event.isPressed()) {
-			world.setTileState(x, y, Tiles.MATERIAL.getDefaultVariant());
+			world.setTileVariant(x, y, Tiles.MATERIAL.getDefaultVariant());
+		}
+	}
+
+	@Override
+	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
+		if (symbol == world.getTileState(x, y).getOwner()) {
+			world.getCountry(symbol).addMaterials(1);
 		}
 	}
 

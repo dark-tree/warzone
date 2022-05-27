@@ -81,6 +81,15 @@ final public class TileState implements NbtSerializable {
 		}
 	}
 
+	public void setOwner(World world, int x, int y, Symbol owner, boolean notify) {
+		if (notify && this.owner != owner) {
+			this.owner = owner;
+			getTile().onOwnerUpdate(world, x, y, this.owner, owner);
+		}
+
+		world.onOwnershipChanged();
+	}
+
 	public Tile getTile() {
 		return this.variant.getTile();
 	}
@@ -91,13 +100,6 @@ final public class TileState implements NbtSerializable {
 
 	public Symbol getOwner() {
 		return this.owner;
-	}
-
-	public void setOwner(World world, int x, int y, Symbol owner) {
-		if (this.owner != owner) {
-			this.owner = owner;
-			getTile().onOwnerUpdate(world, x, y, this.owner, owner);
-		}
 	}
 
 	public TileInstance getInstance() {

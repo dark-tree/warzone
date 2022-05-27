@@ -9,7 +9,7 @@ public class MaterialOreTile extends Tile {
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
 		if (event.isPressed()) {
-			world.setTileState(x, y, Tiles.MATERIAL_MINE.getDefaultVariant());
+			world.setTileVariant(x, y, Tiles.MATERIAL_MINE.getDefaultVariant());
 		}
 	}
 

@@ -71,7 +71,7 @@ public abstract class Building implements NbtSerializable, WorldComponent {
 	@Override
 	public void onOwnerUpdate(World world, int x, int y, Symbol previous, Symbol current) {
 		getPattern().iterate(world, this.x, this.y, pos -> {
-			world.getTileState(pos.x, pos.y).setOwner(world, pos.x, pos.y, current);
+			world.getTileState(pos).setOwner(world, pos.x, pos.y, current, false);
 		});
 
 		world.getCountry(previous).removeBuilding(this);
@@ -80,8 +80,7 @@ public abstract class Building implements NbtSerializable, WorldComponent {
 
 	public void removed() {
 		getPattern().list(world, x, y, true).forEach(pos -> {
-			TileState state = world.getTileState(pos);
-			state.setVariant(world, x, y, Tiles.EMPTY.getDefaultVariant(), true);
+			world.setTileVariant(x, y, Tiles.EMPTY.getDefaultVariant());
 		});
 
 		world.setLinkedBuildingAt(x, y, null);

@@ -83,6 +83,12 @@ public class PlayScreen extends Screen {
 		ScreenRenderer.centerAt(-1, 1);
 		ScreenRenderer.setOffset(0, -40);
 		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS", 30);
+
+		if (symbol != null) {
+			ScreenRenderer.centerAt(-1, -1);
+			ScreenRenderer.setOffset(0, 35);
+			ScreenRenderer.text(symbol + "\n" + world.getCountry(symbol).getTotalMaterials() + "m", 30);
+		}
 	}
 
 	@Override
@@ -111,7 +117,7 @@ public class PlayScreen extends Screen {
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
 			world.setOverlay((world, x, y, state, color) -> {
 				if (state.getOwner() != Symbol.NONE) {
-					color.set(1, 1, 1);
+					color.a = 0;
 				}else{
 					color.set(0, 0, 0);
 				}

@@ -78,7 +78,7 @@ public class Renderer {
 		}
 
 		// this doesn't respect the winding order for some directions
-		// (when the line is pointing to the lest and/or downwards)
+		// (when the line is pointing to the left and/or downwards)
 		// it would be a good idea to fix this, for now I disabled back face culling to mitigate this
 
 		float ax1 = ((2 * x1) + d) / 2;

@@ -17,7 +17,7 @@ public class EmptyTile extends Tile {
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
 		if (event.isPressed()) {
-			world.setTileState(x, y, Window.INSTANCE.input().isKeyPressed(GLFW.GLFW_KEY_W) ? Tiles.WATER.getDefaultVariant() : Tiles.MATERIAL.getDefaultVariant());
+			world.setTileVariant(x, y, Window.INSTANCE.input().isKeyPressed(GLFW.GLFW_KEY_W) ? Tiles.WATER.getDefaultVariant() : Tiles.MATERIAL.getDefaultVariant());
 		}
 	}
 

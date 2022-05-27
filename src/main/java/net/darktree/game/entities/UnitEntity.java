@@ -34,7 +34,7 @@ public class UnitEntity extends MovingEntity {
 
 	public void colonize() {
 		Pattern.nextColonizationPattern().iterate(world, tx, ty, pos -> {
-			world.getTileState(pos).setOwner(world, pos.x, pos.y, this.symbol);
+			world.setTileOwner(pos.x, pos.y, this.symbol);
 		});
 	}
 
