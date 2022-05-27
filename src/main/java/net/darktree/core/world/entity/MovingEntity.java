@@ -12,6 +12,7 @@ public class MovingEntity extends Entity {
 	private float sx, sy;
 	private Path path = null;
 	private int px, py;
+	private boolean moved;
 
 	public MovingEntity(World world, int x, int y, Type<Entity> type) {
 		super(world, x, y, type);
@@ -30,6 +31,7 @@ public class MovingEntity extends Entity {
 
 	public void follow(Path path) {
 		this.path = path;
+		this.moved = true;
 		followNext();
 	}
 
@@ -65,6 +67,7 @@ public class MovingEntity extends Entity {
 	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
 		this.px = this.tx;
 		this.py = this.ty;
+		this.moved = false;
 	}
 
 	public void onTargetReached() {
@@ -73,6 +76,10 @@ public class MovingEntity extends Entity {
 
 	public void revert() {
 		move(px, py, 0.05f);
+		moved = false;
 	}
 
+	public boolean hasMoved() {
+		return moved;
+	}
 }

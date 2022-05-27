@@ -7,12 +7,15 @@ import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.input.MouseButton;
 import net.darktree.core.event.ClickEvent;
+import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.MovingEntity;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.path.Pathfinder;
 import net.darktree.core.world.task.BuildTask;
+import net.darktree.core.world.task.ColonizeTask;
+import net.darktree.core.world.task.MoveTask;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.tiles.Tiles;
@@ -117,20 +120,12 @@ public class PlayScreen extends Screen {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
 			if (this.entity instanceof UnitEntity unit) {
-				unit.colonize();
+				world.getManager().apply(world.getCurrentSymbol(), new ColonizeTask(unit));
 			}
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
 			world.getManager().apply(world.getCurrentSymbol(), new BuildTask(Tiles.BUILD, 2, 2));
-		}
-
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_X) {
-			if (this.entity instanceof UnitEntity unit) {
-				if (unit.getSymbol() == world.getCurrentSymbol()) {
-					unit.revert();
-				}
-			}
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
@@ -149,7 +144,7 @@ public class PlayScreen extends Screen {
 	private MovingEntity entity = null;
 
 	void pathfinderBegin(int x, int y) {
-		pathfinder = new Pathfinder(world, x, y, 5, world.getCurrentSymbol());
+		pathfinder = new Pathfinder(world, x, y, 5, world.getCurrentSymbol(), Pattern.IDENTITY);
 		world.setOverlay(new PathfinderOverlay(pathfinder));
 	}
 
@@ -157,7 +152,7 @@ public class PlayScreen extends Screen {
 		if (pathfinder != null) {
 			if (pathfinder.canReach(x, y)) {
 				Path path = pathfinder.getPathTo(x, y);
-				entity.follow(path);
+				world.getManager().apply(world.getCurrentSymbol(), new MoveTask(entity, path));
 			}
 		}
 	}
@@ -187,7 +182,7 @@ public class PlayScreen extends Screen {
 							}
 						}
 
-						if (entity != null) {
+						if (entity != null && !entity.hasMoved()) {
 							pathfinderBegin(x, y);
 						}
 					}else{

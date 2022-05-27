@@ -1,5 +1,6 @@
 package net.darktree.core.world.path;
 
+import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.world.tile.TilePos;
@@ -40,14 +41,22 @@ public class Path {
 
 		TilePos prev = positions.get(0);
 
+		drawBox(buffer, prev);
+
 		for (int i = 1; i < positions.size(); i ++) {
 			TilePos pos = positions.get(i);
 
-			Renderer.line(buffer, prev.x + 0.5f, prev.y + 0.5f, pos.x + 0.5f, pos.y + 0.5f, 0.05f, 1, 1, 1, 1f);
+			Renderer.line(buffer, prev.x + 0.5f, prev.y + 0.5f, pos.x + 0.5f, pos.y + 0.5f, 0.05f, 1, 1, 1, 0.95f);
+
+			drawBox(buffer, pos);
 
 			prev = pos;
 		}
 
+	}
+
+	private void drawBox(VertexBuffer buffer, TilePos pos) {
+		Renderer.quad(buffer, pos.x + 0.4f, pos.y + 0.4f, 0.2f, 0.2f, Sprites.NULL, 1, 1, 1, 0.95f);
 	}
 
 }

@@ -34,9 +34,8 @@ public class BuildTask extends Task {
 
 		List<TilePos> tiles = building.getPattern().list(world, x, y, true);
 		TileState[][] map = world.getTiles();
-		Symbol owner = world.getTileState(x, y).getOwner();
 
-		return tiles.stream().map(pos -> map[pos.x][pos.y]).allMatch(state -> state.getTile().isReplaceable() && state.getOwner() == owner);
+		return tiles.stream().map(pos -> map[pos.x][pos.y]).allMatch(state -> state.getTile().isReplaceable() && state.getOwner() == symbol);
 	}
 
 	@Override

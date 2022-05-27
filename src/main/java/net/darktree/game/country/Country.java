@@ -1,6 +1,9 @@
 package net.darktree.game.country;
 
+import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
+import net.darktree.core.world.World;
+import net.darktree.core.world.WorldListener;
 import net.darktree.game.buildings.Building;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -8,11 +11,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Country implements NbtSerializable {
+public class Country implements NbtSerializable, WorldListener {
 
 	private final List<Building> buildings = new ArrayList<>();
 	private final Symbol symbol;
 	private int local = 0;
+	public boolean colonized = false;
 
 	public Country(Symbol symbol) {
 		this.symbol = symbol;
@@ -21,11 +25,18 @@ public class Country implements NbtSerializable {
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		tag.putByte("symbol", (byte) symbol.ordinal());
+		tag.putInt("local", local);
 	}
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
+		this.local = tag.getInt("local");
+	}
 
+	public void onPlayerTurnEvent(World world, TurnEvent event, Symbol symbol) {
+		if (symbol == this.symbol && event == TurnEvent.TURN_START) {
+			colonized = false;
+		}
 	}
 
 	public int getTotalMaterials() {
@@ -43,4 +54,5 @@ public class Country implements NbtSerializable {
 	public void addBuilding(Building building) {
 		buildings.add(building);
 	}
+
 }

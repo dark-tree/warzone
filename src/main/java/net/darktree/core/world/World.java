@@ -1,17 +1,17 @@
 package net.darktree.core.world;
 
 import net.darktree.Main;
-import net.darktree.core.client.Sprites;
-import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
-import net.darktree.core.util.Type;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.task.TaskManager;
-import net.darktree.core.world.tile.*;
+import net.darktree.core.world.tile.TileInstance;
+import net.darktree.core.world.tile.TilePos;
+import net.darktree.core.world.tile.TileState;
+import net.darktree.core.world.tile.TileStateConsumer;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.core.world.view.WorldEntityView;
 import net.darktree.game.buildings.Building;
@@ -277,6 +277,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {
 		forEach((state, x, y) -> state.getTile().onPlayerTurnEvent(this, x, y, event, symbol));
 		getEntities().forEach(entity -> entity.onPlayerTurnEvent(this, entity.getX(), entity.getY(), event, symbol));
+		this.countries.forEach((key, value) -> value.onPlayerTurnEvent(this, event, symbol));
 	}
 
 	public void forEach(TileStateConsumer consumer) {

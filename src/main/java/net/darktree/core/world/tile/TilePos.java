@@ -26,6 +26,6 @@ public class TilePos {
 
 	@Override
 	public int hashCode() {
-		return 31 * x + y;
+		return 1024 * x + y;
 	}
 }

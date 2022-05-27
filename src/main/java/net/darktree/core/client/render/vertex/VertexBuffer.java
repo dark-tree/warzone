@@ -1,7 +1,6 @@
 package net.darktree.core.client.render.vertex;
 
 import net.darktree.core.client.render.ResizeableBuffer;
-import net.darktree.game.buildings.Building;
 import org.lwjgl.opengl.GL32;
 
 import java.util.ArrayList;

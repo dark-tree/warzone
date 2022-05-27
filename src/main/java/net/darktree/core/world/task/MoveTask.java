@@ -16,6 +16,11 @@ public class MoveTask extends Task {
 	}
 
 	@Override
+	boolean verify(World world, Symbol symbol) {
+		return !entity.hasMoved();
+	}
+
+	@Override
 	void redo(World world, Symbol symbol) {
 		entity.follow(path);
 	}

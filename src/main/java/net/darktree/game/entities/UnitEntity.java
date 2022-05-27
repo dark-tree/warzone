@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 public class UnitEntity extends MovingEntity {
 
 	private Symbol symbol = Symbol.CROSS;
-	private boolean colonized = false;
 
 	public UnitEntity(World world, int x, int y, Type<Entity> type) {
 		super(world, x, y, type);
@@ -34,20 +33,9 @@ public class UnitEntity extends MovingEntity {
 	}
 
 	public void colonize() {
-		if (!colonized && world.getTileState(tx, ty).getOwner() == this.symbol) {
-			Pattern.nextColonizationPattern().iterate(world, tx, ty, pos -> {
-				world.getTileState(pos.x, pos.y).setOwner(world, pos.x, pos.y, this.symbol);
-			});
-
-			colonized = true;
-		}
-	}
-
-	@Override
-	public void revert() {
-		if (!colonized) {
-			super.revert();
-		}
+		Pattern.nextColonizationPattern().iterate(world, tx, ty, pos -> {
+			world.getTileState(pos).setOwner(world, pos.x, pos.y, this.symbol);
+		});
 	}
 
 	@Override
@@ -65,7 +53,6 @@ public class UnitEntity extends MovingEntity {
 	@Override
 	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
 		super.onPlayerTurnStart(world, x, y, symbol);
-		this.colonized = false;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package net.darktree.core.world.path;
 
+import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.tile.Tile;
@@ -20,15 +21,18 @@ public class Pathfinder {
 			{+0, +1}, {+1, +1}, {+1, -1}, {-1, +1}
 	};
 
-	public Pathfinder(World world, int x, int y, int max, Symbol symbol) {
+	public Pathfinder(World world, int x, int y, int max, Symbol symbol, Pattern pattern) {
 		this.world = world;
 		this.width = world.width;
 		this.height = world.height;
 		this.field = new int[this.width][this.height];
-		this.field[x][y] = 1;
 		this.distance = new float[this.width][this.height];
-		this.distance[x][y] = max;
 		this.symbol = symbol;
+
+		pattern.iterate(world, x, y, pos -> {
+			this.field[pos.x][pos.y] = 1;
+			this.distance[pos.x][pos.y] = max;
+		});
 
 		compute(max);
 	}

@@ -36,4 +36,7 @@ public class TaskManager {
 		}
 	}
 
+	public void pointOfNoReturn(Symbol symbol) {
+		tasks.get(symbol).clear();
+	}
 }

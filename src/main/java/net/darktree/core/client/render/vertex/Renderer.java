@@ -7,7 +7,6 @@ import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.util.Color;
-import net.darktree.core.util.Logger;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.tile.TileState;
 import org.lwjgl.opengl.GL32;
