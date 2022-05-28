@@ -12,7 +12,7 @@ public class MovingEntity extends Entity {
 	private float sx, sy;
 	private Path path = null;
 	private int px, py;
-	private boolean moved;
+	protected boolean moved;
 
 	public MovingEntity(World world, int x, int y, Type<Entity> type) {
 		super(world, x, y, type);

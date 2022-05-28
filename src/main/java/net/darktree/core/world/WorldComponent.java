@@ -41,6 +41,7 @@ public interface WorldComponent extends WorldListener {
 	/**
 	 * Called when a neighbour tile changes variants, x & y point to the neighbour
 	 */
+	@Deprecated(forRemoval = true)
 	default void onNeighbourUpdate(World world, int x, int y, Direction direction) {
 
 	}

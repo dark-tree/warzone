@@ -68,6 +68,7 @@ public class Main {
 		try {
 			loop();
 		}catch (Exception e) {
+			Window.alert("Main thread has thrown an exception and crashed!\nThe application will be terminated!", "Game has crashed!");
 			Logger.fatal("Main thread has thrown an exception and crashed!");
 			e.printStackTrace();
 		}

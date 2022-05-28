@@ -51,11 +51,6 @@ public class UnitEntity extends MovingEntity {
 	}
 
 	@Override
-	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
-		super.onPlayerTurnStart(world, x, y, symbol);
-	}
-
-	@Override
 	public boolean canPathfindThrough(Symbol symbol) {
 		return this.symbol == symbol;
 	}

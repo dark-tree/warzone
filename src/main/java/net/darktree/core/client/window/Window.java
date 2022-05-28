@@ -6,6 +6,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.APIUtil;
 
+import javax.swing.*;
 import java.util.Map;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -110,7 +111,6 @@ public class Window implements AutoCloseable {
 		input.updateScale(width, height);
 	}
 
-
 	@Override
 	public void close() {
 		glfwFreeCallbacks(this.handle);
@@ -144,4 +144,9 @@ public class Window implements AutoCloseable {
 		glfwPollEvents();
 		profiler.next();
 	}
+
+	public static void alert(String message, String title) {
+		JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
+	}
+
 }
