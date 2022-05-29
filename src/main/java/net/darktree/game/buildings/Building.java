@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class Building implements NbtSerializable, WorldComponent {
 
-	protected final int x, y;
 	protected final World world;
-	protected final Type<Building> type;
+	public final Type<Building> type;
+	public final int x, y;
 
 	public Building(World world, int x, int y, Type<Building> type) {
 		this.x = x;

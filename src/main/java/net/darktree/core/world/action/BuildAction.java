@@ -1,4 +1,4 @@
-package net.darktree.core.world.task;
+package net.darktree.core.world.action;
 
 import net.darktree.core.util.Type;
 import net.darktree.core.world.World;
@@ -9,13 +9,13 @@ import net.darktree.game.country.Symbol;
 
 import java.util.List;
 
-public class BuildTask extends Task {
+public class BuildAction extends Action {
 
 	private final Type<Building> type;
 	private final int x, y;
 	private Building building;
 
-	public BuildTask(Type<Building> type, int x, int y) {
+	public BuildAction(Type<Building> type, int x, int y) {
 		this.type = type;
 		this.x = x;
 		this.y = y;

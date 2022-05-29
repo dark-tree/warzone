@@ -15,19 +15,22 @@ public class Pathfinder {
 	private final World world;
 	private final int width, height;
 	private final Symbol symbol;
+	private final boolean within;
 
 	private final static int[][] OFFSETS = {
 			{-1, +0}, {+0, -1}, {-1, -1}, {+1, +0},
 			{+0, +1}, {+1, +1}, {+1, -1}, {-1, +1}
 	};
 
-	public Pathfinder(World world, int x, int y, int max, Symbol symbol, Pattern pattern) {
+	// TODO: split max, pattern and within into PathfinderConfig
+	public Pathfinder(World world, int x, int y, int max, Symbol symbol, Pattern pattern, boolean within) {
 		this.world = world;
 		this.width = world.width;
 		this.height = world.height;
 		this.field = new int[this.width][this.height];
 		this.distance = new float[this.width][this.height];
 		this.symbol = symbol;
+		this.within = within;
 
 		pattern.iterate(world, x, y, pos -> {
 			this.field[pos.x][pos.y] = 1;
@@ -97,12 +100,16 @@ public class Pathfinder {
 		if (x >= 0 && y >= 0 && x < width && y < height) {
 
 			Tile tile = world.getTileState(x, y).getTile();
-			float weight = distance - ((this.symbol != world.getTileState(x, y).getOwner()) ? 2.0f : 1.0f);
+			Symbol owner = world.getTileState(x, y).getOwner();
 
-			if (this.field[x][y] == 0 && shouldPropagate(x, y, tile)) {
-				if (weight > 0) {
-					this.field[x][y] = value;
-					this.distance[x][y] = weight;
+			if (!within || owner == this.symbol) {
+				float weight = distance - ((this.symbol != owner) ? 2.0f : 1.0f);
+
+				if (this.field[x][y] == 0 && shouldPropagate(x, y, tile)) {
+					if (weight > 0) {
+						this.field[x][y] = value;
+						this.distance[x][y] = weight;
+					}
 				}
 			}
 		}

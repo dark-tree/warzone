@@ -8,12 +8,13 @@ import java.util.List;
 
 public interface WorldEntityView {
 
-	default void addEntity(Entity entity) {
+	default Entity addEntity(Entity entity) {
 		getEntities().add(entity);
+		return entity;
 	}
 
-	default void addEntity(int x, int y, Type<Entity> type) {
-		getEntities().add(type.construct((World) this, x, y));
+	default Entity addEntity(int x, int y, Type<Entity> type) {
+		return addEntity(type.construct((World) this, x, y));
 	}
 
 	default Entity getEntity(int x, int y) {

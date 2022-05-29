@@ -8,11 +8,27 @@ import net.darktree.core.util.Logger;
 import net.darktree.core.util.Type;
 import net.darktree.core.world.World;
 import net.darktree.game.country.Symbol;
+import net.querz.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
 
 public class CapitolBuilding extends Building {
 
+	private Symbol symbol = Symbol.CROSS;
+
 	public CapitolBuilding(World world, int x, int y, Type<Building> type) {
 		super(world, x, y, type);
+	}
+
+	@Override
+	public void toNbt(@NotNull CompoundTag tag) {
+		super.toNbt(tag);
+		tag.putByte("symbol", (byte) this.symbol.ordinal());
+	}
+
+	@Override
+	public void fromNbt(@NotNull CompoundTag tag) {
+		super.fromNbt(tag);
+		this.symbol = Symbol.values()[tag.getByte("symbol")];
 	}
 
 	@Override
@@ -33,7 +49,7 @@ public class CapitolBuilding extends Building {
 	@Override
 	public void draw(int x, int y, VertexBuffer buffer) {
 		Renderer.quad(buffer, x, y, 2, 2, Sprites.BUILDING_CAPITOL, 1, 1, 1, 0);
-		Renderer.quad(buffer, x + 0.5f, y + 0.5f, 1, 1, Symbol.TRIANGLE.getSprite(), 1, 1, 1, 0);
+		Renderer.quad(buffer, x + 0.5f, y + 0.5f, 1, 1, symbol.getSprite(), 1, 1, 1, 0);
 	}
 
 	@Override

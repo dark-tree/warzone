@@ -1,14 +1,14 @@
-package net.darktree.core.world.task;
+package net.darktree.core.world.action;
 
 import net.darktree.core.world.World;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 
-public class ColonizeTask extends Task {
+public class ColonizeAction extends Action {
 
 	private final UnitEntity entity;
 
-	public ColonizeTask(UnitEntity entity) {
+	public ColonizeAction(UnitEntity entity) {
 		this.entity = entity;
 	}
 

@@ -11,13 +11,14 @@ import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.WorldView;
+import net.darktree.core.world.action.SummonAction;
 import net.darktree.core.world.entity.MovingEntity;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.path.Pathfinder;
-import net.darktree.core.world.task.BuildTask;
-import net.darktree.core.world.task.ColonizeTask;
-import net.darktree.core.world.task.MoveTask;
+import net.darktree.core.world.action.BuildAction;
+import net.darktree.core.world.action.ColonizeAction;
+import net.darktree.core.world.action.MoveAction;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.tiles.Tiles;
@@ -122,12 +123,13 @@ public class PlayScreen extends Screen {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
 			if (this.entity instanceof UnitEntity unit) {
-				world.getManager().apply(world.getCurrentSymbol(), new ColonizeTask(unit));
+				world.getManager().apply(world.getCurrentSymbol(), new ColonizeAction(unit));
 			}
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
-			world.getManager().apply(world.getCurrentSymbol(), new BuildTask(Tiles.BUILD, 2, 2));
+//			world.getManager().apply(world.getCurrentSymbol(), new BuildAction(Tiles.BUILD, 2, 2));
+			world.getManager().apply(world.getCurrentSymbol(), new SummonAction(world, world.getCurrentSymbol(), 4, 7));
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
@@ -146,7 +148,7 @@ public class PlayScreen extends Screen {
 	private MovingEntity entity = null;
 
 	void pathfinderBegin(int x, int y) {
-		pathfinder = new Pathfinder(world, x, y, 5, world.getCurrentSymbol(), Pattern.IDENTITY);
+		pathfinder = new Pathfinder(world, x, y, 5, world.getCurrentSymbol(), Pattern.IDENTITY, false);
 		world.setOverlay(new PathfinderOverlay(pathfinder));
 	}
 
@@ -154,7 +156,7 @@ public class PlayScreen extends Screen {
 		if (pathfinder != null) {
 			if (pathfinder.canReach(x, y)) {
 				Path path = pathfinder.getPathTo(x, y);
-				world.getManager().apply(world.getCurrentSymbol(), new MoveTask(entity, path));
+				world.getManager().apply(world.getCurrentSymbol(), new MoveAction(entity, path));
 			}
 		}
 	}

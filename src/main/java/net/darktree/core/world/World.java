@@ -6,7 +6,7 @@ import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
-import net.darktree.core.world.task.TaskManager;
+import net.darktree.core.world.action.TaskManager;
 import net.darktree.core.world.tile.TileInstance;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;

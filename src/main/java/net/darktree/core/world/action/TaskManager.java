@@ -1,4 +1,4 @@
-package net.darktree.core.world.task;
+package net.darktree.core.world.action;
 
 import net.darktree.core.world.World;
 import net.darktree.game.country.Symbol;
@@ -9,7 +9,7 @@ import java.util.Stack;
 public class TaskManager {
 
 	private final World world;
-	private final IdentityHashMap<Symbol,Stack<Task>> tasks = new IdentityHashMap<>();
+	private final IdentityHashMap<Symbol,Stack<Action>> tasks = new IdentityHashMap<>();
 
 	public TaskManager(World world) {
 		this.world = world;
@@ -19,17 +19,17 @@ public class TaskManager {
 		}
 	}
 
-	public void apply(Symbol symbol, Task task) {
-		task.prepare(this.world, symbol);
+	public void apply(Symbol symbol, Action action) {
+		action.prepare(this.world, symbol);
 
-		if (task.verify(this.world, symbol)) {
-			task.redo(this.world, symbol);
-			tasks.get(symbol).push(task);
+		if (action.verify(this.world, symbol)) {
+			action.redo(this.world, symbol);
+			tasks.get(symbol).push(action);
 		}
 	}
 
 	public void undo(Symbol symbol) {
-		Stack<Task> list = tasks.get(symbol);
+		Stack<Action> list = tasks.get(symbol);
 
 		if (!list.isEmpty()) {
 			list.pop().undo(this.world, symbol);

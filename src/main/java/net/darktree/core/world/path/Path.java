@@ -34,6 +34,10 @@ public class Path {
 		return this.positions.get(index ++);
 	}
 
+	public TilePos getStarting() {
+		return this.positions.get(0);
+	}
+
 	/**
 	 * Draw this path as a series of lines and boxes
 	 */

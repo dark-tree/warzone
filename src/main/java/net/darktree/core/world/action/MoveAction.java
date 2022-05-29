@@ -1,16 +1,16 @@
-package net.darktree.core.world.task;
+package net.darktree.core.world.action;
 
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.MovingEntity;
 import net.darktree.core.world.path.Path;
 import net.darktree.game.country.Symbol;
 
-public class MoveTask extends Task {
+public class MoveAction extends Action {
 
 	private final MovingEntity entity;
 	private final Path path;
 
-	public MoveTask(MovingEntity entity, Path path) {
+	public MoveAction(MovingEntity entity, Path path) {
 		this.entity = entity;
 		this.path = path;
 	}
