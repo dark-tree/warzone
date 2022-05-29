@@ -135,7 +135,7 @@ public class Window implements AutoCloseable {
 	}
 
 	public boolean shouldClose() {
-		return glfwWindowShouldClose(this.handle) || input.isKeyPressed(GLFW_KEY_ESCAPE);
+		return glfwWindowShouldClose(this.handle);
 	}
 
 	public void swap() {

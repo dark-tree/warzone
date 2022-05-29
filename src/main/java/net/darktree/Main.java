@@ -9,7 +9,7 @@ import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
-import net.darktree.game.screens.PlayScreen;
+import net.darktree.game.screen.PlayScreen;
 import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
 

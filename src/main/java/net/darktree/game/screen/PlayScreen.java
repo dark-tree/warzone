@@ -1,4 +1,4 @@
-package net.darktree.game.screens;
+package net.darktree.game.screen;
 
 import net.darktree.Main;
 import net.darktree.core.client.Sprites;
@@ -7,21 +7,15 @@ import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.input.MouseButton;
 import net.darktree.core.event.ClickEvent;
-import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.WorldView;
 import net.darktree.core.world.action.SummonAction;
-import net.darktree.core.world.entity.MovingEntity;
-import net.darktree.core.world.overlay.PathfinderOverlay;
-import net.darktree.core.world.path.Path;
-import net.darktree.core.world.path.Pathfinder;
-import net.darktree.core.world.action.BuildAction;
-import net.darktree.core.world.action.ColonizeAction;
-import net.darktree.core.world.action.MoveAction;
+import net.darktree.core.world.entity.Entity;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
-import net.darktree.game.tiles.Tiles;
+import net.darktree.game.interactor.Interactor;
+import net.darktree.game.interactor.MoveInteractor;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
@@ -29,6 +23,12 @@ import org.lwjgl.glfw.GLFW;
 import java.io.IOException;
 
 public class PlayScreen extends Screen {
+
+	private Interactor interactor = null;
+
+	public void setInteractor(Interactor interactor) {
+		this.interactor = interactor;
+	}
 
 	private boolean isMapFocused = true;
 	private final World world;
@@ -44,12 +44,12 @@ public class PlayScreen extends Screen {
 
 		WorldHolder.draw();
 
-		if (pathfinder != null) {
-			int x = Main.window.input().getMouseMapX(world.getView());
-			int y = Main.window.input().getMouseMapY(world.getView());
+		if (interactor != null) {
+			interactor.draw(WorldHolder.pipeline.buffer);
 
-			if (pathfinder.canReach(x, y)) {
-				pathfinder.getPathTo(x, y).draw(WorldHolder.pipeline.buffer);
+			if (interactor.isClosed()) {
+				interactor.close();
+				interactor = null;
 			}
 		}
 
@@ -91,6 +91,11 @@ public class PlayScreen extends Screen {
 	@Override
 	public void onKey(int key, int action, int mods) {
 
+		if (interactor != null) {
+			interactor.onKey(key, action, mods);
+			return;
+		}
+
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_S) {
 			CompoundTag tag = new CompoundTag();
 			world.toNbt(tag);
@@ -122,9 +127,9 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
-			if (this.entity instanceof UnitEntity unit) {
-				world.getManager().apply(world.getCurrentSymbol(), new ColonizeAction(unit));
-			}
+//			if (this.entity instanceof UnitEntity unit) {
+//				world.getManager().apply(world.getCurrentSymbol(), new ColonizeAction(unit));
+//			}
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
@@ -141,30 +146,10 @@ public class PlayScreen extends Screen {
 		}
 	}
 
-	/**
-	 * TODO: Cleanup
-	 */
-	private Pathfinder pathfinder = null;
-	private MovingEntity entity = null;
-
-	void pathfinderBegin(int x, int y) {
-		pathfinder = new Pathfinder(world, x, y, 5, world.getCurrentSymbol(), Pattern.IDENTITY, false);
-		world.setOverlay(new PathfinderOverlay(pathfinder));
-	}
-
-	void pathfinderApply(MovingEntity entity, int x, int y) {
-		if (pathfinder != null) {
-			if (pathfinder.canReach(x, y)) {
-				Path path = pathfinder.getPathTo(x, y);
-				world.getManager().apply(world.getCurrentSymbol(), new MoveAction(entity, path));
-			}
-		}
-	}
-
 	@Override
 	public void onClick(int button, int action, int mods) {
 
-		if (!isMapFocused) {
+		if (!isMapFocused || button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
 			return;
 		}
 
@@ -173,34 +158,21 @@ public class PlayScreen extends Screen {
 		int x = input.getMouseMapX(world.getView());
 		int y = input.getMouseMapY(world.getView());
 
+		if (interactor != null) {
+			interactor.onClick(button, action, mods, x, y);
+			return;
+		}
+
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
 			if (world.isPositionValid(x, y)) {
 
-				if (action == GLFW.GLFW_PRESS && input.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-					if (pathfinder == null) {
-						entity = (MovingEntity) world.getEntity(x, y);
+				if (action == GLFW.GLFW_PRESS) {
+					Entity entity = world.getEntity(x, y);
 
-						if (entity instanceof UnitEntity unit) {
-							if (unit.getSymbol() != world.getCurrentSymbol()) {
-								return;
-							}
+					if (entity instanceof UnitEntity unit) {
+						if (unit.getSymbol() == world.getCurrentSymbol() && !unit.hasMoved()) {
+							interactor = new MoveInteractor(unit, world);
 						}
-
-						if (entity != null && !entity.hasMoved()) {
-							pathfinderBegin(x, y);
-						}
-					}else{
-
-						if (entity instanceof UnitEntity unit) {
-							if (unit.getSymbol() != world.getCurrentSymbol()) {
-								return;
-							}
-						}
-
-						pathfinderApply(entity, x, y);
-						pathfinder = null;
-						entity = null;
-						world.setOverlay(null);
 					}
 				}else{
 					world.getTileState(x, y).getTile().onInteract(world, x, y, new ClickEvent(button, action));
