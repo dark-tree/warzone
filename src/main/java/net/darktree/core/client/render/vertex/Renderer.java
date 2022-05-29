@@ -7,6 +7,7 @@ import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.util.Color;
+import net.darktree.core.world.World;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.tile.TileState;
 import org.lwjgl.opengl.GL32;
@@ -18,11 +19,11 @@ public class Renderer {
 
 	private final static Color COLOR = new Color();
 
-	public static void tile(VertexBuffer buffer, int x, int y, TileState state, Sprite sprite) {
-		Overlay overlay = Main.world.getOverlay();
+	public static void tile(VertexBuffer buffer, World world, int x, int y, TileState state, Sprite sprite) {
+		Overlay overlay = world.getOverlay();
 
 		if (overlay != null) {
-			overlay.getColor(Main.world, x, y, state, COLOR);
+			overlay.getColor(world, x, y, state, COLOR);
 		}else{
 			COLOR.clear();
 		}

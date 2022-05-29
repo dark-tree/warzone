@@ -23,8 +23,8 @@ public abstract class Tile implements WorldComponent {
 		return this.variant;
 	}
 
-	public void draw(int x, int y, TileState state, VertexBuffer buffer) {
-		Renderer.tile(buffer, x, y, state, SpriteBridge.getSprite(this));
+	public void draw(World world, int x, int y, TileState state, VertexBuffer buffer) {
+		Renderer.tile(buffer, world, x, y, state, SpriteBridge.getSprite(this));
 	}
 
 	public void onInteract(World world, int x, int y, ClickEvent event) {

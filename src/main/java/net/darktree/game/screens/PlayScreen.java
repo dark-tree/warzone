@@ -9,6 +9,8 @@ import net.darktree.core.client.window.input.MouseButton;
 import net.darktree.core.event.ClickEvent;
 import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
+import net.darktree.core.world.WorldHolder;
+import net.darktree.core.world.WorldView;
 import net.darktree.core.world.entity.MovingEntity;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Path;
@@ -39,29 +41,23 @@ public class PlayScreen extends Screen {
 
 		isMapFocused = true;
 
-		// render map
-		world.draw(Main.pipeline.buffer);
+		WorldHolder.draw();
 
 		if (pathfinder != null) {
-			int x = Main.window.input().getMouseMapX();
-			int y = Main.window.input().getMouseMapY();
+			int x = Main.window.input().getMouseMapX(world.getView());
+			int y = Main.window.input().getMouseMapY(world.getView());
 
 			if (pathfinder.canReach(x, y)) {
-				pathfinder.getPathTo(x, y).draw(Main.pipeline.buffer);
+				pathfinder.getPathTo(x, y).draw(WorldHolder.pipeline.buffer);
 			}
 		}
 
-		Main.pipeline.flush();
+		WorldHolder.pipeline.flush();
 
 		// render hud
 		Symbol symbol = world.getCurrentSymbol();
 
 		ScreenRenderer.setSprite(Sprites.TOP);
-
-//		ScreenRenderer.centerAt(0, 0);
-//		if (ScreenRenderer.button(100, 100)) {
-//			Logger.info("Button pressed!");
-//		}
 
 		ScreenRenderer.centerAt(0, 1);
 		ScreenRenderer.offset(-240, -120);
@@ -108,7 +104,7 @@ public class PlayScreen extends Screen {
 			try {
 				World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
 				Main.screens.clear();
-				Main.screens.push(new PlayScreen(Main.world));
+				Main.screens.push(new PlayScreen(WorldHolder.world));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -172,8 +168,8 @@ public class PlayScreen extends Screen {
 
 		Input input = Main.window.input();
 
-		int x = input.getMouseMapX();
-		int y = input.getMouseMapY();
+		int x = input.getMouseMapX(world.getView());
+		int y = input.getMouseMapY(world.getView());
 
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
 			if (world.isPositionValid(x, y)) {
@@ -214,17 +210,21 @@ public class PlayScreen extends Screen {
 
 	@Override
 	public void onResize(int w, int h) {
-		world.setZoom(world.zoom);
+		WorldView view = world.getView();
+
+		view.setZoom(view.zoom);
 	}
 
 	@Override
 	public void onScroll(float value) {
-		float zoom = world.zoom * (1 + value * 0.15f);
+		WorldView view = world.getView();
+
+		float zoom = view.zoom * (1 + value * 0.15f);
 
 		if (zoom < Input.MAP_ZOOM_MIN) zoom = Input.MAP_ZOOM_MIN;
 		if (zoom > Input.MAP_ZOOM_MAX) zoom = Input.MAP_ZOOM_MAX;
 
-		world.setZoom(zoom);
+		view.setZoom(zoom);
 	}
 
 	public void onMove(float x, float y) {
@@ -234,7 +234,7 @@ public class PlayScreen extends Screen {
 			float ox = (input.prevX - x) / Main.window.width() * -2;
 			float oy = (input.prevY - y) / Main.window.height() * 2;
 
-			world.drag(ox, oy);
+			world.getView().drag(ox, oy);
 		}
 	}
 

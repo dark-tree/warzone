@@ -1,6 +1,5 @@
 package net.darktree.game.tiles;
 
-import net.darktree.Main;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.ClickEvent;
 import net.darktree.core.event.TurnEvent;
@@ -65,8 +64,8 @@ public class StructureTile extends Tile {
 	}
 
 	@Override
-	public void draw(int x, int y, TileState state, VertexBuffer buffer) {
-		Building.Link link = Main.world.getTileInstance(x, y, Building.Link.class);
+	public void draw(World world, int x, int y, TileState state, VertexBuffer buffer) {
+		Building.Link link = world.getTileInstance(x, y, Building.Link.class);
 
 		if (link.isOrigin()) {
 			link.getBuilding().draw(x, y, buffer);

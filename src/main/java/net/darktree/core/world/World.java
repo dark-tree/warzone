@@ -1,9 +1,7 @@
 package net.darktree.core.world;
 
-import net.darktree.Main;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
-import net.darktree.core.client.window.Input;
 import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.entity.Entity;
@@ -31,22 +29,19 @@ import java.util.function.Function;
 public class World implements NbtSerializable, WorldEntityView {
 
 	final public int width, height;
+
 	final private TileState[][] tiles;
 	final private List<Entity> entities = new ArrayList<>();
-	final private List<Symbol> symbols = new ArrayList<>();
 	final private HashMap<TilePos, Building> buildings = new HashMap<>();
 	final private HashMap<Symbol, Country> countries = new HashMap<>();
-	final private TaskManager manager = new TaskManager(this);
 
+	private Symbol[] symbols = new Symbol[]{};
+	final private TaskManager manager = new TaskManager(this);
 	private Overlay overlay = null;
 	private boolean ownershipDirty = true;
 	private int turn;
 
-	public float offsetX;
-	public float offsetY;
-	public float scaleX;
-	public float scaleY;
-	public float zoom;
+	private final WorldView view;
 
 	public World(int width, int height) {
 		this.width = width;
@@ -59,21 +54,7 @@ public class World implements NbtSerializable, WorldEntityView {
 			}
 		}
 
-		setZoom(Input.MAP_ZOOM_MIN * 1.8f);
-
-		offsetX = width / -2f;
-		offsetY = height / -2f;
-	}
-
-	public void drag(float x, float y) {
-		this.offsetX += x / scaleX;
-		this.offsetY += y / scaleY;
-	}
-
-	public void setZoom(float zoom) {
-		this.scaleX = zoom * Main.window.height() / (float) Main.window.width();
-		this.scaleY = zoom;
-		this.zoom = zoom;
+		this.view = new WorldView(width, height);
 	}
 
 	@Override
@@ -130,16 +111,20 @@ public class World implements NbtSerializable, WorldEntityView {
 		World world = new World(tag.getInt("width"), tag.getInt("height"));
 		world.turn = tag.getByte("turn");
 
-		Main.world = world;
+		WorldHolder.world = world;
+
+		List<Symbol> symbols = new ArrayList<>();
 
 		for (Symbol symbol : Symbol.values()) {
 			CompoundTag countryTag = countriesTag.getCompoundTag(symbol.name());
 
 			if (countryTag != null) {
 				world.defineCountry(symbol).fromNbt(countryTag);
-				world.symbols.add(symbol);
+				symbols.add(symbol);
 			}
 		}
+
+		world.symbols = symbols.toArray(new Symbol[]{});
 
 		for (int x = 0; x < world.width; x ++) {
 			for (int y = 0; y < world.height; y ++) {
@@ -155,7 +140,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	public void loadTiles(Function<TilePos, TileVariant> generator) {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.getTileState(x, y).setVariant(this, x, y, generator.apply(new TilePos(x, y)), false);
+				this.getTileState(x, y).setVariant(this, x, y, generator.apply(new TilePos(x, y)));
 			}
 		}
 	}
@@ -187,7 +172,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
 	public void setTileVariant(int x, int y, TileVariant variant) {
-		getTileState(x, y).setVariant(this, x, y, variant, true);
+		getTileState(x, y).setVariant(this, x, y, variant);
 	}
 
 	/**
@@ -226,7 +211,7 @@ public class World implements NbtSerializable, WorldEntityView {
 
 		tiles.forEach(pos -> {
 			TileState state = this.tiles[pos.x][pos.y];
-			state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant(), true);
+			state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant());
 			((Building.Link) state.getInstance()).linkWith(x, y);
 		});
 
@@ -241,7 +226,7 @@ public class World implements NbtSerializable, WorldEntityView {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
 				TileState state = this.tiles[x][y];
-				state.getTile().draw(x, y, state, buffer);
+				state.getTile().draw(this, x, y, state, buffer);
 
 				drawBorders(buffer, x, y);
 			}
@@ -282,7 +267,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	 */
 	public Symbol getCurrentSymbol() {
 		try {
-			return this.symbols.get(turn);
+			return this.symbols[turn];
 		}catch (IndexOutOfBoundsException e) {
 			return null;
 		}
@@ -292,7 +277,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	 * Advance the game to the next player and sends map updates
 	 */
 	public void nextPlayerTurn() {
-		int len = this.symbols.size();
+		int len = this.symbols.length;
 
 		Symbol symbol = getCurrentSymbol();
 		sendPlayerTurnEvent(TurnEvent.TURN_END, symbol);
@@ -355,4 +340,9 @@ public class World implements NbtSerializable, WorldEntityView {
 	public void onOwnershipChanged() {
 		ownershipDirty = true;
 	}
+
+	public WorldView getView() {
+		return view;
+	}
+
 }

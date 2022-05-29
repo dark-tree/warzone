@@ -1,8 +1,10 @@
 package net.darktree.core.client.sound;
 
-import net.darktree.Main;
-import net.darktree.core.world.World;
+import net.darktree.core.world.WorldView;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.openal.AL10;
+
+import java.util.Objects;
 
 public class AudioSource {
 
@@ -25,9 +27,9 @@ public class AudioSource {
 		}
 	}
 
-	boolean update(World world) {
-		if (attenuation) {
-			updatePosition(world);
+	boolean update(@Nullable WorldView view) {
+		if (attenuation && view != null) {
+			updatePosition(view);
 		}
 
 		if (!isPlaying()) {
@@ -38,9 +40,8 @@ public class AudioSource {
 		return false;
 	}
 
-	private void updatePosition(World world) {
-		float oz = 1 - Main.world.zoom;
-		AL10.alSource3f(source, AL10.AL_POSITION, (world.offsetX + x) * Main.world.scaleX, (world.offsetY + y) * Main.world.scaleY, (z + oz) * 10);
+	private void updatePosition(WorldView view) {
+		AL10.alSource3f(source, AL10.AL_POSITION, (view.offsetX + x) * view.scaleX, (view.offsetY + y) * view.scaleY, (z + 1 - view.zoom) * 10);
 	}
 
 	/**
@@ -97,11 +98,11 @@ public class AudioSource {
 	/**
 	 * Start playing
 	 */
-	public void play() {
+	public void play(@Nullable WorldView view) {
 		AL10.alSourcePlay(source);
 
 		if (attenuation) {
-			updatePosition(Main.world);
+			updatePosition(Objects.requireNonNull(view));
 		}
 	}
 

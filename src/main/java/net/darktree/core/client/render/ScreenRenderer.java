@@ -1,6 +1,5 @@
 package net.darktree.core.client.render;
 
-import net.darktree.Main;
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Shaders;
 import net.darktree.core.client.Sprites;
@@ -13,6 +12,7 @@ import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
 import net.darktree.core.client.window.input.MouseButton;
+import net.darktree.core.world.WorldView;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -32,12 +32,12 @@ public class ScreenRenderer {
 	private static Font currentFont;
 	private static Alignment currentAlignment = Alignment.LEFT;
 
-	private static float projectMapIntoScreenX(int x) {
-		return (x + Main.world.offsetX) * Main.world.scaleX;
+	private static float projectMapIntoScreenX(WorldView view, int x) {
+		return (x + view.offsetX) * view.scaleX;
 	}
 
-	private static float projectMapIntoScreenY(int y) {
-		return (y + Main.world.offsetY) * Main.world.scaleY;
+	private static float projectMapIntoScreenY(WorldView view, int y) {
+		return (y + view.offsetY) * view.scaleY;
 	}
 
 	public static void registerFontPipeline(TextureConvertible texture) {
@@ -79,8 +79,8 @@ public class ScreenRenderer {
 	/**
 	 * Center the renderer at the specified map tile
 	 */
-	public static void centerAtTile(int x, int y) {
-		centerAt(projectMapIntoScreenX(x), projectMapIntoScreenY(y));
+	public static void centerAtTile(WorldView view, int x, int y) {
+		centerAt(projectMapIntoScreenX(view, x), projectMapIntoScreenY(view, y));
 	}
 
 	/**

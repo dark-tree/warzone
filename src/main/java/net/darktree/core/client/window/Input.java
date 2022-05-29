@@ -2,6 +2,7 @@ package net.darktree.core.client.window;
 
 import net.darktree.Main;
 import net.darktree.core.client.window.input.MouseButton;
+import net.darktree.core.world.WorldView;
 import org.lwjgl.glfw.GLFW;
 
 public class Input {
@@ -62,12 +63,12 @@ public class Input {
 		return (prevY / window.height() * -2 + 1);
 	}
 
-	public int getMouseMapX() {
-		return (int) (getMouseScreenX() / Main.world.scaleX - Main.world.offsetX);
+	public int getMouseMapX(WorldView view) {
+		return (int) (getMouseScreenX() / view.scaleX - view.offsetX);
 	}
 
-	public int getMouseMapY() {
-		return (int) (getMouseScreenY() / Main.world.scaleY - Main.world.offsetY);
+	public int getMouseMapY(WorldView view) {
+		return (int) (getMouseScreenY() / view.scaleY - view.offsetY);
 	}
 
 	public boolean isKeyPressed(int key) {

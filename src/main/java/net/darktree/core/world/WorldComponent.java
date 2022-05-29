@@ -1,7 +1,6 @@
 package net.darktree.core.world;
 
 import net.darktree.core.event.ClickEvent;
-import net.darktree.core.util.Direction;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.game.country.Symbol;
 
@@ -35,14 +34,6 @@ public interface WorldComponent extends WorldListener {
 	 * Called when tile ownership changes
 	 */
 	default void onOwnerUpdate(World world, int x, int y, Symbol previous, Symbol current) {
-
-	}
-
-	/**
-	 * Called when a neighbour tile changes variants, x & y point to the neighbour
-	 */
-	@Deprecated(forRemoval = true)
-	default void onNeighbourUpdate(World world, int x, int y, Direction direction) {
 
 	}
 

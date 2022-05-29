@@ -1,7 +1,6 @@
 package net.darktree.core.world.tile;
 
 import net.darktree.core.Registries;
-import net.darktree.core.util.Direction;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.World;
@@ -56,29 +55,18 @@ final public class TileState implements NbtSerializable {
 			Logger.warn("Loading of tile at: ", x, " ", y, " failed! Reverting to default...");
 
 			// TODO make better
-			setVariant(world, x, y, Tiles.EMPTY.getDefaultVariant(), false);
+			world.setTileVariant(x, y, Tiles.EMPTY.getDefaultVariant());
 			owner = Symbol.NONE;
 		}
 	}
 
-	public void setVariant(World world, int x, int y, TileVariant variant, boolean notify) {
+	public void setVariant(World world, int x, int y, TileVariant variant) {
 		if (this.variant != null) {
 			this.variant.getTile().onRemoved(world, x, y, variant);
 		}
 
 		this.variant = variant;
 		this.instance = variant.getTile().getInstance(world, x, y);
-
-		if(notify) {
-			for (Direction direction : Direction.values()) {
-				int nx = x + direction.x;
-				int ny = y + direction.y;
-
-				if (world.isPositionValid(nx, ny)) {
-					world.getTileState(nx, ny).getTile().onNeighbourUpdate(world, x, y, direction);
-				}
-			}
-		}
 	}
 
 	public void setOwner(World world, int x, int y, Symbol owner, boolean notify) {
@@ -105,4 +93,8 @@ final public class TileState implements NbtSerializable {
 	public TileInstance getInstance() {
 		return instance;
 	}
+
+//	public TileState copy() {
+//		return new TileState(this.variant, this.instance.copy(), this.owner);
+//	}
 }

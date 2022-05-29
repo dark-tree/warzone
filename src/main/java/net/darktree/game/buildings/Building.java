@@ -9,7 +9,6 @@ import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldComponent;
 import net.darktree.core.world.tile.TileInstance;
-import net.darktree.core.world.tile.TileState;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;

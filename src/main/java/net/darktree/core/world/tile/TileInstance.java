@@ -5,7 +5,7 @@ import net.darktree.core.world.World;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public class TileInstance implements NbtSerializable {
+public abstract class TileInstance implements NbtSerializable {
 
 	protected final World world;
 	protected final int x, y;
@@ -26,4 +26,5 @@ public class TileInstance implements NbtSerializable {
 
 	}
 
+//	public abstract TileInstance copy();
 }

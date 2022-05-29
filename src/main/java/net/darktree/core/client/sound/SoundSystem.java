@@ -1,8 +1,7 @@
 package net.darktree.core.client.sound;
 
-import net.darktree.Main;
 import net.darktree.core.util.Logger;
-import net.darktree.core.world.World;
+import net.darktree.core.world.WorldHolder;
 import org.lwjgl.openal.*;
 
 import java.nio.ByteBuffer;
@@ -43,12 +42,16 @@ public class SoundSystem {
 		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
 		AL.createCapabilities(deviceCaps);
 
+		// FIXME
+		// redesign this so that this thread either doesn't exist or only handles source deletion
+		// having to pass world to sound's play() function is also dumb as this handles it already
+		// why not wait for the next position update before starting to play?
+		// for now the WorldHolder class has to be loaded in the main thread first to not crash
+
 		thread = new Thread(() -> {
 			while (true) {
-				World world = Main.world;
-
 				synchronized (sources) {
-					sources.removeIf(source -> source.update(world));
+					sources.removeIf(source -> source.update(WorldHolder.world.getView()));
 				}
 
 				try {

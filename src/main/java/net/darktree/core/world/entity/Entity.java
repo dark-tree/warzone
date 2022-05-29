@@ -10,12 +10,13 @@ import net.darktree.game.country.Symbol;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public class Entity implements NbtSerializable, WorldListener {
+public abstract class Entity implements NbtSerializable, WorldListener {
 
 	protected final World world;
-	protected final Type<Entity> type;
 	protected int tx, ty;
 	protected float x, y;
+
+	public final Type<Entity> type;
 	public boolean removed = false;
 
 	public Entity(World world, int x, int y, Type<Entity> type) {
