@@ -14,8 +14,10 @@ import net.darktree.core.world.action.SummonAction;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
+import net.darktree.game.interactor.BuildInteractor;
 import net.darktree.game.interactor.Interactor;
 import net.darktree.game.interactor.MoveInteractor;
+import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
@@ -127,8 +129,11 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
-//			world.getManager().apply(world.getCurrentSymbol(), new BuildAction(Tiles.BUILD, 2, 2));
 			world.getManager().apply(new SummonAction(world, world.getCurrentSymbol(), 4, 7));
+		}
+
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
+			interactor = new BuildInteractor(Tiles.BUILD, world);
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {

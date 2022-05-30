@@ -64,11 +64,11 @@ public class Input {
 	}
 
 	public int getMouseMapX(WorldView view) {
-		return (int) (getMouseScreenX() / view.scaleX - view.offsetX);
+		return (int) Math.floor(getMouseScreenX() / view.scaleX - view.offsetX);
 	}
 
 	public int getMouseMapY(WorldView view) {
-		return (int) (getMouseScreenY() / view.scaleY - view.offsetY);
+		return (int) Math.floor(getMouseScreenY() / view.scaleY - view.offsetY);
 	}
 
 	public boolean isKeyPressed(int key) {
