@@ -23,9 +23,13 @@ public class TaskManager {
 		action.prepare(this.world, symbol);
 
 		if (action.verify(this.world, symbol)) {
-			action.redo(this.world, symbol);
 			tasks.get(symbol).push(action);
+			action.redo(this.world, symbol);
 		}
+	}
+
+	public void apply(Action action) {
+		apply(world.getCurrentSymbol(), action);
 	}
 
 	public void undo(Symbol symbol) {

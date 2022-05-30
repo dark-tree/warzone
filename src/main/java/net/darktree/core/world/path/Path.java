@@ -34,8 +34,12 @@ public class Path {
 		return this.positions.get(index ++);
 	}
 
-	public TilePos getStarting() {
+	public TilePos getStart() {
 		return this.positions.get(0);
+	}
+
+	public TilePos getEnd() {
+		return this.positions.get(positions.size() - 1);
 	}
 
 	/**

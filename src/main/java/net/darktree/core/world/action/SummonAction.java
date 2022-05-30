@@ -32,7 +32,7 @@ public class SummonAction extends Action {
 	@Override
 	void redo(World world, Symbol symbol) {
 		Path path = pathfinder.getPathTo(x, y);
-		TilePos starting = path.getStarting();
+		TilePos starting = path.getStart();
 
 		entity = (UnitEntity) world.addEntity(starting.x, starting.y, Tiles.TEST);
 		entity.follow(path);

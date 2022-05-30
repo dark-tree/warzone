@@ -77,9 +77,21 @@ public class MovingEntity extends Entity {
 	public void revert() {
 		move(px, py, 0.05f);
 		moved = false;
+		path = null;
 	}
 
 	public boolean hasMoved() {
 		return moved;
 	}
+
+	@Override
+	public int getX() {
+		return path != null ? path.getEnd().x : tx;
+	}
+
+	@Override
+	public int getY() {
+		return path != null ? path.getEnd().y : ty;
+	}
+
 }

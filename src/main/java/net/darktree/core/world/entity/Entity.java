@@ -27,7 +27,7 @@ public abstract class Entity implements NbtSerializable, WorldListener {
 	}
 
 	public boolean isAt(int x, int y) {
-		return this.tx == x && this.ty == y;
+		return getX() == x && getY() == y;
 	}
 
 	public int getX() {
@@ -54,8 +54,8 @@ public abstract class Entity implements NbtSerializable, WorldListener {
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		tag.putString("id", Registries.ENTITIES.keyOf(this.type));
-		tag.putInt("x", tx);
-		tag.putInt("y", ty);
+		tag.putInt("x", getX());
+		tag.putInt("y", getY());
 	}
 
 	@Override
