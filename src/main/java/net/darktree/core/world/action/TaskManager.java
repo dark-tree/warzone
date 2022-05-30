@@ -20,8 +20,6 @@ public class TaskManager {
 	}
 
 	public void apply(Symbol symbol, Action action) {
-		action.prepare(this.world, symbol);
-
 		if (action.verify(this.world, symbol)) {
 			tasks.get(symbol).push(action);
 			action.redo(this.world, symbol);

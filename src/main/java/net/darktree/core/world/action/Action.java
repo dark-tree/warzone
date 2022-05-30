@@ -9,11 +9,6 @@ public abstract class Action {
 		return true;
 	}
 
-	@Deprecated(forRemoval = true)
-	public void prepare(World world, Symbol symbol) {
-
-	}
-
 	abstract void redo(World world, Symbol symbol);
 
 	abstract void undo(World world, Symbol symbol);

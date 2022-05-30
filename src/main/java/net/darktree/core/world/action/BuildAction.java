@@ -22,12 +22,9 @@ public class BuildAction extends Action {
 	}
 
 	@Override
-	public void prepare(World world, Symbol symbol) {
-		this.building = type.construct(world, x, y);
-	}
-
-	@Override
 	boolean verify(World world, Symbol symbol) {
+		this.building = type.construct(world, x, y);
+
 		if (building.getCost() > world.getCountry(symbol).getTotalMaterials()) {
 			return false;
 		}

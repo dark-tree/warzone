@@ -29,7 +29,7 @@ public class BufferTest {
 			assertEquals(69.0f, rwbuf.getFloat());
 		}
 
-		buffer.print();
+		buffer.close();
 	}
 
 }

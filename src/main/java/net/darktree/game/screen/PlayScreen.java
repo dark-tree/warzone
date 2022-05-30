@@ -128,7 +128,7 @@ public class PlayScreen extends Screen {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
 //			world.getManager().apply(world.getCurrentSymbol(), new BuildAction(Tiles.BUILD, 2, 2));
-			world.getManager().apply(world.getCurrentSymbol(), new SummonAction(world, world.getCurrentSymbol(), 4, 7));
+			world.getManager().apply(new SummonAction(world, world.getCurrentSymbol(), 4, 7));
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {

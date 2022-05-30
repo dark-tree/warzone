@@ -7,7 +7,6 @@ import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.action.ColonizeAction;
 import net.darktree.core.world.action.MoveAction;
-import net.darktree.core.world.entity.MovingEntity;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.path.Pathfinder;
