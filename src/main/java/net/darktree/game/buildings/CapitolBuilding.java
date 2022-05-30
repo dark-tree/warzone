@@ -55,7 +55,7 @@ public class CapitolBuilding extends Building {
 		Color c = overlay == null ? Colors.OVERLAY_NONE : overlay.getColor(world, x, y, world.getTileState(x, y));
 
 		Renderer.quad(buffer, x, y, 2, 2, Sprites.BUILDING_CAPITOL, c.r, c.g, c.b, c.a);
-		Renderer.quad(buffer, x + 0.5f, y + 0.5f, 1, 1, symbol.getSprite(), c.r, c.g, c.b, c.a);
+		Renderer.quad(buffer, x + 0.5f, y + 0.5f, 1, 1, symbol.getSprite(), 0, 0, 0, 0);
 	}
 
 	@Override

@@ -11,8 +11,8 @@ import net.darktree.core.event.ClickEvent;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.WorldView;
-import net.darktree.core.world.action.SummonAction;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.terrain.EnclaveFinder;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.interactor.BuildInteractor;
@@ -124,7 +124,8 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
-			world.getManager().apply(new SummonAction(world, world.getCurrentSymbol(), 4, 7));
+//			world.getManager().apply(new SummonAction(world, world.getCurrentSymbol(), 4, 7));
+			EnclaveFinder finder = new EnclaveFinder(world, Symbol.NONE);
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
