@@ -1,0 +1,11 @@
+{
+  "border": [0.4, 0.4, 0.4, 1.0],
+  "path": [1.0, 1.0, 1.0, 0.95],
+  "overlay_reachable": [0.1, 0.8, 0.3, 0.2],
+  "overlay_foreign": [0.0, 0.0, 0.0, 0.2],
+  "overlay_none": [0.0, 0.0, 0.0, 0.0],
+  "button_hover": [0.0, 0.0, 0.0, 0.2],
+  "button_pressed": [0.0, 0.0, 0.0, 0.4],
+  "spot_valid": [0.0, 1.0, 0.0, 1],
+  "spot_invalid": [1.0, 0.0, 0.0, 1]
+}

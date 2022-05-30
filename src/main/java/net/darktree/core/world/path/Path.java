@@ -1,6 +1,8 @@
 package net.darktree.core.world.path;
 
+import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
+import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.world.tile.TilePos;
@@ -48,23 +50,24 @@ public class Path {
 	public void draw(VertexBuffer buffer) {
 
 		TilePos prev = positions.get(0);
+		Color c = Colors.PATH;
 
-		drawBox(buffer, prev);
+		drawBox(buffer, prev, c);
 
 		for (int i = 1; i < positions.size(); i ++) {
 			TilePos pos = positions.get(i);
 
-			Renderer.line(buffer, prev.x + 0.5f, prev.y + 0.5f, pos.x + 0.5f, pos.y + 0.5f, 0.05f, 1, 1, 1, 0.95f);
+			Renderer.line(buffer, prev.x + 0.5f, prev.y + 0.5f, pos.x + 0.5f, pos.y + 0.5f, 0.05f, c.r, c.g, c.b, c.a);
 
-			drawBox(buffer, pos);
+			drawBox(buffer, pos, c);
 
 			prev = pos;
 		}
 
 	}
 
-	private void drawBox(VertexBuffer buffer, TilePos pos) {
-		Renderer.quad(buffer, pos.x + 0.4f, pos.y + 0.4f, 0.2f, 0.2f, Sprites.NULL, 1, 1, 1, 0.95f);
+	private void drawBox(VertexBuffer buffer, TilePos pos, Color c) {
+		Renderer.quad(buffer, pos.x + 0.4f, pos.y + 0.4f, 0.2f, 0.2f, Sprites.NULL, c.r, c.g, c.b, c.a);
 	}
 
 }

@@ -1,12 +1,13 @@
 package net.darktree.core.client.render.vertex;
 
 import net.darktree.Main;
+import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.ScreenRenderer;
+import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
-import net.darktree.core.util.Color;
 import net.darktree.core.world.World;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.tile.TileState;
@@ -17,18 +18,10 @@ import java.nio.charset.StandardCharsets;
 
 public class Renderer {
 
-	private final static Color COLOR = new Color();
-
 	public static void tile(VertexBuffer buffer, World world, int x, int y, TileState state, Sprite sprite) {
 		Overlay overlay = world.getOverlay();
-
-		if (overlay != null) {
-			overlay.getColor(world, x, y, state, COLOR);
-		}else{
-			COLOR.clear();
-		}
-
-		quad(buffer, x, y, 1, 1, sprite, COLOR.r, COLOR.g, COLOR.b, COLOR.a);
+		Color color = overlay == null ? Colors.OVERLAY_NONE : overlay.getColor(world, x, y, state);
+		quad(buffer, x, y, 1, 1, sprite, color.r, color.g, color.b, color.a);
 	}
 
 	public static void quad(VertexBuffer buffer, float x, float y, float w, float h, Sprite sprite, float r, float g, float b, float a) {

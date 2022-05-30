@@ -1,6 +1,7 @@
 package net.darktree.game.screen;
 
 import net.darktree.Main;
+import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.ScreenRenderer;
@@ -119,13 +120,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
-			world.setOverlay((world, x, y, state, color) -> {
-				if (state.getOwner() != Symbol.NONE) {
-					color.a = 0;
-				}else{
-					color.set(0, 0, 0);
-				}
-			});
+			world.setOverlay((world, x, y, state) -> (state.getOwner() != Symbol.NONE) ? Colors.OVERLAY_NONE : Colors.OVERLAY_FOREIGN);
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {

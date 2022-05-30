@@ -1,5 +1,7 @@
 package net.darktree.core.world;
 
+import net.darktree.core.client.Colors;
+import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.TurnEvent;
@@ -239,14 +241,14 @@ public class World implements NbtSerializable, WorldEntityView {
 	private void drawBorders(VertexBuffer buffer, int x, int y) {
 		Symbol self = tiles[x][y].getOwner();
 		float w = 0.02f;
-		float c = 0.4f;
+		Color c = Colors.BORDER;
 
 		if (x != 0 && tiles[x - 1][y].getOwner() != self) {
-			Renderer.line(buffer, x, y, x, y + 1, w, c, c, c, 1f);
+			Renderer.line(buffer, x, y, x, y + 1, w, c.r, c.g, c.b, c.a);
 		}
 
 		if (y != 0 && tiles[x][y - 1].getOwner() != self) {
-			Renderer.line(buffer, x, y, x + 1, y, w, c, c, c, 1f);
+			Renderer.line(buffer, x, y, x + 1, y, w, c.r, c.g, c.b, c.a);
 		}
 
 	}

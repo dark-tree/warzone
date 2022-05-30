@@ -1,6 +1,7 @@
 package net.darktree;
 
 import net.darktree.core.client.render.Screen;
+import net.darktree.core.client.render.color.ColorAtlas;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.sound.SoundSystem;
@@ -13,6 +14,7 @@ import net.darktree.game.screen.PlayScreen;
 import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
 
+import java.io.IOException;
 import java.util.Stack;
 
 import static org.lwjgl.opengl.GL32.glClearColor;
@@ -31,6 +33,13 @@ public class Main {
 		window = Window.init(800, 500, "Game");
 
 		SoundSystem.enable();
+
+		try {
+			ColorAtlas blob = Resources.json("colors.json", ColorAtlas.class);
+			blob.toString();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
 //		AudioBuffer song = SoundSystem.createBuffer("sound/test_song.ogg");
 //		AudioSource source = SoundSystem.createSource(song);

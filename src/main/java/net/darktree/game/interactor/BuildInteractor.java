@@ -1,13 +1,14 @@
 package net.darktree.game.interactor;
 
 import net.darktree.Main;
+import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
+import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.util.Type;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.BuildAction;
-import net.darktree.core.world.action.SummonAction;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
 import net.darktree.game.buildings.Building;
@@ -63,7 +64,9 @@ public class BuildInteractor extends Interactor {
 			}
 		}
 
-		Renderer.quad(buffer, this.x, this.y, 2, 2, Sprites.BUILDING_CAPITOL, valid ? 0 : 1, valid ? 1 : 0, 0, wave);
+		Color c = valid ? Colors.SPOT_VALID : Colors.SPOT_INVALID;
+
+		Renderer.quad(buffer, this.x, this.y, 2, 2, Sprites.BUILDING_CAPITOL, c.r, c.g, c.b, c.a * wave);
 	}
 
 	@Override

@@ -1,8 +1,10 @@
 package net.darktree.core.client.render;
 
 import net.darktree.core.client.Buffers;
+import net.darktree.core.client.Colors;
 import net.darktree.core.client.Shaders;
 import net.darktree.core.client.Sprites;
+import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.client.render.image.TextureConvertible;
@@ -110,6 +112,16 @@ public class ScreenRenderer {
 	}
 
 	/**
+	 * Set output color, used for tinting textures and text coloring
+	 */
+	public static void setColor(Color color) {
+		cr = color.r;
+		cg = color.g;
+		cb = color.b;
+		ca = color.a;
+	}
+
+	/**
 	 * Set output color with no alpha, used for text coloring
 	 * for tinting quads use {@link #setColor(float r, float g, float b, float a)} and set alpha to >0
 	 */
@@ -182,10 +194,10 @@ public class ScreenRenderer {
 		Alignment alignment = currentAlignment;
 
 		if (hover) {
-			setColor(0, 0, 0, 0.2f);
+			setColor(Colors.BUTTON_HOVER);
 
 			if (INPUT.isButtonPressed(MouseButton.LEFT)) {
-				setColor(0, 0, 0, 0.4f);
+				setColor(Colors.BUTTON_PRESSED);
 			}
 		}
 
