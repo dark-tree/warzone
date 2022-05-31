@@ -12,6 +12,7 @@ import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.WorldView;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.terrain.ControlFinder;
 import net.darktree.core.world.terrain.EnclaveFinder;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
@@ -120,12 +121,20 @@ public class PlayScreen extends Screen {
 		}
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
-			world.setOverlay((world, x, y, state) -> (state.getOwner() != Symbol.NONE) ? Colors.OVERLAY_NONE : Colors.OVERLAY_FOREIGN);
+			ControlFinder finder = new ControlFinder(world, null);
+
+			world.setOverlay((world, x, y, state) -> {
+				if (state.getOwner() == world.getCurrentSymbol()) {
+					return finder.canControl(x, y) ? Colors.OVERLAY_NONE : ((Main.window.profiler.getFrameCount() / 30 % 2 == 0) ? Colors.OVERLAY_NONE : Colors.OVERLAY_FOREIGN);
+				}
+
+				return Colors.OVERLAY_FOREIGN;
+			});
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
 //			world.getManager().apply(new SummonAction(world, world.getCurrentSymbol(), 4, 7));
-			EnclaveFinder finder = new EnclaveFinder(world, Symbol.NONE);
+			EnclaveFinder finder = new EnclaveFinder(world);
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {

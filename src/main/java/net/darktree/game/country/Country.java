@@ -68,7 +68,11 @@ public class Country implements NbtSerializable, WorldListener {
 	}
 
 	public Building getCapitol() {
-		return buildings.get(0); // FIXME
+		try {
+			return buildings.get(0); // FIXME
+		}catch (Exception e) {
+			return null;
+		}
 	}
 
 }

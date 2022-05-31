@@ -53,6 +53,10 @@ public class MoveInteractor extends Interactor {
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
 			world.getManager().apply(new ColonizeAction(entity));
 		}
+
+//		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_I) {
+//			world.setTileOwner(entity.getX(), entity.getY(), Symbol.NONE);
+//		}
 	}
 
 	@Override

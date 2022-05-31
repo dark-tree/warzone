@@ -11,24 +11,25 @@ import java.util.function.Consumer;
 public class EnclaveFinder {
 
 	private final int[][] field;
+	private final int[][] marks;
+
 	private final List<Enclave> enclaves = new ArrayList<>();
 
 	private final int width, height;
 	private final World world;
-	private final Symbol symbol;
 	private final ControlFinder control;
 
 	private final static int[][] OFFSETS = {
 			{-1, +0}, {+0, -1}, {+0, +1}, {+1, +0}
 	};
 
-	public EnclaveFinder(World world, Symbol symbol) {
+	public EnclaveFinder(World world) {
 		this.world = world;
 		this.width = world.width;
 		this.height = world.height;
-		this.symbol = symbol;
-		this.control = new ControlFinder(world, symbol);
+		this.control = new ControlFinder(world, null);
 		this.field = new int[this.width][this.height];
+		this.marks = new int[this.width][this.height];
 
 		compute();
 	}
@@ -46,7 +47,7 @@ public class EnclaveFinder {
 	void forEachEnclaveTile(int id, Consumer<TilePos> consumer) {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				if (field[x][y] == id) {
+				if (marks[x][y] == id) {
 					consumer.accept(new TilePos(x, y));
 				}
 			}
@@ -56,83 +57,75 @@ public class EnclaveFinder {
 	private void compute() {
 		int id = 0;
 
-		boolean start = true; // should a new enclave be assigned?
-		boolean dirty = true; // where there any changes made during the lass iteration?
-		boolean propagated; // was propagation of already assigned enclave continued?
+		while(true) {
+			id ++;
 
-		Enclave enclave = null;
+			// try finding another enclave
+			Enclave enclave = initializer(id);
+			if (enclave == null) break;
 
-		while (dirty) {
-			dirty = false;
-			propagated = false;
+			int level = 1;
 
-			for (int x = 0; x < width; x ++) {
-				for (int y = 0; y < height; y ++) {
-					if (field[x][y] == 0) {
-						if (world.getTileState(x, y).getOwner() == symbol && !control.canControl(x, y)) {
-							if (start) {
-								id ++;
+			// propagate current enclave until there are no more tiles
+			for (boolean dirty = true; dirty; level ++) {
+				dirty = false;
 
-								field[x][y] = id;
-								start = false;
-
-								// add newly marked enclave to the list
-								enclave = new Enclave(this.symbol, new TilePos(x, y), this, id);
-								enclaves.add(enclave);
-
-								// update neighbours for starting position
-								for (int[] pos : OFFSETS) {
-									query(x + pos[0], y + pos[1], enclave);
-								}
-							} else {
-								propagated |= propagate(x, y, id, enclave);
-							}
-
+				for (int x = 0; x < width; x++) {
+					for (int y = 0; y < height; y++) {
+						if (field[x][y] == level) {
 							dirty = true;
+							propagate(x, y, level + 1, id, enclave);
 						}
 					}
 				}
 			}
 
-			// no propagation was made, but there still are some unassigned spaces
-			// start marking the next enclave
-			if (dirty && !propagated) {
-				start = true;
-			}
 		}
 	}
 
-	private boolean propagate(int x, int y, int id, Enclave enclave) {
-		for (int[] o1 : OFFSETS) {
-			if( get(x + o1[0], y + o1[1]) ) {
-				this.field[x][y] = id;
+	private Enclave initializer(int id) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				field[x][y] = 0;
+			}
+		}
 
-				for (int[] o2 : OFFSETS) {
-					query(x + o2[0], y + o2[1], enclave);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (marks[x][y] == 0 && !control.canControl(x, y)) {
+
+					field[x][y] = 1;
+					marks[x][y] = id;
+
+					// add newly marked enclave to the list
+					Enclave enclave = new Enclave(world.getTileState(x, y).getOwner(), new TilePos(x, y), this, id);
+					enclaves.add(enclave);
+
+					return enclave;
 				}
-
-				return true;
 			}
 		}
 
-		return false;
+		// no enclaves found
+		return null;
 	}
 
-	private boolean get(int x, int y) {
-		if (x >= 0 && y >= 0 && x < width && y < height) {
-			return this.field[x][y] != 0;
+	private void propagate(int x, int y, int value, int id, Enclave enclave) {
+		for (int[] pair : OFFSETS) {
+			set(x + pair[0], y + pair[1], value, id, enclave);
 		}
-
-		return false;
 	}
 
-	private void query(int x, int y, Enclave enclave) {
+	private void set(int x, int y, int value, int id, Enclave enclave) {
 		if (x >= 0 && y >= 0 && x < width && y < height) {
-			if (field[x][y] == 0) {
-				Symbol owner = world.getTileState(x, y).getOwner();
+			if (this.field[x][y] == 0) {
+				Symbol symbol = world.getTileState(x, y).getOwner();
 
-				if (owner != this.symbol) {
-					enclave.addNeighbour(owner);
+				if (enclave.owner == symbol) {
+					this.field[x][y] = value;
+					this.marks[x][y] = id;
+				}else{
+					enclave.addNeighbour(symbol);
 				}
 			}
 		}
