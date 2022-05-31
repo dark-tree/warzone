@@ -16,7 +16,7 @@ import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.interactor.BuildInteractor;
 import net.darktree.game.interactor.Interactor;
-import net.darktree.game.interactor.MoveInteractor;
+import net.darktree.game.interactor.UnitInteractor;
 import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
@@ -28,8 +28,8 @@ public class PlayScreen extends Screen {
 
 	private Interactor interactor = null;
 
-	public void setInteractor(Interactor interactor) {
-		this.interactor = interactor;
+	public static void setInteractor(Interactor interactor) {
+		Main.screens.stream().filter(screen -> screen instanceof PlayScreen).findAny().ifPresent(screen -> ((PlayScreen) screen).interactor = interactor);
 	}
 
 	private boolean isMapFocused = true;
@@ -170,7 +170,7 @@ public class PlayScreen extends Screen {
 
 					if (entity instanceof UnitEntity unit) {
 						if (unit.getSymbol() == world.getCurrentSymbol() && !unit.hasMoved()) {
-							interactor = new MoveInteractor(unit, world);
+							interactor = new UnitInteractor(unit, world);
 						}
 					}else{
 						world.getTileState(x, y).getTile().onInteract(world, x, y, new ClickEvent(button, action));

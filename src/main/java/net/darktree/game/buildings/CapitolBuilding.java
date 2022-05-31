@@ -6,17 +6,19 @@ import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.ClickEvent;
-import net.darktree.core.util.Logger;
 import net.darktree.core.util.Type;
 import net.darktree.core.world.World;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.game.country.Symbol;
+import net.darktree.game.interactor.CityInteractor;
+import net.darktree.game.screen.PlayScreen;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 public class CapitolBuilding extends Building {
 
 	private Symbol symbol = Symbol.CROSS;
+	public boolean summoned;
 
 	public CapitolBuilding(World world, int x, int y, Type<Building> type) {
 		super(world, x, y, type);
@@ -35,6 +37,11 @@ public class CapitolBuilding extends Building {
 	}
 
 	@Override
+	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
+		if (symbol == this.symbol) summoned = false;
+	}
+
+	@Override
 	public boolean canPathfindOnto(World world, int x, int y) {
 		return false;
 	}
@@ -46,7 +53,9 @@ public class CapitolBuilding extends Building {
 
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
-		Logger.info("You clicked me!");
+		if (!summoned) {
+			PlayScreen.setInteractor(new CityInteractor(world.getCurrentSymbol(), world));
+		}
 	}
 
 	@Override

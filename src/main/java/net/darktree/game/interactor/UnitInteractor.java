@@ -13,13 +13,13 @@ import net.darktree.core.world.path.Pathfinder;
 import net.darktree.game.entities.UnitEntity;
 import org.lwjgl.glfw.GLFW;
 
-public class MoveInteractor extends Interactor {
+public class UnitInteractor extends Interactor {
 
 	private final Pathfinder pathfinder;
 	private final UnitEntity entity;
 	private final World world;
 
-	public MoveInteractor(UnitEntity entity, World world) {
+	public UnitInteractor(UnitEntity entity, World world) {
 		this.entity = entity;
 		this.pathfinder = new Pathfinder(world, entity.getX(), entity.getY(), 5, world.getCurrentSymbol(), Pattern.IDENTITY, false);
 		this.world = world;
