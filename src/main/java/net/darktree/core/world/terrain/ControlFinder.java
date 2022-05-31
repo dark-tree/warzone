@@ -4,7 +4,6 @@ import net.darktree.core.world.World;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
-import org.jetbrains.annotations.Nullable;
 
 public class ControlFinder {
 
@@ -17,27 +16,21 @@ public class ControlFinder {
 			{-1, +0}, {+0, -1}, {+0, +1}, {+1, +0}
 	};
 
-	public ControlFinder(World world, @Nullable Symbol symbol) {
+	public ControlFinder(World world) {
 		this.world = world;
 		this.width = world.width;
 		this.height = world.height;
 		this.field = new int[this.width][this.height];
 
-		if (symbol == null) {
-			for (Symbol s : Symbol.values()) {
-				init(s);
-			}
-		} else {
-			init(symbol);
+		for (Symbol s : Symbol.values()) {
+			init(s);
 		}
 
 		compute();
 	}
 
 	/**
-	 * Check if the country controls this point (if it's connected to the capitol)
-	 * When checking control for the NONE symbol, it checks for any connection to the world border
-	 * When symbols was set to null it checks if anything controls a tile (including NONE)
+	 * Check if any country controls this point (if it's connected to the capitol)
 	 */
 	public boolean canControl(int x, int y) {
 		return field[x][y] != 0;

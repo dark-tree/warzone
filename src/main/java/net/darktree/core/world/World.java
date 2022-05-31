@@ -9,6 +9,8 @@ import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.action.TaskManager;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
+import net.darktree.core.world.terrain.ControlFinder;
+import net.darktree.core.world.terrain.EnclaveFinder;
 import net.darktree.core.world.tile.TileInstance;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
@@ -37,6 +39,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	final private HashMap<TilePos, Building> buildings = new HashMap<>();
 	final private HashMap<Symbol, Country> countries = new HashMap<>();
 
+	private ControlFinder control;
 	private Symbol[] symbols = new Symbol[]{};
 	final private TaskManager manager = new TaskManager(this);
 	private Overlay overlay = null;
@@ -57,6 +60,7 @@ public class World implements NbtSerializable, WorldEntityView {
 		}
 
 		this.view = new WorldView(width, height);
+		this.control = new ControlFinder(this);
 	}
 
 	@Override
@@ -225,6 +229,21 @@ public class World implements NbtSerializable, WorldEntityView {
 
 		// TODO: bake country borders
 
+		if (ownershipDirty) {
+			this.control = new ControlFinder(this);
+			EnclaveFinder finder = new EnclaveFinder(this, this.control);
+
+			finder.getEnclaves().forEach(enclave -> {
+				Symbol symbol = enclave.encircled();
+
+				if (symbol != Symbol.NONE) {
+					enclave.forEachTile(pos -> {
+						setTileOwner(pos.x, pos.y, symbol);
+					});
+				}
+			});
+		}
+
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
 				TileState state = this.tiles[x][y];
@@ -291,6 +310,13 @@ public class World implements NbtSerializable, WorldEntityView {
 		}
 
 		sendPlayerTurnEvent(TurnEvent.TURN_START, getCurrentSymbol());
+	}
+
+	/**
+	 * Returns true if a tile is controlled by its owner, or false if it is disconnected
+	 */
+	public boolean canControl(int x, int y) {
+		return control.canControl(x, y);
 	}
 
 	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {

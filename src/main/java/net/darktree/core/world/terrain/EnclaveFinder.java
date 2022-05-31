@@ -23,11 +23,11 @@ public class EnclaveFinder {
 			{-1, +0}, {+0, -1}, {+0, +1}, {+1, +0}
 	};
 
-	public EnclaveFinder(World world) {
+	public EnclaveFinder(World world, ControlFinder control) {
 		this.world = world;
 		this.width = world.width;
 		this.height = world.height;
-		this.control = new ControlFinder(world, null);
+		this.control = control;
 		this.field = new int[this.width][this.height];
 		this.marks = new int[this.width][this.height];
 

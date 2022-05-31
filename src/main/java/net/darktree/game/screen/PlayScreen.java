@@ -12,8 +12,6 @@ import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.WorldView;
 import net.darktree.core.world.entity.Entity;
-import net.darktree.core.world.terrain.ControlFinder;
-import net.darktree.core.world.terrain.EnclaveFinder;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.interactor.BuildInteractor;
@@ -121,11 +119,9 @@ public class PlayScreen extends Screen {
 		}
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
-			ControlFinder finder = new ControlFinder(world, null);
-
 			world.setOverlay((world, x, y, state) -> {
 				if (state.getOwner() == world.getCurrentSymbol()) {
-					return finder.canControl(x, y) ? Colors.OVERLAY_NONE : ((Main.window.profiler.getFrameCount() / 30 % 2 == 0) ? Colors.OVERLAY_NONE : Colors.OVERLAY_FOREIGN);
+					return world.canControl(x, y) ? Colors.OVERLAY_NONE : ((Main.window.profiler.getFrameCount() / 30 % 2 == 0) ? Colors.OVERLAY_NONE : Colors.OVERLAY_FOREIGN);
 				}
 
 				return Colors.OVERLAY_FOREIGN;
@@ -134,7 +130,6 @@ public class PlayScreen extends Screen {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
 //			world.getManager().apply(new SummonAction(world, world.getCurrentSymbol(), 4, 7));
-			EnclaveFinder finder = new EnclaveFinder(world);
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
@@ -177,9 +172,9 @@ public class PlayScreen extends Screen {
 						if (unit.getSymbol() == world.getCurrentSymbol() && !unit.hasMoved()) {
 							interactor = new MoveInteractor(unit, world);
 						}
+					}else{
+						world.getTileState(x, y).getTile().onInteract(world, x, y, new ClickEvent(button, action));
 					}
-				}else{
-					world.getTileState(x, y).getTile().onInteract(world, x, y, new ClickEvent(button, action));
 				}
 
 			}
