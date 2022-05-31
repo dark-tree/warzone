@@ -14,7 +14,7 @@ public class ColonizeAction extends Action {
 
 	@Override
 	boolean verify(World world, Symbol symbol) {
-		return !world.getCountry(symbol).colonized && !entity.hasMoved() && world.getTileState(entity.getX(), entity.getY()).getOwner() == symbol;
+		return !world.getCountry(symbol).colonized && !entity.hasMoved() && world.canControl(entity.getX(), entity.getY(), symbol);
 	}
 
 	@Override

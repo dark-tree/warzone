@@ -319,6 +319,13 @@ public class World implements NbtSerializable, WorldEntityView {
 		return control.canControl(x, y);
 	}
 
+	/**
+	 * Returns true if a tile is controlled by the given symbol, or false if it is not
+	 */
+	public boolean canControl(int x, int y, Symbol symbol) {
+		return control.canControl(x, y) && getTileState(x, y).getOwner() == symbol;
+	}
+
 	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {
 		forEach((state, x, y) -> state.getTile().onPlayerTurnEvent(this, x, y, event, symbol));
 		getEntities().forEach(entity -> entity.onPlayerTurnEvent(this, entity.getX(), entity.getY(), event, symbol));
