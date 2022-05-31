@@ -1,7 +1,6 @@
 package net.darktree.core.client.sound;
 
 import net.darktree.core.util.Logger;
-import net.darktree.core.world.WorldHolder;
 import org.lwjgl.openal.*;
 
 import java.nio.ByteBuffer;
@@ -20,7 +19,6 @@ public class SoundSystem {
 	private static long device, context;
 	private static final List<AudioSource> sources = new ArrayList<>();
 	private static final List<AudioBuffer> buffers = new ArrayList<>();
-	private static Thread thread;
 
 	/**
 	 * Initialize and enable the sound system
@@ -42,28 +40,6 @@ public class SoundSystem {
 		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
 		AL.createCapabilities(deviceCaps);
 
-		// FIXME
-		// redesign this so that this thread either doesn't exist or only handles source deletion
-		// having to pass world to sound's play() function is also dumb as this handles it already
-		// why not wait for the next position update before starting to play?
-		// for now the WorldHolder class has to be loaded in the main thread first to not crash
-
-		thread = new Thread(() -> {
-			while (true) {
-				synchronized (sources) {
-					sources.removeIf(source -> source.update(WorldHolder.world.getView()));
-				}
-
-				try {
-					//noinspection BusyWait
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					return;
-				}
-			}
-		}, "AudioManagerThread");
-		thread.start();
-
 		Logger.info("Sound system started!");
 	}
 
@@ -72,7 +48,6 @@ public class SoundSystem {
 	 */
 	public static void disable() {
 		Logger.info("Shutting down the sound system...");
-		thread.interrupt();
 
 		sources.forEach(AudioSource::close);
 		sources.clear();
@@ -83,6 +58,13 @@ public class SoundSystem {
 		ALC10.alcMakeContextCurrent(0);
 		ALC10.alcDestroyContext(context);
 		ALC10.alcCloseDevice(device);
+	}
+
+	/**
+	 * Updated attenuated sounds and cleanup the sounds that finished playing
+	 */
+	public static void tick() {
+		sources.removeIf(source -> !source.tick());
 	}
 
 	/**
@@ -101,10 +83,8 @@ public class SoundSystem {
 	public static AudioSource createSource(AudioBuffer buffer) {
 		AudioSource source = new AudioSource();
 		source.setBuffer(buffer);
-		
-		synchronized (sources) {
-			sources.add(source);
-		}
+
+		sources.add(source);
 
 		return source;
 	}
@@ -113,9 +93,7 @@ public class SoundSystem {
 	 * Stop all sounds
 	 */
 	public static void stopAll() {
-		synchronized (sources) {
-			sources.forEach(AudioSource::stop);
-		}
+		sources.forEach(AudioSource::stop);
 	}
 
 	/**

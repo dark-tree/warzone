@@ -6,6 +6,7 @@ import net.darktree.core.client.Sprites;
 import net.darktree.core.client.Uniforms;
 import net.darktree.core.client.render.pipeline.Pipeline;
 import net.darktree.core.client.render.pipeline.TexturedPipeline;
+import net.darktree.core.client.sound.SoundSystem;
 
 public class WorldHolder {
 
@@ -19,6 +20,7 @@ public class WorldHolder {
 	}, true);
 
 	public static void draw() {
+		SoundSystem.tick();
 		world.draw(pipeline.buffer);
 	}
 

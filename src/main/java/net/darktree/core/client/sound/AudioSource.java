@@ -1,16 +1,15 @@
 package net.darktree.core.client.sound;
 
+import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.WorldView;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.openal.AL10;
-
-import java.util.Objects;
 
 public class AudioSource {
 
 	private boolean attenuation;
 	private float x, y, z;
 	private int source;
+	private boolean playing;
 
 	AudioSource() {
 		source = AL10.alGenSources();
@@ -27,23 +26,6 @@ public class AudioSource {
 		}
 	}
 
-	boolean update(@Nullable WorldView view) {
-		if (attenuation && view != null) {
-			updatePosition(view);
-		}
-
-		if (!isPlaying()) {
-			close();
-			return true;
-		}
-
-		return false;
-	}
-
-	private void updatePosition(WorldView view) {
-		AL10.alSource3f(source, AL10.AL_POSITION, (view.offsetX + x) * view.scaleX, (view.offsetY + y) * view.scaleY, (z + 1 - view.zoom) * 10);
-	}
-
 	/**
 	 * Set the audio buffer from which to play the sound
 	 */
@@ -54,22 +36,25 @@ public class AudioSource {
 	/**
 	 * Set the pitch of this source
 	 */
-	public void setPitch(float pitch) {
+	public AudioSource setPitch(float pitch) {
 		AL10.alSourcef(source, AL10.AL_PITCH, pitch);
+		return this;
 	}
 
 	/**
 	 * Set the volume of this source
 	 */
-	public void setVolume(float volume) {
+	public AudioSource setVolume(float volume) {
 		AL10.alSourcef(source, AL10.AL_GAIN, volume);
+		return this;
 	}
 
 	/**
 	 * Enable or disable looping for this source
 	 */
-	public void setLoop(boolean loop) {
+	public AudioSource setLoop(boolean loop) {
 		AL10.alSourcei(source, AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
+		return this;
 	}
 
 	/**
@@ -98,12 +83,9 @@ public class AudioSource {
 	/**
 	 * Start playing
 	 */
-	public void play(@Nullable WorldView view) {
+	public void play() {
 		AL10.alSourcePlay(source);
-
-		if (attenuation) {
-			updatePosition(Objects.requireNonNull(view));
-		}
+		positionUpdate();
 	}
 
 	/**
@@ -111,6 +93,24 @@ public class AudioSource {
 	 */
 	public void stop() {
 		AL10.alSourceStop(source);
+	}
+
+	boolean tick() {
+		positionUpdate();
+
+		if (!isPlaying()) {
+			close();
+			return false;
+		}
+
+		return true;
+	}
+
+	private void positionUpdate() {
+		if (attenuation) {
+			WorldView view = WorldHolder.world.getView();
+			AL10.alSource3f(source, AL10.AL_POSITION, (view.offsetX + x) * view.scaleX, (view.offsetY + y) * view.scaleY, (z + 1 - view.zoom) * 10);
+		}
 	}
 
 }
