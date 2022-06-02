@@ -12,6 +12,7 @@ import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.WorldView;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.interactor.BuildInteractor;
@@ -86,7 +87,9 @@ public class PlayScreen extends Screen {
 		if (symbol != null) {
 			ScreenRenderer.centerAt(-1, -1);
 			ScreenRenderer.setOffset(0, 35);
-			ScreenRenderer.text(symbol + "\n" + world.getCountry(symbol).getTotalMaterials() + "m", 30);
+			Country country = world.getCountry(symbol);
+
+			ScreenRenderer.text(symbol + "\n" + country.getTotalMaterials() + "m + " + country.income, 30);
 		}
 	}
 

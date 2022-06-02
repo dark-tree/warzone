@@ -18,8 +18,9 @@ public class Country implements NbtSerializable, WorldListener {
 	public boolean colonized = false;
 
 	private int local = 0;
-	private int ammo = 0;
-	private int armor = 0;
+	public int ammo = 0;
+	public int armor = 0;
+	public int income = 0;
 
 	public Country(Symbol symbol) {
 		this.symbol = symbol;
@@ -43,6 +44,7 @@ public class Country implements NbtSerializable, WorldListener {
 	public void onPlayerTurnEvent(World world, TurnEvent event, Symbol symbol) {
 		if (symbol == this.symbol && event == TurnEvent.TURN_START) {
 			colonized = false;
+			local += income;
 		}
 	}
 
@@ -52,18 +54,6 @@ public class Country implements NbtSerializable, WorldListener {
 
 	public void addMaterials(int amount) {
 		local += amount;
-	}
-
-	public int getAmmo() {
-		return ammo;
-	}
-
-	public int getArmor() {
-		return armor;
-	}
-
-	public void addAmmo(int amount) {
-		ammo += amount;
 	}
 
 	public void removeBuilding(Building building) {
@@ -86,4 +76,7 @@ public class Country implements NbtSerializable, WorldListener {
 		armor += i;
 	}
 
+	public void setIncome(Integer income) {
+		this.income = income;
+	}
 }
