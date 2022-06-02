@@ -6,12 +6,12 @@ import net.darktree.game.country.Symbol;
 import java.util.IdentityHashMap;
 import java.util.Stack;
 
-public class TaskManager {
+public class ActionManager {
 
 	private final World world;
 	private final IdentityHashMap<Symbol,Stack<Action>> tasks = new IdentityHashMap<>();
 
-	public TaskManager(World world) {
+	public ActionManager(World world) {
 		this.world = world;
 
 		for (Symbol symbol : Symbol.values()) {
@@ -21,7 +21,18 @@ public class TaskManager {
 
 	public boolean apply(Symbol symbol, Action action) {
 		if (action.verify(this.world, symbol)) {
-			tasks.get(symbol).push(action);
+			Stack<Action> actions = tasks.get(symbol);
+
+			if (action instanceof ToggleableAction self) {
+				if (!actions.isEmpty() && actions.peek() instanceof ToggleableAction peek) {
+					if (self.supersedes(peek)) {
+						undo(symbol);
+						return true;
+					}
+				}
+			}
+
+			actions.push(action);
 			action.redo(this.world, symbol);
 			return true;
 		}

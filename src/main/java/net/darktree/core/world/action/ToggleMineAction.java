@@ -5,7 +5,7 @@ import net.darktree.core.world.tile.TileState;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.tiles.Tiles;
 
-public class ToggleMineAction extends Action {
+public class ToggleMineAction extends ToggleableAction {
 
 	private final int x, y;
 
@@ -38,6 +38,11 @@ public class ToggleMineAction extends Action {
 		} else if (state.getTile() == Tiles.MATERIAL_MINE) {
 			world.setTileVariant(x, y, Tiles.MATERIAL.getDefaultVariant());
 		}
+	}
+
+	@Override
+	public boolean supersedes(ToggleableAction peek) {
+		return peek instanceof ToggleMineAction action && action.x == this.x && action.y == this.y;
 	}
 
 }

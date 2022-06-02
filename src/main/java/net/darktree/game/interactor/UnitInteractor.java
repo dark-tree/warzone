@@ -8,9 +8,9 @@ import net.darktree.core.util.MathHelper;
 import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
-import net.darktree.core.world.action.ArmorAction;
 import net.darktree.core.world.action.ColonizeAction;
 import net.darktree.core.world.action.MoveAction;
+import net.darktree.core.world.action.ToggleArmorAction;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.path.Pathfinder;
@@ -86,9 +86,8 @@ public class UnitInteractor extends Interactor {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_Z) {
-			world.getManager().apply(new ArmorAction(entity));
+			world.getManager().apply(new ToggleArmorAction(entity));
 		}
-
 
 //		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_I) {
 //			world.setTileOwner(entity.getX(), entity.getY(), Symbol.NONE);

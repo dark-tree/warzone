@@ -6,7 +6,7 @@ import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
-import net.darktree.core.world.action.TaskManager;
+import net.darktree.core.world.action.ActionManager;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.terrain.ControlFinder;
@@ -41,7 +41,7 @@ public class World implements NbtSerializable, WorldEntityView {
 
 	private ControlFinder control;
 	private Symbol[] symbols = new Symbol[]{};
-	final private TaskManager manager = new TaskManager(this);
+	final private ActionManager manager = new ActionManager(this);
 	private Overlay overlay = null;
 	private boolean ownershipDirty = true;
 	private int turn;
@@ -302,6 +302,7 @@ public class World implements NbtSerializable, WorldEntityView {
 
 		Symbol symbol = getCurrentSymbol();
 		sendPlayerTurnEvent(TurnEvent.TURN_END, symbol);
+		manager.pointOfNoReturn(symbol);
 
 		turn = (turn + 1) % len;
 
@@ -364,7 +365,7 @@ public class World implements NbtSerializable, WorldEntityView {
 		buildings.put(new TilePos(x, y), building);
 	}
 
-	public TaskManager getManager() {
+	public ActionManager getManager() {
 		return manager;
 	}
 

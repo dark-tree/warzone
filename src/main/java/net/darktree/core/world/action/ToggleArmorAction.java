@@ -5,11 +5,11 @@ import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
 
-public class ArmorAction extends Action {
+public class ToggleArmorAction extends ToggleableAction {
 
 	private final UnitEntity entity;
 
-	public ArmorAction(UnitEntity entity) {
+	public ToggleArmorAction(UnitEntity entity) {
 		this.entity = entity;
 	}
 
@@ -31,6 +31,11 @@ public class ArmorAction extends Action {
 	private void toggle(Country country) {
 		country.addArmor(entity.armored ? 1 : -1);
 		entity.armored = !entity.armored;
+	}
+
+	@Override
+	public boolean supersedes(ToggleableAction peek) {
+		return peek instanceof ToggleArmorAction action && action.entity == this.entity;
 	}
 
 }
