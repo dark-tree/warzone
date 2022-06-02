@@ -10,13 +10,18 @@ public enum Symbol {
 	TRIANGLE("triangle"),
 	SQUARE("square");
 
-	private final Sprite sprite;
+	private final Sprite sprite, armored;
 
 	Symbol(String path) {
 		sprite = path == null ? null : Sprites.ATLAS.getSprite("symbol/" + path + ".png");
+		armored	= path == null ? null : Sprites.ATLAS.getSprite("symbol/armored_" + path + ".png");
 	}
 
 	public Sprite getSprite() {
 		return sprite;
+	}
+
+	public Sprite getArmoredSprite() {
+		return armored;
 	}
 }

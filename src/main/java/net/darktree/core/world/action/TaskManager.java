@@ -19,15 +19,18 @@ public class TaskManager {
 		}
 	}
 
-	public void apply(Symbol symbol, Action action) {
+	public boolean apply(Symbol symbol, Action action) {
 		if (action.verify(this.world, symbol)) {
 			tasks.get(symbol).push(action);
 			action.redo(this.world, symbol);
+			return true;
 		}
+
+		return false;
 	}
 
-	public void apply(Action action) {
-		apply(world.getCurrentSymbol(), action);
+	public boolean apply(Action action) {
+		return apply(world.getCurrentSymbol(), action);
 	}
 
 	public void undo(Symbol symbol) {

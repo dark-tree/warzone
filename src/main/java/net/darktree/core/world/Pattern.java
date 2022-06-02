@@ -1,6 +1,5 @@
 package net.darktree.core.world;
 
-import net.darktree.core.util.RandomHelper;
 import net.darktree.core.world.tile.TilePos;
 
 import java.util.ArrayList;
@@ -64,8 +63,8 @@ public class Pattern {
 		return tiles;
 	}
 
-	public static Pattern nextColonizationPattern() {
-		return RandomHelper.nextCubeDigit() == 2 ? Pattern.LARGE_CROSS : Pattern.SMALL_CROSS;
+	public static Pattern nextColonizationPattern(int dice) {
+		return dice == 2 ? Pattern.LARGE_CROSS : Pattern.SMALL_CROSS;
 	}
 
 }

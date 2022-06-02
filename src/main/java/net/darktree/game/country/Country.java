@@ -19,6 +19,7 @@ public class Country implements NbtSerializable, WorldListener {
 
 	private int local = 0;
 	private int ammo = 0;
+	private int armor = 0;
 
 	public Country(Symbol symbol) {
 		this.symbol = symbol;
@@ -29,12 +30,14 @@ public class Country implements NbtSerializable, WorldListener {
 		tag.putByte("symbol", (byte) symbol.ordinal());
 		tag.putInt("local", local);
 		tag.putInt("ammo", ammo);
+		tag.putInt("armor", armor);
 	}
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
 		this.local = tag.getInt("local");
 		this.ammo = tag.getInt("ammo");
+		this.armor = tag.getInt("armor");
 	}
 
 	public void onPlayerTurnEvent(World world, TurnEvent event, Symbol symbol) {
@@ -55,6 +58,10 @@ public class Country implements NbtSerializable, WorldListener {
 		return ammo;
 	}
 
+	public int getArmor() {
+		return armor;
+	}
+
 	public void addAmmo(int amount) {
 		ammo += amount;
 	}
@@ -73,6 +80,10 @@ public class Country implements NbtSerializable, WorldListener {
 		}catch (Exception e) {
 			return null;
 		}
+	}
+
+	public void addArmor(int i) {
+		armor += i;
 	}
 
 }

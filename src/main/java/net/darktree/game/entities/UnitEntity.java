@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class UnitEntity extends MovingEntity {
 
 	private Symbol symbol = Symbol.CROSS;
+	public boolean armored = false;
 
 	public UnitEntity(World world, int x, int y, Type<Entity> type) {
 		super(world, x, y, type);
@@ -29,25 +30,35 @@ public class UnitEntity extends MovingEntity {
 
 	public void draw(VertexBuffer buffer) {
 		super.draw(buffer);
-		Renderer.quad(buffer, x, y, 1, 1, symbol.getSprite(), 1, 1, 1, 0);
+		Renderer.quad(buffer, x, y, 1, 1, armored ? symbol.getArmoredSprite() : symbol.getSprite(), 1, 1, 1, 0);
 	}
 
-	public void colonize() {
-		Pattern.nextColonizationPattern().iterate(world, tx, ty, pos -> {
+	public void colonize(int dice) {
+		Pattern.nextColonizationPattern(dice).iterate(world, tx, ty, pos -> {
 			world.setTileOwner(pos.x, pos.y, this.symbol);
 		});
+
+		if (dice % 2 != 0) {
+			if (armored) {
+				armored = false;
+			} else {
+				removed = true;
+			}
+		}
 	}
 
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		super.toNbt(tag);
 		tag.putByte("symbol", (byte) this.symbol.ordinal());
+		tag.putBoolean("armored", armored);
 	}
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
 		super.fromNbt(tag);
 		this.symbol = Symbol.values()[tag.getByte("symbol")];
+		this.armored = tag.getBoolean("armored");
 	}
 
 	@Override

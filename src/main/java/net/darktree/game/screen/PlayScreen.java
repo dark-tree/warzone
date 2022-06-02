@@ -169,7 +169,7 @@ public class PlayScreen extends Screen {
 					Entity entity = world.getEntity(x, y);
 
 					if (entity instanceof UnitEntity unit) {
-						if (unit.getSymbol() == world.getCurrentSymbol() && !unit.hasMoved()) {
+						if (unit.getSymbol() == world.getCurrentSymbol()) {
 							interactor = new UnitInteractor(unit, world);
 						}
 					}else{

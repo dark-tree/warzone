@@ -7,9 +7,11 @@ import net.darktree.game.entities.UnitEntity;
 public class ColonizeAction extends Action {
 
 	private final UnitEntity entity;
+	private final int dice;
 
-	public ColonizeAction(UnitEntity entity) {
+	public ColonizeAction(UnitEntity entity, int dice) {
 		this.entity = entity;
+		this.dice = dice;
 	}
 
 	@Override
@@ -20,7 +22,7 @@ public class ColonizeAction extends Action {
 	@Override
 	void redo(World world, Symbol symbol) {
 		world.getCountry(symbol).colonized = true;
-		entity.colonize();
+		entity.colonize(dice);
 
 		// colonization can not be undone or modified
 		world.getManager().pointOfNoReturn(symbol);
