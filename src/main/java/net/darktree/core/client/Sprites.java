@@ -20,6 +20,7 @@ public class Sprites {
 	}
 
 	public final static Sprite TOP = getSprite("gui/top.png");
+	public final static Sprite BUILD = getSprite("gui/build_screen.png");
 	public final static Sprite BUTTON_LEFT = getSprite("gui/button/left.png");
 	public final static Sprite BUTTON_CENTER = getSprite("gui/button/center.png");
 	public final static Sprite BUTTON_RIGHT = getSprite("gui/button/right.png");

@@ -28,7 +28,7 @@ public class ScreenRenderer {
 
 	private static float psx, psy;
 	private static float x, y;
-	private static int ox, oy;
+	public static int ox, oy;
 	private static float cr, cg, cb, ca;
 	private static Sprite quadSprite;
 	private static Font currentFont;

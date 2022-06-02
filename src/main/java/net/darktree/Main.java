@@ -1,6 +1,5 @@
 package net.darktree;
 
-import net.darktree.core.client.Sounds;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.vertex.Renderer;
@@ -33,7 +32,7 @@ public class Main {
 
 		SoundSystem.enable();
 
-		Sounds.TEST_SONG.play().setLoop(true).setVolume(0.8f);
+//		Sounds.TEST_SONG.play().setLoop(true).setVolume(0.8f);
 
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);

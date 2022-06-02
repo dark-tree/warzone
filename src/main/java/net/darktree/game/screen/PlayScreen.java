@@ -15,10 +15,8 @@ import net.darktree.core.world.entity.Entity;
 import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
-import net.darktree.game.interactor.BuildInteractor;
 import net.darktree.game.interactor.Interactor;
 import net.darktree.game.interactor.UnitInteractor;
-import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
@@ -136,7 +134,8 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
-			interactor = new BuildInteractor(Tiles.BUILD, world);
+			//interactor = new BuildInteractor(Tiles.BUILD, world);
+			Main.screens.push(new BuildScreen());
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
