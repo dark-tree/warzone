@@ -8,6 +8,21 @@ public abstract class Screen {
 		closed = false;
 	}
 
+	protected boolean box(int ox, int oy, int w, int h) {
+		ScreenRenderer.setOffset(ox, oy);
+		return ScreenRenderer.box(w, h);
+	}
+
+	protected void text(int ox, int oy, String text, Alignment alignment) {
+		int x = ScreenRenderer.ox;
+		int y = ScreenRenderer.oy;
+
+		ScreenRenderer.setOffset(ox, oy);
+		ScreenRenderer.setAlignment(alignment);
+		ScreenRenderer.text(text, 30);
+		ScreenRenderer.setOffset(x, y);
+	}
+
 	public abstract void draw();
 
 	public void onKey(int key, int action, int mods) {

@@ -3,6 +3,7 @@ package net.darktree.game.screen;
 import net.darktree.Main;
 import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
+import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.window.Input;
@@ -22,13 +23,30 @@ import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 public class PlayScreen extends Screen {
 
 	private Interactor interactor = null;
+	private static List<ResourceRenderer> resourceRenderers = new ArrayList<>();
 
 	public static void setInteractor(Interactor interactor) {
 		Main.screens.stream().filter(screen -> screen instanceof PlayScreen).findAny().ifPresent(screen -> ((PlayScreen) screen).interactor = interactor);
+	}
+
+	public static void registerResourceLabel(char letter, Function<Country, Integer> provider) {
+		resourceRenderers.add(country -> ScreenRenderer.text(letter + provider.apply(country).toString(), 30));
+	}
+
+	static {
+		registerResourceLabel('A', country -> country.ammo);
+		registerResourceLabel('Z', country -> country.armor);
+//		registerResourceLabel('B', country -> 0);
+//		registerResourceLabel('N', country -> 0);
+//		registerResourceLabel('U', country -> 0);
+//		registerResourceLabel('R', country -> 0);
 	}
 
 	private boolean isMapFocused = true;
@@ -82,13 +100,44 @@ public class PlayScreen extends Screen {
 		ScreenRenderer.setOffset(0, -40);
 		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS", 30);
 
+		// hot bar begin
+
 		if (symbol != null) {
-			ScreenRenderer.centerAt(-1, -1);
-			ScreenRenderer.setOffset(0, 35);
+
+			ScreenRenderer.setSprite(Sprites.HOTBAR);
+			ScreenRenderer.centerAt(0, -1);
+//			ScreenRenderer.offset(0, 10);
+			ScreenRenderer.box(630, 630, 170, 0);
+
 			Country country = world.getCountry(symbol);
 
-			ScreenRenderer.text(symbol + "\n" + country.getTotalMaterials() + "m + " + country.income, 30);
+			int x = ScreenRenderer.ox;
+			int y = ScreenRenderer.oy;
+
+			ScreenRenderer.offset(30, 35);
+			for (int i = 0; i < resourceRenderers.size(); i ++) {
+				resourceRenderers.get(i).draw(country);
+				if (i % 2 == 1) {
+					ScreenRenderer.offset(90, 30);
+				}else{
+					ScreenRenderer.offset(0, -30);
+				}
+			}
+
+			ScreenRenderer.setOffset(x + 16, y + 78);
+			ScreenRenderer.setSprite(symbol.getSprite());
+			ScreenRenderer.box(80, 80);
+
+			ScreenRenderer.offset(130, 16);
+			ScreenRenderer.setAlignment(Alignment.CENTER);
+			ScreenRenderer.text(country.getTotalMaterials() + "", 38);
+
+			ScreenRenderer.offset(90, 0);
+			ScreenRenderer.setAlignment(Alignment.LEFT);
+			ScreenRenderer.text(country.income + "", 40);
+
 		}
+
 	}
 
 	@Override

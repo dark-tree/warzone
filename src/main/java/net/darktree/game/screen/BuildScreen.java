@@ -1,5 +1,6 @@
 package net.darktree.game.screen;
 
+import net.darktree.Main;
 import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
@@ -9,21 +10,6 @@ import net.darktree.core.client.render.image.Sprite;
 import org.lwjgl.glfw.GLFW;
 
 public class BuildScreen extends Screen {
-
-	private boolean box(int ox, int oy, int w, int h) {
-		ScreenRenderer.setOffset(ox, oy);
-		return ScreenRenderer.box(w, h);
-	}
-
-	private void text(int ox, int oy, String text, Alignment alignment) {
-		int x = ScreenRenderer.ox;
-		int y = ScreenRenderer.oy;
-
-		ScreenRenderer.setOffset(ox, oy);
-		ScreenRenderer.setAlignment(alignment);
-		ScreenRenderer.text(text, 30);
-		ScreenRenderer.setOffset(x, y);
-	}
 
 	private void option(Sprite icon, String name, String description, int value) {
 		if (ScreenRenderer.isMouseOver(400, 100)) {
@@ -49,7 +35,13 @@ public class BuildScreen extends Screen {
 	@Override
 	public void draw() {
 
+		ScreenRenderer.centerAt(-1, -1);
+		ScreenRenderer.setSprite(Sprites.NULL);
+		ScreenRenderer.setColor(0, 0, 0, 0.4f);
+		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
+
 		ScreenRenderer.centerAt(0, 0);
+		ScreenRenderer.setColor(0, 0, 0, 0);
 		ScreenRenderer.setSprite(Sprites.BUILD);
 
 		text(0, 310, "SELECT A BUILDING", Alignment.CENTER);
