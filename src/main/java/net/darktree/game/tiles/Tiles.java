@@ -6,6 +6,7 @@ import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.tile.Tile;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.buildings.CapitolBuilding;
+import net.darktree.game.buildings.FactoryBuilding;
 import net.darktree.game.entities.UnitEntity;
 
 public class Tiles {
@@ -17,5 +18,7 @@ public class Tiles {
 
 	public static Type<Entity> TEST = Registries.ENTITIES.register("unit", new Type<>(UnitEntity::new));
 
-	public static Type<Building> BUILD = Registries.BUILDINGS.register("capitol", new Type<>(CapitolBuilding::new));
+	public static Type<Building> CAPITOL = Registries.BUILDINGS.register("capitol", new Type<>(CapitolBuilding::new));
+	public static Type<Building> FACTORY = Registries.BUILDINGS.register("factory", new Type<>(FactoryBuilding::new));
+
 }

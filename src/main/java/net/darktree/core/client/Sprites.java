@@ -25,7 +25,14 @@ public class Sprites {
 	public final static Sprite BUTTON_LEFT = getSprite("gui/button/left.png");
 	public final static Sprite BUTTON_CENTER = getSprite("gui/button/center.png");
 	public final static Sprite BUTTON_RIGHT = getSprite("gui/button/right.png");
+	public final static Sprite BUTTON_BUILDING = getSprite("gui/button/building.png");
+	public final static Sprite BUTTON_DEMOLISH = getSprite("gui/button/demolish.png");
+	public final static Sprite FRAME = getSprite("gui/button/frame.png");
+
+	public final static Sprite ICON_WALL_1 = getSprite("gui/wall.png");
+	public final static Sprite ICON_WALL_2 = getSprite("gui/wall2.png");
 
 	public static Sprite BUILDING_CAPITOL = getSprite("building/capitol.png");
+	public static final Sprite BUILDING_FACTORY = getSprite("building/factory.png");
 
 }

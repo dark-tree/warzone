@@ -13,7 +13,6 @@ import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Symbol;
-import net.darktree.game.tiles.Tiles;
 
 import java.util.List;
 
@@ -23,7 +22,6 @@ public class BuildInteractor extends Interactor {
 	private final World world;
 
 	private int x, y;
-	private Building building;
 	private boolean valid;
 
 	public BuildInteractor(Type<Building> type, World world) {
@@ -33,7 +31,7 @@ public class BuildInteractor extends Interactor {
 
 	boolean verify(int x, int y) {
 		Symbol symbol = world.getCurrentSymbol();
-		this.building = type.construct(world, x, y);
+		Building building = type.construct(world, x, y);
 
 		if (building.getCost() > world.getCountry(symbol).getTotalMaterials()) {
 			return false;
@@ -42,7 +40,13 @@ public class BuildInteractor extends Interactor {
 		List<TilePos> tiles = building.getPattern().list(world, x, y, true);
 		TileState[][] map = world.getTiles();
 
-		return tiles.stream().filter(pos -> world.getEntity(pos.x, pos.y) == null).map(pos -> map[pos.x][pos.y]).allMatch(state -> state.getTile().isReplaceable() && state.getOwner() == symbol);
+		for (TilePos pos : tiles) {
+			if (world.getEntity(pos.x, pos.y) != null) return false;
+			if (!map[pos.x][pos.y].getTile().isReplaceable()) return false;
+			if (!world.canControl(pos.x, pos.y, symbol)) return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -72,7 +76,7 @@ public class BuildInteractor extends Interactor {
 	@Override
 	public void onClick(int button, int action, int mods, int x, int y) {
 		if (valid && this.x == x && this.y == y) {
-			world.getManager().apply(new BuildAction(Tiles.BUILD, this.x, this.y));
+			world.getManager().apply(new BuildAction(type, this.x, this.y));
 		}
 	}
 }

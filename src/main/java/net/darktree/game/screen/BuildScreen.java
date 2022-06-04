@@ -6,24 +6,40 @@ import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.ScreenRenderer;
-import net.darktree.core.client.render.image.Sprite;
+import net.darktree.core.world.World;
+import net.darktree.game.buildings.BuildingEntry;
+import net.darktree.game.buildings.BuildingManager;
+import net.darktree.game.interactor.BuildInteractor;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.List;
 
 public class BuildScreen extends Screen {
 
-	private void option(Sprite icon, String name, String description, int value) {
+	private final World world;
+
+	public BuildScreen(World world) {
+		this.world = world;
+	}
+
+	private void option(BuildingEntry entry, World world) {
 		if (ScreenRenderer.isMouseOver(400, 100)) {
 			ScreenRenderer.setColor(Colors.BUTTON_HOVER);
-			description(description, value);
+			description(entry.description, entry.cost);
+
+			if (Main.window.input().hasClicked()) {
+				PlayScreen.setInteractor(new BuildInteractor(entry.type, world));
+				this.close();
+			}
 		}
 
 		ScreenRenderer.setAlignment(Alignment.LEFT);
-		ScreenRenderer.setSprite(icon);
+		ScreenRenderer.setSprite(entry.icon);
 		ScreenRenderer.box(100, 100);
 		ScreenRenderer.offset(100, 6);
-		ScreenRenderer.text(value + "m", 30);
+		ScreenRenderer.text(entry.cost + "m", 30);
 		ScreenRenderer.offset(0, 54);
-		ScreenRenderer.text(name, 30);
+		ScreenRenderer.text(entry.name, 30);
 		ScreenRenderer.offset(-100, -180);
 		ScreenRenderer.setColor(0, 0, 0, 0);
 	}
@@ -45,15 +61,16 @@ public class BuildScreen extends Screen {
 		ScreenRenderer.setSprite(Sprites.BUILD);
 
 		text(0, 310, "SELECT A BUILDING", Alignment.CENTER);
-		text(0, 270, "PAGE 1/2", Alignment.CENTER);
+		text(0, 270, "PAGE 1/1", Alignment.CENTER);
 		box(-650, -400, 1300, 800);
 
 		ScreenRenderer.setOffset(-550, 60);
 
-		option(Sprites.BUILDING_CAPITOL, "FACTORY", "THIS WILL APPEAR ON HOVER\nAND DESCRIBE THE FUNCTION\nOF A PARTICULAR BUILDING", 10);
-		option(Sprites.BUILDING_CAPITOL, "BOMB FACTORY", "THIS WILL APPEAR ON HOVER\nAND DESCRIBE THE FUNCTION\nOF A PARTICULAR BUILDING", 20);
-		option(Sprites.BUILDING_CAPITOL, "SHIELD", "THIS WILL APPEAR ON HOVER\nAND DESCRIBE THE FUNCTION\nOF A PARTICULAR BUILDING", 20);
-		option(Sprites.BUILDING_CAPITOL, "LAUNCHER", "THIS WILL APPEAR ON HOVER\nAND DESCRIBE THE FUNCTION\nOF A PARTICULAR BUILDING", 20);
+		List<BuildingEntry> entries = BuildingManager.getEntries();
+
+		for (int i = 0; i < 4 && i < entries.size(); i ++) {
+			option(entries.get(i), world);
+		}
 
 		ScreenRenderer.setOffset(650 - 300, -400 + 100);
 		ScreenRenderer.button("<", 1, 50, 50);

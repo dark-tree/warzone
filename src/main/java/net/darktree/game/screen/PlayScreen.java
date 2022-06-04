@@ -101,6 +101,9 @@ public class PlayScreen extends Screen {
 		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS", 30);
 
 		// hot bar begin
+		// TODO 1. split this into a separate hot bar class
+		// TODO 2. The right hand side should be split off further into another separate class
+		// TODO 3. MAKE IS NOT SO CURSED
 
 		if (symbol != null) {
 
@@ -135,6 +138,76 @@ public class PlayScreen extends Screen {
 			ScreenRenderer.offset(90, 0);
 			ScreenRenderer.setAlignment(Alignment.LEFT);
 			ScreenRenderer.text(country.income + "", 40);
+
+			// right section
+
+//			ScreenRenderer.offset(385 + 74 + 4, -42 + 4);
+//			ScreenRenderer.setAlignment(Alignment.RIGHT);
+//			ScreenRenderer.text("<", 50);
+//
+//			if (ScreenRenderer.isMouseOver(58, 58)) {
+//				ScreenRenderer.setColor(Colors.BUTTON_HOVER);
+//			}else{
+//				ScreenRenderer.setColor(Colors.OVERLAY_NONE);
+//			}
+//			ScreenRenderer.setSprite(Sprites.FRAME);
+//			ScreenRenderer.box(58, 58);
+//			ScreenRenderer.setSprite(Sprites.ICON_WALL_1);
+//			ScreenRenderer.box(58, 58);
+//
+//			ScreenRenderer.offset(96 - 4, -4);
+//			if (ScreenRenderer.isMouseOver(66, 66)) {
+//				ScreenRenderer.setColor(Colors.BUTTON_HOVER);
+//			}else{
+//				ScreenRenderer.setColor(Colors.OVERLAY_NONE);
+//			}
+//			ScreenRenderer.setSprite(Sprites.FRAME);
+//			ScreenRenderer.box(66, 66);
+//			ScreenRenderer.setSprite(Sprites.ICON_WALL_2);
+//			ScreenRenderer.box(66, 66);
+//
+//			ScreenRenderer.offset(96 + 4, 4);
+//			if (ScreenRenderer.isMouseOver(58, 58)) {
+//				ScreenRenderer.setColor(Colors.BUTTON_HOVER);
+//			}else{
+//				ScreenRenderer.setColor(Colors.OVERLAY_NONE);
+//			}
+//			ScreenRenderer.setSprite(Sprites.FRAME);
+//			ScreenRenderer.box(58, 58);
+//
+//			ScreenRenderer.setAlignment(Alignment.LEFT);
+//			ScreenRenderer.offset(50, -4);
+//			ScreenRenderer.text(">", 50);
+//			ScreenRenderer.offset(-385 - 74 - 96 -96 -50 - 4, 42);
+
+			ScreenRenderer.offset(385 + 426, -42);
+			ScreenRenderer.setSprite(Sprites.BUTTON_BUILDING);
+			ScreenRenderer.setColor(Colors.OVERLAY_NONE);
+			if (ScreenRenderer.isMouseOver(66, 66)) {
+				ScreenRenderer.setColor(Colors.BUTTON_HOVER);
+
+				if(Main.window.input().hasClicked()) {
+					Main.pendingScreens.add(new BuildScreen(world));
+				}
+ 			}
+			ScreenRenderer.box(66, 66);
+			ScreenRenderer.offset(96, 0);
+
+			ScreenRenderer.setSprite(Sprites.BUTTON_DEMOLISH);
+			ScreenRenderer.setColor(Colors.OVERLAY_NONE);
+			if (ScreenRenderer.isMouseOver(66, 66)) {
+				ScreenRenderer.setColor(Colors.BUTTON_HOVER);
+			}
+			ScreenRenderer.box(66, 66);
+			ScreenRenderer.offset(-426 -96, 42);
+
+			ScreenRenderer.offset(630 / 2, 35);
+//			ScreenRenderer.box(100, 100);
+			ScreenRenderer.setAlignment(Alignment.CENTER);
+			ScreenRenderer.text("CONSTRUCTION", 20);
+
+			ScreenRenderer.setColor(Colors.OVERLAY_NONE);
+			ScreenRenderer.setAlignment(Alignment.LEFT);
 
 		}
 
@@ -184,7 +257,7 @@ public class PlayScreen extends Screen {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
 			//interactor = new BuildInteractor(Tiles.BUILD, world);
-			Main.screens.push(new BuildScreen());
+			Main.screens.push(new BuildScreen(world));
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
