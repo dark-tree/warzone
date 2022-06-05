@@ -7,8 +7,7 @@ import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.world.World;
-import net.darktree.game.buildings.BuildingEntry;
-import net.darktree.game.buildings.BuildingManager;
+import net.darktree.game.buildings.BuildingConfigRegistry;
 import net.darktree.game.interactor.BuildInteractor;
 import org.lwjgl.glfw.GLFW;
 
@@ -22,10 +21,10 @@ public class BuildScreen extends Screen {
 		this.world = world;
 	}
 
-	private void option(BuildingEntry entry, World world) {
+	private void option(BuildingConfigRegistry.Config entry, World world) {
 		if (ScreenRenderer.isMouseOver(400, 100)) {
 			ScreenRenderer.setColor(Colors.BUTTON_HOVER);
-			description(entry.description, entry.cost);
+			description(entry.description, entry.type.value);
 
 			if (Main.window.input().hasClicked()) {
 				PlayScreen.setInteractor(new BuildInteractor(entry.type, world));
@@ -34,10 +33,10 @@ public class BuildScreen extends Screen {
 		}
 
 		ScreenRenderer.setAlignment(Alignment.LEFT);
-		ScreenRenderer.setSprite(entry.icon);
+		ScreenRenderer.setSprite(entry.type.sprite);
 		ScreenRenderer.box(100, 100);
 		ScreenRenderer.offset(100, 6);
-		ScreenRenderer.text(entry.cost + "m", 30);
+		ScreenRenderer.text(entry.type.value + "m", 30);
 		ScreenRenderer.offset(0, 54);
 		ScreenRenderer.text(entry.name, 30);
 		ScreenRenderer.offset(-100, -180);
@@ -66,7 +65,7 @@ public class BuildScreen extends Screen {
 
 		ScreenRenderer.setOffset(-550, 60);
 
-		List<BuildingEntry> entries = BuildingManager.getEntries();
+		List<BuildingConfigRegistry.Config> entries = BuildingConfigRegistry.getEntries();
 
 		for (int i = 0; i < 4 && i < entries.size(); i ++) {
 			option(entries.get(i), world);

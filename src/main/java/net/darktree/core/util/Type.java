@@ -2,10 +2,7 @@ package net.darktree.core.util;
 
 import net.darktree.core.world.World;
 
-/**
- * Generic class used for identifying some registry items,
- * like buildings and entities.
- */
+@Deprecated
 public class Type<T> {
 	private final Constructor<T> constructor;
 

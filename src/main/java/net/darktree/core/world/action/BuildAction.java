@@ -1,6 +1,6 @@
 package net.darktree.core.world.action;
 
-import net.darktree.core.util.Type;
+import net.darktree.core.util.BuildingType;
 import net.darktree.core.world.World;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
@@ -11,11 +11,12 @@ import java.util.List;
 
 public class BuildAction extends Action {
 
-	private final Type<Building> type;
+	private final BuildingType type;
 	private final int x, y;
+
 	private Building building;
 
-	public BuildAction(Type<Building> type, int x, int y) {
+	public BuildAction(BuildingType type, int x, int y) {
 		this.type = type;
 		this.x = x;
 		this.y = y;
@@ -23,13 +24,11 @@ public class BuildAction extends Action {
 
 	@Override
 	boolean verify(World world, Symbol symbol) {
-		this.building = type.construct(world, x, y);
-
-		if (building.getCost() > world.getCountry(symbol).getTotalMaterials()) {
+		if (type.value > world.getCountry(symbol).getTotalMaterials()) {
 			return false;
 		}
 
-		List<TilePos> tiles = building.getPattern().list(world, x, y, true);
+		List<TilePos> tiles = type.pattern.list(world, x, y, true);
 		TileState[][] map = world.getTiles();
 
 		return tiles.stream().filter(pos -> world.getEntity(pos.x, pos.y) == null).map(pos -> map[pos.x][pos.y]).allMatch(state -> state.getTile().isReplaceable() && state.getOwner() == symbol);
@@ -37,13 +36,15 @@ public class BuildAction extends Action {
 
 	@Override
 	void redo(World world, Symbol symbol) {
+		building = type.construct(world, x, y);
 		world.placeBuilding(x, y, building);
-		world.getCountry(symbol).addMaterials(-building.getCost());
+		world.getCountry(symbol).addMaterials(-type.value);
 	}
 
 	@Override
 	void undo(World world, Symbol symbol) {
 		building.removed();
+		world.getCountry(symbol).addMaterials(type.value);
 	}
 
 }

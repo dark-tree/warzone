@@ -1,6 +1,5 @@
 package net.darktree;
 
-import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.vertex.Renderer;
@@ -10,7 +9,7 @@ import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
-import net.darktree.game.buildings.BuildingManager;
+import net.darktree.game.buildings.BuildingConfigRegistry;
 import net.darktree.game.screen.PlayScreen;
 import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
@@ -51,7 +50,7 @@ public class Main {
 
 		screens.push(new PlayScreen(WorldHolder.world));
 
-		BuildingManager.register(Tiles.FACTORY, 10, "FACTORY", "ALLOWS YOU TO PRODUCE\nAMMUNITION AND ARMORS\nFOR YOUR UNITS.", Sprites.BUILDING_FACTORY);
+		BuildingConfigRegistry.register(Tiles.FACTORY, "FACTORY", "ALLOWS YOU TO PRODUCE\nAMMUNITION AND ARMORS\nFOR YOUR UNITS.");
 
 		try {
 			loop();

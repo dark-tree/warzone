@@ -1,14 +1,10 @@
 package net.darktree.game.buildings;
 
-import net.darktree.core.client.Colors;
-import net.darktree.core.client.Sprites;
-import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.ClickEvent;
-import net.darktree.core.util.Type;
+import net.darktree.core.util.BuildingType;
 import net.darktree.core.world.World;
-import net.darktree.core.world.overlay.Overlay;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.interactor.CityInteractor;
 import net.darktree.game.screen.PlayScreen;
@@ -20,7 +16,7 @@ public class CapitolBuilding extends Building {
 	private Symbol symbol = Symbol.CROSS;
 	public boolean summoned;
 
-	public CapitolBuilding(World world, int x, int y, Type<Building> type) {
+	public CapitolBuilding(World world, int x, int y, BuildingType type) {
 		super(world, x, y, type);
 	}
 
@@ -60,16 +56,8 @@ public class CapitolBuilding extends Building {
 
 	@Override
 	public void draw(int x, int y, VertexBuffer buffer) {
-		Overlay overlay = world.getOverlay();
-		Color c = overlay == null ? Colors.OVERLAY_NONE : overlay.getColor(world, x, y, world.getTileState(x, y));
-
-		Renderer.quad(buffer, x, y, 2, 2, Sprites.BUILDING_CAPITOL, c.r, c.g, c.b, c.a);
+		super.draw(x, y, buffer);
 		Renderer.quad(buffer, x + 0.5f, y + 0.5f, 1, 1, symbol.getSprite(), 0, 0, 0, 0);
-	}
-
-	@Override
-	public int getCost() {
-		return 0;
 	}
 
 	@Override

@@ -1,10 +1,12 @@
 package net.darktree.game.tiles;
 
 import net.darktree.core.Registries;
+import net.darktree.core.client.Sprites;
+import net.darktree.core.util.BuildingType;
 import net.darktree.core.util.Type;
+import net.darktree.core.world.Pattern;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.tile.Tile;
-import net.darktree.game.buildings.Building;
 import net.darktree.game.buildings.CapitolBuilding;
 import net.darktree.game.buildings.FactoryBuilding;
 import net.darktree.game.entities.UnitEntity;
@@ -18,7 +20,7 @@ public class Tiles {
 
 	public static Type<Entity> TEST = Registries.ENTITIES.register("unit", new Type<>(UnitEntity::new));
 
-	public static Type<Building> CAPITOL = Registries.BUILDINGS.register("capitol", new Type<>(CapitolBuilding::new));
-	public static Type<Building> FACTORY = Registries.BUILDINGS.register("factory", new Type<>(FactoryBuilding::new));
+	public static BuildingType CAPITOL = Registries.BUILDINGS.register("capitol", new BuildingType(CapitolBuilding::new, 0, Pattern.SQUARE, Sprites.BUILDING_CAPITOL));
+	public static BuildingType FACTORY = Registries.BUILDINGS.register("factory", new BuildingType(FactoryBuilding::new, 10, Pattern.SQUARE, Sprites.BUILDING_FACTORY));
 
 }

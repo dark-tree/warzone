@@ -60,11 +60,6 @@ public class Registry<T> {
 		return this.lookup.get(value).key;
 	}
 
-	@Deprecated
-	public int identifierOf(String key) {
-		return this.registry.get(key).identifier;
-	}
-
 	public record Entry<T>(int identifier, String key, T value) {
 
 	}

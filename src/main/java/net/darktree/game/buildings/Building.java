@@ -1,26 +1,30 @@
 package net.darktree.game.buildings;
 
 import net.darktree.core.Registries;
+import net.darktree.core.client.Colors;
+import net.darktree.core.client.render.color.Color;
+import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.ClickEvent;
+import net.darktree.core.util.BuildingType;
 import net.darktree.core.util.NbtSerializable;
-import net.darktree.core.util.Type;
 import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldComponent;
+import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.tile.TileInstance;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class Building implements NbtSerializable, WorldComponent {
+public class Building implements NbtSerializable, WorldComponent {
 
 	protected final World world;
-	public final Type<Building> type;
+	public final BuildingType type;
 	public final int x, y;
 
-	public Building(World world, int x, int y, Type<Building> type) {
+	public Building(World world, int x, int y, BuildingType type) {
 		this.x = x;
 		this.y = y;
 		this.world = world;
@@ -56,7 +60,7 @@ public abstract class Building implements NbtSerializable, WorldComponent {
 	}
 
 	public Pattern getPattern() {
-		return Pattern.SQUARE;
+		return type.pattern;
 	}
 
 	public boolean canAbolish() {
@@ -64,7 +68,9 @@ public abstract class Building implements NbtSerializable, WorldComponent {
 	}
 
 	public void draw(int x, int y, VertexBuffer buffer) {
-
+		Overlay overlay = world.getOverlay();
+		Color c = overlay == null ? Colors.OVERLAY_NONE : overlay.getColor(world, x, y, world.getTileState(x, y));
+		Renderer.quad(buffer, x, y, 2, 2, type.sprite, c.r, c.g, c.b, c.a);
 	}
 
 	@Override
@@ -84,12 +90,6 @@ public abstract class Building implements NbtSerializable, WorldComponent {
 
 		world.setLinkedBuildingAt(x, y, null);
 		world.getCountry(world.getTileState(x, y).getOwner()).removeBuilding(this);
-	}
-
-	public abstract int getCost();
-
-	public int getProfit() {
-		return (int) (0.4f * getCost());
 	}
 
 	public int getStored() {
