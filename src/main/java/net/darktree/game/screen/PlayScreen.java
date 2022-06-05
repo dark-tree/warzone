@@ -30,10 +30,10 @@ import java.util.function.Function;
 public class PlayScreen extends Screen {
 
 	private Interactor interactor = null;
-	private static List<ResourceRenderer> resourceRenderers = new ArrayList<>();
+	private static final List<ResourceRenderer> resourceRenderers = new ArrayList<>();
 
 	public static void setInteractor(Interactor interactor) {
-		Main.screens.stream().filter(screen -> screen instanceof PlayScreen).findAny().ifPresent(screen -> ((PlayScreen) screen).interactor = interactor);
+		ScreenStack.asInstance(PlayScreen.class, screen -> screen.interactor = interactor);
 	}
 
 	public static void registerResourceLabel(char letter, Function<Country, Integer> provider) {
@@ -57,9 +57,9 @@ public class PlayScreen extends Screen {
 	}
 
 	@Override
-	public void draw() {
+	public void draw(boolean focused) {
 
-		isMapFocused = true;
+		isMapFocused = focused;
 
 		WorldHolder.draw();
 
@@ -187,7 +187,7 @@ public class PlayScreen extends Screen {
 				ScreenRenderer.setColor(Colors.BUTTON_HOVER);
 
 				if(Main.window.input().hasClicked()) {
-					Main.pendingScreens.add(new BuildScreen(world));
+					ScreenStack.open(new BuildScreen(world));
 				}
  			}
 			ScreenRenderer.box(66, 66);
@@ -234,8 +234,8 @@ public class PlayScreen extends Screen {
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
 			try {
 				World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
-				Main.screens.clear();
-				Main.screens.push(new PlayScreen(WorldHolder.world));
+				ScreenStack.closeAll();
+				ScreenStack.open(new PlayScreen(WorldHolder.world));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -257,7 +257,7 @@ public class PlayScreen extends Screen {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
 			//interactor = new BuildInteractor(Tiles.BUILD, world);
-			Main.screens.push(new BuildScreen(world));
+			ScreenStack.open(new BuildScreen(world));
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {

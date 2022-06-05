@@ -30,6 +30,7 @@ public class ScreenRenderer {
 	private static float x, y;
 	public static int ox, oy;
 	private static float cr, cg, cb, ca;
+	private static boolean focus;
 	private static Sprite quadSprite;
 	private static Font currentFont;
 	private static Alignment currentAlignment = Alignment.LEFT;
@@ -130,11 +131,19 @@ public class ScreenRenderer {
 	}
 
 	/**
+	 * Set focus context for dynamic elements like buttons
+	 */
+	public static void setFocus(boolean flag) {
+		focus = flag;
+	}
+
+	/**
 	 * Set font for text renderer
 	 */
 	public static void setFont(Font font) {
 		currentFont = font;
 	}
+
 
 	/**
 	 * Set sprite for quad renderer
@@ -183,7 +192,7 @@ public class ScreenRenderer {
 			return false;
 		}
 
-		return !(mx > bx + right * psx || my > by + top * psy);
+		return focus && !(mx > bx + right * psx || my > by + top * psy);
 	}
 
 	public static boolean button(String text, int count, int size, int height) {

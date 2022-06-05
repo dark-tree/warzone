@@ -23,7 +23,7 @@ public abstract class Screen {
 		ScreenRenderer.setOffset(x, y);
 	}
 
-	public abstract void draw();
+	public abstract void draw(boolean focused);
 
 	public void onKey(int key, int action, int mods) {
 

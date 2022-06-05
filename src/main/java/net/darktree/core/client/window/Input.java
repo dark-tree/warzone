@@ -1,8 +1,8 @@
 package net.darktree.core.client.window;
 
-import net.darktree.Main;
 import net.darktree.core.client.window.input.MouseButton;
 import net.darktree.core.world.WorldView;
+import net.darktree.game.screen.ScreenStack;
 import org.lwjgl.glfw.GLFW;
 
 public class Input {
@@ -26,25 +26,25 @@ public class Input {
 	}
 
 	void keyHandle(long handle, int key, int scancode, int action, int mods) {
-		Main.screens.peek().onKey(key, action, mods);
+		ScreenStack.asFocused(screen -> screen.onKey(key, action, mods));
 	}
 
 	void cursorHandle(long handle, double x, double y) {
-		Main.screens.peek().onMove((float) x, (float) y);
+		ScreenStack.asFocused(screen -> screen.onMove((float) x, (float) y));
 
 		prevX = (float) x;
 		prevY = (float) y;
 	}
 
 	void clickHandle(long handle, int button, int action, int mods) {
-		Main.screens.peek().onClick(button, action, mods);
+		ScreenStack.asFocused(screen -> screen.onClick(button, action, mods));
 
 		// if button was RELEASED the click is complete
 		clicked = (button == GLFW.GLFW_MOUSE_BUTTON_1 && action == GLFW.GLFW_RELEASE);
 	}
 
 	void scrollHandle(long handle, double x, double y) {
-		Main.screens.peek().onScroll((float) y);
+		ScreenStack.asFocused(screen -> screen.onScroll((float) y));
 	}
 
 	void frameHandle() {
@@ -52,7 +52,7 @@ public class Input {
 	}
 
 	public void updateScale(int w, int h) {
-		if (!Main.screens.isEmpty()) Main.screens.peek().onResize(w, h);
+		ScreenStack.asFocused(screen -> screen.onResize(w, h));
 	}
 
 	public float getMouseScreenX() {

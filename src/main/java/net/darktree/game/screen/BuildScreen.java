@@ -48,7 +48,7 @@ public class BuildScreen extends Screen {
 	}
 
 	@Override
-	public void draw() {
+	public void draw(boolean focused) {
 
 		ScreenRenderer.centerAt(-1, -1);
 		ScreenRenderer.setSprite(Sprites.NULL);

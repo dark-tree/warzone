@@ -4,7 +4,6 @@ import net.darktree.Main;
 import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
-import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
@@ -89,11 +88,9 @@ public class Renderer {
 	}
 
 	/**
-	 * Complete all pending OpenGL operations, measure frame times
-	 * swap frames and get ready for the next frame.
+	 * Finish this frame and prepare for the next one
 	 */
 	public static void next() {
-		ScreenRenderer.flush();
 		Main.window.swap();
 		GL32.glClear(GL32.GL_COLOR_BUFFER_BIT | GL32.GL_DEPTH_BUFFER_BIT);
 	}

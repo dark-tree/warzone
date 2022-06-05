@@ -1,6 +1,5 @@
 package net.darktree;
 
-import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.sound.SoundSystem;
@@ -11,18 +10,14 @@ import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.game.buildings.BuildingConfigRegistry;
 import net.darktree.game.screen.PlayScreen;
+import net.darktree.game.screen.ScreenStack;
 import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
-
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.Stack;
 
 import static org.lwjgl.opengl.GL32.glClearColor;
 
 public class Main {
 
-	public static Stack<Screen> screens = new Stack<>();
 	public static Window window;
 
 	public static void main(String[] args) {
@@ -48,7 +43,7 @@ public class Main {
 
 		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
 
-		screens.push(new PlayScreen(WorldHolder.world));
+		ScreenStack.open(new PlayScreen(WorldHolder.world));
 
 		BuildingConfigRegistry.register(Tiles.FACTORY, "FACTORY", "ALLOWS YOU TO PRODUCE\nAMMUNITION AND ARMORS\nFOR YOUR UNITS.");
 
@@ -64,16 +59,9 @@ public class Main {
 		SoundSystem.disable();
 	}
 
-	public static Queue<Screen> pendingScreens = new ArrayDeque<>();
-
 	private static void loop() {
 		while (!window.shouldClose()) {
-			screens.forEach(Screen::draw);
-			screens.removeIf(Screen::isClosed);
-
-			pendingScreens.forEach(screen -> screens.push(screen));
-			pendingScreens.clear();
-
+			ScreenStack.draw();
 			Renderer.next();
 		}
 	}
