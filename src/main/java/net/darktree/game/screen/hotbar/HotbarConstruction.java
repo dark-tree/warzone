@@ -1,7 +1,5 @@
 package net.darktree.game.screen.hotbar;
 
-import net.darktree.Main;
-import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.world.World;
@@ -60,24 +58,14 @@ public class HotbarConstruction extends HotbarComponent {
 //		ScreenRenderer.offset(-385 - 74 - 96 -96 -50 - 4, 42);
 
 		ScreenRenderer.offset(417, 52);
-		ScreenRenderer.setSprite(Sprites.BUTTON_BUILDING);
-		ScreenRenderer.setColor(Colors.OVERLAY_NONE);
-		if (ScreenRenderer.isMouseOver(66, 66)) {
-			ScreenRenderer.setColor(Colors.BUTTON_HOVER);
-
-			if(Main.window.input().hasClicked()) {
-				ScreenStack.open(new BuildScreen(world));
-			}
+		if (button(Sprites.BUTTON_BUILDING, 66, 66)) {
+			ScreenStack.open(new BuildScreen(world));
 		}
-		ScreenRenderer.box(66, 66);
+
 		ScreenRenderer.offset(96, 0);
-
-		ScreenRenderer.setSprite(Sprites.BUTTON_DEMOLISH);
-		ScreenRenderer.setColor(Colors.OVERLAY_NONE);
-		if (ScreenRenderer.isMouseOver(66, 66)) {
-			ScreenRenderer.setColor(Colors.BUTTON_HOVER);
+		if (button(Sprites.BUTTON_DEMOLISH, 66, 66)) {
+			// TODO: demolish interactor
 		}
-		ScreenRenderer.box(66, 66);
 	}
 
 }

@@ -8,6 +8,9 @@ import net.darktree.game.country.Symbol;
 
 public class Hotbar {
 
+	private static final int EXTEND = 630;
+	private static final int HEIGHT = 170;
+
 	private static final HotbarComponent left = new HotbarOverview();
 	private static final HotbarComponent right = new HotbarConstruction();
 
@@ -15,9 +18,9 @@ public class Hotbar {
 
 		ScreenRenderer.setSprite(Sprites.HOTBAR);
 		ScreenRenderer.centerAt(0, -1);
-		ScreenRenderer.box(630, 630, 170, 0);
+		ScreenRenderer.box(EXTEND, EXTEND, HEIGHT, 0);
 
-		draw(left, -630, focused, world, symbol);
+		draw(left, -EXTEND, focused, world, symbol);
 		draw(right, 0, focused, world, symbol);
 
 	}
@@ -29,7 +32,7 @@ public class Hotbar {
 			String name = component.getName();
 
 			if (name != null) {
-				ScreenRenderer.setOffset(x + 315, 130);
+				ScreenRenderer.setOffset(x + EXTEND / 2, HEIGHT - 40);
 				ScreenRenderer.setAlignment(Alignment.CENTER);
 				ScreenRenderer.text(name, 20);
 			}

@@ -52,7 +52,7 @@ public class BuildScreen extends Screen {
 
 		ScreenRenderer.centerAt(-1, -1);
 		ScreenRenderer.setSprite(Sprites.NULL);
-		ScreenRenderer.setColor(0, 0, 0, 0.4f);
+		ScreenRenderer.setColor(Colors.SCREEN_SEPARATOR);
 		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
 
 		ScreenRenderer.centerAt(0, 0);

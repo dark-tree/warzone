@@ -32,7 +32,7 @@ public class HotbarOverview extends HotbarComponent {
 		int y = ScreenRenderer.oy;
 
 		// render resource labels
-		ScreenRenderer.offset(30, 35);
+		ScreenRenderer.offset(25, 35);
 		for (int i = 0; i < labels.size(); i ++) {
 			labels.get(i).draw(country);
 

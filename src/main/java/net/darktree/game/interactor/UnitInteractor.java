@@ -1,7 +1,9 @@
 package net.darktree.game.interactor;
 
 import net.darktree.Main;
+import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sounds;
+import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.util.MathHelper;
@@ -41,15 +43,17 @@ public class UnitInteractor extends Interactor {
 		int y = entity.getY();
 		float f = (float) (Math.sin(Main.window.profiler.getFrameCount() / 20f) + 1) / 60 + 0.04f;
 
+		Color c = Colors.ENTITY_SELECTION;
+
 		// TODO: make it better
-		Renderer.line(buffer, x + f, y + f, x + f, y + f + 0.25f, 0.03f, 0.4f, 0.6f, 1.0f, 1.0f);
-		Renderer.line(buffer, x + 1 - f, y + f, x + 1 - f, y + 0.25f + f, 0.03f, 0.4f, 0.6f, 1.0f, 1.0f);
-		Renderer.line(buffer, x + f, y + 1 - f, x + f, y + 0.75f - f, 0.03f, 0.4f, 0.6f, 1.0f, 1.0f);
-		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 1 - f, y + 0.75f - f, 0.03f, 0.4f, 0.6f, 1.0f, 1.0f);
-		Renderer.line(buffer, x + f, y + f, x + 0.25f + f, y + f, 0.03f, 0.4f, 0.6f, 1.0f, 1.0f);
-		Renderer.line(buffer, x + f, y + 1 - f, x + 0.25f + f, y + 1 - f, 0.03f, 0.4f, 0.6f, 1.0f, 1.0f);
-		Renderer.line(buffer, x + 1 - f, y + f, x + 0.75f - f, y + f, 0.03f, 0.4f, 0.6f, 1.0f, 1.0f);
-		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 0.75f - f, y + 1 - f, 0.03f, 0.4f, 0.6f, 1.0f, 1.0f);
+		Renderer.line(buffer, x + f, y + f, x + f, y + f + 0.25f, 0.03f, c.r, c.g, c.b, c.a);
+		Renderer.line(buffer, x + 1 - f, y + f, x + 1 - f, y + 0.25f + f, 0.03f, c.r, c.g, c.b, c.a);
+		Renderer.line(buffer, x + f, y + 1 - f, x + f, y + 0.75f - f, 0.03f, c.r, c.g, c.b, c.a);
+		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 1 - f, y + 0.75f - f, 0.03f, c.r, c.g, c.b, c.a);
+		Renderer.line(buffer, x + f, y + f, x + 0.25f + f, y + f, 0.03f, c.r, c.g, c.b, c.a);
+		Renderer.line(buffer, x + f, y + 1 - f, x + 0.25f + f, y + 1 - f, 0.03f, c.r, c.g, c.b, c.a);
+		Renderer.line(buffer, x + 1 - f, y + f, x + 0.75f - f, y + f, 0.03f, c.r, c.g, c.b, c.a);
+		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 0.75f - f, y + 1 - f, 0.03f, c.r, c.g, c.b, c.a);
 
 		x = Main.window.input().getMouseMapX(world.getView());
 		y = Main.window.input().getMouseMapY(world.getView());
@@ -88,10 +92,6 @@ public class UnitInteractor extends Interactor {
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_Z) {
 			world.getManager().apply(new ToggleArmorAction(entity));
 		}
-
-//		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_I) {
-//			world.setTileOwner(entity.getX(), entity.getY(), Symbol.NONE);
-//		}
 	}
 
 	@Override

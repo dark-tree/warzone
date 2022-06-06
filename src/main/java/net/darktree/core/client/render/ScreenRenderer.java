@@ -105,6 +105,7 @@ public class ScreenRenderer {
 	/**
 	 * Set output color, used for tinting textures and text coloring
 	 */
+	@Deprecated
 	public static void setColor(float r, float g, float b, float a) {
 		cr = r;
 		cg = g;
@@ -208,6 +209,8 @@ public class ScreenRenderer {
 			if (INPUT.isButtonPressed(MouseButton.LEFT)) {
 				setColor(Colors.BUTTON_PRESSED);
 			}
+		}else{
+			setColor(Colors.BUTTON_DEFAULT);
 		}
 
 		setSprite(Sprites.BUTTON_LEFT);
