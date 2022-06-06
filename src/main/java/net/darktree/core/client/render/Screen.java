@@ -14,13 +14,11 @@ public abstract class Screen {
 	}
 
 	protected void text(int ox, int oy, String text, Alignment alignment) {
-		int x = ScreenRenderer.ox;
-		int y = ScreenRenderer.oy;
-
+		ScreenRenderer.push();
 		ScreenRenderer.setOffset(ox, oy);
 		ScreenRenderer.setAlignment(alignment);
 		ScreenRenderer.text(text, 30);
-		ScreenRenderer.setOffset(x, y);
+		ScreenRenderer.pop();
 	}
 
 	public abstract void draw(boolean focused);

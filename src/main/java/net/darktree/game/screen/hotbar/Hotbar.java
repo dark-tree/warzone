@@ -1,5 +1,6 @@
 package net.darktree.game.screen.hotbar;
 
+import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.ScreenRenderer;
@@ -37,7 +38,7 @@ public class Hotbar {
 				ScreenRenderer.text(name, 20);
 			}
 
-			ScreenRenderer.setColor(0, 0, 0, 0);
+			ScreenRenderer.setColor(Colors.NONE);
 			ScreenRenderer.setAlignment(Alignment.LEFT);
 		}
 	}

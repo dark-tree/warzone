@@ -1,5 +1,6 @@
 package net.darktree.core.client.render;
 
+import net.darktree.Main;
 import net.darktree.core.client.Buffers;
 import net.darktree.core.client.Colors;
 import net.darktree.core.client.Shaders;
@@ -14,10 +15,12 @@ import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
 import net.darktree.core.client.window.input.MouseButton;
+import net.darktree.core.util.math.Vec2i;
 import net.darktree.core.world.WorldView;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Stack;
 
 public class ScreenRenderer {
 
@@ -28,12 +31,13 @@ public class ScreenRenderer {
 
 	private static float psx, psy;
 	private static float x, y;
-	public static int ox, oy;
+	private static int ox, oy;
 	private static float cr, cg, cb, ca;
 	private static boolean focus;
 	private static Sprite quadSprite;
 	private static Font currentFont;
 	private static Alignment currentAlignment = Alignment.LEFT;
+	private static final Stack<Vec2i> offsets = new Stack<>();
 
 	private static float projectMapIntoScreenX(WorldView view, int x) {
 		return (x + view.offsetX) * view.scaleX;
@@ -60,6 +64,23 @@ public class ScreenRenderer {
 		for (Pipeline pipeline : pipelines.values()) {
 			pipeline.flush();
 		}
+	}
+
+	/**
+	 * Save the current offset onto a stack
+	 */
+	public static void push() {
+		offsets.push(new Vec2i(ox, oy));
+	}
+
+	/**
+	 * Load the last offset from a stack
+	 */
+	public static void pop() {
+		Vec2i offset = offsets.pop();
+
+		ox = offset.x;
+		oy = offset.y;
 	}
 
 	/**
@@ -196,12 +217,8 @@ public class ScreenRenderer {
 		return focus && !(mx > bx + right * psx || my > by + top * psy);
 	}
 
-	public static boolean button(String text, int count, int size, int height) {
-		int width = height / 2;
-		boolean hover = isMouseOver(width * (count + 2), height);
-
-		int sx = ox;
-		Alignment alignment = currentAlignment;
+	private static boolean button(int width, int height) {
+		boolean hover = isMouseOver(width, height);
 
 		if (hover) {
 			setColor(Colors.BUTTON_HOVER);
@@ -212,6 +229,16 @@ public class ScreenRenderer {
 		}else{
 			setColor(Colors.BUTTON_DEFAULT);
 		}
+
+		return hover && Main.window.input().hasClicked();
+	}
+
+	public static boolean button(String text, int count, int size, int height) {
+		int width = height / 2;
+		boolean status = button(width * (count + 2), height);
+
+		int sx = ox;
+		Alignment alignment = currentAlignment;
 
 		setSprite(Sprites.BUTTON_LEFT);
 		box(width, height);
@@ -235,7 +262,15 @@ public class ScreenRenderer {
 		setAlignment(alignment);
 		setColor(0, 0, 0, 0);
 
-		return hover && INPUT.hasClicked();
+		return status;
+	}
+
+	public static boolean button(Sprite sprite, int width, int height) {
+		boolean status = button(width, height);
+
+		ScreenRenderer.setSprite(sprite);
+		ScreenRenderer.box(width, height);
+		return status;
 	}
 
 }

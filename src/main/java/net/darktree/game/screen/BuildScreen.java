@@ -6,6 +6,7 @@ import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.ScreenRenderer;
+import net.darktree.core.client.window.input.MouseButton;
 import net.darktree.core.world.World;
 import net.darktree.game.buildings.BuildingConfigRegistry;
 import net.darktree.game.interactor.BuildInteractor;
@@ -26,6 +27,10 @@ public class BuildScreen extends Screen {
 			ScreenRenderer.setColor(Colors.BUTTON_HOVER);
 			description(entry.description, entry.type.value);
 
+			if (Main.window.input().isButtonPressed(MouseButton.LEFT)) {
+				ScreenRenderer.setColor(Colors.BUTTON_PRESSED);
+			}
+
 			if (Main.window.input().hasClicked()) {
 				PlayScreen.setInteractor(new BuildInteractor(entry.type, world));
 				this.close();
@@ -40,7 +45,7 @@ public class BuildScreen extends Screen {
 		ScreenRenderer.offset(0, 54);
 		ScreenRenderer.text(entry.name, 30);
 		ScreenRenderer.offset(-100, -180);
-		ScreenRenderer.setColor(0, 0, 0, 0);
+		ScreenRenderer.setColor(Colors.NONE);
 	}
 
 	private void description(String text, int value) {
@@ -56,7 +61,7 @@ public class BuildScreen extends Screen {
 		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
 
 		ScreenRenderer.centerAt(0, 0);
-		ScreenRenderer.setColor(0, 0, 0, 0);
+		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.setSprite(Sprites.BUILD);
 
 		text(0, 310, "SELECT A BUILDING", Alignment.CENTER);

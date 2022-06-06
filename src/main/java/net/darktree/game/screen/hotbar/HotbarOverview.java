@@ -28,8 +28,7 @@ public class HotbarOverview extends HotbarComponent {
 	public void draw(boolean focused, World world, Symbol symbol) {
 		Country country = world.getCountry(symbol);
 
-		int x = ScreenRenderer.ox;
-		int y = ScreenRenderer.oy;
+		ScreenRenderer.push();
 
 		// render resource labels
 		ScreenRenderer.offset(25, 35);
@@ -43,7 +42,9 @@ public class HotbarOverview extends HotbarComponent {
 			}
 		}
 
-		ScreenRenderer.setOffset(x + 16, y + 78);
+		ScreenRenderer.pop();
+		ScreenRenderer.offset(16, 78);
+
 		ScreenRenderer.setSprite(symbol.getSprite());
 		ScreenRenderer.box(80, 80);
 

@@ -7,6 +7,7 @@ public class Colors {
 
 	private static final ColorAtlas ATLAS = ColorAtlas.load("colors.json");
 
+	public static final Color NONE = ATLAS.getColor("none");
 	public static final Color BORDER = ATLAS.getColor("border");
 	public static final Color PATH = ATLAS.getColor("path");
 	public static final Color OVERLAY_REACHABLE = ATLAS.getColor("overlay_reachable");
