@@ -77,9 +77,9 @@ public class BuildScreen extends Screen {
 		}
 
 		ScreenRenderer.setOffset(650 - 300, -400 + 100);
-		ScreenRenderer.button("<", 1, 50, 50);
+		ScreenRenderer.button("<", 1, 50, 50, false);
 		ScreenRenderer.offset(44, 0);
-		ScreenRenderer.button(">", 1, 50, 50);
+		ScreenRenderer.button(">", 1, 50, 50, false);
 
 	}
 

@@ -32,13 +32,14 @@ public class Hotbar {
 			component.draw(focused, world, symbol);
 			String name = component.getName();
 
+			ScreenRenderer.setColor(Colors.NONE);
+
 			if (name != null) {
 				ScreenRenderer.setOffset(x + EXTEND / 2, HEIGHT - 40);
 				ScreenRenderer.setAlignment(Alignment.CENTER);
 				ScreenRenderer.text(name, 20);
 			}
 
-			ScreenRenderer.setColor(Colors.NONE);
 			ScreenRenderer.setAlignment(Alignment.LEFT);
 		}
 	}

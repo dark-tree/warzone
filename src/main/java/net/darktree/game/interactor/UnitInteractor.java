@@ -46,14 +46,14 @@ public class UnitInteractor extends Interactor {
 		Color c = Colors.ENTITY_SELECTION;
 
 		// TODO: make it better
-		Renderer.line(buffer, x + f, y + f, x + f, y + f + 0.25f, 0.03f, c.r, c.g, c.b, c.a);
-		Renderer.line(buffer, x + 1 - f, y + f, x + 1 - f, y + 0.25f + f, 0.03f, c.r, c.g, c.b, c.a);
-		Renderer.line(buffer, x + f, y + 1 - f, x + f, y + 0.75f - f, 0.03f, c.r, c.g, c.b, c.a);
-		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 1 - f, y + 0.75f - f, 0.03f, c.r, c.g, c.b, c.a);
-		Renderer.line(buffer, x + f, y + f, x + 0.25f + f, y + f, 0.03f, c.r, c.g, c.b, c.a);
-		Renderer.line(buffer, x + f, y + 1 - f, x + 0.25f + f, y + 1 - f, 0.03f, c.r, c.g, c.b, c.a);
-		Renderer.line(buffer, x + 1 - f, y + f, x + 0.75f - f, y + f, 0.03f, c.r, c.g, c.b, c.a);
-		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 0.75f - f, y + 1 - f, 0.03f, c.r, c.g, c.b, c.a);
+		Renderer.line(buffer, x + f, y + f, x + f, y + f + 0.25f, 0.03f, c);
+		Renderer.line(buffer, x + 1 - f, y + f, x + 1 - f, y + 0.25f + f, 0.03f, c);
+		Renderer.line(buffer, x + f, y + 1 - f, x + f, y + 0.75f - f, 0.03f, c);
+		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 1 - f, y + 0.75f - f, 0.03f, c);
+		Renderer.line(buffer, x + f, y + f, x + 0.25f + f, y + f, 0.03f, c);
+		Renderer.line(buffer, x + f, y + 1 - f, x + 0.25f + f, y + 1 - f, 0.03f, c);
+		Renderer.line(buffer, x + 1 - f, y + f, x + 0.75f - f, y + f, 0.03f, c);
+		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 0.75f - f, y + 1 - f, 0.03f, c);
 
 		x = Main.window.input().getMouseMapX(world.getView());
 		y = Main.window.input().getMouseMapY(world.getView());

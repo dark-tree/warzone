@@ -29,7 +29,7 @@ public class ScreenRenderer {
 
 	private static final Pipeline quads = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.GUI, Sprites.ATLAS, pipeline -> {}, true);
 
-	private static float psx, psy;
+	private static float scale, psx, psy;
 	private static float x, y;
 	private static int ox, oy;
 	private static float cr, cg, cb, ca;
@@ -55,7 +55,7 @@ public class ScreenRenderer {
 	 * Flush all geometry for rendering, and update screen size
 	 */
 	public static void flush() {
-		float scale = INPUT.guiScale;
+		scale = INPUT.guiScale;
 		psx = scale / Window.INSTANCE.width();
 		psy = scale / Window.INSTANCE.height();
 
@@ -198,6 +198,16 @@ public class ScreenRenderer {
 	}
 
 	/**
+	 * Render a line starting at current offset and pointing along the given vector
+	 */
+	public static void line(float width, int vx, int vy) {
+		float sx = x + ox * psx;
+		float sy = y + oy * psy;
+
+		Renderer.line(quads.buffer, sx, sy, sx + vx * psx, sy + vy * psy, width * scale, cr, cg, cb, ca);
+	}
+
+	/**
 	 * Render text
 	 */
 	public static void text(String text, float size) {
@@ -217,8 +227,8 @@ public class ScreenRenderer {
 		return focus && !(mx > bx + right * psx || my > by + top * psy);
 	}
 
-	private static boolean button(int width, int height) {
-		boolean hover = isMouseOver(width, height);
+	private static boolean button(int width, int height, boolean active) {
+		boolean hover = active && isMouseOver(width, height);
 
 		if (hover) {
 			setColor(Colors.BUTTON_HOVER);
@@ -227,15 +237,15 @@ public class ScreenRenderer {
 				setColor(Colors.BUTTON_PRESSED);
 			}
 		}else{
-			setColor(Colors.BUTTON_DEFAULT);
+			setColor(active ? Colors.BUTTON_DEFAULT : Colors.BUTTON_INACTIVE);
 		}
 
 		return hover && Main.window.input().hasClicked();
 	}
 
-	public static boolean button(String text, int count, int size, int height) {
+	public static boolean button(String text, int count, int size, int height, boolean active) {
 		int width = height / 2;
-		boolean status = button(width * (count + 2), height);
+		boolean status = button(width * (count + 2), height, active);
 
 		int sx = ox;
 		Alignment alignment = currentAlignment;
@@ -265,8 +275,8 @@ public class ScreenRenderer {
 		return status;
 	}
 
-	public static boolean button(Sprite sprite, int width, int height) {
-		boolean status = button(width, height);
+	public static boolean button(Sprite sprite, int width, int height, boolean active) {
+		boolean status = button(width, height, active);
 
 		ScreenRenderer.setSprite(sprite);
 		ScreenRenderer.box(width, height);

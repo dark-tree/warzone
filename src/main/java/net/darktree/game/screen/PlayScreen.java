@@ -69,7 +69,7 @@ public class PlayScreen extends Screen {
 			}
 
 			ScreenRenderer.offset(300, 20);
-			if (ScreenRenderer.button("END", 2, 38, 80)) {
+			if (ScreenRenderer.button("END", 2, 38, 80, true)) {
 				world.nextPlayerTurn();
 			}
 
@@ -129,8 +129,8 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
-			//interactor = new BuildInteractor(Tiles.BUILD, world);
-			ScreenStack.open(new BuildScreen(world));
+//			ScreenStack.open(new BuildScreen(world));
+			ScreenStack.open(new ProduceScreen());
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {

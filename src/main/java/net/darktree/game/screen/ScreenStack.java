@@ -38,6 +38,7 @@ public class ScreenStack {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T extends Screen> void asInstance(Class<T> clazz, Consumer<T> consumer) {
 		for (Screen screen : stack) {
 			if (clazz.isInstance(screen)) {

@@ -27,6 +27,8 @@ public class Sprites {
 	public final static Sprite BUTTON_RIGHT = getSprite("gui/button/right.png");
 	public final static Sprite BUTTON_BUILDING = getSprite("gui/button/building.png");
 	public final static Sprite BUTTON_DEMOLISH = getSprite("gui/button/demolish.png");
+	public final static Sprite ICON_PLUS = getSprite("gui/button/plus.png");
+	public final static Sprite ICON_MINUS = getSprite("gui/button/minus.png");
 	public final static Sprite FRAME = getSprite("gui/button/frame.png");
 
 	public final static Sprite ICON_WALL_1 = getSprite("gui/wall.png");

@@ -1,5 +1,6 @@
 package net.darktree.game.screen.hotbar;
 
+import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.ScreenRenderer;
@@ -20,12 +21,12 @@ public class HotbarConstruction extends HotbarComponent {
 		drawPicker();
 
 		ScreenRenderer.offset(417, 52);
-		if (ScreenRenderer.button(Sprites.BUTTON_BUILDING, 66, 66)) {
+		if (ScreenRenderer.button(Sprites.BUTTON_BUILDING, 66, 66, true)) {
 			ScreenStack.open(new BuildScreen(world));
 		}
 
 		ScreenRenderer.offset(96, 0);
-		if (ScreenRenderer.button(Sprites.BUTTON_DEMOLISH, 66, 66)) {
+		if (ScreenRenderer.button(Sprites.BUTTON_DEMOLISH, 66, 66, false)) {
 			// TODO: demolish interactor
 		}
 	}
@@ -37,17 +38,20 @@ public class HotbarConstruction extends HotbarComponent {
 		ScreenRenderer.setAlignment(Alignment.RIGHT);
 		ScreenRenderer.text("<", 50);
 
-		ScreenRenderer.button(Sprites.FRAME, 58, 58);
+		ScreenRenderer.button(Sprites.FRAME, 58, 58, false);
+		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.setSprite(Sprites.ICON_WALL_1);
 		ScreenRenderer.box(58, 58);
 
 		ScreenRenderer.offset(92, -4);
-		ScreenRenderer.button(Sprites.FRAME, 66, 66);
+		ScreenRenderer.button(Sprites.FRAME, 66, 66, false);
+		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.setSprite(Sprites.ICON_WALL_2);
 		ScreenRenderer.box(66, 66);
 
 		ScreenRenderer.offset(100, 4);
-		ScreenRenderer.button(Sprites.FRAME, 58, 58);
+		ScreenRenderer.button(Sprites.FRAME, 58, 58, false);
+		ScreenRenderer.setColor(Colors.NONE);
 		//ScreenRenderer.setSprite(Sprites.ICON_WALL_1);
 		//ScreenRenderer.box(58, 58);
 

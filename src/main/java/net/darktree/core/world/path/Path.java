@@ -57,7 +57,7 @@ public class Path {
 		for (int i = 1; i < positions.size(); i ++) {
 			TilePos pos = positions.get(i);
 
-			Renderer.line(buffer, prev.x + 0.5f, prev.y + 0.5f, pos.x + 0.5f, pos.y + 0.5f, 0.05f, c.r, c.g, c.b, c.a);
+			Renderer.line(buffer, prev.x + 0.5f, prev.y + 0.5f, pos.x + 0.5f, pos.y + 0.5f, 0.05f, c);
 
 			drawBox(buffer, pos, c);
 

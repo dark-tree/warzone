@@ -58,6 +58,10 @@ public class Renderer {
 		}
 	}
 
+	public static void line(VertexBuffer buffer, float x1, float y1, float x2, float y2, float w, Color color) {
+		line(buffer, x1, y1, x2, y2, w, color.r, color.g, color.b, color.a);
+	}
+
 	public static void line(VertexBuffer buffer, float x1, float y1, float x2, float y2, float w, float cr, float cg, float cb, float ca) {
 		float a = -1/((y1 - y2)/(x1 - x2));
 		float d = (float) Math.sqrt((4 * w * w) / (1 + a * a));

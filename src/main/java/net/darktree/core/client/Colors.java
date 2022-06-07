@@ -16,6 +16,7 @@ public class Colors {
 	public static final Color BUTTON_HOVER = ATLAS.getColor("button_hover");
 	public static final Color BUTTON_PRESSED = ATLAS.getColor("button_pressed");
 	public static final Color BUTTON_DEFAULT = ATLAS.getColor("button_default");
+	public static final Color BUTTON_INACTIVE = ATLAS.getColor("button_inactive");
 	public static final Color SPOT_VALID = ATLAS.getColor("spot_valid");
 	public static final Color SPOT_INVALID = ATLAS.getColor("spot_invalid");
 	public static final Color ENTITY_SELECTION = ATLAS.getColor("entity_selection");
