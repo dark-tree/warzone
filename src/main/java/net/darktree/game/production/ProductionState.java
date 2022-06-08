@@ -1,5 +1,8 @@
 package net.darktree.game.production;
 
+import net.darktree.core.world.World;
+import net.darktree.game.country.Symbol;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,14 @@ public class ProductionState {
 
 	public String getCapacityString() {
 		return capacity == -1 ? "UNLIMITED" : getQuantity() + "/" + capacity;
+	}
+
+	public void apply(World world, Symbol symbol) {
+		recipes.forEach(recipe -> {
+			if (recipe.quantity > 0) {
+				recipe.apply(this, world, symbol);
+			}
+		});
 	}
 
 }

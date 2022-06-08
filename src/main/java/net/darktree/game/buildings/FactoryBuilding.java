@@ -1,22 +1,17 @@
 package net.darktree.game.buildings;
 
-import net.darktree.core.event.ClickEvent;
 import net.darktree.core.util.BuildingType;
 import net.darktree.core.world.World;
-import net.darktree.game.screen.ProduceScreen;
-import net.darktree.game.screen.ScreenStack;
+import net.darktree.game.production.AmmoRecipe;
+import net.darktree.game.production.ArmorRecipe;
 
-public class FactoryBuilding extends Building {
+public class FactoryBuilding extends ProducingBuilding {
 
 	public FactoryBuilding(World world, int x, int y, BuildingType type) {
-		super(world, x, y, type);
-	}
+		super(world, x, y, type, 2);
 
-	@Override
-	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (event.isPressed()) {
-			ScreenStack.open(new ProduceScreen());
-		}
+		production.register(new AmmoRecipe());
+		production.register(new ArmorRecipe());
 	}
 
 }

@@ -129,8 +129,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
-//			ScreenStack.open(new BuildScreen(world));
-			ScreenStack.open(new ProduceScreen());
+			ScreenStack.open(new BuildScreen(world));
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {

@@ -30,7 +30,7 @@ public abstract class Recipe {
 	/**
 	 * Check if the required resources is available
 	 */
-	public boolean verify(ProductionState state, World world, Symbol symbol) {
+	public boolean canProduce(ProductionState state, World world, Symbol symbol) {
 		return state.canProduce();
 	}
 

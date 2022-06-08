@@ -6,19 +6,22 @@ import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.ScreenRenderer;
-import net.darktree.core.world.WorldHolder;
-import net.darktree.game.production.AmmoRecipe;
-import net.darktree.game.production.ArmorRecipe;
+import net.darktree.core.world.World;
+import net.darktree.game.country.Symbol;
 import net.darktree.game.production.ProductionState;
+import net.darktree.game.production.Recipe;
 import org.lwjgl.glfw.GLFW;
 
 public class ProduceScreen extends Screen {
-	static ProductionState state;
 
-	static {
-		state = new ProductionState(2);
-		state.register(new AmmoRecipe());
-		state.register(new ArmorRecipe());
+	private final ProductionState state;
+	private final World world;
+	private final Symbol symbol;
+
+	public ProduceScreen(ProductionState state, World world, Symbol symbol) {
+		this.state = state;
+		this.world = world;
+		this.symbol = symbol;
 	}
 
 	@Override
@@ -38,11 +41,11 @@ public class ProduceScreen extends Screen {
 		box(-650, -400, 1300, 800);
 
 		ScreenRenderer.push();
-
 		ScreenRenderer.setAlignment(Alignment.LEFT);
 		ScreenRenderer.setColor(Colors.BORDER);
 		ScreenRenderer.offset(100, 600);
 
+		// table heading
 		ScreenRenderer.push();
 		ScreenRenderer.text("RESOURCE", 30);
 		ScreenRenderer.offset(400, 0);
@@ -50,11 +53,10 @@ public class ProduceScreen extends Screen {
 		ScreenRenderer.offset(200, 0);
 		ScreenRenderer.text("QUANTITY", 30);
 		ScreenRenderer.pop();
+
 		ScreenRenderer.offset(0, -6);
 
-		state.getRecipes().forEach(recipe -> {
-			boolean valid = recipe.verify(state, WorldHolder.world, WorldHolder.world.getCurrentSymbol());
-
+		for (Recipe recipe : state.getRecipes()) {
 			ScreenRenderer.line(0.005f, 1300 - 200, 0);
 
 			ScreenRenderer.offset(0, -40);
@@ -64,23 +66,23 @@ public class ProduceScreen extends Screen {
 			ScreenRenderer.text(recipe.getCostString(), 30);
 			ScreenRenderer.offset(200, 0);
 			ScreenRenderer.text("" + recipe.getQuantity(), 30);
+
 			ScreenRenderer.offset(60, 0);
-			ScreenRenderer.setColor(Colors.NONE);
-			ScreenRenderer.setColor(0.5f, 0.5f, 0.5f, 0.2f);
 			if (ScreenRenderer.button(Sprites.ICON_MINUS, 35, 35, recipe.getQuantity() > 0)) {
-				recipe.undo(state, WorldHolder.world, WorldHolder.world.getCurrentSymbol());
+				recipe.undo(state, world, symbol);
 			}
+
 			ScreenRenderer.offset(60, 0);
-			if (ScreenRenderer.button(Sprites.ICON_PLUS, 35, 35, valid)) {
-				recipe.redo(state, WorldHolder.world, WorldHolder.world.getCurrentSymbol());
+			if (ScreenRenderer.button(Sprites.ICON_PLUS, 35, 35, recipe.canProduce(state, world, symbol))) {
+				recipe.redo(state, world, symbol);
 			}
+
 			ScreenRenderer.pop();
 			ScreenRenderer.offset(0, -6);
 			ScreenRenderer.setColor(Colors.BORDER);
-		});
+		}
 
 		ScreenRenderer.line(0.005f, 1300 - 200, 0);
-
 		ScreenRenderer.pop();
 
 		ScreenRenderer.offset(100, 100);

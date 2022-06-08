@@ -12,8 +12,8 @@ public class AmmoRecipe extends Recipe {
 	/**
 	 * Check if the required resources is available
 	 */
-	public boolean verify(ProductionState state, World world, Symbol symbol) {
-		return super.verify(state, world, symbol) && world.getCountry(symbol).getTotalMaterials() >= 1;
+	public boolean canProduce(ProductionState state, World world, Symbol symbol) {
+		return super.canProduce(state, world, symbol) && world.getCountry(symbol).getTotalMaterials() >= 1;
 	}
 
 	/**
@@ -36,8 +36,8 @@ public class AmmoRecipe extends Recipe {
 	 * Add the output resource into the target
 	 */
 	public void apply(ProductionState state, World world, Symbol symbol) {
+		world.getCountry(symbol).ammo += quantity;
 		quantity = 0;
-		world.getCountry(symbol).ammo ++;
 	}
 
 }
