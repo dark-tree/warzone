@@ -70,7 +70,7 @@ public class Renderer {
 			float uy1 = y1 - w;
 			float uy2 = y2 + w;
 
-			quad(buffer, x1, uy1, x2, uy1, x2, uy2, x1, uy2, Sprites.NULL, cr, cg, cb, ca);
+			quad(buffer, x1, uy1, x2, uy1, x2, uy2, x1, uy2, Sprites.NONE, cr, cg, cb, ca);
 			return;
 		}
 
@@ -88,7 +88,7 @@ public class Renderer {
 		float by1 = a * (bx1 - x2) + y2;
 		float by2 = a * (bx2 - x2) + y2;
 
-		quad(buffer, ax1, ay1, bx1, by1, bx2, by2, ax2, ay2, Sprites.NULL, cr, cg, cb, ca);
+		quad(buffer, ax1, ay1, bx1, by1, bx2, by2, ax2, ay2, Sprites.NONE, cr, cg, cb, ca);
 	}
 
 	/**

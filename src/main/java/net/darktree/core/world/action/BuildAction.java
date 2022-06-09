@@ -1,5 +1,6 @@
 package net.darktree.core.world.action;
 
+import net.darktree.core.client.Sounds;
 import net.darktree.core.util.BuildingType;
 import net.darktree.core.world.World;
 import net.darktree.core.world.tile.TilePos;
@@ -39,6 +40,7 @@ public class BuildAction extends Action {
 		building = type.construct(world, x, y);
 		world.placeBuilding(x, y, building);
 		world.getCountry(symbol).addMaterials(-type.value);
+		Sounds.STAMP.play(x, y);
 	}
 
 	@Override

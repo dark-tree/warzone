@@ -1,5 +1,6 @@
 package net.darktree.core.world.action;
 
+import net.darktree.core.client.Sounds;
 import net.darktree.core.world.World;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.entities.UnitEntity;
@@ -23,6 +24,7 @@ public class ColonizeAction extends Action {
 	void redo(World world, Symbol symbol) {
 		world.getCountry(symbol).colonized = true;
 		entity.colonize(dice);
+		Sounds.DICE_ROLL.play(entity).setVolume(2);
 
 		// colonization can not be undone or modified
 		world.getManager().pointOfNoReturn(symbol);

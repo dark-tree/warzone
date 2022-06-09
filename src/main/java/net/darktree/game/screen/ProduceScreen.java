@@ -28,7 +28,7 @@ public class ProduceScreen extends Screen {
 	public void draw(boolean focused) {
 
 		ScreenRenderer.centerAt(-1, -1);
-		ScreenRenderer.setSprite(Sprites.NULL);
+		ScreenRenderer.setSprite(Sprites.NONE);
 		ScreenRenderer.setColor(Colors.SCREEN_SEPARATOR);
 		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
 

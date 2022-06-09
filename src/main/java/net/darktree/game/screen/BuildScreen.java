@@ -23,6 +23,8 @@ public class BuildScreen extends Screen {
 	}
 
 	private void option(BuildingConfigRegistry.Config entry, World world) {
+		boolean verify = entry.type.value <= world.getCountry(world.getCurrentSymbol()).getTotalMaterials();
+
 		if (ScreenRenderer.isMouseOver(400, 100)) {
 			ScreenRenderer.setColor(Colors.BUTTON_HOVER);
 			description(entry.description, entry.type.value);
@@ -31,7 +33,7 @@ public class BuildScreen extends Screen {
 				ScreenRenderer.setColor(Colors.BUTTON_PRESSED);
 			}
 
-			if (Main.window.input().hasClicked()) {
+			if (verify && Main.window.input().hasClicked()) {
 				PlayScreen.setInteractor(new BuildInteractor(entry.type, world));
 				this.close();
 			}
@@ -41,7 +43,11 @@ public class BuildScreen extends Screen {
 		ScreenRenderer.setSprite(entry.type.sprite);
 		ScreenRenderer.box(100, 100);
 		ScreenRenderer.offset(100, 6);
+		if (!verify) {
+			ScreenRenderer.setColor(Colors.SPOT_INVALID);
+		}
 		ScreenRenderer.text(entry.type.value + "m", 30);
+		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.offset(0, 54);
 		ScreenRenderer.text(entry.name, 30);
 		ScreenRenderer.offset(-100, -180);
@@ -56,7 +62,7 @@ public class BuildScreen extends Screen {
 	public void draw(boolean focused) {
 
 		ScreenRenderer.centerAt(-1, -1);
-		ScreenRenderer.setSprite(Sprites.NULL);
+		ScreenRenderer.setSprite(Sprites.NONE);
 		ScreenRenderer.setColor(Colors.SCREEN_SEPARATOR);
 		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
 

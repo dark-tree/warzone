@@ -1,5 +1,6 @@
 package net.darktree.core.world.action;
 
+import net.darktree.core.client.Sounds;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.MovingEntity;
 import net.darktree.core.world.path.Path;
@@ -30,4 +31,8 @@ public class MoveAction extends Action {
 		entity.revert();
 	}
 
+	@Override
+	void common(World world, Symbol symbol) {
+		Sounds.DRAW_PATH.play(entity);
+	}
 }

@@ -1,5 +1,6 @@
 package net.darktree.core.world.action;
 
+import net.darktree.core.client.Sounds;
 import net.darktree.core.world.World;
 import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
@@ -26,6 +27,11 @@ public class ToggleArmorAction extends ToggleableAction {
 	@Override
 	void undo(World world, Symbol symbol) {
 		toggle(world.getCountry(symbol));
+	}
+
+	@Override
+	void common(World world, Symbol symbol) {
+		Sounds.EQUIP.play(entity);
 	}
 
 	private void toggle(Country country) {

@@ -2,7 +2,6 @@ package net.darktree.game.interactor;
 
 import net.darktree.Main;
 import net.darktree.core.client.Colors;
-import net.darktree.core.client.Sounds;
 import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
@@ -81,8 +80,6 @@ public class UnitInteractor extends Interactor {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
 			if (world.getManager().apply(new ColonizeAction(entity, MathHelper.nextRandomDice()))) {
-				Sounds.DICE_ROLL.play(entity).setVolume(2);
-
 				if (entity.removed) {
 					closed = true;
 				}

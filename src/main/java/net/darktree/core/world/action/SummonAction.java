@@ -1,5 +1,6 @@
 package net.darktree.core.world.action;
 
+import net.darktree.core.client.Sounds;
 import net.darktree.core.world.World;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.tile.TilePos;
@@ -32,6 +33,7 @@ public class SummonAction extends Action {
 		entity = (UnitEntity) world.addEntity(starting.x, starting.y, Tiles.TEST);
 		entity.follow(path);
 		building.summoned = true;
+		Sounds.DRAW_THING.play(starting);
 	}
 
 	@Override

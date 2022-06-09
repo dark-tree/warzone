@@ -3,6 +3,7 @@ package net.darktree.core.client.sound;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.tile.TilePos;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.stb.STBVorbis;
 import org.lwjgl.system.MemoryStack;
@@ -83,6 +84,10 @@ public class AudioBuffer {
 
 	public AudioSource play(Entity entity) {
 		return play(entity.getX(), entity.getX());
+	}
+
+	public AudioSource play(TilePos pos) {
+		return play(pos.x, pos.y);
 	}
 
 }

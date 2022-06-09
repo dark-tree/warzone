@@ -8,7 +8,7 @@ public class Sprites {
 
 	public final static Atlas ATLAS = Atlas.stitchedOf("sprites");
 	public final static Sprite MISSINGNO = ATLAS.getSprite("missingno.png");
-	public final static Sprite NULL = ATLAS.getSprite("null.png");
+	public final static Sprite NONE = ATLAS.getSprite("none.png");
 
 	public static Sprite getSprite(String identifier) {
 		try {

@@ -34,6 +34,7 @@ public class ActionManager {
 
 			actions.push(action);
 			action.redo(this.world, symbol);
+			action.common(this.world, symbol);
 			return true;
 		}
 
@@ -48,7 +49,9 @@ public class ActionManager {
 		Stack<Action> list = tasks.get(symbol);
 
 		if (!list.isEmpty()) {
-			list.pop().undo(this.world, symbol);
+			Action action = list.pop();
+			action.undo(this.world, symbol);
+			action.common(this.world, symbol);
 		}
 	}
 

@@ -1,10 +1,7 @@
 package net.darktree.core.client.render;
 
 import net.darktree.Main;
-import net.darktree.core.client.Buffers;
-import net.darktree.core.client.Colors;
-import net.darktree.core.client.Shaders;
-import net.darktree.core.client.Sprites;
+import net.darktree.core.client.*;
 import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
@@ -240,7 +237,13 @@ public class ScreenRenderer {
 			setColor(active ? Colors.BUTTON_DEFAULT : Colors.BUTTON_INACTIVE);
 		}
 
-		return hover && Main.window.input().hasClicked();
+		boolean clicked = hover && Main.window.input().hasClicked();
+
+		if (clicked) {
+			Sounds.PEN_CLICK.play();
+		}
+
+		return clicked;
 	}
 
 	public static boolean button(String text, int count, int size, int height, boolean active) {

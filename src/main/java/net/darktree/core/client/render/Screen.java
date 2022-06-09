@@ -1,5 +1,7 @@
 package net.darktree.core.client.render;
 
+import net.darktree.core.client.Sounds;
+
 public abstract class Screen {
 
 	private boolean closed;
@@ -45,6 +47,7 @@ public abstract class Screen {
 
 	public void close() {
 		this.closed = true;
+		Sounds.PEN_CLOSE.play();
 	}
 
 	public boolean isClosed() {
