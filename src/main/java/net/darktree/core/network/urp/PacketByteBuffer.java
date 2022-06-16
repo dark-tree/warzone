@@ -13,7 +13,7 @@ public class PacketByteBuffer {
 	private static final ByteBuffer packet = allocateOrderedBuffer(PACKET_MAX);
 
 	private static ByteBuffer allocateOrderedBuffer(int length) {
-		ByteBuffer buffer = ByteBuffer.allocate(PACKET_MAX);
+		ByteBuffer buffer = ByteBuffer.allocate(length);
 		buffer.order(ByteOrder.nativeOrder());
 		return buffer;
 	}

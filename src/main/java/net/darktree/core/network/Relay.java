@@ -27,7 +27,7 @@ public class Relay {
 			int uid = buffer.getInt();
 			int version = buffer.getInt();
 
-			Logger.info("Connection established with '" + hostname + ":" + port + "', uid=" + uid + " urp=" + version);
+			Logger.info("Connection with '" + hostname + ":" + port + "' established, as user #" + uid + ", using URP v" + version);
 
 			if (version != 1) {
 				throw new RuntimeException("Unsupported URP version: " + version);
@@ -58,6 +58,7 @@ public class Relay {
 		});
 
 		thread.setName("NetworkReaderThread");
+		thread.start();
 	}
 
 	public boolean isOpen() {
