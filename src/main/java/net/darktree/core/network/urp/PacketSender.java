@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 public class PacketSender {
 
 	private final OutputStream stream;
-	private final ByteBuffer buffer = PacketByteBuffer.getInstance();
+	private final ByteBuffer buffer = PacketByteBuffer.getPacketBuffer();
 
 	public PacketSender(OutputStream stream, int type) {
 		this.stream = stream;

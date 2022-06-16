@@ -17,7 +17,7 @@ public abstract class Packet {
 	 * or {@link Relay#broadcastMessage(ByteBuffer)}
 	 */
 	protected final ByteBuffer getBuffer() {
-		ByteBuffer buffer = PacketByteBuffer.getInstance();
+		ByteBuffer buffer = PacketByteBuffer.getMessageBuffer();
 		buffer.putInt(Registries.PACKETS.identifierOf(this));
 		return buffer;
 	}
