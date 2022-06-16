@@ -1,4 +1,4 @@
-package net.darktree.core.network;
+package net.darktree.core.network.urp;
 
 import java.io.IOException;
 import java.io.InputStream;
