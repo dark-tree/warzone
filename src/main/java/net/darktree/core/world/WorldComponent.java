@@ -21,12 +21,21 @@ public interface WorldComponent extends WorldListener {
 	/**
 	 * Called when a component is clicked
 	 */
-	void onInteract(World world, int x, int y, ClickEvent event);
+	default void onInteract(World world, int x, int y, ClickEvent event) {
+
+	}
 
 	/**
 	 * Called right before a component is removed
 	 */
 	default void onRemoved(World world, int x, int y, TileVariant state) {
+
+	}
+
+	/**
+	 * Called right after a component is added
+	 */
+	default void onAdded(World world, int x, int y, TileVariant state) {
 
 	}
 

@@ -10,7 +10,10 @@ import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.terrain.ControlFinder;
 import net.darktree.core.world.terrain.EnclaveFinder;
-import net.darktree.core.world.tile.*;
+import net.darktree.core.world.tile.TileInstance;
+import net.darktree.core.world.tile.TilePos;
+import net.darktree.core.world.tile.TileState;
+import net.darktree.core.world.tile.TileStateConsumer;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.core.world.view.WorldEntityView;
 import net.darktree.game.buildings.Building;
@@ -20,7 +23,9 @@ import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -235,27 +240,6 @@ public class World implements NbtSerializable, WorldEntityView {
 						setTileOwner(pos.x, pos.y, symbol);
 					});
 				}
-			});
-
-			Map<Symbol, Integer> incomes = new IdentityHashMap<>();
-
-			for (int x = 0; x < width; x ++) {
-				for (int y = 0; y < height; y ++) {
-					TileState state = this.tiles[x][y];
-
-					if (state.getTile() instanceof MaterialProvider provider) {
-						Symbol symbol = state.getOwner();
-
-						if (control.canControl(x, y) && symbol != Symbol.NONE) {
-							int current = incomes.getOrDefault(symbol, 0);
-							incomes.put(symbol, current + provider.getIncome());
-						}
-					}
-				}
-			}
-
-			incomes.forEach((symbol, income) -> {
-				getCountry(symbol).setIncome(income);
 			});
 		}
 

@@ -2,18 +2,24 @@ package net.darktree.game.country;
 
 import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
+import net.darktree.core.util.Pair;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldListener;
+import net.darktree.core.world.tile.MaterialProvider;
+import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.buildings.Building;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Country implements NbtSerializable, WorldListener {
 
 	private final List<Building> buildings = new ArrayList<>();
+	private final Set<Pair<TilePos, MaterialProvider>> mines = new HashSet<>();
 	private final Symbol symbol;
 	public boolean colonized = false;
 
@@ -76,7 +82,14 @@ public class Country implements NbtSerializable, WorldListener {
 		armor += i;
 	}
 
-	public void setIncome(Integer income) {
-		this.income = income;
+	public void removeMine(MaterialProvider provider, TilePos pos) {
+		mines.remove(Pair.of(pos, provider));
+		this.income -= provider.getIncome();
 	}
+
+	public void addMine(MaterialProvider provider, TilePos pos) {
+		mines.add(Pair.of(pos, provider));
+		this.income += provider.getIncome();
+	}
+
 }

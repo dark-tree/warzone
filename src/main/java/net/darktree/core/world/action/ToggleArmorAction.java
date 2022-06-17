@@ -16,7 +16,7 @@ public class ToggleArmorAction extends ToggleableAction {
 
 	@Override
 	boolean verify(World world, Symbol symbol) {
-		return entity.armored || world.getCountry(symbol).armor > 0;
+		return entity.inHomeland() && (entity.armored || world.getCountry(symbol).armor > 0);
 	}
 
 	@Override

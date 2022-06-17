@@ -34,7 +34,7 @@ public class UnitEntity extends MovingEntity {
 	}
 
 	public void colonize(int dice) {
-		Pattern.nextColonizationPattern(dice).iterate(world, tx, ty, pos -> {
+		Pattern.nextColonizationPattern(dice).iterate(world, getX(), getY(), pos -> {
 			world.setTileOwner(pos.x, pos.y, this.symbol);
 		});
 
@@ -45,6 +45,10 @@ public class UnitEntity extends MovingEntity {
 				removed = true;
 			}
 		}
+	}
+
+	public boolean inHomeland() {
+		return world.canControl(getX(), getY(), symbol);
 	}
 
 	@Override
