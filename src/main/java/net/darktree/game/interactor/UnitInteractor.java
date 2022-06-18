@@ -2,10 +2,8 @@ package net.darktree.game.interactor;
 
 import net.darktree.Main;
 import net.darktree.core.client.Colors;
-import net.darktree.core.client.render.color.Color;
-import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
-import net.darktree.core.util.MathHelper;
+import net.darktree.core.util.math.MathHelper;
 import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
@@ -16,6 +14,7 @@ import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.path.Pathfinder;
 import net.darktree.game.entities.UnitEntity;
+import net.darktree.game.screen.PlayScreen;
 import org.lwjgl.glfw.GLFW;
 
 public class UnitInteractor extends Interactor {
@@ -38,24 +37,10 @@ public class UnitInteractor extends Interactor {
 
 	@Override
 	public void draw(VertexBuffer buffer) {
-		int x = entity.getX();
-		int y = entity.getY();
-		float f = (float) (Math.sin(Main.window.profiler.getFrameCount() / 20f) + 1) / 60 + 0.04f;
+		entity.drawSelection(buffer, Colors.ENTITY_SELECTION);
 
-		Color c = Colors.ENTITY_SELECTION;
-
-		// TODO: make it better
-		Renderer.line(buffer, x + f, y + f, x + f, y + f + 0.25f, 0.03f, c);
-		Renderer.line(buffer, x + 1 - f, y + f, x + 1 - f, y + 0.25f + f, 0.03f, c);
-		Renderer.line(buffer, x + f, y + 1 - f, x + f, y + 0.75f - f, 0.03f, c);
-		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 1 - f, y + 0.75f - f, 0.03f, c);
-		Renderer.line(buffer, x + f, y + f, x + 0.25f + f, y + f, 0.03f, c);
-		Renderer.line(buffer, x + f, y + 1 - f, x + 0.25f + f, y + 1 - f, 0.03f, c);
-		Renderer.line(buffer, x + 1 - f, y + f, x + 0.75f - f, y + f, 0.03f, c);
-		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 0.75f - f, y + 1 - f, 0.03f, c);
-
-		x = Main.window.input().getMouseMapX(world.getView());
-		y = Main.window.input().getMouseMapY(world.getView());
+		int x = Main.window.input().getMouseMapX(world.getView());
+		int y = Main.window.input().getMouseMapY(world.getView());
 
 		if (pathfinder != null && world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
 			pathfinder.getPathTo(x, y).draw(WorldHolder.pipeline.buffer);
@@ -88,6 +73,10 @@ public class UnitInteractor extends Interactor {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_Z) {
 			world.getManager().apply(new ToggleArmorAction(entity));
+		}
+
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_A && !entity.hasMoved()) {
+			PlayScreen.setInteractor(new UnitAttackInteractor(entity, world));
 		}
 	}
 

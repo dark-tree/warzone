@@ -55,4 +55,14 @@ public class MaterialMineTile extends Tile implements MaterialProvider {
 		}
 	}
 
+	@Override
+	public boolean isDeconstructable(World world, int x, int y) {
+		return true;
+	}
+
+	@Override
+	public void deconstruct(World world, int x, int y) {
+		world.getManager().apply(new ToggleMineAction(x, y));
+	}
+
 }

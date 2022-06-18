@@ -3,6 +3,7 @@ package net.darktree.core.world.view;
 import net.darktree.core.util.Type;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.tile.TilePos;
 
 import java.util.List;
 
@@ -19,6 +20,10 @@ public interface WorldEntityView {
 
 	default Entity getEntity(int x, int y) {
 		return getEntities().stream().filter(entity -> entity.isAt(x, y)).findFirst().orElse(null);
+	}
+
+	default Entity getEntity(TilePos pos) {
+		return getEntity(pos.x, pos.y);
 	}
 
 	List<Entity> getEntities();

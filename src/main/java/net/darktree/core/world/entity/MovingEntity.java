@@ -84,6 +84,10 @@ public class MovingEntity extends Entity {
 		return moved;
 	}
 
+	public void setAttacked(boolean attacked) {
+		moved = attacked;
+	}
+
 	@Override
 	public int getX() {
 		return path != null ? path.getEnd().x : tx;

@@ -1,6 +1,7 @@
 package net.darktree.game.tiles;
 
 import net.darktree.core.event.ClickEvent;
+import net.darktree.core.util.Direction;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.ToggleMineAction;
 import net.darktree.core.world.tile.Tile;
@@ -18,4 +19,10 @@ public class MaterialOreTile extends Tile {
 	public boolean canPathfindOnto(World world, int x, int y) {
 		return false;
 	}
+
+	@Override
+	public boolean canPenetrate(World world, int x, int y, Direction vector) {
+		return true;
+	}
+
 }
