@@ -38,6 +38,16 @@ public class Pattern {
 		this.offsets = offsets;
 	}
 
+	public List<TilePos> list(World world, int ox, int oy, boolean required) {
+		List<TilePos> tiles = new ArrayList<>();
+
+		if (!iterate(world, ox, oy, tiles::add) && required) {
+			throw new RuntimeException("The pattern did not match perfectly!");
+		}
+
+		return tiles;
+	}
+
 	public boolean iterate(World world, int ox, int oy, Consumer<TilePos> consumer) {
 		boolean perfect = true;
 
@@ -53,14 +63,8 @@ public class Pattern {
 		return perfect;
 	}
 
-	public List<TilePos> list(World world, int ox, int oy, boolean required) {
-		List<TilePos> tiles = new ArrayList<>();
-
-		if (required && !iterate(world, ox, oy, tiles::add)) {
-			throw new RuntimeException("The pattern did not match perfectly!");
-		}
-
-		return tiles;
+	public PlacedPattern place(World world, int x, int y) {
+		return new PlacedPattern(world, x, y, this);
 	}
 
 	public static Pattern nextColonizationPattern(int dice) {

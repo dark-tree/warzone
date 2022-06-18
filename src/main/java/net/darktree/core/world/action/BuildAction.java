@@ -45,7 +45,7 @@ public class BuildAction extends Action {
 
 	@Override
 	void undo(World world, Symbol symbol) {
-		building.removed();
+		building.remove();
 		world.getCountry(symbol).addMaterials(type.value);
 	}
 

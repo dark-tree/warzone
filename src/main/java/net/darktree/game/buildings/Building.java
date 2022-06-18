@@ -11,6 +11,7 @@ import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldComponent;
+import net.darktree.core.world.action.DeconstructBuildingAction;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.tile.TileInstance;
 import net.darktree.game.country.Symbol;
@@ -63,8 +64,14 @@ public class Building implements NbtSerializable, WorldComponent {
 		return type.pattern;
 	}
 
-	public boolean canAbolish() {
+	@Override
+	public boolean isDeconstructable(World world, int x, int y) {
 		return true;
+	}
+
+	@Override
+	public void deconstruct(World world, int x, int y) {
+		world.getManager().apply(new DeconstructBuildingAction(this, this.x, this.y));
 	}
 
 	public void draw(int x, int y, VertexBuffer buffer) {
@@ -83,9 +90,9 @@ public class Building implements NbtSerializable, WorldComponent {
 		world.getCountry(current).addBuilding(this);
 	}
 
-	public void removed() {
+	public void remove() {
 		getPattern().list(world, x, y, true).forEach(pos -> {
-			world.setTileVariant(x, y, Tiles.EMPTY.getDefaultVariant());
+			world.setTileVariant(pos.x, pos.y, Tiles.EMPTY.getDefaultVariant());
 		});
 
 		world.setLinkedBuildingAt(x, y, null);

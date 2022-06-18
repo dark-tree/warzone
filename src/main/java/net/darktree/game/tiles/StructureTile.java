@@ -29,7 +29,7 @@ public class StructureTile extends Tile {
 	 * Get the Building object associated with this structure tile, by querying
 	 * it from the Building Link Tile Instance.
 	 */
-	protected Building getBuilding(World world, int x, int y) {
+	public Building getBuilding(World world, int x, int y) {
 		return world.getTileInstance(x, y, Building.Link.class).getBuilding();
 	}
 
@@ -61,6 +61,16 @@ public class StructureTile extends Tile {
 	@Override
 	public boolean isReplaceable() {
 		return false;
+	}
+
+	@Override
+	public boolean isDeconstructable(World world, int x, int y) {
+		return getBuilding(world, x, y).isDeconstructable(world, x, y);
+	}
+
+	@Override
+	public void deconstruct(World world, int x, int y) {
+		getBuilding(world, x, y).deconstruct(world, x, y);
 	}
 
 	@Override

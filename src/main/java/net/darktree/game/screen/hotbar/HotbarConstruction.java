@@ -6,7 +6,9 @@ import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.world.World;
 import net.darktree.game.country.Symbol;
+import net.darktree.game.interactor.DeconstructInteractor;
 import net.darktree.game.screen.BuildScreen;
+import net.darktree.game.screen.PlayScreen;
 import net.darktree.game.screen.ScreenStack;
 
 public class HotbarConstruction extends HotbarComponent {
@@ -26,8 +28,8 @@ public class HotbarConstruction extends HotbarComponent {
 		}
 
 		ScreenRenderer.offset(96, 0);
-		if (ScreenRenderer.button(Sprites.BUTTON_DEMOLISH, 66, 66, false)) {
-			// TODO: demolish interactor
+		if (ScreenRenderer.button(Sprites.BUTTON_DEMOLISH, 66, 66, true)) {
+			PlayScreen.setInteractor(new DeconstructInteractor(world.getCurrentSymbol(), world));
 		}
 	}
 

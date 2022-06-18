@@ -60,4 +60,18 @@ public interface WorldComponent extends WorldListener {
 		return false;
 	}
 
+	/**
+	 * Can be deconstructed by its owner
+	 */
+	default boolean isDeconstructable(World world, int x, int y) {
+		return false;
+	}
+
+	/**
+	 * Deconstruct this building, this method should trigger applicable game action
+	 */
+	default void deconstruct(World world, int x, int y) {
+
+	}
+
 }
