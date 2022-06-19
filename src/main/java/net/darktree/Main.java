@@ -4,6 +4,7 @@ import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.sound.SoundSystem;
 import net.darktree.core.client.window.Window;
+import net.darktree.core.network.Relay;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
 import net.darktree.core.world.World;
@@ -14,11 +15,14 @@ import net.darktree.game.screen.ScreenStack;
 import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
 
+import java.io.IOException;
+
 import static org.lwjgl.opengl.GL32.glClearColor;
 
 public class Main {
 
 	public static Window window;
+	public static Relay relay;
 
 	public static void main(String[] args) {
 		Logger.info("Current working directory: ", Resources.path());
@@ -27,6 +31,12 @@ public class Main {
 		long start = System.currentTimeMillis();
 
 		window = Window.init(800, 500, "Game");
+
+		try {
+			relay = new Relay("localhost", 9698);
+		} catch (IOException e) {
+			Logger.warn("Failed to open a connection to the user relay!");
+		}
 
 		SoundSystem.enable();
 
@@ -55,6 +65,7 @@ public class Main {
 			e.printStackTrace();
 		}
 
+		relay.close();
 		window.close();
 		SoundSystem.disable();
 	}

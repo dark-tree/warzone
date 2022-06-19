@@ -13,7 +13,7 @@ public class Registry<T> {
 	private final Map<String, Entry<T>> registry = new HashMap<>();
 	private final Map<T, Entry<T>> lookup = new IdentityHashMap<>();
 
-	public Registry(Consumer<Entry<T>> listener) {
+	public Registry(@Deprecated Consumer<Entry<T>> listener) {
 		this.listener = listener;
 	}
 
