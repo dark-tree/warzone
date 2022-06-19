@@ -15,25 +15,25 @@ public class MathHelper {
 
 	public static <T extends Enum<T>> T getRandomEnum(Class<T> enumerable) {
 		T[] values = enumerable.getEnumConstants();
-		return (T) values[RANDOM.nextInt(values.length)];
+		return values[RANDOM.nextInt(values.length)];
 	}
 
 	/**
-	 * Returns a manhattan distance between two points (x1, y1) and (x2, y2)
+	 * Returns a manhattan distance between two points
 	 */
 	public static int getManhattanDistance(int x1, int y1, int x2, int y2) {
 		return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 	}
 
 	/**
-	 * Returns a chebyshev distance between two points (x1, y1) and (x2, y2)
+	 * Returns a chebyshev distance between two points
 	 */
 	public static int getChebyshevDistance(int x1, int y1, int x2, int y2) {
 		return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
 	}
 
 	/**
-	 * Returns a standard distance between two points (x1, y1) and (x2, y2)
+	 * Returns a standard distance between two points
 	 */
 	public static float getStandardDistance(int x1, int y1, int x2, int y2) {
 		int vx = x1 - x2;
@@ -43,7 +43,7 @@ public class MathHelper {
 	}
 
 	/**
-	 * Returns an approximated middle grid point between two points (x1, y1) and (x2, y2)
+	 * Returns an approximated middle grid point between two points
 	 */
 	public static TilePos getMiddlePoint(int x1, int y1, int x2, int y2) {
 		return new TilePos((x1 + x2) / 2, (y1 + y2) / 2);
@@ -59,7 +59,7 @@ public class MathHelper {
 		if (y2 > y1) return Direction.NORTH;
 		if (y2 < y1) return Direction.SOUTH;
 
-		throw new RuntimeException("The given point are equal!");
+		throw new RuntimeException("The given points are equal!");
 	}
 
 }

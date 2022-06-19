@@ -18,7 +18,7 @@ public class Tiles {
 	public static Tile WATER = Registries.TILES.register("water", new WaterTile());
 	public static Tile STRUCTURE = Registries.TILES.register("structure", new StructureTile());
 
-	public static Type<Entity> TEST = Registries.ENTITIES.register("unit", new Type<>(UnitEntity::new));
+	public static Type<Entity> UNIT = Registries.ENTITIES.register("unit", new Type<>(UnitEntity::new));
 
 	public static BuildingType CAPITOL = Registries.BUILDINGS.register("capitol", new BuildingType(CapitolBuilding::new, 0, Pattern.SQUARE, Sprites.BUILDING_CAPITOL));
 	public static BuildingType FACTORY = Registries.BUILDINGS.register("factory", new BuildingType(FactoryBuilding::new, 10, Pattern.SQUARE, Sprites.BUILDING_FACTORY));

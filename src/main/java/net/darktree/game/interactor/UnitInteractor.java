@@ -64,10 +64,14 @@ public class UnitInteractor extends Interactor {
 		super.onKey(key, action, mods);
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
-			if (world.getManager().apply(new ColonizeAction(entity, MathHelper.nextRandomDice()))) {
-				if (entity.removed) {
-					closed = true;
-				}
+			if (world.getManager().apply(new ColonizeAction(entity, MathHelper.nextRandomDice(), false))) {
+				if (entity.removed) closed = true;
+			}
+		}
+
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_W) {
+			if (world.getManager().apply(new ColonizeAction(entity, MathHelper.nextRandomDice(), true))) {
+				if (entity.removed) closed = true;
 			}
 		}
 

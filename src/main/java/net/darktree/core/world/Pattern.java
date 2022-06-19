@@ -12,30 +12,22 @@ import java.util.function.Consumer;
  */
 public class Pattern {
 
-	public static final Pattern EMPTY = new Pattern(new int[][]{
-			// Nothing
-	});
-
-	public static final Pattern IDENTITY = new Pattern(new int[][]{
-			{0, 0}
-	});
-
-	public static final Pattern SQUARE = new Pattern(new int[][]{
-			{0, 0}, {1, 0}, {0, 1}, {1, 1}
-	});
-
-	public static final Pattern SMALL_CROSS = new Pattern(new int[][]{
-			{-1, 0}, {0, 0}, {1, 0}, {0, 1}, {0, -1}
-	});
-
-	public static final Pattern LARGE_CROSS = new Pattern(new int[][]{
-			{-1, 0}, {0, 0}, {1, 0}, {0, 1}, {0, -1}, {-2, 0}, {2, 0}, {0, 2}, {0, -2}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}
-	});
+	public static final Pattern EMPTY = Pattern.create().build();
+	public static final Pattern IDENTITY = Pattern.create().add(0, 0).build();
+	public static final Pattern SQUARE = Pattern.create().add(0, 0).add(1, 0).add(0, 1).add(1, 1).build();
+	public static final Pattern SMALL_CROSS = Pattern.create().addManhattan(1).build();
+	public static final Pattern LARGE_CROSS = Pattern.create().addManhattan(2).build();
+	public static final Pattern STAR_SMALL = Pattern.create().add(-1, -1).add(-1, 1).add(1, 1).add(1, -1).build();
+	public static final Pattern STAR_LARGE = Pattern.create().add(2, 0).add(-2, 0).add(0, 2).add(0, -2).build();
 
 	public final int[][] offsets;
 
-	public Pattern(int[][] offsets) {
+	Pattern(int[][] offsets) {
 		this.offsets = offsets;
+	}
+
+	public static PatternBuilder create() {
+		return new PatternBuilder();
 	}
 
 	public List<TilePos> list(World world, int ox, int oy, boolean required) {

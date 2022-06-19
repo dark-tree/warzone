@@ -54,7 +54,7 @@ public class UnitAttackInteractor extends Interactor {
 		if (cd == 1) return isTargetValid(world, tx, ty); // inside inner circle
 
 		// at this point there are only 4 possible positions
-		// each in a straight line from the (fx, fy) point and at a distance of two from it,
+		// each on an axis-aligned line starting from the (fx, fy) point and at a distance of 2 from it,
 		// validity of the selection depends then on the tile in the middle between (fx, fy) and (tx, ty)
 
 		TilePos middle = MathHelper.getMiddlePoint(fx, fy, tx, ty);

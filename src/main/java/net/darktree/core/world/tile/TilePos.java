@@ -1,5 +1,7 @@
 package net.darktree.core.world.tile;
 
+import net.darktree.core.util.math.MathHelper;
+
 public class TilePos {
 	public final int x, y;
 
@@ -28,4 +30,9 @@ public class TilePos {
 	public int hashCode() {
 		return 1024 * x + y;
 	}
+
+	public TilePos getMiddlePointFrom(int x, int y) {
+		return MathHelper.getMiddlePoint(x, y, this.x, this.y);
+	}
+
 }

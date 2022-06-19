@@ -30,8 +30,9 @@ public class SummonAction extends Action {
 	void redo(World world, Symbol symbol) {
 		TilePos starting = path.getStart();
 
-		entity = (UnitEntity) world.addEntity(starting.x, starting.y, Tiles.TEST);
+		entity = (UnitEntity) world.addEntity(starting.x, starting.y, Tiles.UNIT);
 		entity.follow(path);
+		entity.setSymbol(symbol);
 		building.summoned = true;
 		Sounds.DRAW_THING.play(starting);
 	}

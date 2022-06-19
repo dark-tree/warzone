@@ -4,6 +4,7 @@ import net.darktree.core.client.Colors;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.TurnEvent;
+import net.darktree.core.util.Logger;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.action.ActionManager;
 import net.darktree.core.world.entity.Entity;
@@ -140,6 +141,8 @@ public class World implements NbtSerializable, WorldEntityView {
 		entitiesTag.forEach(entry -> {
 			world.addEntity(Entity.load(world, (CompoundTag) entry.getValue()));
 		});
+
+		Logger.info("World loaded!");
 	}
 
 	public void loadTiles(Function<TilePos, TileVariant> generator) {
@@ -235,7 +238,7 @@ public class World implements NbtSerializable, WorldEntityView {
 			finder.getEnclaves().forEach(enclave -> {
 				Symbol symbol = enclave.encircled();
 
-				if (symbol != Symbol.NONE) {
+				if (symbol != null && symbol != Symbol.NONE) {
 					enclave.forEachTile(pos -> {
 						setTileOwner(pos.x, pos.y, symbol);
 					});
