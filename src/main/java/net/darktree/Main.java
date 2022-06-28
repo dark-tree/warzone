@@ -4,6 +4,7 @@ import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.sound.SoundSystem;
 import net.darktree.core.client.window.Window;
+import net.darktree.core.network.Packets;
 import net.darktree.core.network.Relay;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
@@ -34,9 +35,14 @@ public class Main {
 
 		try {
 			relay = new Relay("localhost", 9698);
+			relay.onGroupCreated(id -> System.out.println("onGroupCreated: " + id));
+			relay.onGroupJoined(id -> System.out.println("onGroupJoined: " + id));
+			relay.onGroupLeft(id -> System.out.println("onGroupLeft: " + id));
 		} catch (IOException e) {
 			Logger.warn("Failed to open a connection to the user relay!");
 		}
+
+		Packets.load();
 
 		SoundSystem.enable();
 

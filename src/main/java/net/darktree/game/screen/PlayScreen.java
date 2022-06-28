@@ -8,6 +8,7 @@ import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.input.MouseButton;
 import net.darktree.core.event.ClickEvent;
+import net.darktree.core.network.Packets;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.WorldView;
@@ -22,6 +23,7 @@ import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class PlayScreen extends Screen {
 
@@ -70,6 +72,7 @@ public class PlayScreen extends Screen {
 
 			ScreenRenderer.offset(300, 20);
 			if (ScreenRenderer.button("END", 2, 38, 80, true)) {
+				Packets.NEXT_TURN_PACKET.send(Main.relay);
 				world.nextPlayerTurn();
 			}
 
@@ -107,6 +110,7 @@ public class PlayScreen extends Screen {
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
 			try {
 				World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
+				Main.relay.createGroup();
 				ScreenStack.closeAll();
 				ScreenStack.open(new PlayScreen(WorldHolder.world));
 			} catch (IOException e) {
@@ -125,7 +129,10 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
-//			world.getManager().apply(new SummonAction(world, world.getCurrentSymbol(), 4, 7));
+			Scanner in = new Scanner(System.in);
+			int i = Integer.decode(in.next());
+
+			Main.relay.joinGroup(i);
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
@@ -133,6 +140,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
+			Packets.NEXT_TURN_PACKET.send(Main.relay);
 			world.nextPlayerTurn();
 		}
 

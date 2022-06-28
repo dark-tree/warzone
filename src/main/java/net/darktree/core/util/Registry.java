@@ -17,7 +17,7 @@ public class Registry<T> {
 		this.listener = listener;
 	}
 
-	public T register(String key, T value) {
+	public <E extends T> E register(String key, E value) {
 		Entry<T> entry = new Entry<>(list.size(), key, value);
 
 		if (this.lookup.get(value) != null || this.registry.get(key) != null) {

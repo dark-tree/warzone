@@ -25,8 +25,8 @@ public class PacketSender {
 		return this;
 	}
 
-	public PacketSender write(byte[] bytes) {
-		buffer.put(bytes);
+	public PacketSender write(byte[] bytes, int count) {
+		buffer.put(bytes, 0, count);
 		return this;
 	}
 

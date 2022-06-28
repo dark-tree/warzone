@@ -38,11 +38,19 @@ public class Relay {
 
 		reader.on(PacketType.R2U_TEXT, buffer -> {
 			final int id = buffer.getInt();
+			Packet packet;
+
+			try{
+				packet = Registries.PACKETS.getElement(id);
+			} catch (IndexOutOfBoundsException e) {
+				Logger.error("Unknown game packet with id: " + id + " received!");
+				return;
+			}
 
 			try {
-				Registries.PACKETS.getElement(id).onReceive(buffer);
+				packet.onReceive(buffer);
 			} catch (Exception e) {
-				Logger.error("Unknown game packet with id: " + id + " received!");
+				Logger.error("Exception was thrown while processing game packet with id: " + id + "!");
 			}
 		});
 
@@ -83,11 +91,11 @@ public class Relay {
 	}
 
 	public void sendMessage(int uid, ByteBuffer buffer) {
-		writer.of(PacketType.U2R_SEND).write(uid).write(buffer.array());
+		writer.of(PacketType.U2R_SEND).write(uid).write(buffer.array(), buffer.position()).send();
 	}
 
 	public void broadcastMessage(ByteBuffer buffer) {
-		writer.of(PacketType.U2R_BROD).write(buffer.array());
+		writer.of(PacketType.U2R_BROD).write(buffer.array(), buffer.position()).send();
 	}
 
 	public void onGroupCreated(IntCallback callback) {
