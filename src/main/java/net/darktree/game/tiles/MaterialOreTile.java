@@ -1,7 +1,6 @@
 package net.darktree.game.tiles;
 
 import net.darktree.core.event.ClickEvent;
-import net.darktree.core.util.Direction;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.ToggleMineAction;
 import net.darktree.core.world.tile.Tile;
@@ -9,10 +8,8 @@ import net.darktree.core.world.tile.Tile;
 public class MaterialOreTile extends Tile {
 
 	@Override
-	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (event.isPressed()) {
-			world.getManager().apply(new ToggleMineAction(x, y));
-		}
+	public boolean canPathfindThrough(World world, int x, int y) {
+		return true;
 	}
 
 	@Override
@@ -21,8 +18,10 @@ public class MaterialOreTile extends Tile {
 	}
 
 	@Override
-	public boolean canPenetrate(World world, int x, int y, Direction vector) {
-		return true;
+	public void onInteract(World world, int x, int y, ClickEvent event) {
+		if (event.isPressed()) {
+			world.getManager().apply(new ToggleMineAction(x, y));
+		}
 	}
 
 }

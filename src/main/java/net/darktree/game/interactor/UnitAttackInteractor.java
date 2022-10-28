@@ -59,14 +59,16 @@ public class UnitAttackInteractor extends Interactor {
 
 		TilePos middle = MathHelper.getMiddlePoint(fx, fy, tx, ty);
 		Direction vector = MathHelper.getDirection(fx, fy, tx, ty);
-		boolean tileCheck = world.getTileState(middle).getTile().canPenetrate(world, middle.x, middle.y, vector);
+		Entity tile = world.getEntity(middle);
 
+		boolean tileCheck = tile != null && tile.canPenetrate(world, middle.x, middle.y, vector);
 		return tileCheck && world.getEntity(middle) == null && isTargetValid(world, tx, ty);
 	}
 
 	private boolean isTargetValid(World world, int tx, int ty) {
-		boolean tileCheck = world.getTileState(tx, ty).getTile().isDestructible(world, tx, ty);
-		return tileCheck || world.getEntity(tx, ty) instanceof UnitEntity unit && unit.getSymbol() != entity.getSymbol();
+		Entity tile = world.getEntity(tx, ty);
+		boolean tileCheck = tile != null && tile.isDestructible(world, tx, ty);
+		return tileCheck || tile instanceof UnitEntity unit && unit.getSymbol() != entity.getSymbol();
 	}
 
 	private void drawAttackVector(VertexBuffer buffer, int fx, int fy, int tx, int ty, Color color) {

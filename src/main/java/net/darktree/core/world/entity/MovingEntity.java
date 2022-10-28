@@ -1,20 +1,23 @@
 package net.darktree.core.world.entity;
 
+import net.darktree.Main;
+import net.darktree.core.client.render.color.Color;
+import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
-import net.darktree.core.util.Type;
 import net.darktree.core.world.World;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.country.Symbol;
 
-public class MovingEntity extends Entity {
+public abstract class MovingEntity extends Entity {
 
+	protected float x, y;
 	private float sx, sy;
 	private Path path = null;
 	private int px, py;
 	protected boolean moved;
 
-	public MovingEntity(World world, int x, int y, Type<Entity> type) {
+	public MovingEntity(World world, int x, int y, Type type) {
 		super(world, x, y, type);
 
 		this.px = x;
@@ -45,6 +48,14 @@ public class MovingEntity extends Entity {
 				this.path = null;
 			}
 		}
+	}
+
+	@Override
+	public void setPos(int x, int y) {
+		super.setPos(x, y);
+
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -96,6 +107,22 @@ public class MovingEntity extends Entity {
 	@Override
 	public int getY() {
 		return path != null ? path.getEnd().y : ty;
+	}
+
+	public void drawSelection(VertexBuffer buffer, Color c) {
+		final int x = getX();
+		final int y = getY();
+		float f = (float) (Math.sin(Main.window.profiler.getFrameCount() / 20f) + 1) / 60 + 0.04f;
+
+		// TODO: make it better
+		Renderer.line(buffer, x + f, y + f, x + f, y + f + 0.25f, 0.03f, c);
+		Renderer.line(buffer, x + 1 - f, y + f, x + 1 - f, y + 0.25f + f, 0.03f, c);
+		Renderer.line(buffer, x + f, y + 1 - f, x + f, y + 0.75f - f, 0.03f, c);
+		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 1 - f, y + 0.75f - f, 0.03f, c);
+		Renderer.line(buffer, x + f, y + f, x + 0.25f + f, y + f, 0.03f, c);
+		Renderer.line(buffer, x + f, y + 1 - f, x + 0.25f + f, y + 1 - f, 0.03f, c);
+		Renderer.line(buffer, x + 1 - f, y + f, x + 0.75f - f, y + f, 0.03f, c);
+		Renderer.line(buffer, x + 1 - f, y + 1 - f, x + 0.75f - f, y + 1 - f, 0.03f, c);
 	}
 
 }

@@ -2,13 +2,13 @@ package net.darktree.game.entities;
 
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
-import net.darktree.core.util.Type;
-import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.entity.MovingEntity;
+import net.darktree.core.world.pattern.Patterns;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.country.Symbol;
+import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,8 +17,8 @@ public class UnitEntity extends MovingEntity {
 	private Symbol symbol = Symbol.CROSS;
 	public boolean armored = false;
 
-	public UnitEntity(World world, int x, int y, Type<Entity> type) {
-		super(world, x, y, type);
+	public UnitEntity(World world, int x, int y) {
+		super(world, x, y, Tiles.UNIT);
 	}
 
 	public void setSymbol(Symbol symbol) {
@@ -39,12 +39,12 @@ public class UnitEntity extends MovingEntity {
 		int y = getY();
 
 		if (war) {
-			Pattern.SMALL_CROSS.iterate(world, x, y, this::warColonizeTile);
+			Patterns.SMALL_CROSS.iterate(world, x, y, this::warColonizeTile);
 
 			if (dice == 2) {
-				Pattern.STAR_SMALL.iterate(world, x, y, this::warColonizeTile);
+				Patterns.STAR_SMALL.iterate(world, x, y, this::warColonizeTile);
 
-				Pattern.STAR_LARGE.iterate(world, x, y, pos -> {
+				Patterns.STAR_LARGE.iterate(world, x, y, pos -> {
 					TilePos middle = pos.getMiddlePointFrom(x, y);
 
 					if (warColonizeTile(middle)) {
@@ -53,7 +53,7 @@ public class UnitEntity extends MovingEntity {
 				});
 			}
 		} else {
-			Pattern.nextColonizationPattern(dice).iterate(world, x, y, pos -> {
+			Patterns.nextColonizationPattern(dice).iterate(world, x, y, pos -> {
 				if (world.getTileState(pos).getOwner() == Symbol.NONE) {
 					world.setTileOwner(pos.x, pos.y, this.symbol);
 				}

@@ -1,7 +1,8 @@
 package net.darktree.core.world.action;
 
 import net.darktree.core.world.World;
-import net.darktree.core.world.tile.TileState;
+import net.darktree.game.buildings.Building;
+import net.darktree.game.buildings.MineBuilding;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.tiles.Tiles;
 
@@ -16,8 +17,7 @@ public class ToggleMineAction extends ToggleableAction {
 
 	@Override
 	boolean verify(World world, Symbol symbol) {
-		TileState state = world.getTileState(x, y);
-		return (state.getTile() == Tiles.MATERIAL_MINE || state.getTile() == Tiles.MATERIAL) && world.canControl(x, y, symbol);
+		return (world.getTileState(x, y).getTile() == Tiles.MATERIAL) && world.canControl(x, y, symbol);
 	}
 
 	@Override
@@ -31,12 +31,14 @@ public class ToggleMineAction extends ToggleableAction {
 	}
 
 	private void toggle(World world) {
-		TileState state = world.getTileState(x, y);
+		Building building = world.getBuilding(x, y);
 
-		if (state.getTile() == Tiles.MATERIAL) {
-			world.setTileVariant(x, y, Tiles.MATERIAL_MINE.getDefaultVariant());
-		} else if (state.getTile() == Tiles.MATERIAL_MINE) {
-			world.setTileVariant(x, y, Tiles.MATERIAL.getDefaultVariant());
+		if (building == null) {
+			world.placeBuilding(x, y, new MineBuilding(world, x, y));
+		} else {
+			if (building instanceof MineBuilding) {
+				building.remove();
+			}
 		}
 	}
 

@@ -1,31 +1,25 @@
 package net.darktree.core.util;
 
 import net.darktree.core.client.render.image.Sprite;
-import net.darktree.core.world.Pattern;
-import net.darktree.core.world.World;
-import net.darktree.game.buildings.Building;
+import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.pattern.Pattern;
+import net.darktree.core.world.pattern.Patterns;
 
-public class BuildingType {
-
-	private final Constructor<Building> constructor;
+public class BuildingType extends Entity.Type {
 
 	public final int value;
-	public final Pattern pattern;
+	public final int width, height;
 	public final Sprite sprite;
+	public final Pattern pattern;
 
-	public BuildingType(Constructor<Building> constructor, int value, Pattern pattern, Sprite sprite) {
-		this.constructor = constructor;
+	public BuildingType(Constructor constructor, int value, int width, int height, Sprite sprite) {
+		super(constructor);
+
 		this.value = value;
-		this.pattern = pattern;
+		this.width = width;
+		this.height = height;
 		this.sprite = sprite;
-	}
-
-	public Building construct(World world, int x, int y) {
-		return constructor.construct(world, x, y, this);
-	}
-
-	public interface Constructor<T> {
-		T construct(World world, int x, int y, BuildingType type);
+		this.pattern = Patterns.area(width, height);
 	}
 
 }

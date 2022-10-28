@@ -1,11 +1,12 @@
-package net.darktree.core.world;
+package net.darktree.core.world.pattern;
 
+import net.darktree.core.world.World;
 import net.darktree.core.world.tile.TilePos;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public class PlacedPattern {
+public class PlacedPattern implements PlacedTileIterator {
 
 	private final World world;
 	private final int x;
@@ -19,8 +20,8 @@ public class PlacedPattern {
 		this.pattern = pattern;
 	}
 
-	public boolean iterate(Consumer<TilePos> consumer) {
-		return pattern.iterate(world, x, y, consumer);
+	public void iterate(Consumer<TilePos> consumer) {
+		pattern.iterate(world, x, y, consumer);
 	}
 
 	public List<TilePos> list(boolean required) {
@@ -30,4 +31,5 @@ public class PlacedPattern {
 	public Pattern getPattern() {
 		return pattern;
 	}
+
 }

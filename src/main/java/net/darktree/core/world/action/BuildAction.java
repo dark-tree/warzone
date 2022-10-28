@@ -32,12 +32,12 @@ public class BuildAction extends Action {
 		List<TilePos> tiles = type.pattern.list(world, x, y, true);
 		TileState[][] map = world.getTiles();
 
-		return tiles.stream().filter(pos -> world.getEntity(pos.x, pos.y) == null).map(pos -> map[pos.x][pos.y]).allMatch(state -> state.getTile().isReplaceable() && state.getOwner() == symbol);
+		return tiles.stream().filter(pos -> world.getEntity(pos.x, pos.y) == null).map(pos -> map[pos.x][pos.y]).allMatch(state -> state.getOwner() == symbol);
 	}
 
 	@Override
 	void redo(World world, Symbol symbol) {
-		building = type.construct(world, x, y);
+		building = (Building) type.create(world, x, y);
 		world.placeBuilding(x, y, building);
 		world.getCountry(symbol).addMaterials(-type.value);
 		Sounds.STAMP.play(x, y);

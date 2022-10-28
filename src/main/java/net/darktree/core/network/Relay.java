@@ -51,6 +51,7 @@ public class Relay {
 				packet.onReceive(buffer);
 			} catch (Exception e) {
 				Logger.error("Exception was thrown while processing game packet with id: " + id + "!");
+				e.printStackTrace();
 			}
 		});
 

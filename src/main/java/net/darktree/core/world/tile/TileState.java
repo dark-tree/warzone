@@ -51,10 +51,8 @@ final public class TileState implements NbtSerializable {
 			if (instance != null) {
 				instance.fromNbt(tile.getCompoundTag("data"));
 			}
-
-			variant.getTile().onAdded(world, x, y, variant);
 		}catch (Exception e) {
-			Logger.warn("Loading of tile at: ", x, " ", y, " failed! Reverting to default...");
+			Logger.warn("Loading of tile at: (", x, ", ", y, ") failed! Reverting to default...");
 
 			// TODO make better
 			world.setTileVariant(x, y, Tiles.EMPTY.getDefaultVariant());
@@ -63,18 +61,12 @@ final public class TileState implements NbtSerializable {
 	}
 
 	public void setVariant(World world, int x, int y, TileVariant variant) {
-		if (this.variant != null) {
-			this.variant.getTile().onRemoved(world, x, y, variant);
-		}
-
 		this.variant = variant;
 		this.instance = variant.getTile().getInstance(world, x, y);
-		this.variant.getTile().onAdded(world, x, y, this.variant);
 	}
 
 	public void setOwner(World world, int x, int y, Symbol owner, boolean notify) {
 		if (notify && this.owner != owner) {
-			getTile().onOwnerUpdate(world, x, y, this.owner, owner);
 			this.owner = owner;
 		}
 

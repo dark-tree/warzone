@@ -1,13 +1,14 @@
 package net.darktree;
 
+import net.darktree.core.client.Sounds;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.sound.SoundSystem;
 import net.darktree.core.client.window.Window;
 import net.darktree.core.network.Packets;
-import net.darktree.core.network.Relay;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.Resources;
+import net.darktree.core.util.Util;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
 import net.darktree.game.buildings.BuildingConfigRegistry;
@@ -16,14 +17,12 @@ import net.darktree.game.screen.ScreenStack;
 import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
 
-import java.io.IOException;
-
 import static org.lwjgl.opengl.GL32.glClearColor;
 
 public class Main {
 
 	public static Window window;
-	public static Relay relay;
+//	public static Relay relay;
 
 	public static void main(String[] args) {
 		Logger.info("Current working directory: ", Resources.path());
@@ -33,18 +32,18 @@ public class Main {
 
 		window = Window.init(800, 500, "Game");
 
-		try {
-			relay = new Relay("localhost", 9698);
-			relay.onGroupCreated(id -> System.out.println("onGroupCreated: " + id));
-			relay.onGroupJoined(id -> System.out.println("onGroupJoined: " + id));
-			relay.onGroupLeft(id -> System.out.println("onGroupLeft: " + id));
-		} catch (IOException e) {
-			Logger.warn("Failed to open a connection to the user relay!");
-		}
+//		try {
+//			relay = new Relay("localhost", 9698);
+//			relay.onGroupCreated(id -> System.out.println("onGroupCreated: " + id));
+//			relay.onGroupJoined(id -> System.out.println("onGroupJoined: " + id));
+//			relay.onGroupLeft(id -> System.out.println("onGroupLeft: " + id));
+//		} catch (IOException e) {
+//			Logger.warn("Failed to open a connection to the user relay!");
+//		}
 
 		Packets.load();
-
 		SoundSystem.enable();
+		Util.load(Sounds.class);
 
 //		Sounds.TEST_SONG.play().setLoop(true).setVolume(0.8f);
 
@@ -71,7 +70,7 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		relay.close();
+		//relay.close();
 		window.close();
 		SoundSystem.disable();
 	}

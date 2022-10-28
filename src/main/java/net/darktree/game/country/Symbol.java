@@ -2,6 +2,7 @@ package net.darktree.game.country;
 
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.image.Sprite;
+import net.querz.nbt.tag.CompoundTag;
 
 public enum Symbol {
 	NONE(null),
@@ -23,5 +24,13 @@ public enum Symbol {
 
 	public Sprite getArmoredSprite() {
 		return armored;
+	}
+
+	public static Symbol fromNbt(CompoundTag nbt) {
+		return fromIndex(nbt.getByte("symbol"));
+	}
+
+	public static Symbol fromIndex(byte index) {
+		return values()[index];
 	}
 }

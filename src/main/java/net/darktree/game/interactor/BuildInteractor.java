@@ -9,7 +9,6 @@ import net.darktree.core.util.BuildingType;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.BuildAction;
 import net.darktree.core.world.tile.TilePos;
-import net.darktree.core.world.tile.TileState;
 import net.darktree.game.country.Symbol;
 
 import java.util.List;
@@ -29,7 +28,6 @@ public class BuildInteractor extends Interactor {
 
 	boolean verify(int x, int y) {
 		Symbol symbol = world.getCurrentSymbol();
-		TileState[][] map = world.getTiles();
 
 		// try matching pattern first to ensure that we don't
 		// render the building outside the map
@@ -41,7 +39,6 @@ public class BuildInteractor extends Interactor {
 
 		for (TilePos pos : tiles) {
 			if (world.getEntity(pos.x, pos.y) != null) return false;
-			if (!map[pos.x][pos.y].getTile().isReplaceable()) return false;
 			if (!world.canControl(pos.x, pos.y, symbol)) return false;
 		}
 

@@ -9,6 +9,7 @@ import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.action.ActionManager;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
+import net.darktree.core.world.pattern.FixedPattern;
 import net.darktree.core.world.terrain.ControlFinder;
 import net.darktree.core.world.terrain.EnclaveFinder;
 import net.darktree.core.world.tile.TileInstance;
@@ -20,7 +21,6 @@ import net.darktree.core.world.view.WorldEntityView;
 import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
-import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +36,6 @@ public class World implements NbtSerializable, WorldEntityView {
 
 	final private TileState[][] tiles;
 	final private List<Entity> entities = new ArrayList<>();
-	final private HashMap<TilePos, Building> buildings = new HashMap<>();
 	final private HashMap<Symbol, Country> countries = new HashMap<>();
 
 	private ControlFinder control;
@@ -139,7 +138,9 @@ public class World implements NbtSerializable, WorldEntityView {
 		}
 
 		entitiesTag.forEach(entry -> {
-			world.addEntity(Entity.load(world, (CompoundTag) entry.getValue()));
+			Entity entity = Entity.load(world, (CompoundTag) entry.getValue());
+			world.addEntity(entity);
+			entity.onLoaded();
 		});
 
 		Logger.info("World loaded!");
@@ -214,16 +215,11 @@ public class World implements NbtSerializable, WorldEntityView {
 	 * Method used for placing buildings on the map, it takes care
 	 * of all the required setup. Returns true on success, false otherwise.
 	 */
+	@Deprecated
 	public void placeBuilding(int x, int y, Building building) {
-		List<TilePos> tiles = building.getPattern().list(this, x, y, true);
-
-		tiles.forEach(pos -> {
-			TileState state = this.tiles[pos.x][pos.y];
-			state.setVariant(this, pos.x, pos.y, Tiles.STRUCTURE.getDefaultVariant());
-			((Building.Link) state.getInstance()).linkWith(x, y);
-		});
-
-		setLinkedBuildingAt(x, y, building);
+		addEntity(building);
+		building.onAdded(this, x, y, getTileState(x, y).getVariant());
+		getCountry(x, y).addBuilding(building);
 	}
 
 	public void draw(VertexBuffer buffer) {
@@ -273,7 +269,7 @@ public class World implements NbtSerializable, WorldEntityView {
 
 	}
 
-	public void getPatternTiles(Pattern pattern, int x, int y, Consumer<TileState> consumer) {
+	public void getPatternTiles(FixedPattern pattern, int x, int y, Consumer<TileState> consumer) {
 		pattern.iterate(this, x, y, pos -> consumer.accept(this.tiles[pos.x][pos.y]));
 	}
 
@@ -329,7 +325,6 @@ public class World implements NbtSerializable, WorldEntityView {
 	}
 
 	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {
-		forEach((state, x, y) -> state.getTile().onPlayerTurnEvent(this, x, y, event, symbol));
 		getEntities().forEach(entity -> entity.onPlayerTurnEvent(this, entity.getX(), entity.getY(), event, symbol));
 		this.countries.forEach((key, value) -> value.onPlayerTurnEvent(this, event, symbol));
 	}
@@ -346,6 +341,10 @@ public class World implements NbtSerializable, WorldEntityView {
 		return countries.get(symbol);
 	}
 
+	public Country getCountry(int x, int y) {
+		return countries.get(getTileState(x, y).getOwner());
+	}
+
 	public Overlay getOverlay() {
 		return this.overlay;
 	}
@@ -356,14 +355,6 @@ public class World implements NbtSerializable, WorldEntityView {
 
 	public TileState[][] getTiles() {
 		return tiles;
-	}
-
-	public Building getLinkedBuildingAt(int x, int y) {
-		return buildings.get(new TilePos(x, y));
-	}
-
-	public void setLinkedBuildingAt(int x, int y, Building building) {
-		buildings.put(new TilePos(x, y), building);
 	}
 
 	public ActionManager getManager() {

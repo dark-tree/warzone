@@ -1,9 +1,9 @@
 package net.darktree.core.world.view;
 
-import net.darktree.core.util.Type;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.tile.TilePos;
+import net.darktree.game.buildings.Building;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ public interface WorldEntityView {
 		return entity;
 	}
 
-	default Entity addEntity(int x, int y, Type<Entity> type) {
-		return addEntity(type.construct((World) this, x, y));
+	default Entity addEntity(int x, int y, Entity.Type type) {
+		return addEntity(type.create((World) this, x, y));
 	}
 
 	default Entity getEntity(int x, int y) {
@@ -28,4 +28,13 @@ public interface WorldEntityView {
 
 	List<Entity> getEntities();
 
+	default Building getBuilding(int x, int y){
+		Entity entity = getEntity(x, y);
+
+		if (entity instanceof Building building) {
+			return building;
+		}
+
+		return null;
+	}
 }

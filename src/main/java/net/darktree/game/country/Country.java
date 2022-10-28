@@ -2,24 +2,20 @@ package net.darktree.game.country;
 
 import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
-import net.darktree.core.util.Pair;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldListener;
 import net.darktree.core.world.tile.MaterialProvider;
-import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.buildings.Building;
+import net.darktree.game.buildings.CapitolBuilding;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Country implements NbtSerializable, WorldListener {
 
 	private final List<Building> buildings = new ArrayList<>();
-	private final Set<Pair<TilePos, MaterialProvider>> mines = new HashSet<>();
 	private final Symbol symbol;
 	public boolean colonized = false;
 
@@ -64,32 +60,26 @@ public class Country implements NbtSerializable, WorldListener {
 
 	public void removeBuilding(Building building) {
 		buildings.remove(building);
+
+		if (building instanceof MaterialProvider provider) {
+			this.income -= provider.getIncome();
+		}
 	}
 
 	public void addBuilding(Building building) {
 		buildings.add(building);
+
+		if (building instanceof MaterialProvider provider) {
+			this.income += provider.getIncome();
+		}
 	}
 
 	public Building getCapitol() {
-		try {
-			return buildings.get(0); // FIXME
-		}catch (Exception e) {
-			return null;
-		}
+		return buildings.stream().filter(building -> building instanceof CapitolBuilding).findAny().orElse(null);
 	}
 
 	public void addArmor(int i) {
 		armor += i;
-	}
-
-	public void removeMine(MaterialProvider provider, TilePos pos) {
-		mines.remove(Pair.of(pos, provider));
-		this.income -= provider.getIncome();
-	}
-
-	public void addMine(MaterialProvider provider, TilePos pos) {
-		mines.add(Pair.of(pos, provider));
-		this.income += provider.getIncome();
 	}
 
 }

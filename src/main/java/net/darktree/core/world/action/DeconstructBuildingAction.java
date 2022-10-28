@@ -14,7 +14,7 @@ public class DeconstructBuildingAction extends Action {
 		this.x = x;
 		this.y = y;
 		this.building = building;
-		this.value = (int) Math.floor(building.type.value * 0.4f);
+		this.value = (int) Math.floor(building.getType().value * 0.4f);
 	}
 
 	@Override

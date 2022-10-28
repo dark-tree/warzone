@@ -1,8 +1,8 @@
 package net.darktree.core.world.path;
 
-import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.pattern.PlacedTileIterator;
 import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.country.Symbol;
@@ -23,7 +23,7 @@ public class Pathfinder {
 	};
 
 	// TODO: split max, pattern and within into PathfinderConfig
-	public Pathfinder(World world, int x, int y, int max, Symbol symbol, Pattern pattern, boolean within) {
+	public Pathfinder(World world, int max, Symbol symbol, PlacedTileIterator pattern, boolean within) {
 		this.world = world;
 		this.width = world.width;
 		this.height = world.height;
@@ -32,7 +32,7 @@ public class Pathfinder {
 		this.symbol = symbol;
 		this.within = within;
 
-		pattern.iterate(world, x, y, pos -> {
+		pattern.iterate(pos -> {
 			this.field[pos.x][pos.y] = 1;
 			this.distance[pos.x][pos.y] = max;
 		});

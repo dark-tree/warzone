@@ -19,7 +19,7 @@ public class CityInteractor extends Interactor {
 
 	public CityInteractor(Symbol symbol, World world) {
 		this.building = world.getCountry(symbol).getCapitol();
-		this.pathfinder = new Pathfinder(world, building.x, building.y, 10, symbol, building.getPattern(), true);
+		this.pathfinder = new Pathfinder(world, 10, symbol, consumer -> building.forEachTile(consumer), true);
 		this.world = world;
 
 		world.setOverlay(new PathfinderOverlay(pathfinder));

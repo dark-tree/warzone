@@ -3,65 +3,51 @@ package net.darktree.game.buildings;
 import net.darktree.core.Registries;
 import net.darktree.core.client.Colors;
 import net.darktree.core.client.render.color.Color;
+import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
-import net.darktree.core.event.ClickEvent;
 import net.darktree.core.util.BuildingType;
-import net.darktree.core.util.NbtSerializable;
-import net.darktree.core.world.Pattern;
 import net.darktree.core.world.World;
-import net.darktree.core.world.WorldComponent;
 import net.darktree.core.world.action.DeconstructBuildingAction;
+import net.darktree.core.world.entity.StructureEntity;
 import net.darktree.core.world.overlay.Overlay;
-import net.darktree.core.world.tile.TileInstance;
+import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.country.Symbol;
-import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public class Building implements NbtSerializable, WorldComponent {
+import java.util.function.Consumer;
 
-	protected final World world;
-	public final BuildingType type;
-	public final int x, y;
+public abstract class Building extends StructureEntity {
 
 	public Building(World world, int x, int y, BuildingType type) {
-		this.x = x;
-		this.y = y;
-		this.world = world;
-		this.type = type;
+		super(world, x, y, type.width, type.height, type);
 	}
 
 	public static Building from(int x, int y, World world, @NotNull CompoundTag tag) {
-		Building building = Registries.BUILDINGS.getElement(tag.getString("id")).construct(world, x, y);
+		Building building = (Building) Registries.ENTITIES.getElement(tag.getString("id")).create(world, x, y);
 		building.fromNbt(tag);
-		world.setLinkedBuildingAt(x, y, building);
 		world.getCountry(world.getTileState(x, y).getOwner()).addBuilding(building);
 		return building;
 	}
 
-	@Override
-	public void toNbt(@NotNull CompoundTag tag) {
-		tag.putString("id", Registries.BUILDINGS.keyOf(this.type));
+	public final BuildingType getType() {
+		return (BuildingType) type;
 	}
 
-	@Override
-	public void fromNbt(@NotNull CompoundTag tag) {
+	public final boolean forEachTile(Consumer<TilePos> consumer) {
+		for (int x = 0; x < width; x ++) {
+			for (int y = 0; y < height; y ++) {
+				consumer.accept(new TilePos(x + tx, y + ty));
+			}
+		}
 
-	}
-
-	@Override
-	public boolean canPathfindThrough(World world, int x, int y) {
+		// TODO
 		return false;
 	}
 
-	@Override
-	public void onInteract(World world, int x, int y, ClickEvent event) {
-
-	}
-
-	public Pattern getPattern() {
-		return type.pattern;
+	public final Sprite getSprite() {
+		return getType().sprite;
 	}
 
 	@Override
@@ -71,18 +57,24 @@ public class Building implements NbtSerializable, WorldComponent {
 
 	@Override
 	public void deconstruct(World world, int x, int y) {
-		world.getManager().apply(new DeconstructBuildingAction(this, this.x, this.y));
+		world.getManager().apply(new DeconstructBuildingAction(this, getX(), getY()));
 	}
 
-	public void draw(int x, int y, VertexBuffer buffer) {
+	@Override
+	public void draw(VertexBuffer buffer) {
 		Overlay overlay = world.getOverlay();
-		Color c = overlay == null ? Colors.OVERLAY_NONE : overlay.getColor(world, x, y, world.getTileState(x, y));
-		Renderer.quad(buffer, x, y, 2, 2, type.sprite, c.r, c.g, c.b, c.a);
+		Color c = overlay == null ? Colors.OVERLAY_NONE : overlay.getColor(world, tx, ty, world.getTileState(tx, ty));
+		Renderer.quad(buffer, tx, ty, width, height, getSprite(), c.r, c.g, c.b, c.a);
+	}
+
+	@Override
+	public boolean canPathfindOnto(Symbol symbol) {
+		return false;
 	}
 
 	@Override
 	public void onOwnerUpdate(World world, int x, int y, Symbol previous, Symbol current) {
-		getPattern().iterate(world, this.x, this.y, pos -> {
+		forEachTile(pos -> {
 			world.getTileState(pos).setOwner(world, pos.x, pos.y, current, false);
 		});
 
@@ -91,64 +83,17 @@ public class Building implements NbtSerializable, WorldComponent {
 	}
 
 	public void remove() {
-		getPattern().list(world, x, y, true).forEach(pos -> {
-			world.setTileVariant(pos.x, pos.y, Tiles.EMPTY.getDefaultVariant());
-		});
-
-		world.setLinkedBuildingAt(x, y, null);
-		world.getCountry(world.getTileState(x, y).getOwner()).removeBuilding(this);
+		removed = true;
+		world.getCountry(tx, ty).removeBuilding(this);
 	}
 
+	@Deprecated
 	public int getStored() {
 		return 0;
 	}
 
-	public static class Link extends TileInstance {
-
-		private int bx, by;
-		private Building building;
-
-		public Link(World world, int x, int y) {
-			super(world, x, y);
-		}
-
-		public void linkWith(int bx, int by) {
-			this.bx = bx;
-			this.by = by;
-		}
-
-		public boolean isOrigin() {
-			return bx == x && by == y;
-		}
-
-		@Override
-		public void toNbt(@NotNull CompoundTag tag) {
-			tag.putInt("bx", bx);
-			tag.putInt("by", by);
-
-			if (isOrigin()) {
-				building.toNbt(tag);
-			}
-		}
-
-		@Override
-		public void fromNbt(@NotNull CompoundTag tag) {
-			bx = tag.getInt("bx");
-			by = tag.getInt("by");
-
-			if (isOrigin()) {
-				building = Building.from(bx, by, world, tag);
-			}
-		}
-
-		public Building getBuilding() {
-			if (building == null) {
-				building = world.getLinkedBuildingAt(bx, by);
-			}
-
-			return building;
-		}
-
+	public void onLoaded() {
+		world.getCountry(tx, ty).addBuilding(this);
 	}
 
 }

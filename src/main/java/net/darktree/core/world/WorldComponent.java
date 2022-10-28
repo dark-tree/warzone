@@ -1,30 +1,10 @@
 package net.darktree.core.world;
 
-import net.darktree.core.event.ClickEvent;
 import net.darktree.core.util.Direction;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.game.country.Symbol;
 
-public interface WorldComponent extends WorldListener {
-
-	/**
-	 * Defines whether a pathfinder can create a path node through this component
-	 */
-	boolean canPathfindThrough(World world, int x, int y);
-
-	/**
-	 * Defines whether a pathfinder can create a path to this location
-	 */
-	default boolean canPathfindOnto(World world, int x, int y) {
-		return canPathfindThrough(world, x, y);
-	}
-
-	/**
-	 * Called when a component is clicked
-	 */
-	default void onInteract(World world, int x, int y, ClickEvent event) {
-
-	}
+public interface WorldComponent extends WorldListener, WorldTile {
 
 	/**
 	 * Called right before a component is removed
@@ -48,15 +28,9 @@ public interface WorldComponent extends WorldListener {
 	}
 
 	/**
-	 * Defines whether a tile can be colonized
-	 */
-	default boolean canColonize(World world, int x, int y) {
-		return true;
-	}
-
-	/**
 	 * Can be replaced by another tile, used by buildings
 	 */
+	@Deprecated
 	default boolean isReplaceable() {
 		return false;
 	}
@@ -89,4 +63,7 @@ public interface WorldComponent extends WorldListener {
 		return false;
 	}
 
+	default void onLoaded() {
+
+	}
 }

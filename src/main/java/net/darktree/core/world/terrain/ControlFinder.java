@@ -77,9 +77,7 @@ public class ControlFinder {
 				Building capitol = country.getCapitol();
 
 				if (capitol != null) {
-					capitol.getPattern().iterate(world, capitol.x, capitol.y, pos -> {
-						field[pos.x][pos.y] = 1;
-					});
+					capitol.forEachTile(pos -> field[pos.x][pos.y] = 1);
 				}
 			}
 		}else{
