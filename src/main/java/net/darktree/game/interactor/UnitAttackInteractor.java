@@ -61,13 +61,13 @@ public class UnitAttackInteractor extends Interactor {
 		Direction vector = MathHelper.getDirection(fx, fy, tx, ty);
 		Entity tile = world.getEntity(middle);
 
-		boolean tileCheck = tile != null && tile.canPenetrate(world, middle.x, middle.y, vector);
+		boolean tileCheck = tile != null && tile.canPenetrate(vector);
 		return tileCheck && world.getEntity(middle) == null && isTargetValid(world, tx, ty);
 	}
 
 	private boolean isTargetValid(World world, int tx, int ty) {
 		Entity tile = world.getEntity(tx, ty);
-		boolean tileCheck = tile != null && tile.isDestructible(world, tx, ty);
+		boolean tileCheck = tile != null && tile.isDestructible();
 		return tileCheck || tile instanceof UnitEntity unit && unit.getSymbol() != entity.getSymbol();
 	}
 

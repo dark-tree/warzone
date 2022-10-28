@@ -24,13 +24,13 @@ public class MineBuilding extends Building implements MaterialProvider {
 	}
 
 	@Override
-	public boolean isDeconstructable(World world, int x, int y) {
+	public boolean isDeconstructable() {
 		return true;
 	}
 
 	@Override
-	public void deconstruct(World world, int x, int y) {
-		world.getManager().apply(new ToggleMineAction(x, y));
+	public void deconstruct() {
+		this.world.getManager().apply(new ToggleMineAction(tx, ty));
 	}
 
 }

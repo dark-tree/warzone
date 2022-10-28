@@ -22,6 +22,7 @@ import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
 import net.querz.nbt.tag.CompoundTag;
+import net.querz.nbt.tag.ListTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -74,12 +75,12 @@ public class World implements NbtSerializable, WorldEntityView {
 			}
 		}
 
-		CompoundTag entitiesTag = new CompoundTag();
+		ListTag<CompoundTag> entities = new ListTag<>(CompoundTag.class);
 
-		for (int i = 0; i < this.entities.size(); i ++) {
+		for (Entity entity : this.entities) {
 			CompoundTag entityTag = new CompoundTag();
-			this.entities.get(i).toNbt(entityTag);
-			entitiesTag.put(String.valueOf(i), entityTag);
+			entity.toNbt(entityTag);
+			entities.add(entityTag);
 		}
 
 		CompoundTag countriesTag = new CompoundTag();
@@ -98,7 +99,7 @@ public class World implements NbtSerializable, WorldEntityView {
 		tag.putInt("height", this.height);
 		tag.putByte("turn", (byte) turn);
 		tag.put("tiles", tilesTag);
-		tag.put("entities", entitiesTag);
+		tag.put("entities", entities);
 		tag.put("countries", countriesTag);
 	}
 
@@ -110,7 +111,7 @@ public class World implements NbtSerializable, WorldEntityView {
 
 	public static void load(CompoundTag tag) {
 		CompoundTag tilesTag = tag.getCompoundTag("tiles");
-		CompoundTag entitiesTag = tag.getCompoundTag("entities");
+		ListTag<?> entities = tag.getListTag("entities");
 		CompoundTag countriesTag = tag.getCompoundTag("countries");
 
 		World world = new World(tag.getInt("width"), tag.getInt("height"));
@@ -137,8 +138,8 @@ public class World implements NbtSerializable, WorldEntityView {
 			}
 		}
 
-		entitiesTag.forEach(entry -> {
-			Entity entity = Entity.load(world, (CompoundTag) entry.getValue());
+		entities.forEach(entry -> {
+			Entity entity = Entity.load(world, (CompoundTag) entry);
 			world.addEntity(entity);
 			entity.onLoaded();
 		});
@@ -218,7 +219,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	@Deprecated
 	public void placeBuilding(int x, int y, Building building) {
 		addEntity(building);
-		building.onAdded(this, x, y, getTileState(x, y).getVariant());
+		building.onAdded();
 		getCountry(x, y).addBuilding(building);
 	}
 

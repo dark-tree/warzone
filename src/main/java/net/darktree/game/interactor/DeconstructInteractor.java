@@ -35,7 +35,7 @@ public class DeconstructInteractor extends Interactor {
 			float wave = (float) (Math.sin(Main.window.profiler.getFrameCount() / 6f) + 1) / 3f;
 			Color c = Colors.SPOT_INVALID;
 
-			if (entity != null && entity.isDeconstructable(world, x, y) ) {
+			if (entity != null && entity.isDeconstructable() ) {
 				this.x = entity.getX();
 				this.y = entity.getY();
 
@@ -54,8 +54,8 @@ public class DeconstructInteractor extends Interactor {
 		if (this.x == x && this.y == y) {
 			Entity entity = world.getEntity(this.x, this.y);
 
-			if (entity.isDeconstructable(world, this.x, this.y)) {
-				entity.deconstruct(world, this.x, this.y);
+			if (entity.isDeconstructable()) {
+				entity.deconstruct();
 			}
 		}
 		closed = true;

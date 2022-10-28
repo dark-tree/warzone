@@ -22,7 +22,7 @@ public abstract class ProducingBuilding extends Building {
 		if (event.isPressed()) {
 			Symbol owner = world.getTileState(x, y).getOwner();
 
-			if (world.canControl(x, y)) {
+			if (world.canControl(x, y) && owner == world.getCurrentSymbol()) {
 				ScreenStack.open(new ProduceScreen(production, world, owner));
 			}
 		}

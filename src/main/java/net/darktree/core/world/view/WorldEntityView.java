@@ -6,6 +6,7 @@ import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.buildings.Building;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WorldEntityView {
 
@@ -20,6 +21,10 @@ public interface WorldEntityView {
 
 	default Entity getEntity(int x, int y) {
 		return getEntities().stream().filter(entity -> entity.isAt(x, y)).findFirst().orElse(null);
+	}
+
+	default Optional<Entity> getOptionalEntity(int x, int y) {
+		return Optional.ofNullable(getEntity(x, y));
 	}
 
 	default Entity getEntity(TilePos pos) {

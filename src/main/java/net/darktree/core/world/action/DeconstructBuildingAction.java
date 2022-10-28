@@ -19,7 +19,7 @@ public class DeconstructBuildingAction extends Action {
 
 	@Override
 	boolean verify(World world, Symbol symbol) {
-		return building.isDeconstructable(world, this.x, this.y);
+		return building.isDeconstructable();
 	}
 
 	@Override

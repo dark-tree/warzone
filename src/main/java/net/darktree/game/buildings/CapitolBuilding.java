@@ -56,7 +56,7 @@ public class CapitolBuilding extends Building {
 	}
 
 	@Override
-	public boolean isDeconstructable(World world, int x, int y) {
+	public boolean isDeconstructable() {
 		return false;
 	}
 

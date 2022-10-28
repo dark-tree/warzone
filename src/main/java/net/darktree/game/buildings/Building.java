@@ -35,15 +35,12 @@ public abstract class Building extends StructureEntity {
 		return (BuildingType) type;
 	}
 
-	public final boolean forEachTile(Consumer<TilePos> consumer) {
+	public final void forEachTile(Consumer<TilePos> consumer) {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
 				consumer.accept(new TilePos(x + tx, y + ty));
 			}
 		}
-
-		// TODO
-		return false;
 	}
 
 	public final Sprite getSprite() {
@@ -51,13 +48,13 @@ public abstract class Building extends StructureEntity {
 	}
 
 	@Override
-	public boolean isDeconstructable(World world, int x, int y) {
+	public boolean isDeconstructable() {
 		return true;
 	}
 
 	@Override
-	public void deconstruct(World world, int x, int y) {
-		world.getManager().apply(new DeconstructBuildingAction(this, getX(), getY()));
+	public void deconstruct() {
+		this.world.getManager().apply(new DeconstructBuildingAction(this, getX(), getY()));
 	}
 
 	@Override
@@ -73,7 +70,7 @@ public abstract class Building extends StructureEntity {
 	}
 
 	@Override
-	public void onOwnerUpdate(World world, int x, int y, Symbol previous, Symbol current) {
+	public void onOwnerUpdate(Symbol previous, Symbol current) {
 		forEachTile(pos -> {
 			world.getTileState(pos).setOwner(world, pos.x, pos.y, current, false);
 		});
@@ -84,6 +81,7 @@ public abstract class Building extends StructureEntity {
 
 	public void remove() {
 		removed = true;
+		onRemoved();
 		world.getCountry(tx, ty).removeBuilding(this);
 	}
 
