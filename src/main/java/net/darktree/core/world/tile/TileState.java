@@ -63,6 +63,8 @@ final public class TileState implements NbtSerializable {
 	public void setVariant(World world, int x, int y, TileVariant variant) {
 		this.variant = variant;
 		this.instance = variant.getTile().getInstance(world, x, y);
+
+		world.onTileChanged();
 	}
 
 	public void setOwner(World world, int x, int y, Symbol owner, boolean notify) {

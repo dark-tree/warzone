@@ -29,6 +29,7 @@ public class UnitEntity extends MovingEntity {
 		return symbol;
 	}
 
+	@Override
 	public void draw(VertexBuffer buffer) {
 		super.draw(buffer);
 		Renderer.quad(buffer, x, y, 1, 1, armored ? symbol.getArmoredSprite() : symbol.getSprite(), 1, 1, 1, 0);

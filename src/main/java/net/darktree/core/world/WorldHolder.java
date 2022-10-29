@@ -1,27 +1,25 @@
 package net.darktree.core.world;
 
-import net.darktree.core.client.Buffers;
-import net.darktree.core.client.Shaders;
-import net.darktree.core.client.Sprites;
-import net.darktree.core.client.Uniforms;
-import net.darktree.core.client.render.pipeline.Pipeline;
-import net.darktree.core.client.render.pipeline.TexturedPipeline;
+import net.darktree.core.client.render.WorldBuffers;
 import net.darktree.core.client.sound.SoundSystem;
 
 public class WorldHolder {
 
 	public static World world;
+	public static WorldBuffers buffers;
 
-	public static Pipeline pipeline = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.WORLD, Sprites.ATLAS, pipeline -> {
-		WorldView view = world.getView();
+	public static void setWorld(World world) {
+		if (WorldHolder.buffers != null) {
+			WorldHolder.buffers.close();
+		}
 
-		Uniforms.SCALE.putFloats(view.scaleX, view.scaleY).flush();
-		Uniforms.OFFSET.putFloats(view.offsetX, view.offsetY).flush();
-	}, true);
+		WorldHolder.world = world;
+		WorldHolder.buffers = new WorldBuffers(world);
+	}
 
 	public static void draw() {
 		SoundSystem.tick();
-		world.draw(pipeline.buffer);
+		world.draw(buffers);
 	}
 
 }

@@ -24,7 +24,7 @@ public class ScreenRenderer {
 	private static final Input INPUT = Window.INSTANCE.input();
 	private static final Map<TextureConvertible, Pipeline> pipelines = new IdentityHashMap<>();
 
-	private static final Pipeline quads = new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.GUI, Sprites.ATLAS, pipeline -> {}, true);
+	private static final Pipeline quads = new TexturedPipeline(Buffers.IMMEDIATE.build(), Shaders.GUI, Sprites.ATLAS, pipeline -> {});
 
 	private static float scale, psx, psy;
 	private static float x, y;
@@ -45,7 +45,7 @@ public class ScreenRenderer {
 	}
 
 	public static void registerFontPipeline(TextureConvertible texture) {
-		pipelines.put(texture, new TexturedPipeline(Buffers.TEXTURED.build(), Shaders.TEXT, texture, pipeline -> {}, true));
+		pipelines.put(texture, new TexturedPipeline(Buffers.IMMEDIATE.build(), Shaders.TEXT, texture, pipeline -> {}));
 	}
 
 	/**

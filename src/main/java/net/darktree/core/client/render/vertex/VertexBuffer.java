@@ -8,16 +8,18 @@ import java.util.List;
 
 public class VertexBuffer implements AutoCloseable {
 
-	public final int primitive, vertexSize;
-	public final ResizeableBuffer buffer;
+	protected final int primitive, vertexSize;
+	protected final ResizeableBuffer buffer;
+	protected final boolean immediate;
 
-	int vao, vbo;
-	boolean modified = false;
+	private int vao, vbo;
+	private	boolean modified = false;
 
-	public VertexBuffer(int primitive, int vertexSize) {
+	public VertexBuffer(int primitive, int vertexSize, boolean immediate) {
 		this.primitive = primitive;
 		this.vertexSize = vertexSize;
 		this.buffer = new ResizeableBuffer(16);
+		this.immediate = immediate;
 
 		this.vao = GL32.glGenVertexArrays();
 		this.vbo = GL32.glGenBuffers();
@@ -46,6 +48,11 @@ public class VertexBuffer implements AutoCloseable {
 		}
 	}
 
+	public void draw() {
+		GL32.glDrawArrays(this.primitive, 0, this.count());
+		if (immediate) clear();
+	}
+
 	public VertexBuffer putByte(byte value) {
 		this.buffer.reserve(1).putByte(value);
 		this.modified = true;
@@ -64,10 +71,9 @@ public class VertexBuffer implements AutoCloseable {
 		return this;
 	}
 
-	public VertexBuffer clear() {
+	public void clear() {
 		this.buffer.clear();
 		this.modified = true;
-		return this;
 	}
 
 	public static Builder create() {
@@ -91,6 +97,7 @@ public class VertexBuffer implements AutoCloseable {
 		final List<VertexAttribute> attributes = new ArrayList<>();
 
 		int stride = 0;
+		boolean immediate = false;
 
 		private Builder() {
 			this.primitive = GL32.GL_TRIANGLES;
@@ -130,8 +137,16 @@ public class VertexBuffer implements AutoCloseable {
 			return this.attribute(name.length());
 		}
 
+		/**
+		 * Make a immediate-like buffer (clear after use)
+		 */
+		public Builder immediate() {
+			immediate = true;
+			return this;
+		}
+
 		public VertexBuffer build() {
-			VertexBuffer buffer = new VertexBuffer(this.primitive, this.stride);
+			VertexBuffer buffer = new VertexBuffer(this.primitive, this.stride, this.immediate);
 			this.apply();
 			return buffer;
 		}

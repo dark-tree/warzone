@@ -50,7 +50,7 @@ public class Main {
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
 
-		WorldHolder.world = new World(8, 8);
+		WorldHolder.setWorld(new World(8, 8));
 		WorldHolder.world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
 
 		// load and set font

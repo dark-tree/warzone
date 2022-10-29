@@ -3,7 +3,6 @@ package net.darktree.game.interactor;
 import net.darktree.Main;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.world.World;
-import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.action.SummonAction;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Pathfinder;
@@ -19,7 +18,7 @@ public class CityInteractor extends Interactor {
 
 	public CityInteractor(Symbol symbol, World world) {
 		this.building = world.getCountry(symbol).getCapitol();
-		this.pathfinder = new Pathfinder(world, 10, symbol, consumer -> building.forEachTile(consumer), true);
+		this.pathfinder = new Pathfinder(world, 10, symbol, building::forEachTile, true);
 		this.world = world;
 
 		world.setOverlay(new PathfinderOverlay(pathfinder));
@@ -31,7 +30,7 @@ public class CityInteractor extends Interactor {
 		int y = Main.window.input().getMouseMapY(world.getView());
 
 		if (world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
-			pathfinder.getPathTo(x, y).draw(WorldHolder.pipeline.buffer);
+			pathfinder.getPathTo(x, y).draw(buffer);
 		}
 	}
 

@@ -5,7 +5,6 @@ import net.darktree.core.client.Colors;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.util.math.MathHelper;
 import net.darktree.core.world.World;
-import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.action.ColonizeAction;
 import net.darktree.core.world.action.MoveAction;
 import net.darktree.core.world.action.ToggleArmorAction;
@@ -43,7 +42,7 @@ public class UnitInteractor extends Interactor {
 		int y = Main.window.input().getMouseMapY(world.getView());
 
 		if (pathfinder != null && world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
-			pathfinder.getPathTo(x, y).draw(WorldHolder.pipeline.buffer);
+			pathfinder.getPathTo(x, y).draw(buffer);
 		}
 	}
 

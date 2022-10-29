@@ -1,5 +1,7 @@
 package net.darktree.core.world.entity;
 
+import net.darktree.core.client.render.WorldBuffers;
+import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.world.World;
 
 public abstract class StructureEntity extends Entity {
@@ -24,5 +26,12 @@ public abstract class StructureEntity extends Entity {
 
 		return a < width && b < height;
 	}
+
+	@Override
+	public final void draw(WorldBuffers buffers) {
+		draw(buffers.getBuilding());
+	}
+
+	abstract public void draw(VertexBuffer buffer);
 
 }

@@ -1,6 +1,7 @@
 package net.darktree.core.world.entity;
 
 import net.darktree.Main;
+import net.darktree.core.client.render.WorldBuffers;
 import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
@@ -59,9 +60,11 @@ public abstract class MovingEntity extends Entity {
 	}
 
 	@Override
-	public void draw(VertexBuffer buffer) {
-		super.draw(buffer);
+	public final void draw(WorldBuffers buffers) {
+		draw(buffers.getEntity());
+	}
 
+	public void draw(VertexBuffer buffer) {
 		this.x += sx;
 		this.y += sy;
 

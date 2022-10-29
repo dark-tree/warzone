@@ -11,8 +11,8 @@ public class TexturedPipeline extends Pipeline {
 
 	private final Texture texture;
 
-	public TexturedPipeline(VertexBuffer buffer, Program program, TextureConvertible texture, Consumer<Pipeline> prepare, boolean immediate) {
-		super(buffer, program, prepare, immediate);
+	public TexturedPipeline(VertexBuffer buffer, Program program, TextureConvertible texture, Consumer<Pipeline> prepare) {
+		super(buffer, program, prepare);
 		this.texture = texture.getTexture();
 	}
 

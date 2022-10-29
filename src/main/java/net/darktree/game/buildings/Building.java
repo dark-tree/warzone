@@ -57,7 +57,6 @@ public abstract class Building extends StructureEntity {
 		this.world.getManager().apply(new DeconstructBuildingAction(this, getX(), getY()));
 	}
 
-	@Override
 	public void draw(VertexBuffer buffer) {
 		Overlay overlay = world.getOverlay();
 		Color c = overlay == null ? Colors.OVERLAY_NONE : overlay.getColor(world, tx, ty, world.getTileState(tx, ty));

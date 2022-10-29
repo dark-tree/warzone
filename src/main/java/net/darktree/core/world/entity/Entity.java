@@ -1,7 +1,7 @@
 package net.darktree.core.world.entity;
 
 import net.darktree.core.Registries;
-import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.client.render.WorldBuffers;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldComponent;
@@ -42,7 +42,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		this.ty = y;
 	}
 
-	public void draw(VertexBuffer buffer) {
+	public void draw(WorldBuffers buffers) {
 
 	}
 

@@ -1,6 +1,7 @@
 package net.darktree.core.world;
 
 import net.darktree.core.client.Colors;
+import net.darktree.core.client.render.WorldBuffers;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.TurnEvent;
@@ -43,7 +44,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	private Symbol[] symbols = new Symbol[]{};
 	final private ActionManager manager = new ActionManager(this);
 	private Overlay overlay = null;
-	private boolean ownershipDirty = true;
+	private boolean ownershipDirty = true, redrawSurface = true;
 	private int turn;
 
 	private final WorldView view;
@@ -117,7 +118,7 @@ public class World implements NbtSerializable, WorldEntityView {
 		World world = new World(tag.getInt("width"), tag.getInt("height"));
 		world.turn = tag.getByte("turn");
 
-		WorldHolder.world = world;
+		WorldHolder.setWorld(world);
 
 		List<Symbol> symbols = new ArrayList<>();
 
@@ -223,7 +224,7 @@ public class World implements NbtSerializable, WorldEntityView {
 		getCountry(x, y).addBuilding(building);
 	}
 
-	public void draw(VertexBuffer buffer) {
+	public void draw(WorldBuffers buffers) {
 		this.entities.removeIf(entity -> entity.removed);
 
 		// TODO: bake country borders
@@ -243,16 +244,24 @@ public class World implements NbtSerializable, WorldEntityView {
 			});
 		}
 
-		for (int x = 0; x < width; x ++) {
-			for (int y = 0; y < height; y ++) {
-				TileState state = this.tiles[x][y];
-				state.getTile().draw(this, x, y, state, buffer);
+		if (redrawSurface) {
+			buffers.getSurface().clear();
 
-				drawBorders(buffer, x, y);
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					TileState state = this.tiles[x][y];
+					state.getTile().draw(this, x, y, state, buffers.getSurface());
+
+					drawBorders(buffers.getSurface(), x, y);
+				}
 			}
+
+			// FIXME move overlays to a separate layer so that we can skip rendering the surface every frame
+			//Logger.info("Surface redrawn, using " + buffers.getSurface().count() + " vertices");
+			//redrawSurface = false;
 		}
 
-		this.entities.forEach(entity -> entity.draw(buffer));
+		this.entities.forEach(entity -> entity.draw(buffers));
 		ownershipDirty = false;
 	}
 
@@ -368,6 +377,11 @@ public class World implements NbtSerializable, WorldEntityView {
 
 	public void onOwnershipChanged() {
 		ownershipDirty = true;
+		redrawSurface = true;
+	}
+
+	public void onTileChanged() {
+		redrawSurface = true;
 	}
 
 	public WorldView getView() {

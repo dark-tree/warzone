@@ -47,7 +47,7 @@ public class PlayScreen extends Screen {
 		WorldHolder.draw();
 
 		if (interactor != null) {
-			interactor.draw(WorldHolder.pipeline.buffer);
+			interactor.draw(WorldHolder.buffers.getEntity());
 
 			if (interactor.isClosed()) {
 				interactor.close();
@@ -55,7 +55,7 @@ public class PlayScreen extends Screen {
 			}
 		}
 
-		WorldHolder.pipeline.flush();
+		WorldHolder.buffers.draw();
 
 		Symbol symbol = world.getCurrentSymbol();
 
