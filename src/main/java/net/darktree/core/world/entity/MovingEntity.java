@@ -60,7 +60,7 @@ public abstract class MovingEntity extends Entity {
 	}
 
 	@Override
-	public final void draw(WorldBuffers buffers) {
+	public void draw(WorldBuffers buffers, boolean updateStaticElements) {
 		draw(buffers.getEntity());
 	}
 
@@ -78,7 +78,7 @@ public abstract class MovingEntity extends Entity {
 	}
 
 	@Override
-	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
+	public void onPlayerTurnStart(Symbol symbol) {
 		this.px = this.tx;
 		this.py = this.ty;
 		this.moved = false;

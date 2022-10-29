@@ -33,7 +33,7 @@ public class CapitolBuilding extends Building {
 	}
 
 	@Override
-	public void onPlayerTurnStart(World world, int x, int y, Symbol symbol) {
+	public void onPlayerTurnStart(Symbol symbol) {
 		if (symbol == this.symbol) summoned = false;
 	}
 

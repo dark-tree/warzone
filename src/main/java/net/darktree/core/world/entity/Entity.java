@@ -14,15 +14,22 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 
 	protected final World world;
 	protected int tx, ty;
-
-	public final Type type;
-	public boolean removed = false;
+	protected final Type type;
+	protected boolean removed = false;
 
 	public Entity(World world, int x, int y, Type type) {
 		this.world = world;
 		this.type = type;
 
 		setPos(x, y);
+	}
+
+	public void remove() {
+		removed = true;
+	}
+
+	public boolean isRemoved() {
+		return removed;
 	}
 
 	public boolean isAt(int x, int y) {
@@ -42,9 +49,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		this.ty = y;
 	}
 
-	public void draw(WorldBuffers buffers) {
-
-	}
+	abstract public void draw(WorldBuffers buffers, boolean updateStaticElements);
 
 	public boolean canPathfindThrough(Symbol symbol) {
 		return false;

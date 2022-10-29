@@ -1,8 +1,6 @@
 package net.darktree.game.buildings;
 
 import net.darktree.core.Registries;
-import net.darktree.core.client.Colors;
-import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
@@ -10,7 +8,6 @@ import net.darktree.core.util.BuildingType;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.DeconstructBuildingAction;
 import net.darktree.core.world.entity.StructureEntity;
-import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.game.country.Symbol;
 import net.querz.nbt.tag.CompoundTag;
@@ -58,9 +55,7 @@ public abstract class Building extends StructureEntity {
 	}
 
 	public void draw(VertexBuffer buffer) {
-		Overlay overlay = world.getOverlay();
-		Color c = overlay == null ? Colors.OVERLAY_NONE : overlay.getColor(world, tx, ty, world.getTileState(tx, ty));
-		Renderer.quad(buffer, tx, ty, width, height, getSprite(), c.r, c.g, c.b, c.a);
+		Renderer.quad(buffer, tx, ty, width, height, getSprite(), 0, 0, 0, 0);
 	}
 
 	@Override
@@ -78,19 +73,21 @@ public abstract class Building extends StructureEntity {
 		world.getCountry(current).addBuilding(this);
 	}
 
-	public void remove() {
-		removed = true;
-		onRemoved();
-		world.getCountry(tx, ty).removeBuilding(this);
-	}
-
 	@Deprecated
 	public int getStored() {
 		return 0;
 	}
 
-	public void onLoaded() {
+	@Override
+	public void onAdded() {
 		world.getCountry(tx, ty).addBuilding(this);
+		world.onBuildingChanged();
+	}
+
+	@Override
+	public void onRemoved() {
+		world.getCountry(tx, ty).removeBuilding(this);
+		world.onBuildingChanged();
 	}
 
 }

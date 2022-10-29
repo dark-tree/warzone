@@ -28,8 +28,8 @@ public abstract class StructureEntity extends Entity {
 	}
 
 	@Override
-	public final void draw(WorldBuffers buffers) {
-		draw(buffers.getBuilding());
+	public void draw(WorldBuffers buffers, boolean updateStaticElements) {
+		if (updateStaticElements) draw(buffers.getBuilding());
 	}
 
 	abstract public void draw(VertexBuffer buffer);

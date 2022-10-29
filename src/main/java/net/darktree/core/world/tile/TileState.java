@@ -53,8 +53,6 @@ final public class TileState implements NbtSerializable {
 			}
 		}catch (Exception e) {
 			Logger.warn("Loading of tile at: (", x, ", ", y, ") failed! Reverting to default...");
-
-			// TODO make better
 			world.setTileVariant(x, y, Tiles.EMPTY.getDefaultVariant());
 			owner = Symbol.NONE;
 		}

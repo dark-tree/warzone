@@ -13,9 +13,7 @@ import net.darktree.core.world.WorldHolder;
 import net.darktree.core.world.WorldView;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.game.country.Symbol;
-import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.interactor.Interactor;
-import net.darktree.game.interactor.UnitInteractor;
 import net.darktree.game.screen.hotbar.Hotbar;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
@@ -47,7 +45,7 @@ public class PlayScreen extends Screen {
 		WorldHolder.draw();
 
 		if (interactor != null) {
-			interactor.draw(WorldHolder.buffers.getEntity());
+			interactor.draw(WorldHolder.buffers.getOverlay());
 
 			if (interactor.isClosed()) {
 				interactor.close();
@@ -170,19 +168,12 @@ public class PlayScreen extends Screen {
 
 				if (action == GLFW.GLFW_PRESS) {
 					Entity entity = world.getEntity(x, y);
+					ClickEvent event = new ClickEvent(button, action);
 
-					if (entity instanceof UnitEntity unit) { // TODO move to entity
-						if (unit.getSymbol() == world.getCurrentSymbol()) {
-							interactor = new UnitInteractor(unit, world);
-						}
-					}else{
-						ClickEvent event = new ClickEvent(button, action);
-
-						if (entity != null) {
-							entity.onInteract(world, x, y, event);
-						} else {
-							world.getTileState(x, y).getTile().onInteract(world, x, y, event);
-						}
+					if (entity != null) {
+						entity.onInteract(world, x, y, event);
+					} else {
+						world.getTileState(x, y).getTile().onInteract(world, x, y, event);
 					}
 				}
 

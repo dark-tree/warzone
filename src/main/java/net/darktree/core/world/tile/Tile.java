@@ -23,8 +23,8 @@ public abstract class Tile implements WorldTile {
 		return this.variant;
 	}
 
-	public void draw(World world, int x, int y, TileState state, VertexBuffer buffer) {
-		Renderer.tile(buffer, world, x, y, state, SpriteBridge.getSprite(this));
+	public void draw(int x, int y, VertexBuffer buffer) {
+		Renderer.tile(buffer, x, y, SpriteBridge.getSprite(this));
 	}
 
 	/**

@@ -55,7 +55,7 @@ public class Window implements AutoCloseable {
 
 		//create the window
 		handle = glfwCreateWindow(width, height, title, NULL, NULL);
-		if ( handle == NULL ) {
+		if (handle == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
 
@@ -95,6 +95,7 @@ public class Window implements AutoCloseable {
 
 		glDepthFunc(GL_LEQUAL);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glActiveTexture(GL_TEXTURE0);
 
 		glfwSetWindowSizeCallback(handle, (window, w, h) -> {
 			this.width = w;

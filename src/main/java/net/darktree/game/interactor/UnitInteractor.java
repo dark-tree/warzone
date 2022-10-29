@@ -8,11 +8,11 @@ import net.darktree.core.world.World;
 import net.darktree.core.world.action.ColonizeAction;
 import net.darktree.core.world.action.MoveAction;
 import net.darktree.core.world.action.ToggleArmorAction;
+import net.darktree.core.world.entity.UnitEntity;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.path.Pathfinder;
 import net.darktree.core.world.pattern.Patterns;
-import net.darktree.game.entities.UnitEntity;
 import net.darktree.game.screen.PlayScreen;
 import org.lwjgl.glfw.GLFW;
 
@@ -64,13 +64,13 @@ public class UnitInteractor extends Interactor {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
 			if (world.getManager().apply(new ColonizeAction(entity, MathHelper.nextRandomDice(), false))) {
-				if (entity.removed) closed = true;
+				if (entity.isRemoved()) closed = true;
 			}
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_W) {
 			if (world.getManager().apply(new ColonizeAction(entity, MathHelper.nextRandomDice(), true))) {
-				if (entity.removed) closed = true;
+				if (entity.isRemoved()) closed = true;
 			}
 		}
 

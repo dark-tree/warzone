@@ -6,17 +6,15 @@ import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.Logger;
-import net.darktree.core.util.NbtSerializable;
+import net.darktree.core.util.Util;
 import net.darktree.core.world.action.ActionManager;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
-import net.darktree.core.world.pattern.FixedPattern;
 import net.darktree.core.world.terrain.ControlFinder;
 import net.darktree.core.world.terrain.EnclaveFinder;
 import net.darktree.core.world.tile.TileInstance;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
-import net.darktree.core.world.tile.TileStateConsumer;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.core.world.view.WorldEntityView;
 import net.darktree.game.buildings.Building;
@@ -29,10 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class World implements NbtSerializable, WorldEntityView {
+public class World implements WorldEntityView {
 
 	final public int width, height;
 
@@ -44,7 +41,7 @@ public class World implements NbtSerializable, WorldEntityView {
 	private Symbol[] symbols = new Symbol[]{};
 	final private ActionManager manager = new ActionManager(this);
 	private Overlay overlay = null;
-	private boolean ownershipDirty = true, redrawSurface = true;
+	private boolean ownershipDirty = true, redrawSurface = true, redrawBuildings = true;
 	private int turn;
 
 	private final WorldView view;
@@ -64,7 +61,6 @@ public class World implements NbtSerializable, WorldEntityView {
 		this.control = new ControlFinder(this);
 	}
 
-	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		CompoundTag tilesTag = new CompoundTag();
 
@@ -104,12 +100,6 @@ public class World implements NbtSerializable, WorldEntityView {
 		tag.put("countries", countriesTag);
 	}
 
-	// should we implement NbtSerializable if that operation is unsupported?
-	@Override
-	public void fromNbt(@NotNull CompoundTag tag) {
-		throw new UnsupportedOperationException("World can't be loaded after being created!");
-	}
-
 	public static void load(CompoundTag tag) {
 		CompoundTag tilesTag = tag.getCompoundTag("tiles");
 		ListTag<?> entities = tag.getListTag("entities");
@@ -141,8 +131,8 @@ public class World implements NbtSerializable, WorldEntityView {
 
 		entities.forEach(entry -> {
 			Entity entity = Entity.load(world, (CompoundTag) entry);
-			world.addEntity(entity);
 			entity.onLoaded();
+			world.addEntity(entity);
 		});
 
 		Logger.info("World loaded!");
@@ -214,20 +204,15 @@ public class World implements NbtSerializable, WorldEntityView {
 	}
 
 	/**
-	 * Method used for placing buildings on the map, it takes care
-	 * of all the required setup. Returns true on success, false otherwise.
+	 * Method used for placing buildings on the map, takes care of all the required setup.
 	 */
-	@Deprecated
 	public void placeBuilding(int x, int y, Building building) {
 		addEntity(building);
-		building.onAdded();
 		getCountry(x, y).addBuilding(building);
 	}
 
 	public void draw(WorldBuffers buffers) {
-		this.entities.removeIf(entity -> entity.removed);
-
-		// TODO: bake country borders
+		Util.consumeIf(entities, Entity::isRemoved, WorldComponent::onRemoved);
 
 		if (ownershipDirty) {
 			this.control = new ControlFinder(this);
@@ -250,18 +235,33 @@ public class World implements NbtSerializable, WorldEntityView {
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < height; y++) {
 					TileState state = this.tiles[x][y];
-					state.getTile().draw(this, x, y, state, buffers.getSurface());
+					state.getTile().draw(x, y, buffers.getSurface());
 
 					drawBorders(buffers.getSurface(), x, y);
 				}
 			}
 
-			// FIXME move overlays to a separate layer so that we can skip rendering the surface every frame
-			//Logger.info("Surface redrawn, using " + buffers.getSurface().count() + " vertices");
-			//redrawSurface = false;
+			Logger.info("Surface redrawn, using " + buffers.getSurface().count() + " vertices");
 		}
 
-		this.entities.forEach(entity -> entity.draw(buffers));
+		if (redrawBuildings) {
+			buffers.getBuilding().clear();
+		}
+
+		this.entities.forEach(entity -> entity.draw(buffers, redrawBuildings));
+
+		if (overlay != null) {
+			VertexBuffer buffer = buffers.getOverlay();
+
+			for (int x = 0; x < width; x++) {
+				for (int y = 0; y < height; y++) {
+					Renderer.overlay(buffer, x, y, overlay.getColor(this, x, y, getTileState(x, y)));
+				}
+			}
+		}
+
+		redrawSurface = false;
+		redrawBuildings = false;
 		ownershipDirty = false;
 	}
 
@@ -277,10 +277,6 @@ public class World implements NbtSerializable, WorldEntityView {
 			Renderer.line(buffer, x, y, x + 1, y, w, Colors.BORDER);
 		}
 
-	}
-
-	public void getPatternTiles(FixedPattern pattern, int x, int y, Consumer<TileState> consumer) {
-		pattern.iterate(this, x, y, pos -> consumer.accept(this.tiles[pos.x][pos.y]));
 	}
 
 	public Country defineCountry(Symbol symbol) {
@@ -335,16 +331,8 @@ public class World implements NbtSerializable, WorldEntityView {
 	}
 
 	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {
-		getEntities().forEach(entity -> entity.onPlayerTurnEvent(this, entity.getX(), entity.getY(), event, symbol));
+		getEntities().forEach(entity -> entity.onPlayerTurnEvent(event, symbol));
 		this.countries.forEach((key, value) -> value.onPlayerTurnEvent(this, event, symbol));
-	}
-
-	public void forEach(TileStateConsumer consumer) {
-		for (int x = 0; x < width; x ++) {
-			for (int y = 0; y < height; y ++) {
-				consumer.accept(this.tiles[x][y], x, y);
-			}
-		}
 	}
 
 	public Country getCountry(Symbol symbol) {
@@ -382,6 +370,10 @@ public class World implements NbtSerializable, WorldEntityView {
 
 	public void onTileChanged() {
 		redrawSurface = true;
+	}
+
+	public void onBuildingChanged() {
+		redrawBuildings = true;
 	}
 
 	public WorldView getView() {

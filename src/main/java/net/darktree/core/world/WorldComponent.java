@@ -8,9 +8,8 @@ public interface WorldComponent extends WorldListener, WorldTile {
 	/**
 	 * Called right before a component is removed
 	 */
-	@Deprecated
 	default void onRemoved() {
-		// this is called only for buildings
+
 	}
 
 	/**
@@ -21,7 +20,7 @@ public interface WorldComponent extends WorldListener, WorldTile {
 	}
 
 	/**
-	 * Called right after a component is added to the world during loading
+	 * Called right before a component is added to the world during loading from NBT
 	 */
 	default void onLoaded() {
 

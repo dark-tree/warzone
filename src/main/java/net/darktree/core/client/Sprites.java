@@ -2,11 +2,14 @@ package net.darktree.core.client;
 
 import net.darktree.core.client.render.image.Atlas;
 import net.darktree.core.client.render.image.Sprite;
+import net.darktree.core.client.render.image.Texture;
+import net.darktree.core.client.render.image.UnsetTexture;
 import net.darktree.core.util.Logger;
 
 public class Sprites {
 
 	public final static Atlas ATLAS = Atlas.stitchedOf("sprites");
+	public final static Texture UNSET = new UnsetTexture(); // handle with care!
 	public final static Sprite MISSINGNO = ATLAS.getSprite("missingno.png");
 	public final static Sprite NONE = ATLAS.getSprite("none.png");
 
@@ -36,5 +39,6 @@ public class Sprites {
 
 	public static Sprite BUILDING_CAPITOL = getSprite("building/capitol.png");
 	public static final Sprite BUILDING_FACTORY = getSprite("building/factory.png");
+	public static final Sprite BUILDING_MINE = getSprite("building/mine.png");
 
 }

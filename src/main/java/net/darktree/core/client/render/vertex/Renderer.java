@@ -1,15 +1,11 @@
 package net.darktree.core.client.render.vertex;
 
 import net.darktree.Main;
-import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Alignment;
 import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
-import net.darktree.core.world.World;
-import net.darktree.core.world.overlay.Overlay;
-import net.darktree.core.world.tile.TileState;
 import org.lwjgl.opengl.GL32;
 
 import java.nio.charset.StandardCharsets;
@@ -17,10 +13,12 @@ import java.nio.charset.StandardCharsets;
 
 public class Renderer {
 
-	public static void tile(VertexBuffer buffer, World world, int x, int y, TileState state, Sprite sprite) {
-		Overlay overlay = world.getOverlay();
-		Color color = overlay == null ? Colors.OVERLAY_NONE : overlay.getColor(world, x, y, state);
-		quad(buffer, x, y, 1, 1, sprite, color.r, color.g, color.b, color.a);
+	public static void overlay(VertexBuffer buffer, int x, int y, Color color) {
+		quad(buffer, x, y, 1, 1, Sprites.NONE, color.r, color.g, color.b, color.a);
+	}
+
+	public static void tile(VertexBuffer buffer, int x, int y, Sprite sprite) {
+		quad(buffer, x, y, 1, 1, sprite, 0, 0, 0, 0);
 	}
 
 	public static void quad(VertexBuffer buffer, float x, float y, float w, float h, Sprite sprite, float r, float g, float b, float a) {
@@ -74,6 +72,7 @@ public class Renderer {
 			return;
 		}
 
+		// FIXME
 		// this doesn't respect the winding order for some directions
 		// (when the line is pointing to the left and/or downwards)
 		// it would be a good idea to fix this, for now I disabled back face culling to mitigate this

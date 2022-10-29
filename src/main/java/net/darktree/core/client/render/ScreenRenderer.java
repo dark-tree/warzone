@@ -7,7 +7,6 @@ import net.darktree.core.client.render.image.Font;
 import net.darktree.core.client.render.image.Sprite;
 import net.darktree.core.client.render.image.TextureConvertible;
 import net.darktree.core.client.render.pipeline.Pipeline;
-import net.darktree.core.client.render.pipeline.TexturedPipeline;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.Window;
@@ -24,7 +23,7 @@ public class ScreenRenderer {
 	private static final Input INPUT = Window.INSTANCE.input();
 	private static final Map<TextureConvertible, Pipeline> pipelines = new IdentityHashMap<>();
 
-	private static final Pipeline quads = new TexturedPipeline(Buffers.IMMEDIATE.build(), Shaders.GUI, Sprites.ATLAS, pipeline -> {});
+	private static final Pipeline quads = new Pipeline(Buffers.IMMEDIATE.build(), Shaders.GUI, Sprites.ATLAS);
 
 	private static float scale, psx, psy;
 	private static float x, y;
@@ -45,7 +44,7 @@ public class ScreenRenderer {
 	}
 
 	public static void registerFontPipeline(TextureConvertible texture) {
-		pipelines.put(texture, new TexturedPipeline(Buffers.IMMEDIATE.build(), Shaders.TEXT, texture, pipeline -> {}));
+		pipelines.put(texture, new Pipeline(Buffers.IMMEDIATE.build(), Shaders.TEXT, texture));
 	}
 
 	/**

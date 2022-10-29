@@ -109,7 +109,7 @@ public class Image implements AutoCloseable {
 	}
 
 	public Texture asTexture() {
-		return new Texture(this);
+		return new NativeTexture(this);
 	}
 
 	@Override

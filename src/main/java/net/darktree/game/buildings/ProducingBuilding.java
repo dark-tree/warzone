@@ -29,8 +29,8 @@ public abstract class ProducingBuilding extends Building {
 	}
 
 	@Override
-	public void onPlayerTurnEnd(World world, int x, int y, Symbol symbol) {
-		if (world.canControl(x, y, symbol)) {
+	public void onPlayerTurnEnd(Symbol symbol) {
+		if (world.canControl(tx, ty, symbol)) {
 			production.apply(world, symbol);
 		}
 	}

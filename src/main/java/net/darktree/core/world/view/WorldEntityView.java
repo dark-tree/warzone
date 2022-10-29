@@ -12,6 +12,7 @@ public interface WorldEntityView {
 
 	default Entity addEntity(Entity entity) {
 		getEntities().add(entity);
+		entity.onAdded();
 		return entity;
 	}
 

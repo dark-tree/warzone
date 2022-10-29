@@ -1,8 +1,8 @@
 package net.darktree.core.world.action;
 
 import net.darktree.core.world.World;
+import net.darktree.core.world.entity.UnitEntity;
 import net.darktree.game.country.Symbol;
-import net.darktree.game.entities.UnitEntity;
 
 public class EntityShotAction extends Action {
 

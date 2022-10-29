@@ -47,6 +47,7 @@ public class Uniform {
 		void send(int loc, ByteBuffer buf);
 	}
 
+	public static final Sender INT = (loc, buf) -> GL32.glUniform1i(loc, buf.getInt());
 	public static final Sender VEC1F = (loc, buf) -> GL32.glUniform1f(loc, buf.getFloat());
 	public static final Sender VEC2F = (loc, buf) -> GL32.glUniform2f(loc, buf.getFloat(), buf.getFloat());
 	public static final Sender VEC3F = (loc, buf) -> GL32.glUniform3f(loc, buf.getFloat(), buf.getFloat(), buf.getFloat());

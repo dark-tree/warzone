@@ -11,8 +11,8 @@ import net.darktree.core.util.math.MathHelper;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.EntityShotAction;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.entity.UnitEntity;
 import net.darktree.core.world.tile.TilePos;
-import net.darktree.game.entities.UnitEntity;
 
 public class UnitAttackInteractor extends Interactor {
 
