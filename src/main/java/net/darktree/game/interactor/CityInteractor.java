@@ -2,6 +2,7 @@ package net.darktree.game.interactor;
 
 import net.darktree.Main;
 import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.client.window.Input;
 import net.darktree.core.world.Surface;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.SummonAction;
@@ -26,12 +27,13 @@ public class CityInteractor extends Interactor {
 	}
 
 	@Override
-	public void draw(VertexBuffer buffer) {
-		int x = Main.window.input().getMouseMapX(world.getView());
-		int y = Main.window.input().getMouseMapY(world.getView());
+	public void draw(VertexBuffer texture, VertexBuffer color) {
+		final Input input = Main.window.input();
+		final int x = input.getMouseMapX(world.getView());
+		final int y = input.getMouseMapY(world.getView());
 
 		if (world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
-			pathfinder.getPathTo(x, y).draw(buffer);
+			pathfinder.getPathTo(x, y).draw(color);
 		}
 	}
 

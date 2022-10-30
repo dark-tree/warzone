@@ -24,12 +24,22 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		setPos(x, y);
 	}
 
+	@Override
+	public void onAdded() {
+		world.getTileState(tx, ty).setEntity(this);
+	}
+
 	public void remove() {
 		removed = true;
 	}
 
 	public boolean isRemoved() {
 		return removed;
+	}
+
+	@Override
+	public void onRemoved() {
+		world.getTileState(tx, ty).removeEntity(this);
 	}
 
 	public boolean isAt(int x, int y) {
@@ -44,7 +54,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		return ty;
 	}
 
-	public void setPos(int x, int y) {
+	protected void setPos(int x, int y) {
 		this.tx = x;
 		this.ty = y;
 	}

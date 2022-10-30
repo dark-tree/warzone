@@ -25,7 +25,7 @@ public class DeconstructInteractor extends Interactor {
 	}
 
 	@Override
-	public void draw(VertexBuffer buffer) {
+	public void draw(VertexBuffer texture, VertexBuffer color) {
 		int x = Main.window.input().getMouseMapX(world.getView());
 		int y = Main.window.input().getMouseMapY(world.getView());
 
@@ -41,9 +41,9 @@ public class DeconstructInteractor extends Interactor {
 
 				if (entity instanceof Building building) {
 					BuildingType type = building.getType();
-					Renderer.quad(buffer, this.x, this.y, type.width, type.height, Sprites.NONE, c.r, c.g, c.b, c.a * wave);
+					Renderer.quad(color, this.x, this.y, type.width, type.height, Sprites.NONE, c.r, c.g, c.b, c.a * wave);
 				} else {
-					Renderer.quad(buffer, this.x, this.y, 1, 1, Sprites.NONE, c.r, c.g, c.b, c.a * wave);
+					Renderer.quad(color, this.x, this.y, 1, 1, Sprites.NONE, c.r, c.g, c.b, c.a * wave);
 				}
 			}
 		}

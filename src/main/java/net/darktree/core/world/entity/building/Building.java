@@ -76,12 +76,14 @@ public abstract class Building extends StructureEntity {
 	@Override
 	public void onAdded() {
 		world.getCountry(tx, ty).addBuilding(this);
+		forEachTile(pos -> world.getTileState(pos).setEntity(this));
 		world.onBuildingChanged();
 	}
 
 	@Override
 	public void onRemoved() {
 		world.getCountry(tx, ty).removeBuilding(this);
+		forEachTile(pos -> world.getTileState(pos).removeEntity(this));
 		world.onBuildingChanged();
 	}
 

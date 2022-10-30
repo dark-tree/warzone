@@ -6,9 +6,12 @@ import net.darktree.core.client.render.color.Color;
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.util.BuildingType;
+import net.darktree.core.world.Surface;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.BuildAction;
+import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.tile.TilePos;
+import net.darktree.core.world.tile.TileState;
 import net.darktree.game.country.Symbol;
 
 import java.util.List;
@@ -38,15 +41,19 @@ public class BuildInteractor extends Interactor {
 		}
 
 		for (TilePos pos : tiles) {
-			if (world.getEntity(pos.x, pos.y) != null) return false;
-			if (!world.canControl(pos.x, pos.y, symbol)) return false;
+			TileState state = world.getTileState(pos);
+			Tile tile = state.getTile();
+
+			if (state.getEntity() != null) return false;
+			if (state.getOwner() != symbol || !world.canControl(pos.x, pos.y)) return false;
+			if (tile.getSurface() != Surface.LAND || !tile.canStayOn()) return false;
 		}
 
 		return true;
 	}
 
 	@Override
-	public void draw(VertexBuffer buffer) {
+	public void draw(VertexBuffer texture, VertexBuffer color) {
 		int x = Main.window.input().getMouseMapX(world.getView());
 		int y = Main.window.input().getMouseMapY(world.getView());
 
@@ -66,7 +73,7 @@ public class BuildInteractor extends Interactor {
 
 		Color c = valid ? Colors.SPOT_VALID : Colors.SPOT_INVALID;
 
-		Renderer.quad(buffer, this.x, this.y, 2, 2, type.sprite, c.r, c.g, c.b, c.a * wave);
+		Renderer.quad(texture, this.x, this.y, 2, 2, type.sprite, c.r, c.g, c.b, c.a * wave);
 	}
 
 	@Override

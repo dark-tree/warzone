@@ -15,7 +15,6 @@ import net.darktree.core.world.terrain.EnclaveFinder;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
 import net.darktree.core.world.tile.variant.TileVariant;
-import net.darktree.core.world.view.WorldEntityView;
 import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
 import net.querz.nbt.tag.CompoundTag;
@@ -49,8 +48,8 @@ public class World implements WorldEntityView {
 		this.height = height;
 		this.tiles = new TileState[width][height];
 
-		for (int x = 0; x < width; x ++) {
-			for (int y = 0; y < height; y ++) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				this.tiles[x][y] = new TileState(null, Symbol.NONE);
 			}
 		}
@@ -62,8 +61,8 @@ public class World implements WorldEntityView {
 	public void toNbt(@NotNull CompoundTag tag) {
 		CompoundTag tilesTag = new CompoundTag();
 
-		for (int x = 0; x < this.width; x ++) {
-			for (int y = 0; y < this.height; y ++) {
+		for (int x = 0; x < this.width; x++) {
+			for (int y = 0; y < this.height; y++) {
 				CompoundTag tileTag = new CompoundTag();
 				this.tiles[x][y].toNbt(tileTag);
 				tilesTag.put(x + " " + y, tileTag);
@@ -121,8 +120,8 @@ public class World implements WorldEntityView {
 
 		world.symbols = symbols.toArray(new Symbol[]{});
 
-		for (int x = 0; x < world.width; x ++) {
-			for (int y = 0; y < world.height; y ++) {
+		for (int x = 0; x < world.width; x++) {
+			for (int y = 0; y < world.height; y++) {
 				world.tiles[x][y].load(world, x, y, tilesTag);
 			}
 		}
@@ -137,8 +136,8 @@ public class World implements WorldEntityView {
 	}
 
 	public void loadTiles(Function<TilePos, TileVariant> generator) {
-		for (int x = 0; x < width; x ++) {
-			for (int y = 0; y < height; y ++) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				setTileVariant(x, y, generator.apply(new TilePos(x, y)));
 			}
 		}
@@ -151,6 +150,11 @@ public class World implements WorldEntityView {
 	@Override
 	public List<Entity> getEntities() {
 		return entities;
+	}
+
+	@Override
+	public Entity getEntity(int x, int y) {
+		return getTileState(x, y).getEntity();
 	}
 
 	/**
@@ -315,10 +319,6 @@ public class World implements WorldEntityView {
 
 	public Country getCountry(int x, int y) {
 		return countries.get(getTileState(x, y).getOwner());
-	}
-
-	public Overlay getOverlay() {
-		return this.overlay;
 	}
 
 	public void setOverlay(Overlay overlay) {

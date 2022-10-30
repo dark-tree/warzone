@@ -25,7 +25,12 @@ public abstract class MovingEntity extends Entity {
 		this.py = y;
 	}
 
-	public void move(int x, int y, float speed) {
+	protected void migrate(int x1, int y1, int x2, int y2) {
+		world.getTileState(x1, y1).removeEntity(this);
+		world.getTileState(x2, y2).setEntity(this);
+	}
+
+	protected void move(int x, int y, float speed) {
 		this.tx = x;
 		this.ty = y;
 
@@ -34,6 +39,9 @@ public abstract class MovingEntity extends Entity {
 	}
 
 	public void follow(Path path) {
+		TilePos end = path.getEnd();
+		migrate(getX(), getY(), end.x, end.y);
+
 		this.path = path;
 		this.moved = true;
 		followNext();
@@ -52,7 +60,7 @@ public abstract class MovingEntity extends Entity {
 	}
 
 	@Override
-	public void setPos(int x, int y) {
+	protected void setPos(int x, int y) {
 		super.setPos(x, y);
 
 		this.x = x;
@@ -89,6 +97,7 @@ public abstract class MovingEntity extends Entity {
 	}
 
 	public void revert() {
+		migrate(tx, ty, px, py);
 		move(px, py, 0.05f);
 		moved = false;
 		path = null;

@@ -2,13 +2,13 @@ package net.darktree.core.world.action;
 
 import net.darktree.core.client.Sounds;
 import net.darktree.core.util.BuildingType;
+import net.darktree.core.world.Surface;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.building.Building;
+import net.darktree.core.world.tile.Tile;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
 import net.darktree.game.country.Symbol;
-
-import java.util.List;
 
 public class BuildAction extends Action {
 
@@ -29,10 +29,16 @@ public class BuildAction extends Action {
 			return false;
 		}
 
-		List<TilePos> tiles = type.pattern.list(world, x, y, true);
-		TileState[][] map = world.getTiles();
+		for (TilePos pos : type.pattern.list(world, x, y, true)) {
+			TileState state = world.getTileState(pos);
 
-		return tiles.stream().filter(pos -> world.getEntity(pos.x, pos.y) == null).map(pos -> map[pos.x][pos.y]).allMatch(state -> state.getOwner() == symbol);
+			Tile tile = state.getTile();
+			if (state.getEntity() != null || state.getOwner() != symbol || tile.getSurface() != Surface.LAND || !tile.canStayOn()) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override

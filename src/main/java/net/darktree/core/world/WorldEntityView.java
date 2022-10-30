@@ -1,6 +1,5 @@
-package net.darktree.core.world.view;
+package net.darktree.core.world;
 
-import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.entity.building.Building;
 import net.darktree.core.world.tile.TilePos;
@@ -20,7 +19,6 @@ public interface WorldEntityView {
 		return addEntity(type.create((World) this, x, y));
 	}
 
-	// TODO add cache
 	default Entity getEntity(int x, int y) {
 		return getEntities().stream().filter(entity -> entity.isAt(x, y)).findFirst().orElse(null);
 	}

@@ -5,6 +5,7 @@ import net.darktree.core.client.Colors;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.ScreenRenderer;
+import net.darktree.core.client.render.WorldBuffers;
 import net.darktree.core.client.window.Input;
 import net.darktree.core.client.window.input.MouseButton;
 import net.darktree.core.event.ClickEvent;
@@ -45,7 +46,8 @@ public class PlayScreen extends Screen {
 		WorldHolder.draw();
 
 		if (interactor != null) {
-			interactor.draw(WorldHolder.buffers.getOverlay());
+			WorldBuffers buffers = WorldHolder.buffers;
+			interactor.draw(buffers.getEntity(), buffers.getOverlay());
 
 			if (interactor.isClosed()) {
 				interactor.close();

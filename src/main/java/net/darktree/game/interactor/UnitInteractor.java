@@ -36,14 +36,14 @@ public class UnitInteractor extends Interactor {
 	}
 
 	@Override
-	public void draw(VertexBuffer buffer) {
-		entity.drawSelection(buffer, Colors.ENTITY_SELECTION);
+	public void draw(VertexBuffer texture, VertexBuffer color) {
+		entity.drawSelection(color, Colors.ENTITY_SELECTION);
 
 		int x = Main.window.input().getMouseMapX(world.getView());
 		int y = Main.window.input().getMouseMapY(world.getView());
 
 		if (pathfinder != null && world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
-			pathfinder.getPathTo(x, y).draw(buffer);
+			pathfinder.getPathTo(x, y).draw(color);
 		}
 	}
 

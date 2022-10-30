@@ -7,7 +7,7 @@ public class Interactor {
 
 	protected boolean closed = false;
 
-	public void draw(VertexBuffer buffer) {
+	public void draw(VertexBuffer texture, VertexBuffer color) {
 
 	}
 

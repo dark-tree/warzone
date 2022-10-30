@@ -4,6 +4,7 @@ import net.darktree.core.Registries;
 import net.darktree.core.util.Logger;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.World;
+import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.core.world.tiles.Tiles;
 import net.darktree.game.country.Symbol;
@@ -14,6 +15,7 @@ final public class TileState implements NbtSerializable {
 
 	private TileVariant variant;
 	private Symbol owner;
+	private Entity entity;
 
 	public TileState(TileVariant variant, Symbol owner) {
 		this.variant = variant;
@@ -68,6 +70,26 @@ final public class TileState implements NbtSerializable {
 
 	public Symbol getOwner() {
 		return this.owner;
+	}
+
+	public Entity getEntity() {
+		return entity;
+	}
+
+	/**
+	 * Place an entity on this tile,
+	 * for internal use only!
+	 */
+	public void setEntity(Entity entity) {
+		if (this.entity == null) this.entity = entity;
+	}
+
+	/**
+	 * Remove an entity from this tile,
+	 * for internal use only!
+	 */
+	public void removeEntity(Entity entity) {
+		if (this.entity == entity) this.entity = null;
 	}
 
 }
