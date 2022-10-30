@@ -1,12 +1,10 @@
 package opengl;
 
-import net.darktree.core.client.render.image.Atlas;
-import net.darktree.core.client.render.image.Image;
+import net.darktree.warzone.client.render.image.Image;
 import org.junit.jupiter.api.Test;
 import org.lwjgl.system.MemoryUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 public class ImageTest {
 

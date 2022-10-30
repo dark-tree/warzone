@@ -5,7 +5,6 @@ plugins {
     id 'application'
 }
 
-mainClassName = 'net.darktree.Main'
 group 'net.darktree'
 version '1.0'
 
@@ -65,7 +64,7 @@ test {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'net.darktree.Main'
+        attributes 'Main-Class': 'net.darktree.warzone.Main'
         attributes 'Application-Version': version
     }
 }
