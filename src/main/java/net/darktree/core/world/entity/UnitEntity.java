@@ -6,10 +6,10 @@ import net.darktree.core.event.ClickEvent;
 import net.darktree.core.world.World;
 import net.darktree.core.world.pattern.Patterns;
 import net.darktree.core.world.tile.TilePos;
+import net.darktree.core.world.tiles.Tiles;
 import net.darktree.game.country.Symbol;
 import net.darktree.game.interactor.UnitInteractor;
 import net.darktree.game.screen.PlayScreen;
-import net.darktree.game.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 

@@ -3,6 +3,7 @@ package net.darktree.core.world.tile;
 import net.darktree.core.util.math.MathHelper;
 
 public class TilePos {
+
 	public final int x, y;
 
 	public TilePos(int x, int y) {

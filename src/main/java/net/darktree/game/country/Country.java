@@ -4,9 +4,9 @@ import net.darktree.core.event.TurnEvent;
 import net.darktree.core.util.NbtSerializable;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldListener;
-import net.darktree.core.world.tile.MaterialProvider;
-import net.darktree.game.buildings.Building;
-import net.darktree.game.buildings.CapitolBuilding;
+import net.darktree.core.world.entity.building.Building;
+import net.darktree.core.world.entity.building.CapitolBuilding;
+import net.darktree.core.world.entity.building.MaterialProvider;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,4 +1,4 @@
-package net.darktree.core.world.tile;
+package net.darktree.core.world.entity.building;
 
 public interface MaterialProvider {
 

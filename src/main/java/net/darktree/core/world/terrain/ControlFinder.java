@@ -1,7 +1,7 @@
 package net.darktree.core.world.terrain;
 
 import net.darktree.core.world.World;
-import net.darktree.game.buildings.Building;
+import net.darktree.core.world.entity.building.Building;
 import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
 

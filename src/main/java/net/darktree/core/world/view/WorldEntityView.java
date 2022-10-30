@@ -2,8 +2,8 @@ package net.darktree.core.world.view;
 
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
+import net.darktree.core.world.entity.building.Building;
 import net.darktree.core.world.tile.TilePos;
-import net.darktree.game.buildings.Building;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +20,7 @@ public interface WorldEntityView {
 		return addEntity(type.create((World) this, x, y));
 	}
 
+	// TODO add cache
 	default Entity getEntity(int x, int y) {
 		return getEntities().stream().filter(entity -> entity.isAt(x, y)).findFirst().orElse(null);
 	}
@@ -43,4 +44,5 @@ public interface WorldEntityView {
 
 		return null;
 	}
+
 }

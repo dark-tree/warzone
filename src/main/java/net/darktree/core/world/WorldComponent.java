@@ -34,14 +34,6 @@ public interface WorldComponent extends WorldListener, WorldTile {
 	}
 
 	/**
-	 * Can be replaced by another tile, used by buildings
-	 */
-	@Deprecated
-	default boolean isReplaceable() {
-		return false;
-	}
-
-	/**
 	 * Can be deconstructed by its owner
 	 */
 	default boolean isDeconstructable() {
@@ -49,7 +41,7 @@ public interface WorldComponent extends WorldListener, WorldTile {
 	}
 
 	/**
-	 * Can be deconstructed by its owner
+	 * Can be destroyed
 	 */
 	default boolean isDestructible() {
 		return isDeconstructable();

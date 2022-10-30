@@ -31,6 +31,7 @@ public enum Symbol {
 	}
 
 	public static Symbol fromIndex(byte index) {
+		assert index < values().length;
 		return values()[index];
 	}
 }

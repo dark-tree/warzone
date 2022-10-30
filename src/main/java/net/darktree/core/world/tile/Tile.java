@@ -2,10 +2,9 @@ package net.darktree.core.world.tile;
 
 import net.darktree.core.client.render.vertex.Renderer;
 import net.darktree.core.client.render.vertex.VertexBuffer;
-import net.darktree.core.world.World;
+import net.darktree.core.world.Surface;
 import net.darktree.core.world.WorldTile;
 import net.darktree.core.world.tile.variant.TileVariant;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class Tile implements WorldTile {
 
@@ -27,12 +26,10 @@ public abstract class Tile implements WorldTile {
 		Renderer.tile(buffer, x, y, SpriteBridge.getSprite(this));
 	}
 
-	/**
-	 * Return the Tile Instance for this tile, or null if there should be no tile instance
-	 */
-	@Deprecated
-	public @Nullable TileInstance getInstance(World world, int x, int y) {
-		return null;
+	public boolean canStayOn() {
+		return true;
 	}
+
+	public abstract Surface getSurface();
 
 }

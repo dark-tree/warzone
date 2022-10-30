@@ -1,9 +1,9 @@
-package net.darktree.game.buildings;
+package net.darktree.core.world.entity.building;
 
 import net.darktree.core.world.World;
+import net.darktree.core.world.tiles.Tiles;
 import net.darktree.game.production.AmmoRecipe;
 import net.darktree.game.production.ArmorRecipe;
-import net.darktree.game.tiles.Tiles;
 
 public class FactoryBuilding extends ProducingBuilding {
 

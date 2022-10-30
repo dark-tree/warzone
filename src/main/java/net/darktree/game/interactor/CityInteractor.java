@@ -2,12 +2,13 @@ package net.darktree.game.interactor;
 
 import net.darktree.Main;
 import net.darktree.core.client.render.vertex.VertexBuffer;
+import net.darktree.core.world.Surface;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.SummonAction;
+import net.darktree.core.world.entity.building.Building;
+import net.darktree.core.world.entity.building.CapitolBuilding;
 import net.darktree.core.world.overlay.PathfinderOverlay;
 import net.darktree.core.world.path.Pathfinder;
-import net.darktree.game.buildings.Building;
-import net.darktree.game.buildings.CapitolBuilding;
 import net.darktree.game.country.Symbol;
 
 public class CityInteractor extends Interactor {
@@ -18,7 +19,7 @@ public class CityInteractor extends Interactor {
 
 	public CityInteractor(Symbol symbol, World world) {
 		this.building = world.getCountry(symbol).getCapitol();
-		this.pathfinder = new Pathfinder(world, 10, symbol, building::forEachTile, true);
+		this.pathfinder = new Pathfinder(world, 10, symbol, Surface.LAND, building::forEachTile, true);
 		this.world = world;
 
 		world.setOverlay(new PathfinderOverlay(pathfinder));

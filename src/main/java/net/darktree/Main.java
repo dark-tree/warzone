@@ -11,10 +11,10 @@ import net.darktree.core.util.Resources;
 import net.darktree.core.util.Util;
 import net.darktree.core.world.World;
 import net.darktree.core.world.WorldHolder;
-import net.darktree.game.buildings.BuildingConfigRegistry;
+import net.darktree.core.world.entity.building.BuildingConfigRegistry;
+import net.darktree.core.world.tiles.Tiles;
 import net.darktree.game.screen.PlayScreen;
 import net.darktree.game.screen.ScreenStack;
-import net.darktree.game.tiles.Tiles;
 import org.lwjgl.Version;
 
 import static org.lwjgl.opengl.GL32.glClearColor;

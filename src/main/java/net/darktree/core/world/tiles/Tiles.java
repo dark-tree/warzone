@@ -1,14 +1,14 @@
-package net.darktree.game.tiles;
+package net.darktree.core.world.tiles;
 
 import net.darktree.core.Registries;
 import net.darktree.core.client.Sprites;
 import net.darktree.core.util.BuildingType;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.entity.UnitEntity;
+import net.darktree.core.world.entity.building.CapitolBuilding;
+import net.darktree.core.world.entity.building.FactoryBuilding;
+import net.darktree.core.world.entity.building.MineBuilding;
 import net.darktree.core.world.tile.Tile;
-import net.darktree.game.buildings.CapitolBuilding;
-import net.darktree.game.buildings.FactoryBuilding;
-import net.darktree.game.buildings.MineBuilding;
 
 public class Tiles {
 	public static Tile EMPTY = Registries.TILES.register("empty", new EmptyTile());

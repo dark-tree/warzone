@@ -3,9 +3,9 @@ package net.darktree.core.world.action;
 import net.darktree.core.client.Sounds;
 import net.darktree.core.util.BuildingType;
 import net.darktree.core.world.World;
+import net.darktree.core.world.entity.building.Building;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
-import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Symbol;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class BuildAction extends Action {
 	@Override
 	void redo(World world, Symbol symbol) {
 		building = (Building) type.create(world, x, y);
-		world.placeBuilding(x, y, building);
+		world.addEntity(building);
 		world.getCountry(symbol).addMaterials(-type.value);
 		Sounds.STAMP.play(x, y);
 	}

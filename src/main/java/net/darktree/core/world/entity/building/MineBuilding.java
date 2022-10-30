@@ -1,10 +1,9 @@
-package net.darktree.game.buildings;
+package net.darktree.core.world.entity.building;
 
 import net.darktree.core.event.ClickEvent;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.ToggleMineAction;
-import net.darktree.core.world.tile.MaterialProvider;
-import net.darktree.game.tiles.Tiles;
+import net.darktree.core.world.tiles.Tiles;
 
 public class MineBuilding extends Building implements MaterialProvider {
 

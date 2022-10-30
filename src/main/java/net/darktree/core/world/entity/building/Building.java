@@ -1,4 +1,4 @@
-package net.darktree.game.buildings;
+package net.darktree.core.world.entity.building;
 
 import net.darktree.core.Registries;
 import net.darktree.core.client.render.image.Sprite;
@@ -56,11 +56,6 @@ public abstract class Building extends StructureEntity {
 
 	public void draw(VertexBuffer buffer) {
 		Renderer.quad(buffer, tx, ty, width, height, getSprite(), 0, 0, 0, 0);
-	}
-
-	@Override
-	public boolean canPathfindOnto(Symbol symbol) {
-		return false;
 	}
 
 	@Override

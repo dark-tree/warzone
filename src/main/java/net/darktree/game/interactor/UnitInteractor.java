@@ -4,6 +4,7 @@ import net.darktree.Main;
 import net.darktree.core.client.Colors;
 import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.util.math.MathHelper;
+import net.darktree.core.world.Surface;
 import net.darktree.core.world.World;
 import net.darktree.core.world.action.ColonizeAction;
 import net.darktree.core.world.action.MoveAction;
@@ -27,7 +28,7 @@ public class UnitInteractor extends Interactor {
 		this.world = world;
 
 		if (!entity.hasMoved()) {
-			this.pathfinder = new Pathfinder(world, 5, world.getCurrentSymbol(), Patterns.IDENTITY.place(world, entity.getX(), entity.getY()), false);
+			this.pathfinder = new Pathfinder(world, 5, world.getCurrentSymbol(), Surface.LAND,  Patterns.IDENTITY.place(world, entity.getX(), entity.getY()), false);
 			world.setOverlay(new PathfinderOverlay(pathfinder));
 		} else {
 			this.pathfinder = null;

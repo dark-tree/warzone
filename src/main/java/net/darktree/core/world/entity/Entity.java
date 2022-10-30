@@ -55,20 +55,6 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		return false;
 	}
 
-	public boolean canPathfindOnto(Symbol symbol) {
-		return canPathfindThrough(symbol);
-	}
-
-	@Override
-	public final boolean canPathfindThrough(World world, int x, int y) {
-		return canPathfindThrough(world.getTileState(x, y).getOwner());
-	}
-
-	@Override
-	public final boolean canPathfindOnto(World world, int x, int y) {
-		return canPathfindOnto(world.getTileState(x, y).getOwner());
-	}
-
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		tag.putString("id", Registries.ENTITIES.keyOf(this.type));

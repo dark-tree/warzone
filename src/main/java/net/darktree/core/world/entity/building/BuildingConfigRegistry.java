@@ -1,4 +1,4 @@
-package net.darktree.game.buildings;
+package net.darktree.core.world.entity.building;
 
 import net.darktree.core.util.BuildingType;
 

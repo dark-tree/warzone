@@ -1,5 +1,6 @@
 package net.darktree.core.world.path;
 
+import net.darktree.core.world.Surface;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.pattern.PlacedTileIterator;
@@ -16,6 +17,7 @@ public class Pathfinder {
 	private final int width, height;
 	private final Symbol symbol;
 	private final boolean within;
+	private final Surface surface;
 
 	private final static int[][] OFFSETS = {
 			{-1, +0}, {+0, -1}, {-1, -1}, {+1, +0},
@@ -23,7 +25,7 @@ public class Pathfinder {
 	};
 
 	// TODO: split max, pattern and within into PathfinderConfig
-	public Pathfinder(World world, int max, Symbol symbol, PlacedTileIterator pattern, boolean within) {
+	public Pathfinder(World world, int max, Symbol symbol, Surface surface, PlacedTileIterator pattern, boolean within) {
 		this.world = world;
 		this.width = world.width;
 		this.height = world.height;
@@ -31,6 +33,7 @@ public class Pathfinder {
 		this.distance = new float[this.width][this.height];
 		this.symbol = symbol;
 		this.within = within;
+		this.surface = surface;
 
 		pattern.iterate(pos -> {
 			this.field[pos.x][pos.y] = 1;
@@ -44,7 +47,7 @@ public class Pathfinder {
 	 * Check if the pathfinder found a path to the given tile
 	 */
 	public boolean canReach(int x, int y) {
-		return this.field[x][y] != 0 && world.getTileState(x, y).getTile().canPathfindOnto(world, x, y) && world.getEntity(x, y) == null;
+		return this.field[x][y] != 0 && world.getTileState(x, y).getTile().canStayOn() && world.getEntity(x, y) == null;
 	}
 
 	/**
@@ -82,7 +85,7 @@ public class Pathfinder {
 	}
 
 	private boolean shouldPropagate(int x, int y, Tile tile) {
-		if (!tile.canPathfindThrough(world, x, y)) {
+		if (tile.getSurface() != surface) {
 			return false;
 		}
 

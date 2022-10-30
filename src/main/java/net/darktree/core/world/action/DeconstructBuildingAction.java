@@ -1,7 +1,7 @@
 package net.darktree.core.world.action;
 
 import net.darktree.core.world.World;
-import net.darktree.game.buildings.Building;
+import net.darktree.core.world.entity.building.Building;
 import net.darktree.game.country.Symbol;
 
 public class DeconstructBuildingAction extends Action {
@@ -30,7 +30,7 @@ public class DeconstructBuildingAction extends Action {
 
 	@Override
 	void undo(World world, Symbol symbol) {
-		world.placeBuilding(x, y, building);
+		world.addEntity(building);
 		world.getCountry(symbol).addMaterials(-value);
 	}
 

@@ -9,7 +9,7 @@ import net.darktree.core.client.render.vertex.VertexBuffer;
 import net.darktree.core.util.BuildingType;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.Entity;
-import net.darktree.game.buildings.Building;
+import net.darktree.core.world.entity.building.Building;
 import net.darktree.game.country.Symbol;
 
 public class DeconstructInteractor extends Interactor {

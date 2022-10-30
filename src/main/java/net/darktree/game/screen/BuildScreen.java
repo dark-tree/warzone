@@ -8,7 +8,7 @@ import net.darktree.core.client.render.Screen;
 import net.darktree.core.client.render.ScreenRenderer;
 import net.darktree.core.client.window.input.MouseButton;
 import net.darktree.core.world.World;
-import net.darktree.game.buildings.BuildingConfigRegistry;
+import net.darktree.core.world.entity.building.BuildingConfigRegistry;
 import net.darktree.game.interactor.BuildInteractor;
 import org.lwjgl.glfw.GLFW;
 

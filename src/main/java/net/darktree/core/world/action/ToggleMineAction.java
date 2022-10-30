@@ -1,10 +1,10 @@
 package net.darktree.core.world.action;
 
 import net.darktree.core.world.World;
-import net.darktree.game.buildings.Building;
-import net.darktree.game.buildings.MineBuilding;
+import net.darktree.core.world.entity.building.Building;
+import net.darktree.core.world.entity.building.MineBuilding;
+import net.darktree.core.world.tiles.Tiles;
 import net.darktree.game.country.Symbol;
-import net.darktree.game.tiles.Tiles;
 
 public class ToggleMineAction extends ToggleableAction {
 
@@ -34,7 +34,7 @@ public class ToggleMineAction extends ToggleableAction {
 		Building building = world.getBuilding(x, y);
 
 		if (building == null) {
-			world.placeBuilding(x, y, new MineBuilding(world, x, y));
+			world.addEntity(new MineBuilding(world, x, y));
 		} else {
 			if (building instanceof MineBuilding) {
 				building.remove();

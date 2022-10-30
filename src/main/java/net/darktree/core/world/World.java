@@ -12,12 +12,10 @@ import net.darktree.core.world.entity.Entity;
 import net.darktree.core.world.overlay.Overlay;
 import net.darktree.core.world.terrain.ControlFinder;
 import net.darktree.core.world.terrain.EnclaveFinder;
-import net.darktree.core.world.tile.TileInstance;
 import net.darktree.core.world.tile.TilePos;
 import net.darktree.core.world.tile.TileState;
 import net.darktree.core.world.tile.variant.TileVariant;
 import net.darktree.core.world.view.WorldEntityView;
-import net.darktree.game.buildings.Building;
 import net.darktree.game.country.Country;
 import net.darktree.game.country.Symbol;
 import net.querz.nbt.tag.CompoundTag;
@@ -53,7 +51,7 @@ public class World implements WorldEntityView {
 
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.tiles[x][y] = new TileState(null, null, Symbol.NONE);
+				this.tiles[x][y] = new TileState(null, Symbol.NONE);
 			}
 		}
 
@@ -141,7 +139,7 @@ public class World implements WorldEntityView {
 	public void loadTiles(Function<TilePos, TileVariant> generator) {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				this.getTileState(x, y).setVariant(this, x, y, generator.apply(new TilePos(x, y)));
+				setTileVariant(x, y, generator.apply(new TilePos(x, y)));
 			}
 		}
 	}
@@ -150,6 +148,7 @@ public class World implements WorldEntityView {
 		return x >= 0 && y >= 0 && x < width && y < height;
 	}
 
+	@Override
 	public List<Entity> getEntities() {
 		return entities;
 	}
@@ -185,36 +184,12 @@ public class World implements WorldEntityView {
 		getTileState(x, y).setOwner(this, x, y, variant, true);
 	}
 
-	/**
-	 * Returns the tile instance of given type from the requested position,
-	 * or null if there is no tile instance at that position, or if it is of incorrect type.
-	 *
-	 * @throws IndexOutOfBoundsException if the given position is invalid
-	 */
-	public <T extends TileInstance> T getTileInstance(int x, int y, Class<T> clazz) {
-		isPositionValid(x, y);
-
-		TileInstance instance = this.tiles[x][y].getInstance();
-
-		if (clazz.isInstance(instance)) {
-			return clazz.cast(instance);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Method used for placing buildings on the map, takes care of all the required setup.
-	 */
-	public void placeBuilding(int x, int y, Building building) {
-		addEntity(building);
-		getCountry(x, y).addBuilding(building);
-	}
-
 	public void draw(WorldBuffers buffers) {
 		Util.consumeIf(entities, Entity::isRemoved, WorldComponent::onRemoved);
 
 		if (ownershipDirty) {
+			ownershipDirty = false;
+
 			this.control = new ControlFinder(this);
 			EnclaveFinder finder = new EnclaveFinder(this, this.control);
 
@@ -262,7 +237,6 @@ public class World implements WorldEntityView {
 
 		redrawSurface = false;
 		redrawBuildings = false;
-		ownershipDirty = false;
 	}
 
 	private void drawBorders(VertexBuffer buffer, int x, int y) {

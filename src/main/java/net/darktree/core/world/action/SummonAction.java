@@ -3,11 +3,11 @@ package net.darktree.core.world.action;
 import net.darktree.core.client.Sounds;
 import net.darktree.core.world.World;
 import net.darktree.core.world.entity.UnitEntity;
+import net.darktree.core.world.entity.building.CapitolBuilding;
 import net.darktree.core.world.path.Path;
 import net.darktree.core.world.tile.TilePos;
-import net.darktree.game.buildings.CapitolBuilding;
+import net.darktree.core.world.tiles.Tiles;
 import net.darktree.game.country.Symbol;
-import net.darktree.game.tiles.Tiles;
 
 public class SummonAction extends Action {
 
