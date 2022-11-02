@@ -1,5 +1,6 @@
 package net.darktree.warzone.client.render.image;
 
+import net.darktree.warzone.client.render.GLManager;
 import org.lwjgl.opengl.GL32;
 
 public class NativeTexture extends Texture {
@@ -21,7 +22,7 @@ public class NativeTexture extends Texture {
 
 	@Override
 	public void bind() {
-		GL32.glBindTexture(GL32.GL_TEXTURE_2D, this.id);
+		GLManager.useTexture(id);
 	}
 
 	@Override

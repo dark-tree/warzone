@@ -1,5 +1,6 @@
 package net.darktree.warzone.client.render.shader;
 
+import net.darktree.warzone.client.render.GLManager;
 import net.darktree.warzone.json.ShaderJsonBlob;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
@@ -19,7 +20,7 @@ public class Program implements AutoCloseable {
 	}
 
 	public void bind() {
-		GL32.glUseProgram(this.id);
+		GLManager.useShader(id);
 	}
 
 	public int location(String name) {

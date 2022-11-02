@@ -1,5 +1,6 @@
 package net.darktree.warzone.client.window;
 
+import net.darktree.warzone.client.render.GLManager;
 import net.darktree.warzone.util.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -88,13 +89,11 @@ public class Window implements AutoCloseable {
 		// load OpenGL
 		GL.createCapabilities();
 
-		// enable some basic opengl functions
-		glEnable(GL_BLEND);
-//		glEnable(GL_CULL_FACE); causes problems with Renderer.line()
-		glEnable(GL_DEPTH_TEST);
+		GLManager.useBlend(true);
+		GLManager.useDepth(true);
 
-		glDepthFunc(GL_LEQUAL);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// enable some basic opengl functions
+//		glEnable(GL_CULL_FACE); causes problems with Renderer.line()
 		glActiveTexture(GL_TEXTURE0);
 
 		glfwSetWindowSizeCallback(handle, (window, w, h) -> {
