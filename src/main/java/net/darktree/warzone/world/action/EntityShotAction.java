@@ -27,7 +27,7 @@ public class EntityShotAction extends Action {
 		source.setAttacked(true);
 
 		if (killed) {
-			world.getEntities().remove(target);
+			world.removeEntity(target);
 		} else {
 			target.armored = false;
 		}
@@ -39,7 +39,7 @@ public class EntityShotAction extends Action {
 		source.setAttacked(false);
 
 		if (killed) {
-			world.getEntities().add(target);
+			world.addEntity(target);
 		} else {
 			target.armored = true;
 		}

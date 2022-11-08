@@ -15,6 +15,12 @@ public interface WorldEntityView {
 		return entity;
 	}
 
+	default Entity removeEntity(Entity entity){
+		getEntities().remove(entity);
+		entity.onRemoved();
+		return entity;
+	}
+
 	default Entity addEntity(int x, int y, Entity.Type type) {
 		return addEntity(type.create((World) this, x, y));
 	}
