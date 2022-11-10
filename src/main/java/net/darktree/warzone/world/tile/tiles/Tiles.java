@@ -12,7 +12,7 @@ import net.darktree.warzone.world.tile.Tile;
 
 public class Tiles {
 	public static Tile EMPTY = Registries.TILES.register("empty", new EmptyTile());
-	public static Tile MATERIAL = Registries.TILES.register("material_ore", new MaterialOreTile());
+	public static Tile MATERIAL_ORE = Registries.TILES.register("material_ore", new MaterialOreTile());
 	public static Tile WATER = Registries.TILES.register("water", new WaterTile());
 
 	public static Entity.Type UNIT = Registries.ENTITIES.register("unit", new Entity.Type(UnitEntity::new));

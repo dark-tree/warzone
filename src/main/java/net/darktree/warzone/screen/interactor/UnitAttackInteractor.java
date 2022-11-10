@@ -82,7 +82,7 @@ public class UnitAttackInteractor extends Interactor {
 			Entity target = world.getEntity(x, y);
 
 			if (target instanceof UnitEntity unit) {
-				world.getManager().apply(new EntityShotAction(entity, unit));
+				world.getManager().apply(new EntityShotAction(world, entity.getX(), entity.getY(), unit.getX(), unit.getY()));
 				closed = true;
 			}
 

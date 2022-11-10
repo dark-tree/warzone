@@ -79,7 +79,7 @@ public class BuildInteractor extends Interactor {
 	@Override
 	public void onClick(int button, int action, int mods, int x, int y) {
 		if (valid && this.x == x && this.y == y) {
-			world.getManager().apply(new BuildAction(type, this.x, this.y));
+			world.getManager().apply(new BuildAction(world, type, this.x, this.y));
 			this.closed = true;
 		}
 	}

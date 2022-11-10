@@ -15,24 +15,31 @@ public interface WorldEntityView {
 		return entity;
 	}
 
-	default Entity addEntity(int x, int y, Entity.Type type) {
+	default Entity addEntity(Entity.Type type, int x, int y) {
 		return addEntity(type.create((World) this, x, y));
 	}
 
-	default Entity getEntity(int x, int y) {
-		return getEntities().stream().filter(entity -> entity.isAt(x, y)).findFirst().orElse(null);
+	Entity getEntity(int x, int y);
+
+	@SuppressWarnings("unchecked")
+	default <T extends Entity> T getEntity(int x, int y, Class<T> clazz) {
+		Entity entity = getEntity(x, y);
+		return clazz.isInstance(entity) ? (T) entity : null;
 	}
 
+	@Deprecated
 	default Optional<Entity> getOptionalEntity(int x, int y) {
 		return Optional.ofNullable(getEntity(x, y));
 	}
 
+	@Deprecated
 	default Entity getEntity(TilePos pos) {
 		return getEntity(pos.x, pos.y);
 	}
 
 	List<Entity> getEntities();
 
+	@Deprecated
 	default Building getBuilding(int x, int y){
 		Entity entity = getEntity(x, y);
 

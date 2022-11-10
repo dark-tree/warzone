@@ -53,7 +53,7 @@ public abstract class Building extends StructureEntity {
 
 	@Override
 	public void deconstruct() {
-		this.world.getManager().apply(new DeconstructBuildingAction(this, getX(), getY()));
+		this.world.getManager().apply(new DeconstructBuildingAction(world, getX(), getY()));
 	}
 
 	public void draw(VertexBuffer buffer) {
@@ -77,6 +77,7 @@ public abstract class Building extends StructureEntity {
 
 	@Override
 	public void onAdded() {
+		removed = false;
 		world.getCountry(tx, ty).addBuilding(this);
 		forEachTile(pos -> world.getTileState(pos).setEntity(this));
 		world.onBuildingChanged();

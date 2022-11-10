@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.github.Querz:NBT:6.1'
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.guava:guava:31.1-jre'
 
     implementation('io.netty:netty-all:4.1.64.Final') {
         exclude group: 'io.netty', module: 'netty-tcnative'

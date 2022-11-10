@@ -2,44 +2,65 @@ package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.action.manager.Action;
 import net.darktree.warzone.world.entity.UnitEntity;
+import net.querz.nbt.tag.CompoundTag;
 
-public class EntityShotAction extends Action {
+public final class EntityShotAction extends Action {
 
+	private final int sx, sy, tx, ty;
 	private final UnitEntity source;
 	private final UnitEntity target;
 	private boolean killed = false;
 
-	public EntityShotAction(UnitEntity source, UnitEntity target) {
-		this.source = source;
-		this.target = target;
+	public EntityShotAction(World world, int sx, int sy, int tx, int ty) {
+		super(world, Actions.ENTITY_SHOT);
+		this.sx = sx;
+		this.sy = sy;
+		this.tx = tx;
+		this.ty = ty;
+		this.source = world.getEntity(sx, sy, UnitEntity.class);
+		this.target = world.getEntity(tx, ty, UnitEntity.class);
+	}
+
+	public EntityShotAction(World world, CompoundTag nbt) {
+		this(world, nbt.getInt("sx"), nbt.getInt("sy"), nbt.getInt("tx"), nbt.getInt("ty"));
 	}
 
 	@Override
-	boolean verify(World world, Symbol symbol) {
+	public void toNbt(CompoundTag nbt) {
+		super.toNbt(nbt);
+		nbt.putInt("sx", sx);
+		nbt.putInt("sy", sy);
+		nbt.putInt("tx", tx);
+		nbt.putInt("ty", ty);
+	}
+
+	@Override
+	protected boolean verify(Symbol symbol) {
 		return !source.hasMoved() && world.getCountry(symbol).ammo > 0;
 	}
 
 	@Override
-	void redo(World world, Symbol symbol) {
+	protected void redo(Symbol symbol) {
 		killed = !target.armored;
 		world.getCountry(symbol).ammo --;
 		source.setAttacked(true);
 
 		if (killed) {
-			world.getEntities().remove(target);
+			target.remove();
 		} else {
 			target.armored = false;
 		}
 	}
 
 	@Override
-	void undo(World world, Symbol symbol) {
+	protected void undo(Symbol symbol) {
 		world.getCountry(symbol).ammo ++;
 		source.setAttacked(false);
 
 		if (killed) {
-			world.getEntities().add(target);
+			world.addEntity(target);
 		} else {
 			target.armored = true;
 		}

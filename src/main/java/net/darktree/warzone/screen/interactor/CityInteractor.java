@@ -7,23 +7,19 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.SummonAction;
 import net.darktree.warzone.world.entity.building.Building;
-import net.darktree.warzone.world.entity.building.CapitolBuilding;
 import net.darktree.warzone.world.overlay.PathfinderOverlay;
-import net.darktree.warzone.world.path.Pathfinder;
-import net.darktree.warzone.world.tile.Surface;
 
 public class CityInteractor extends Interactor {
 
-	private final Pathfinder pathfinder;
+	private final SummonAction action;
 	private final World world;
-	private final Building building;
 
 	public CityInteractor(Symbol symbol, World world) {
-		this.building = world.getCountry(symbol).getCapitol();
-		this.pathfinder = new Pathfinder(world, 10, symbol, Surface.LAND, building::forEachTile, true);
+		Building building = world.getCountry(symbol).getCapitol();
+		this.action = new SummonAction(world, building.getX(), building.getY());
 		this.world = world;
 
-		world.setOverlay(new PathfinderOverlay(pathfinder));
+		world.setOverlay(new PathfinderOverlay(action.getPathfinder()));
 	}
 
 	@Override
@@ -32,16 +28,18 @@ public class CityInteractor extends Interactor {
 		final int x = input.getMouseMapX(world.getView());
 		final int y = input.getMouseMapY(world.getView());
 
-		if (world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
-			pathfinder.getPathTo(x, y).draw(color);
+		if (world.isPositionValid(x, y) && action.getPathfinder().canReach(x, y)) {
+			action.getPathfinder().getPathTo(x, y).draw(color);
 		}
 	}
 
 	@Override
 	public void onClick(int button, int action, int mods, int x, int y) {
-		if (world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
-			world.getManager().apply(new SummonAction(pathfinder.getPathTo(x, y), (CapitolBuilding) building));
-			closed = true;
+		if (world.isPositionValid(x, y)) {
+			if (this.action.setTarget(x, y)) {
+				world.getManager().apply(this.action);
+				closed = true;
+			}
 		}
 	}
 

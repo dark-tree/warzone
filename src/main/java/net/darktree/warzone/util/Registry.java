@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Registry<T> {
 
@@ -13,7 +14,12 @@ public class Registry<T> {
 	private final Map<String, Entry<T>> registry = new HashMap<>();
 	private final Map<T, Entry<T>> lookup = new IdentityHashMap<>();
 
-	public Registry(@Deprecated Consumer<Entry<T>> listener) {
+	public Registry() {
+		this(Function.identity()::apply);
+	}
+
+	@Deprecated
+	public Registry(Consumer<Entry<T>> listener) {
 		this.listener = listener;
 	}
 

@@ -1,9 +1,14 @@
 package net.darktree.warzone.util;
 
+import com.google.common.collect.ImmutableMap;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Util {
 
@@ -34,6 +39,14 @@ public class Util {
 				iterator.remove();
 			}
 		}
+	}
+
+	/**
+	 * Create an immutable map where every key is a enum value and values are
+	 * created with the given function.
+	 */
+	public static <T extends Enum<T>, V> ImmutableMap<T, V> enumMapOf(Class<T> clazz, Function<T, V> supplier) {
+		return ImmutableMap.copyOf(Stream.of(clazz.getEnumConstants()).collect(Collectors.toMap(Function.identity(), supplier)));
 	}
 
 }

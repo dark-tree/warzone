@@ -7,9 +7,7 @@ import java.nio.ByteBuffer;
 
 public abstract class Packet {
 
-	public void onReceive(ByteBuffer buffer) {
-
-	}
+	public abstract void onReceive(ByteBuffer buffer);
 
 	/**
 	 * Use this method to acquire the packet buffer

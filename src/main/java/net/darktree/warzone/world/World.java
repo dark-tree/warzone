@@ -9,7 +9,7 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.event.TurnEvent;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Util;
-import net.darktree.warzone.world.action.ActionManager;
+import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.overlay.Overlay;
 import net.darktree.warzone.world.terrain.ControlFinder;
@@ -36,7 +36,7 @@ public class World implements WorldEntityView {
 
 	private ControlFinder control;
 	private Symbol[] symbols = new Symbol[]{};
-	final private ActionManager manager = new ActionManager(this);
+	final private ActionManager manager = new ActionManager.Host(this);
 	private Overlay overlay = null;
 	private boolean ownershipDirty = true, redrawSurface = true, redrawBuildings = true;
 	private int turn;
@@ -283,7 +283,7 @@ public class World implements WorldEntityView {
 
 		Symbol symbol = getCurrentSymbol();
 		sendPlayerTurnEvent(TurnEvent.TURN_END, symbol);
-		manager.pointOfNoReturn(symbol);
+		manager.clear(symbol);
 
 		turn = (turn + 1) % len;
 

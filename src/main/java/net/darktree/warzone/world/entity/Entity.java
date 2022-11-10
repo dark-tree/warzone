@@ -3,7 +3,9 @@ package net.darktree.warzone.world.entity;
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.render.WorldBuffers;
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.NbtSerializable;
+import net.darktree.warzone.util.Registry;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldComponent;
 import net.darktree.warzone.world.WorldListener;
@@ -26,10 +28,11 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 
 	@Override
 	public void onAdded() {
+		removed = false;
 		world.getTileState(tx, ty).setEntity(this);
 	}
 
-	public void remove() {
+	public final void remove() {
 		removed = true;
 	}
 
@@ -83,7 +86,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		return entity;
 	}
 
-	public static class Type {
+	public static class Type extends ElementType<Entity.Type> {
 		private final Constructor constructor;
 
 		public Type(Constructor constructor) {
@@ -92,6 +95,11 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 
 		public Entity create(World world, int x, int y) {
 			return constructor.create(world, x, y);
+		}
+
+		@Override
+		public Registry<Type> getRegistry() {
+			return Registries.ENTITIES;
 		}
 
 		public interface Constructor {

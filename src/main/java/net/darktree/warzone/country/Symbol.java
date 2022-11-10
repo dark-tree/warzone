@@ -34,4 +34,5 @@ public enum Symbol {
 		assert index < values().length;
 		return values()[index];
 	}
+
 }
