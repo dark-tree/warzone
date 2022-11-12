@@ -34,6 +34,7 @@ public class PacketReader {
 		try {
 			Objects.requireNonNull(types.get(type)).call(body);
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 			throw new RuntimeException("No callback for packet type '" + type + "' defined!");
 		}
 	}

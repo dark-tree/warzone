@@ -1,7 +1,9 @@
 package net.darktree.warzone.world.action.manager;
 
 import com.google.common.collect.ImmutableMap;
+import net.darktree.warzone.Main;
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.World;
@@ -54,7 +56,12 @@ public abstract class ActionManager {
 				return false;
 			}
 
-			return false; // TODO send action packet to host if valid
+			if (action.verify(symbol)) {
+				Packets.H2C_ACTION.send(Main.relay, Main.group, symbol, action);
+				return true;
+			}
+
+			return false;
 		}
 
 		@Override
@@ -71,8 +78,13 @@ public abstract class ActionManager {
 		}
 
 		@Override
-		public boolean applyReceived(Symbol symbol, CompoundTag nbt) {
-			throw new AssertionError("Operation not supported on host!");
+		public boolean apply(Symbol symbol, Action action) {
+			if (super.apply(symbol, action)) {
+				Packets.H2C_ACTION.broadcast(Main.relay, symbol, action);
+				return true;
+			}
+
+			return false;
 		}
 
 	}

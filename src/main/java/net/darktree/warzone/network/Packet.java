@@ -5,9 +5,9 @@ import net.darktree.warzone.network.urp.PacketByteBuffer;
 
 import java.nio.ByteBuffer;
 
-public abstract class Packet {
+public abstract class Packet<T> {
 
-	public abstract void onReceive(ByteBuffer buffer);
+	public abstract T onReceive(Relay relay, ByteBuffer buffer);
 
 	/**
 	 * Use this method to acquire the packet buffer

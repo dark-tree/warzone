@@ -12,8 +12,8 @@ import java.nio.ByteBuffer;
 
 public class NBTHelper {
 
-	private static final NBTSerializer SERIALIZER = new NBTSerializer(true);
-	private static final NBTDeserializer DESERIALIZER = new NBTDeserializer(true);
+	private static final NBTSerializer SERIALIZER = new NBTSerializer(true, true);
+	private static final NBTDeserializer DESERIALIZER = new NBTDeserializer(true, true);
 
 	public static void writeCompound(CompoundTag nbt, OutputStream stream) {
 		try {

@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -47,6 +49,34 @@ public class Util {
 	 */
 	public static <T extends Enum<T>, V> ImmutableMap<T, V> enumMapOf(Class<T> clazz, Function<T, V> supplier) {
 		return ImmutableMap.copyOf(Stream.of(clazz.getEnumConstants()).collect(Collectors.toMap(Function.identity(), supplier)));
+	}
+
+	/**
+	 * Run given lambda on a new thread
+	 */
+	public static void runAsync(Runnable runnable, String name) {
+		Thread thread = new Thread(runnable);
+		thread.setName(name);
+		thread.start();
+	}
+
+	/**
+	 * Run given lambda on a new thread after some time passes
+	 */
+	public static Timer runAsyncAfter(Runnable runnable, int timeout) {
+		Timer timer = new Timer();
+		timer.schedule(
+				new TimerTask() {
+
+					@Override
+					public void run() {
+						runnable.run();
+					}
+
+				},
+				timeout
+		);
+		return timer;
 	}
 
 }

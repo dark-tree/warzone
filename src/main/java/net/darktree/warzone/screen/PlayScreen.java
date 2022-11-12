@@ -10,17 +10,23 @@ import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.event.ClickEvent;
+import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.screen.hotbar.Hotbar;
 import net.darktree.warzone.screen.interactor.Interactor;
+import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.WorldView;
+import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entity;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class PlayScreen extends Screen {
@@ -136,6 +142,48 @@ public class PlayScreen extends Screen {
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
 			ScreenStack.open(new BuildScreen(world));
+		}
+
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_R) {
+			Util.runAsync(() -> {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+				Logger.info("Console reader thread started, you can now enter game command!");
+
+				try {
+					while (true) {
+						String line = reader.readLine();
+
+						if (line.equals("rclient")) {
+							WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
+						}
+
+						if (line.equals("rstop")) {
+							Main.relay.close();
+						}
+
+						if (line.equals("rexit")) {
+							return;
+						}
+
+						if (line.equals("rmake")) {
+							UserGroup.make("localhost", group -> {
+								Logger.info("Group made! " + group.group);
+								Main.group = group;
+							}, Logger::error);
+						}
+
+						if (line.startsWith("rjoin ")) {
+							int gid = Integer.parseInt(line.split(" ")[1]);
+
+							UserGroup.join("localhost", gid, group -> {
+								Logger.info("Group joined! " + group.group);
+								Main.group = group;
+							}, Logger::error);
+						}
+					}
+				} catch (Exception ignored) {}
+			}, "RelayController");
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {

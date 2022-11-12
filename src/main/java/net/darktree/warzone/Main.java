@@ -6,6 +6,8 @@ import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.network.Packets;
+import net.darktree.warzone.network.Relay;
+import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.screen.BuildScreen;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.ScreenStack;
@@ -22,7 +24,8 @@ import static org.lwjgl.opengl.GL32.glClearColor;
 public class Main {
 
 	public static Window window;
-//	public static Relay relay;
+	public static Relay relay;
+	public static UserGroup group;
 
 	public static void main(String[] args) {
 		Logger.info("Current working directory: ", Resources.path());
@@ -32,20 +35,9 @@ public class Main {
 
 		window = Window.init(800, 500, "Game");
 
-//		try {
-//			relay = new Relay("localhost", 9698);
-//			relay.onGroupCreated(id -> System.out.println("onGroupCreated: " + id));
-//			relay.onGroupJoined(id -> System.out.println("onGroupJoined: " + id));
-//			relay.onGroupLeft(id -> System.out.println("onGroupLeft: " + id));
-//		} catch (IOException e) {
-//			Logger.warn("Failed to open a connection to the user relay!");
-//		}
-
 		Packets.load();
 		SoundSystem.enable();
 		Util.load(Sounds.class);
-
-//		Sounds.TEST_SONG.play().setLoop(true).setVolume(0.8f);
 
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
@@ -70,7 +62,7 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		//relay.close();
+		if (relay != null) relay.close();
 		window.close();
 		SoundSystem.disable();
 	}
