@@ -11,14 +11,14 @@ import net.querz.nbt.tag.CompoundTag;
 
 public abstract class ActionManager {
 
-	private final World world;
-	private final ImmutableMap<Symbol, ActionQueue> queues = Util.enumMapOf(Symbol.class, ActionQueue::new);
+	protected final World world;
+	protected final ImmutableMap<Symbol, ActionQueue> queues = Util.enumMapOf(Symbol.class, ActionQueue::new);
 
 	public ActionManager(World world) {
 		this.world = world;
 	}
 
-	private ActionQueue get(Symbol symbol) {
+	protected ActionQueue get(Symbol symbol) {
 		return queues.get(symbol);
 	}
 
@@ -62,6 +62,11 @@ public abstract class ActionManager {
 			}
 
 			return false;
+		}
+
+		@Override
+		public boolean applyReceived(Symbol symbol, CompoundTag nbt) {
+			return get(symbol).push(Action.fromNbt(nbt, world));
 		}
 
 		@Override

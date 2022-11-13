@@ -16,8 +16,13 @@ import net.darktree.warzone.util.Resources;
 import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldHolder;
+import net.darktree.warzone.world.action.Actions;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import org.lwjgl.Version;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL32.glClearColor;
 
@@ -26,6 +31,16 @@ public class Main {
 	public static Window window;
 	public static Relay relay;
 	public static UserGroup group;
+	private static final List<Runnable> tasks = Collections.synchronizedList(new ArrayList<>());
+
+	/**
+	 * Run a piece of code on the main thread
+	 */
+	public static void runSynced(Runnable runnable) {
+		synchronized (tasks) {
+			tasks.add(runnable);
+		}
+	}
 
 	public static void main(String[] args) {
 		Logger.info("Current working directory: ", Resources.path());
@@ -38,6 +53,7 @@ public class Main {
 		Packets.load();
 		SoundSystem.enable();
 		Util.load(Sounds.class);
+		Util.load(Actions.class);
 
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
@@ -71,6 +87,11 @@ public class Main {
 		while (!window.shouldClose()) {
 			ScreenStack.draw();
 			Renderer.next();
+
+			synchronized (tasks) {
+				tasks.forEach(Runnable::run);
+				tasks.clear();
+			}
 		}
 	}
 

@@ -10,6 +10,6 @@ import net.darktree.warzone.world.tile.Tile;
 public class Registries {
 	public static Registry<Tile> TILES = new Registry<>(entry -> SpriteBridge.register(entry.value(), entry.key()));
 	public static Registry<Entity.Type> ENTITIES = new Registry<>();
-	public static Registry<Packet> PACKETS = new Registry<>();
+	public static Registry<Packet<?>> PACKETS = new Registry<>();
 	public static Registry<Action.Type> ACTIONS = new Registry<>();
 }

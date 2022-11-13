@@ -1,5 +1,6 @@
 package net.darktree.warzone.network.packet;
 
+import net.darktree.warzone.Main;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Relay;
 import net.darktree.warzone.network.UserGroup;
@@ -17,7 +18,10 @@ public class H2CActionPacket extends VoidPacket {
 	public void onVoidReceive(Relay relay, ByteBuffer buffer) {
 		Symbol symbol = Symbol.fromIndex(buffer.get());
 		CompoundTag nbt = NBTHelper.readCompound(buffer);
-		WorldHolder.world.getManager().applyReceived(symbol, nbt);
+
+		Main.runSynced(() -> {
+			WorldHolder.world.getManager().applyReceived(symbol, nbt);
+		});
 	}
 
 	private ByteBuffer getReadyBuffer(Symbol symbol, Action action) {
