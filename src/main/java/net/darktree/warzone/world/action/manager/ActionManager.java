@@ -57,7 +57,7 @@ public abstract class ActionManager {
 			}
 
 			if (action.verify(symbol)) {
-				Packets.H2C_ACTION.send(Main.relay, Main.group, symbol, action);
+				Packets.H2C_ACTION.of(symbol, action).sendToHost(Main.group);
 				return true;
 			}
 
@@ -85,7 +85,7 @@ public abstract class ActionManager {
 		@Override
 		public boolean apply(Symbol symbol, Action action) {
 			if (super.apply(symbol, action)) {
-				Packets.H2C_ACTION.broadcast(Main.relay, symbol, action);
+				Packets.H2C_ACTION.of(symbol, action).broadcast(Main.group);
 				return true;
 			}
 

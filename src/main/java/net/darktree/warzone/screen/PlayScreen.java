@@ -159,7 +159,7 @@ public class PlayScreen extends Screen {
 						}
 
 						if (line.equals("rstop")) {
-							Main.relay.close();
+							UserGroup.closeAll();
 						}
 
 						if (line.equals("rexit")) {
@@ -168,7 +168,7 @@ public class PlayScreen extends Screen {
 
 						if (line.equals("rmake")) {
 							UserGroup.make("localhost", group -> {
-								Logger.info("Group made! " + group.group);
+								Logger.info("Group made! " + group.id);
 								Main.group = group;
 							}, Logger::error);
 						}
@@ -177,7 +177,7 @@ public class PlayScreen extends Screen {
 							int gid = Integer.parseInt(line.split(" ")[1]);
 
 							UserGroup.join("localhost", gid, group -> {
-								Logger.info("Group joined! " + group.group);
+								Logger.info("Group joined! " + group.id);
 								Main.group = group;
 							}, Logger::error);
 						}

@@ -1,6 +1,5 @@
 package net.darktree.warzone.network;
 
-import net.darktree.warzone.Main;
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.network.urp.PacketReader;
 import net.darktree.warzone.network.urp.PacketType;
@@ -18,9 +17,10 @@ import java.util.function.Consumer;
 
 public class Relay {
 
-	// the maximum join time
 	public static final int TIMEOUT = 3;
+	public static final int PORT = 9698;
 
+	private final Side side;
 	private final Socket socket;
 	private final PacketWriter writer;
 	private final PacketReader reader;
@@ -30,46 +30,41 @@ public class Relay {
 	private int uid;
 	private boolean open;
 
-	private static Relay relay;
+	public static Relay instance;
 
-	public static void open(String hostname, Consumer<Relay> openCallback, Consumer<String> errorCallback) {
-		if (relay != null) {
-			if (relay.isOpen()) {
-				Logger.warn("Another relay is still open! Closing...");
-				relay.close();
-			}
-
-			relay = null;
-			Main.relay = null;
+	public static void open(Side side, String hostname, Consumer<Relay> openCallback, Consumer<String> errorCallback) {
+		if (instance != null) {
+			Logger.error("Another relay is still open! Closing...");
+			instance.close();
 		}
 
-		open(hostname, 9698, opened -> {
-			Main.relay = opened;
-			relay = opened;
-			openCallback.accept(relay);
+		open(side, hostname, PORT, opened -> {
+			instance = opened;
+			openCallback.accept(instance);
 		}, errorCallback);
 	}
 
-	private static void open(String hostname, int port, Consumer<Relay> openCallback, Consumer<String> errorCallback) {
+	private static void open(Side side, String hostname, int port, Consumer<Relay> openCallback, Consumer<String> errorCallback) {
 		try {
-			Relay.relay = new Relay(hostname, port);
+			instance = new Relay(side, hostname, port);
 			Timer timer = Util.runAsyncAfter(() -> {
-				relay.close();
+				instance.close();
 				errorCallback.accept("Timeout! Failed to open a connection after " + TIMEOUT + " seconds!");
 			}, TIMEOUT * 1000);
 
-			relay.setOpenListener(() -> {
-				openCallback.accept(relay);
+			instance.setOpenListener(() -> {
+				openCallback.accept(instance);
 				timer.cancel();
 			});
 
-			relay.start();
+			instance.start();
 		} catch (Exception e) {
 			errorCallback.accept("Failed to open a connection!");
 		}
 	}
 
-	private Relay(String hostname, int port) throws IOException {
+	private Relay(Side side, String hostname, int port) throws IOException {
+		this.side = side;
 		socket = new Socket(hostname, port);
 
 		writer = new PacketWriter(socket.getOutputStream());
@@ -102,7 +97,7 @@ public class Relay {
 			}
 
 			try {
-				result = packet.onReceive(this, buffer);
+				result = packet.getListenerValue(this, buffer);
 			} catch (Exception e) {
 				Logger.error("Exception was thrown while processing game packet with id: " + id + "!");
 				e.printStackTrace();
@@ -123,6 +118,7 @@ public class Relay {
 			} catch (Throwable e) {
 				Logger.info("Connection closed");
 				this.open = false;
+				instance = null;
 			}
 		}, "NetworkReaderThread");
 	}
@@ -140,6 +136,7 @@ public class Relay {
 		this.listener = listener;
 	}
 
+	@Deprecated
 	public boolean isOpen() {
 		return open;
 	}
@@ -164,10 +161,6 @@ public class Relay {
 		interceptors.put(packet, callback);
 	}
 
-	public <T> void removePacketListener(Packet<T> packet) {
-		interceptors.remove(packet);
-	}
-
 	public void broadcastMessage(ByteBuffer buffer) {
 		writer.of(PacketType.U2R_BROD).write(buffer.array(), buffer.position()).send();
 	}
@@ -182,6 +175,12 @@ public class Relay {
 
 	public void onGroupLeft(IntCallback callback) {
 		reader.on(PacketType.R2U_LEFT, buffer -> callback.call(buffer.getInt()));
+	}
+
+	public void assertSide(Side expected) {
+		if (this.side != expected) {
+			throw new AssertionError("Invalid side!");
+		}
 	}
 
 }

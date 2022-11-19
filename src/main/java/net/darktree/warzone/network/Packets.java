@@ -1,15 +1,15 @@
 package net.darktree.warzone.network;
 
 import net.darktree.warzone.Registries;
-import net.darktree.warzone.network.packet.H2CActionPacket;
-import net.darktree.warzone.network.packet.H2CEndTurnPacket;
-import net.darktree.warzone.network.packet.H2CGroupSyncPacket;
+import net.darktree.warzone.network.packet.ActionPacket;
+import net.darktree.warzone.network.packet.EndTurnPacket;
+import net.darktree.warzone.network.packet.GroupSyncPacket;
 
 public class Packets {
 
-	public static final H2CEndTurnPacket NEXT_TURN_PACKET = new H2CEndTurnPacket();
-	public static final H2CGroupSyncPacket GROUP_SYNC = new H2CGroupSyncPacket();
-	public static final H2CActionPacket H2C_ACTION = new H2CActionPacket();
+	public static final EndTurnPacket NEXT_TURN_PACKET = new EndTurnPacket();
+	public static final GroupSyncPacket GROUP_SYNC = new GroupSyncPacket();
+	public static final ActionPacket H2C_ACTION = new ActionPacket();
 
 	public static void load() {
 		Registries.PACKETS.register("test", NEXT_TURN_PACKET);

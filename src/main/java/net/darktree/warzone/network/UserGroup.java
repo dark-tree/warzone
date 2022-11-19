@@ -9,15 +9,17 @@ import java.util.function.Consumer;
 
 public class UserGroup {
 
-	private final Relay relay;
+	public static UserGroup instance;
+
+	public final Relay relay;
 	public final List<Integer> users = new ArrayList<>();
 	public final int host;
-	public final int group;
+	public final int id;
 
 	public UserGroup(Relay relay, int host, int group) {
 		this.relay = relay;
 		this.host = host;
-		this.group = group;
+		this.id = group;
 		this.users.add(host);
 	}
 
@@ -30,11 +32,16 @@ public class UserGroup {
 	}
 
 	private void sync() {
-		Packets.GROUP_SYNC.send(relay, this);
+		Packets.GROUP_SYNC.of(this).broadcast(this);
+	}
+
+	private void close() {
+		relay.close();
+		instance = null;
 	}
 
 	public static void make(String hostname, Consumer<UserGroup> groupCallback, Consumer<String> errorCallback) {
-		Relay.open(hostname, relay -> {
+		Relay.open(Side.HOST, hostname, relay -> {
 			Timer timer = Util.runAsyncAfter(() -> {
 				relay.close();
 				errorCallback.accept("Timeout! Failed to create a group after " + Relay.TIMEOUT + " seconds!");
@@ -54,7 +61,9 @@ public class UserGroup {
 					group.left(uid);
 					group.sync();
 				});
+
 				groupCallback.accept(group);
+				UserGroup.instance = group;
 			});
 
 			relay.createGroup();
@@ -62,7 +71,7 @@ public class UserGroup {
 	}
 
 	public static void join(String hostname, int gid, Consumer<UserGroup> groupCallback, Consumer<String> errorCallback) {
-		Relay.open(hostname, relay -> {
+		Relay.open(Side.CLIENT, hostname, relay -> {
 			Timer timer = Util.runAsyncAfter(() -> {
 				relay.close();
 				errorCallback.accept("Timeout! Failed to join a group after " + Relay.TIMEOUT + " seconds!");
@@ -71,9 +80,16 @@ public class UserGroup {
 			relay.setPacketListener(Packets.GROUP_SYNC, group -> {
 				timer.cancel();
 				groupCallback.accept(group);
+				UserGroup.instance = group;
 			});
 			relay.joinGroup(gid);
 		}, errorCallback);
+	}
+
+	public static void closeAll() {
+		if (instance != null) {
+			instance.close();
+		}
 	}
 
 }

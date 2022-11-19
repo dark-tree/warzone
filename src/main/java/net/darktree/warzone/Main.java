@@ -6,7 +6,6 @@ import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.network.Packets;
-import net.darktree.warzone.network.Relay;
 import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.screen.BuildScreen;
 import net.darktree.warzone.screen.PlayScreen;
@@ -29,7 +28,6 @@ import static org.lwjgl.opengl.GL32.glClearColor;
 public class Main {
 
 	public static Window window;
-	public static Relay relay;
 	public static UserGroup group;
 	private static final List<Runnable> tasks = Collections.synchronizedList(new ArrayList<>());
 
@@ -78,7 +76,7 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		if (relay != null) relay.close();
+		UserGroup.closeAll();
 		window.close();
 		SoundSystem.disable();
 	}
