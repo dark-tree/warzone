@@ -119,6 +119,9 @@ public class Relay {
 				Logger.info("Connection closed");
 				this.open = false;
 				instance = null;
+
+				// FIXME figure out why sometimes a user joining closes the connection for the host
+				e.printStackTrace();
 			}
 		}, "NetworkReaderThread");
 	}
@@ -181,6 +184,11 @@ public class Relay {
 		if (this.side != expected) {
 			throw new AssertionError("Invalid side!");
 		}
+	}
+
+	@Override
+	public String toString() {
+		return side.name();
 	}
 
 }

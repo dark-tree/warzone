@@ -16,7 +16,7 @@ public class UndoPacket extends VoidPacket {
 		Symbol symbol = Symbol.fromIndex(buffer.get());
 
 		Main.runSynced(() -> {
-			WorldHolder.world.getManager().undo(symbol);
+			WorldHolder.world.getManager().undo(symbol, true);
 		});
 	}
 

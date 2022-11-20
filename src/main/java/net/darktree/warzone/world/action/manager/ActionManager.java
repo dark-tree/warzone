@@ -1,15 +1,14 @@
 package net.darktree.warzone.world.action.manager;
 
 import com.google.common.collect.ImmutableMap;
-import net.darktree.warzone.Main;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Packets;
+import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.World;
-import net.querz.nbt.tag.CompoundTag;
 
-public abstract class ActionManager {
+public class ActionManager {
 
 	protected final World world;
 	protected final ImmutableMap<Symbol, ActionQueue> queues = Util.enumMapOf(Symbol.class, ActionQueue::new);
@@ -26,21 +25,22 @@ public abstract class ActionManager {
 		get(symbol).clear();
 	}
 
-	public boolean applyReceived(Symbol symbol, CompoundTag nbt) {
-		return apply(symbol, Action.fromNbt(nbt, world));
-	}
-
-	public boolean apply(Symbol symbol, Action action) {
+	public boolean apply(Symbol symbol, Action action, boolean received) {
 		return get(symbol).push(action);
 	}
 
-	public boolean undo(Symbol symbol) {
+	public boolean undo(Symbol symbol, boolean received) {
 		return get(symbol).pop();
 	}
 
 	@Deprecated
 	public final boolean apply(Action action) {
-		return apply(world.getCurrentSymbol(), action);
+		return apply(world.getCurrentSymbol(), action, false);
+	}
+
+	@Deprecated
+	public final boolean undo() {
+		return undo(world.getCurrentSymbol(), false);
 	}
 
 	public static class Client extends ActionManager {
@@ -50,14 +50,18 @@ public abstract class ActionManager {
 		}
 
 		@Override
-		public boolean apply(Symbol symbol, Action action) {
+		public boolean apply(Symbol symbol, Action action, boolean received) {
+			if (received) {
+				return get(symbol).push(action);
+			}
+
 			if (action instanceof HostAction) {
 				Logger.warn("Host action invoked on the client! Aborted!");
 				return false;
 			}
 
 			if (action.verify(symbol)) {
-				Packets.H2C_ACTION.of(symbol, action).sendToHost(Main.group);
+				Packets.ACTION.of(symbol, action).sendToHost(UserGroup.instance);
 				return true;
 			}
 
@@ -65,13 +69,17 @@ public abstract class ActionManager {
 		}
 
 		@Override
-		public boolean applyReceived(Symbol symbol, CompoundTag nbt) {
-			return get(symbol).push(Action.fromNbt(nbt, world));
-		}
+		public boolean undo(Symbol symbol, boolean received) {
+			if (received) {
+				return get(symbol).pop();
+			}
 
-		@Override
-		public boolean undo(Symbol symbol) {
-			return false; // TODO send undo packet to host if valid
+			if (get(symbol).canPop()) {
+				Packets.UNDO.of(symbol).sendToHost(UserGroup.instance);
+				return true;
+			}
+
+			return false;
 		}
 
 	}
@@ -83,15 +91,24 @@ public abstract class ActionManager {
 		}
 
 		@Override
-		public boolean apply(Symbol symbol, Action action) {
-			if (super.apply(symbol, action)) {
-				Packets.H2C_ACTION.of(symbol, action).broadcast(Main.group);
+		public boolean apply(Symbol symbol, Action action, boolean received) {
+			if (super.apply(symbol, action, received)) {
+				Packets.ACTION.of(symbol, action).broadcast(UserGroup.instance);
 				return true;
 			}
 
 			return false;
 		}
 
+		@Override
+		public boolean undo(Symbol symbol, boolean received) {
+			if (super.undo(symbol, received)) {
+				Packets.UNDO.of(symbol).broadcast(UserGroup.instance);
+				return true;
+			}
+
+			return false;
+		}
 	}
 
 }

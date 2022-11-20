@@ -28,7 +28,6 @@ import static org.lwjgl.opengl.GL32.glClearColor;
 public class Main {
 
 	public static Window window;
-	public static UserGroup group;
 	private static final List<Runnable> tasks = Collections.synchronizedList(new ArrayList<>());
 
 	/**

@@ -36,7 +36,7 @@ public class World implements WorldEntityView {
 
 	private ControlFinder control;
 	private Symbol[] symbols = new Symbol[]{};
-	public ActionManager manager = new ActionManager.Host(this);
+	public ActionManager manager = new ActionManager(this);
 	private Overlay overlay = null;
 	private boolean ownershipDirty = true, redrawSurface = true, redrawBuildings = true;
 	private int turn;

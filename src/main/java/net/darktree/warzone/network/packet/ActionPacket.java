@@ -20,7 +20,7 @@ public class ActionPacket extends VoidPacket {
 		CompoundTag nbt = NBTHelper.readCompound(buffer);
 
 		Main.runSynced(() -> {
-			WorldHolder.world.getManager().applyReceived(symbol, nbt);
+			WorldHolder.world.getManager().apply(symbol, Action.fromNbt(nbt, WorldHolder.world), true);
 		});
 	}
 

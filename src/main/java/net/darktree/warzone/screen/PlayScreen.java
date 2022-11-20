@@ -90,7 +90,14 @@ public class PlayScreen extends Screen {
 
 		ScreenRenderer.centerAt(-1, 1);
 		ScreenRenderer.setOffset(0, -40);
-		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS", 30);
+
+		String net = "";
+
+		if (UserGroup.instance != null) {
+			net = " " + UserGroup.instance.relay.toString();
+		}
+
+		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS" + net, 30);
 
 	}
 
@@ -158,6 +165,10 @@ public class PlayScreen extends Screen {
 							WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
 						}
 
+						if (line.equals("rhost")) {
+							WorldHolder.world.manager = new ActionManager.Host(WorldHolder.world);
+						}
+
 						if (line.equals("rstop")) {
 							UserGroup.closeAll();
 						}
@@ -169,7 +180,6 @@ public class PlayScreen extends Screen {
 						if (line.equals("rmake")) {
 							UserGroup.make("localhost", group -> {
 								Logger.info("Group made! " + group.id);
-								Main.group = group;
 							}, Logger::error);
 						}
 
@@ -178,7 +188,6 @@ public class PlayScreen extends Screen {
 
 							UserGroup.join("localhost", gid, group -> {
 								Logger.info("Group joined! " + group.id);
-								Main.group = group;
 							}, Logger::error);
 						}
 					}
@@ -192,7 +201,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_BACKSPACE) {
-			world.getManager().undo(world.getCurrentSymbol());
+			world.getManager().undo();
 		}
 	}
 

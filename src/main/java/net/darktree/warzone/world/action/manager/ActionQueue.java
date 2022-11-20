@@ -52,8 +52,12 @@ public class ActionQueue {
 		return false;
 	}
 
-	public void clear() {
+	void clear() {
 		actions.clear();
+	}
+
+	boolean canPop() {
+		return !actions.isEmpty();
 	}
 
 }
