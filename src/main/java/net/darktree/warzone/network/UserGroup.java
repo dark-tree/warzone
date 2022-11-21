@@ -32,7 +32,13 @@ public class UserGroup {
 	}
 
 	private void sync() {
-		Packets.GROUP_SYNC.of(this).broadcast();
+		PacketDelegate delegate = Packets.GROUP_SYNC.of(this);
+
+		for (int uid : users) {
+			if (uid != host) {
+				delegate.sendToUser(uid);
+			}
+		}
 	}
 
 	private void close() {

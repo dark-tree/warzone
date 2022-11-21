@@ -13,11 +13,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class CapitolBuilding extends Building {
 
-	private Symbol symbol = Symbol.CROSS;
+	private Symbol symbol;
 	public boolean summoned;
 
 	public CapitolBuilding(World world, int x, int y) {
 		super(world, x, y, Tiles.CAPITOL);
+		this.symbol = world.getTileState(x, y).getOwner();
 	}
 
 	@Override

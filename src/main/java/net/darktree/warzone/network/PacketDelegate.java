@@ -23,7 +23,7 @@ public class PacketDelegate {
 		group.relay.broadcastMessage(this.buffer);
 	}
 
-	public void sendToHost() {
+	public void sendToUser(int uid) {
 		UserGroup group = UserGroup.instance;
 
 		if (group == null) {
@@ -31,7 +31,15 @@ public class PacketDelegate {
 			return;
 		}
 
-		group.relay.sendMessage(group.host, this.buffer);
+		if (uid == -1) {
+			uid = group.host;
+		}
+
+		group.relay.sendMessage(uid, this.buffer);
+	}
+
+	public void sendToHost() {
+		sendToUser(-1);
 	}
 
 	private void handleLocal() {

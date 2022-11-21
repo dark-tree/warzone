@@ -180,10 +180,6 @@ public class Relay {
 		reader.on(PacketType.R2U_LEFT, buffer -> callback.call(buffer.getInt()));
 	}
 
-	public Side getSide() {
-		return side;
-	}
-
 	@Override
 	public String toString() {
 		return side.name();

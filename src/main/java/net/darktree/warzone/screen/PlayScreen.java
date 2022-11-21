@@ -14,20 +14,11 @@ import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.screen.hotbar.Hotbar;
 import net.darktree.warzone.screen.interactor.Interactor;
-import net.darktree.warzone.util.Logger;
-import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.WorldView;
-import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entity;
-import net.querz.nbt.io.NBTUtil;
-import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.glfw.GLFW;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class PlayScreen extends Screen {
 
@@ -77,7 +68,7 @@ public class PlayScreen extends Screen {
 
 			ScreenRenderer.offset(300, 20);
 			if (ScreenRenderer.button("END", 2, 38, 80, true)) {
-				Packets.END_TURN.of().sendToHost();
+				Packets.END_TURN.of().broadcast();
 			}
 
 			ScreenRenderer.setSprite(symbol.getSprite());
@@ -108,26 +99,6 @@ public class PlayScreen extends Screen {
 			return;
 		}
 
-		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_S) {
-			CompoundTag tag = new CompoundTag();
-			world.toNbt(tag);
-			try {
-				NBTUtil.write(tag, "./map.dat", true);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
-			try {
-				World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
-				ScreenStack.closeAll();
-				ScreenStack.open(new PlayScreen(WorldHolder.world));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
 			world.setOverlay((world, x, y, state) -> {
 				if (state.getOwner() == world.getSelf()) {
@@ -142,50 +113,8 @@ public class PlayScreen extends Screen {
 			ScreenStack.open(new BuildScreen(world));
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_R) {
-			Util.runAsync(() -> {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-				Logger.info("Console reader thread started, you can now enter game command!");
-
-				try {
-					while (true) {
-						String line = reader.readLine();
-
-						if (line.equals("rstop")) {
-							UserGroup.closeAll();
-						}
-
-						if (line.startsWith("self ")) {
-							WorldHolder.world.self = Symbol.fromIndex((byte) Integer.parseInt(line.split(" ")[1]));
-						}
-
-						if (line.equals("rexit")) {
-							return;
-						}
-
-						if (line.equals("rmake")) {
-							UserGroup.make("localhost", group -> {
-								Logger.info("Group made! " + group.id);
-								WorldHolder.world.manager = new ActionManager.Host(WorldHolder.world);
-							}, Logger::error);
-						}
-
-						if (line.startsWith("rjoin ")) {
-							int gid = Integer.parseInt(line.split(" ")[1]);
-
-							UserGroup.join("localhost", gid, group -> {
-								Logger.info("Group joined! " + group.id);
-								WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
-							}, Logger::error);
-						}
-					}
-				} catch (Exception ignored) {}
-			}, "RelayController");
-		}
-
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
-			Packets.END_TURN.of().sendToHost();
+			Packets.END_TURN.of().broadcast();
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_BACKSPACE) {
