@@ -264,7 +264,7 @@ public class World implements WorldEntityView {
 	}
 
 	/**
-	 * Get the symbol of current active player,
+	 * Get the symbol of currently active player,
 	 * returns null if there was an issue.
 	 */
 	public Symbol getCurrentSymbol() {
@@ -273,6 +273,16 @@ public class World implements WorldEntityView {
 		}catch (IndexOutOfBoundsException e) {
 			return null;
 		}
+	}
+
+	public Symbol getActiveSymbol() {
+		return self == getCurrentSymbol() ? self : null;
+	}
+
+	public Symbol self = Symbol.CROSS;
+
+	public Symbol getSelf() {
+		return self;
 	}
 
 	/**

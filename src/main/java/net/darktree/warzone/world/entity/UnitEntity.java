@@ -38,7 +38,7 @@ public class UnitEntity extends MovingEntity {
 
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (symbol == world.getCurrentSymbol()) {
+		if (symbol == world.getActiveSymbol()) {
 			PlayScreen.setInteractor(new UnitInteractor(this, world));
 		}
 	}

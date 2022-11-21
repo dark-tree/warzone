@@ -27,7 +27,6 @@ import org.lwjgl.glfw.GLFW;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 public class PlayScreen extends Screen {
 
@@ -63,7 +62,7 @@ public class PlayScreen extends Screen {
 
 		WorldHolder.buffers.draw();
 
-		Symbol symbol = world.getCurrentSymbol();
+		Symbol symbol = world.getActiveSymbol();
 
 		// render HUD
 		if (symbol != null) {
@@ -122,7 +121,6 @@ public class PlayScreen extends Screen {
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
 			try {
 				World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
-//				Main.relay.createGroup();
 				ScreenStack.closeAll();
 				ScreenStack.open(new PlayScreen(WorldHolder.world));
 			} catch (IOException e) {
@@ -132,19 +130,12 @@ public class PlayScreen extends Screen {
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
 			world.setOverlay((world, x, y, state) -> {
-				if (state.getOwner() == world.getCurrentSymbol()) {
+				if (state.getOwner() == world.getSelf()) {
 					return world.canControl(x, y) ? Colors.OVERLAY_NONE : ((Main.window.profiler.getFrameCount() / 30 % 2 == 0) ? Colors.OVERLAY_NONE : Colors.OVERLAY_FOREIGN);
 				}
 
 				return Colors.OVERLAY_FOREIGN;
 			});
-		}
-
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
-			Scanner in = new Scanner(System.in);
-			int i = Integer.decode(in.next());
-
-//			Main.relay.joinGroup(i);
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
@@ -161,16 +152,12 @@ public class PlayScreen extends Screen {
 					while (true) {
 						String line = reader.readLine();
 
-						if (line.equals("rclient")) {
-							WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
-						}
-
-						if (line.equals("rhost")) {
-							WorldHolder.world.manager = new ActionManager.Host(WorldHolder.world);
-						}
-
 						if (line.equals("rstop")) {
 							UserGroup.closeAll();
+						}
+
+						if (line.startsWith("self ")) {
+							WorldHolder.world.self = Symbol.fromIndex((byte) Integer.parseInt(line.split(" ")[1]));
 						}
 
 						if (line.equals("rexit")) {
@@ -180,6 +167,7 @@ public class PlayScreen extends Screen {
 						if (line.equals("rmake")) {
 							UserGroup.make("localhost", group -> {
 								Logger.info("Group made! " + group.id);
+								WorldHolder.world.manager = new ActionManager.Host(WorldHolder.world);
 							}, Logger::error);
 						}
 
@@ -188,6 +176,7 @@ public class PlayScreen extends Screen {
 
 							UserGroup.join("localhost", gid, group -> {
 								Logger.info("Group joined! " + group.id);
+								WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
 							}, Logger::error);
 						}
 					}
@@ -270,4 +259,8 @@ public class PlayScreen extends Screen {
 		}
 	}
 
+//	@Override
+//	public boolean isFocused() {
+//		return world.getCurrentSymbol() == null || world.getSelf() == world.getCurrentSymbol();
+//	}
 }

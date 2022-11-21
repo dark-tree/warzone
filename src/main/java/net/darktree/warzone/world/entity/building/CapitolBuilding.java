@@ -44,7 +44,7 @@ public class CapitolBuilding extends Building {
 
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (!summoned && world.getCurrentSymbol() == this.symbol) {
+		if (!summoned && world.getActiveSymbol() == this.symbol) {
 			PlayScreen.setInteractor(new CityInteractor(world.getCurrentSymbol(), world));
 		}
 	}
