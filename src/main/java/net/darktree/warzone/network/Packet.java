@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 
 public abstract class Packet<T> {
 
-	public abstract T getListenerValue(Relay relay, ByteBuffer buffer);
+	public abstract T getListenerValue(Side side, ByteBuffer buffer);
 
 	/**
 	 * Use this method to acquire the packet buffer

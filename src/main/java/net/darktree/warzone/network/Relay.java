@@ -97,7 +97,7 @@ public class Relay {
 			}
 
 			try {
-				result = packet.getListenerValue(this, buffer);
+				result = packet.getListenerValue(side, buffer);
 			} catch (Exception e) {
 				Logger.error("Exception was thrown while processing game packet with id: " + id + "!");
 				e.printStackTrace();
@@ -180,10 +180,8 @@ public class Relay {
 		reader.on(PacketType.R2U_LEFT, buffer -> callback.call(buffer.getInt()));
 	}
 
-	public void assertSide(Side expected) {
-		if (this.side != expected) {
-			throw new AssertionError("Invalid side!");
-		}
+	public Side getSide() {
+		return side;
 	}
 
 	@Override

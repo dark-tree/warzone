@@ -7,14 +7,14 @@ import java.nio.ByteBuffer;
 public class GroupSyncPacket extends Packet<UserGroup> {
 
 	@Override
-	public UserGroup getListenerValue(Relay relay, ByteBuffer buffer) {
-		relay.assertSide(Side.CLIENT);
+	public UserGroup getListenerValue(Side side, ByteBuffer buffer) {
+		side.expect(Side.CLIENT);
 
 		int host = buffer.getInt();
 		int gid = buffer.getInt();
 		int count = buffer.getInt();
 
-		UserGroup group = new UserGroup(relay, host, gid);
+		UserGroup group = new UserGroup(Relay.instance, host, gid);
 
 		for (int i = 0; i < count; i ++) {
 			group.join(buffer.getInt());

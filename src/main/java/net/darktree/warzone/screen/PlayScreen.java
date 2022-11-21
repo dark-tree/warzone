@@ -10,6 +10,7 @@ import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.event.ClickEvent;
+import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.screen.hotbar.Hotbar;
 import net.darktree.warzone.screen.interactor.Interactor;
@@ -76,8 +77,7 @@ public class PlayScreen extends Screen {
 
 			ScreenRenderer.offset(300, 20);
 			if (ScreenRenderer.button("END", 2, 38, 80, true)) {
-//				Packets.NEXT_TURN_PACKET.send(Main.relay);
-				world.nextPlayerTurn();
+				Packets.END_TURN.of().sendToHost();
 			}
 
 			ScreenRenderer.setSprite(symbol.getSprite());
@@ -185,8 +185,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
-//			Packets.NEXT_TURN_PACKET.send(Main.relay);
-			world.nextPlayerTurn();
+			Packets.END_TURN.of().sendToHost();
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_BACKSPACE) {

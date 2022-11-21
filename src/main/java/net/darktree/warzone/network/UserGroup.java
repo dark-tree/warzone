@@ -32,7 +32,7 @@ public class UserGroup {
 	}
 
 	private void sync() {
-		Packets.GROUP_SYNC.of(this).broadcast(this);
+		Packets.GROUP_SYNC.of(this).broadcast();
 	}
 
 	private void close() {

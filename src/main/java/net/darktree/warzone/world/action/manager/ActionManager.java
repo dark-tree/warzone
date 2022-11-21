@@ -3,7 +3,6 @@ package net.darktree.warzone.world.action.manager;
 import com.google.common.collect.ImmutableMap;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Packets;
-import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.World;
@@ -61,7 +60,7 @@ public class ActionManager {
 			}
 
 			if (action.verify(symbol)) {
-				Packets.ACTION.of(symbol, action).sendToHost(UserGroup.instance);
+				Packets.ACTION.of(symbol, action).sendToHost();
 				return true;
 			}
 
@@ -75,7 +74,7 @@ public class ActionManager {
 			}
 
 			if (get(symbol).canPop()) {
-				Packets.UNDO.of(symbol).sendToHost(UserGroup.instance);
+				Packets.UNDO.of(symbol).sendToHost();
 				return true;
 			}
 
@@ -93,7 +92,7 @@ public class ActionManager {
 		@Override
 		public boolean apply(Symbol symbol, Action action, boolean received) {
 			if (super.apply(symbol, action, received)) {
-				Packets.ACTION.of(symbol, action).broadcast(UserGroup.instance);
+				Packets.ACTION.of(symbol, action).broadcast();
 				return true;
 			}
 
@@ -103,7 +102,7 @@ public class ActionManager {
 		@Override
 		public boolean undo(Symbol symbol, boolean received) {
 			if (super.undo(symbol, received)) {
-				Packets.UNDO.of(symbol).broadcast(UserGroup.instance);
+				Packets.UNDO.of(symbol).broadcast();
 				return true;
 			}
 
