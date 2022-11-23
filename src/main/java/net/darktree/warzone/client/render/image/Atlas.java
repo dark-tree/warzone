@@ -121,7 +121,7 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 					loadAll(source, resource + "/" + path.getFileName(), root);
 				}
 
-				String identifier = root.relativize(path).toString();
+				String identifier = root.relativize(path).toString().replace('\\', '/');
 
 				if (identifier.endsWith(".png")) {
 					addPath(source + "/" + identifier, identifier);

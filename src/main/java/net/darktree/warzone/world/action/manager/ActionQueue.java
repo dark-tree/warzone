@@ -26,7 +26,7 @@ public class ActionQueue {
 			}
 
 			action.redo(symbol);
-			action.common( symbol);
+			action.common(symbol);
 
 			// handle actions that can't be undone
 			if (action instanceof FinalAction) {

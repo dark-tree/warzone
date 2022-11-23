@@ -79,12 +79,13 @@ public class Main {
 		Util.runAsync(() -> {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-			try {
-				while (true) {
+			while (true) {
+				try {
 					console(reader);
+				} catch (Exception e) {
+					Logger.warn("Exception in console thread!");
+					e.printStackTrace();
 				}
-			} catch (Exception ignored) {
-				Logger.warn("Console thread crashed!");
 			}
 		}, "Console");
 
@@ -200,17 +201,17 @@ public class Main {
 			return;
 		}
 
-		if (line.equals("rmake")) {
-			UserGroup.make("localhost", group -> {
+		if (line.startsWith("rmake ")) {
+			String[] parts = line.split(" ");
+			UserGroup.make(parts[1], group -> {
 				Logger.info("Group made! " + group.id);
 				WorldHolder.world.manager = new ActionManager.Host(WorldHolder.world);
 			}, Logger::error);
 		}
 
 		if (line.startsWith("rjoin ")) {
-			int gid = Integer.parseInt(line.split(" ")[1]);
-
-			UserGroup.join("localhost", gid, group -> {
+			String[] parts = line.split(" ");
+			UserGroup.join(parts[1], Integer.parseInt(parts[2]), group -> {
 				Logger.info("Group joined! " + group.id);
 				WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
 			}, Logger::error);

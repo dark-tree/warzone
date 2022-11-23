@@ -113,7 +113,7 @@ public class PlayScreen extends Screen {
 			ScreenStack.open(new BuildScreen(world));
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB && world.getActiveSymbol() != null) {
 			Packets.END_TURN.of().broadcast();
 		}
 
@@ -187,8 +187,4 @@ public class PlayScreen extends Screen {
 		}
 	}
 
-//	@Override
-//	public boolean isFocused() {
-//		return world.getCurrentSymbol() == null || world.getSelf() == world.getCurrentSymbol();
-//	}
 }
