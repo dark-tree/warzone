@@ -6,32 +6,43 @@ import java.nio.ByteBuffer;
 
 public class GroupSyncPacket extends Packet<UserGroup> {
 
-	@Override
-	public UserGroup getListenerValue(Side side, ByteBuffer buffer) {
+	private final UserGroup group;
+
+	public GroupSyncPacket(Side side, ByteBuffer buffer) {
+		super(Packets.GROUP_SYNC);
 		side.expect(Side.CLIENT);
 
 		int host = buffer.getInt();
 		int gid = buffer.getInt();
 		int count = buffer.getInt();
 
-		UserGroup group = new UserGroup(Relay.instance, host, gid);
+		this.group = new UserGroup(Relay.instance, host, gid);
 
 		for (int i = 0; i < count; i ++) {
 			group.join(buffer.getInt());
 		}
+	}
 
+	public GroupSyncPacket(UserGroup group) {
+		super(Packets.GROUP_SYNC);
+		this.group = group;
+	}
+
+	@Override
+	public UserGroup getListenerValue() {
 		return group;
 	}
 
-	public PacketDelegate of(UserGroup group) {
-		ByteBuffer buffer = getBuffer();
+	@Override
+	public ByteBuffer getBuffer() {
+		ByteBuffer buffer = super.getBuffer();
 
 		buffer.putInt(group.host);
 		buffer.putInt(group.id);
 		buffer.putInt(group.users.size());
 		group.users.forEach(buffer::putInt);
 
-		return new PacketDelegate(buffer);
+		return buffer;
 	}
 
 }

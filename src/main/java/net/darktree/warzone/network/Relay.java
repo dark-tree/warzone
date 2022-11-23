@@ -24,7 +24,7 @@ public class Relay {
 	private final Socket socket;
 	private final PacketWriter writer;
 	private final PacketReader reader;
-	private final Map<Packet<?>, Consumer<?>> interceptors = new HashMap<>();
+	private final Map<Packet.Type, Consumer<?>> interceptors = new HashMap<>();
 
 	private Runnable listener;
 	private int uid;
@@ -86,25 +86,26 @@ public class Relay {
 
 		reader.on(PacketType.R2U_TEXT, buffer -> {
 			final int id = buffer.getInt();
-			Packet<?> packet;
+			Packet<?> packet = null;
 			Object result = null;
 
-			try{
-				packet = Registries.PACKETS.getElement(id);
-			} catch (IndexOutOfBoundsException e) {
-				Logger.error("Unknown game packet with id: " + id + " received!");
-				return;
-			}
-
 			try {
-				result = packet.getListenerValue(side, buffer);
+				try{
+					packet = Registries.PACKETS.getElement(id).create(side, buffer);
+					Logger.info("Received packet ", id);
+				} catch (IndexOutOfBoundsException e) {
+					Logger.error("Unknown game packet with id: " + id + " received!");
+					return;
+				}
+
+				result = packet.getListenerValue();
 			} catch (Exception e) {
 				Logger.error("Exception was thrown while processing game packet with id: " + id + "!");
 				e.printStackTrace();
 			}
 
 			@SuppressWarnings("unchecked")
-			Consumer<Object> consumer = (Consumer<Object>) interceptors.get(packet);
+			Consumer<Object> consumer = (Consumer<Object>) interceptors.get(packet.type);
 			if (consumer != null) {
 				consumer.accept(result);
 			}
@@ -160,7 +161,7 @@ public class Relay {
 		writer.of(PacketType.U2R_SEND).write(uid).write(buffer.array(), buffer.position()).send();
 	}
 
-	public <T> void setPacketListener(Packet<T> packet, Consumer<T> callback) {
+	public <T> void setPacketListener(Packet.Type packet, Consumer<T> callback) {
 		interceptors.put(packet, callback);
 	}
 

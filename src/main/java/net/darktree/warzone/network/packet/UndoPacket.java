@@ -2,7 +2,7 @@ package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.network.PacketDelegate;
+import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.Side;
 import net.darktree.warzone.network.VoidPacket;
 import net.darktree.warzone.world.WorldHolder;
@@ -11,8 +11,10 @@ import java.nio.ByteBuffer;
 
 public class UndoPacket extends VoidPacket {
 
-	@Override
-	public void onReceive(Side side, ByteBuffer buffer) {
+	private Symbol symbol;
+
+	public UndoPacket(Side side, ByteBuffer buffer) {
+		super(Packets.UNDO);
 		Symbol symbol = Symbol.fromIndex(buffer.get());
 
 		Main.runSynced(() -> {
@@ -20,10 +22,16 @@ public class UndoPacket extends VoidPacket {
 		});
 	}
 
-	public PacketDelegate of(Symbol symbol) {
-		ByteBuffer buffer = getBuffer();
+	public UndoPacket(Symbol symbol) {
+		super(Packets.UNDO);
+		this.symbol = symbol;
+	}
+
+	@Override
+	public ByteBuffer getBuffer() {
+		ByteBuffer buffer = super.getBuffer();
 		buffer.put((byte) symbol.ordinal());
-		return new PacketDelegate(buffer);
+		return buffer;
 	}
 
 }

@@ -8,10 +8,10 @@ import net.darktree.warzone.network.packet.UndoPacket;
 
 public class Packets {
 
-	public static final EndTurnPacket END_TURN = new EndTurnPacket();
-	public static final GroupSyncPacket GROUP_SYNC = new GroupSyncPacket();
-	public static final ActionPacket ACTION = new ActionPacket();
-	public static final UndoPacket UNDO = new UndoPacket();
+	public static final Packet.Type END_TURN = new Packet.Type(EndTurnPacket::new);
+	public static final Packet.Type GROUP_SYNC = new Packet.Type(GroupSyncPacket::new);
+	public static final Packet.Type ACTION = new Packet.Type(ActionPacket::new);
+	public static final Packet.Type UNDO = new Packet.Type(UndoPacket::new);
 
 	public static void load() {
 		Registries.PACKETS.register("turn", END_TURN);

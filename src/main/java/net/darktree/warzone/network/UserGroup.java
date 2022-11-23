@@ -1,5 +1,6 @@
 package net.darktree.warzone.network;
 
+import net.darktree.warzone.network.packet.GroupSyncPacket;
 import net.darktree.warzone.util.Util;
 
 import java.util.ArrayList;
@@ -32,11 +33,11 @@ public class UserGroup {
 	}
 
 	private void sync() {
-		PacketDelegate delegate = Packets.GROUP_SYNC.of(this);
+		GroupSyncPacket packet = new GroupSyncPacket(this);
 
 		for (int uid : users) {
 			if (uid != host) {
-				delegate.sendToUser(uid);
+				packet.sendToUser(uid);
 			}
 		}
 	}
@@ -85,8 +86,8 @@ public class UserGroup {
 
 			relay.setPacketListener(Packets.GROUP_SYNC, group -> {
 				timer.cancel();
-				groupCallback.accept(group);
-				UserGroup.instance = group;
+				groupCallback.accept((UserGroup) group);
+				UserGroup.instance = (UserGroup) group;
 			});
 			relay.joinGroup(gid);
 		}, errorCallback);

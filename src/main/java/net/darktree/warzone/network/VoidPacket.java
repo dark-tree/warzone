@@ -1,13 +1,13 @@
 package net.darktree.warzone.network;
 
-import java.nio.ByteBuffer;
-
 public abstract class VoidPacket extends Packet<Void> {
 
-	public abstract void onReceive(Side side, ByteBuffer buffer);
+	public VoidPacket(Type type) {
+		super(type);
+	}
 
-	public Void getListenerValue(Side side, ByteBuffer buffer) {
-		onReceive(side, buffer);
+	@Override
+	public Void getListenerValue() {
 		return null;
 	}
 

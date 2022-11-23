@@ -4,6 +4,7 @@ import net.darktree.warzone.Registries;
 
 import java.nio.ByteBuffer;
 
+@Deprecated
 public class PacketDelegate {
 
 	private final ByteBuffer buffer;
@@ -43,7 +44,7 @@ public class PacketDelegate {
 	}
 
 	private void handleLocal() {
-		Registries.PACKETS.getElement(buffer.getInt()).getListenerValue(Side.HOST, buffer);
+		Registries.PACKETS.getElement(buffer.getInt()).create(Side.HOST, buffer).getListenerValue();
 	}
 
 }
