@@ -6,6 +6,7 @@ import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.Registry;
 
 import java.nio.ByteBuffer;
+import java.util.function.Consumer;
 
 public abstract class Packet<T> {
 
@@ -15,7 +16,21 @@ public abstract class Packet<T> {
 		this.type = type;
 	}
 
+	/**
+	 * Return a value for a packet listener registered
+	 * using {@link Relay#setPacketListener(Type, Consumer)}
+	 * this method is not guaranteed to be called
+	 */
 	public abstract T getListenerValue();
+
+	/**
+	 * Executed on the main thread after the packet is
+	 * constructed and packet listeners fired, if the packet
+	 * is fired locally this will be called immediately
+	 */
+	public void apply() {
+
+	}
 
 	/**
 	 * Use this method to acquire the packet buffer
@@ -29,15 +44,15 @@ public abstract class Packet<T> {
 	}
 
 	public final void broadcast() {
-		new PacketDelegate(getBuffer()).broadcast();
+		UserGroup.broadcast(this);
 	}
 
 	public final void sendToHost() {
-		new PacketDelegate(getBuffer()).sendToHost();
+		UserGroup.sendToHost(this);
 	}
 
 	public final void sendToUser(int uid) {
-		new PacketDelegate(getBuffer()).sendToUser(uid);
+		UserGroup.sendToUser(this, uid);
 	}
 
 	public static class Type extends ElementType<Type> {

@@ -1,6 +1,5 @@
 package net.darktree.warzone.network.packet;
 
-import net.darktree.warzone.Main;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.Side;
@@ -11,20 +10,21 @@ import java.nio.ByteBuffer;
 
 public class UndoPacket extends VoidPacket {
 
-	private Symbol symbol;
+	private final Symbol symbol;
 
 	public UndoPacket(Side side, ByteBuffer buffer) {
 		super(Packets.UNDO);
-		Symbol symbol = Symbol.fromIndex(buffer.get());
-
-		Main.runSynced(() -> {
-			WorldHolder.world.getManager().undo(symbol, true);
-		});
+		this.symbol = Symbol.fromIndex(buffer.get());
 	}
 
 	public UndoPacket(Symbol symbol) {
 		super(Packets.UNDO);
 		this.symbol = symbol;
+	}
+
+	@Override
+	public void apply() {
+		WorldHolder.world.getManager().undo(symbol, true);
 	}
 
 	@Override

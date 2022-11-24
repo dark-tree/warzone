@@ -99,4 +99,34 @@ public class UserGroup {
 		}
 	}
 
+	public static <T> void broadcast(Packet<T> packet) {
+		UserGroup group = UserGroup.instance;
+
+		if (group != null) {
+			group.relay.broadcastMessage(packet.getBuffer());
+		} else {
+			packet.apply();
+		}
+	}
+
+	public static <T> void sendToUser(Packet<T> packet, int uid) {
+		UserGroup group = UserGroup.instance;
+
+		if (group != null) {
+			group.relay.sendMessage(uid, packet.getBuffer());
+		} else {
+			packet.apply();
+		}
+	}
+
+	public static <T> void sendToHost(Packet<T> packet) {
+		UserGroup group = UserGroup.instance;
+
+		if (group != null) {
+			group.relay.sendMessage(group.host, packet.getBuffer());
+		} else {
+			packet.apply();
+		}
+	}
+
 }

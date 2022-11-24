@@ -1,5 +1,6 @@
 package net.darktree.warzone.network;
 
+import net.darktree.warzone.Main;
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.network.urp.PacketReader;
 import net.darktree.warzone.network.urp.PacketType;
@@ -92,13 +93,16 @@ public class Relay {
 			try {
 				try{
 					packet = Registries.PACKETS.getElement(id).create(side, buffer);
-					Logger.info("Received packet ", id);
+					Logger.info("Received packet ", id); // TODO remove
 				} catch (IndexOutOfBoundsException e) {
 					Logger.error("Unknown game packet with id: " + id + " received!");
 					return;
 				}
 
 				result = packet.getListenerValue();
+
+				// run apply() on the main thread
+				Main.runSynced(packet::apply);
 			} catch (Exception e) {
 				Logger.error("Exception was thrown while processing game packet with id: " + id + "!");
 				e.printStackTrace();

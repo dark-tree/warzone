@@ -1,6 +1,5 @@
 package net.darktree.warzone.network.packet;
 
-import net.darktree.warzone.Main;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.Side;
@@ -22,10 +21,6 @@ public class ActionPacket extends VoidPacket {
 
 		this.symbol = Symbol.fromIndex(buffer.get());
 		this.action = Action.fromNbt(NBTHelper.readCompound(buffer), WorldHolder.world);
-
-		Main.runSynced(() -> {
-			WorldHolder.world.getManager().apply(symbol, action, true);
-		});
 	}
 
 	public ActionPacket(Symbol symbol, Action action) {
@@ -33,6 +28,11 @@ public class ActionPacket extends VoidPacket {
 
 		this.action = action;
 		this.symbol = symbol;
+	}
+
+	@Override
+	public void apply() {
+		WorldHolder.world.getManager().apply(symbol, action, true);
 	}
 
 	@Override
