@@ -70,7 +70,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
-		tag.putString("id", Registries.ENTITIES.keyOf(this.type));
+		tag.putString("id", type.key());
 		tag.putInt("x", getX());
 		tag.putInt("y", getY());
 	}

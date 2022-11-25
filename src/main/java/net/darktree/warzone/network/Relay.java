@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 
 public class Relay {
 
+	public static final int NULL_USER = 0;
 	public static final int TIMEOUT = 3;
 	public static final int PORT = 9698;
 
@@ -104,7 +105,7 @@ public class Relay {
 				Main.runSynced(packet::apply);
 			} catch (Exception e) {
 				if (packet != null) {
-					Logger.error("Exception was thrown while processing game packet: '" + Registries.PACKETS.keyOf(packet.type) + "'!");
+					Logger.error("Exception was thrown while processing game packet: '" + packet.type.key() + "'!");
 				}
 
 				e.printStackTrace();
@@ -177,8 +178,8 @@ public class Relay {
 		interceptors.put(packet, callback);
 	}
 
-	public void broadcastMessage(ByteBuffer buffer) {
-		writer.of(PacketType.U2R_BROD).write(buffer.array(), buffer.position()).send();
+	public void broadcastMessage(int uid, ByteBuffer buffer) {
+		writer.of(PacketType.U2R_BROD).write(uid).write(buffer.array(), buffer.position()).send();
 	}
 
 	public void onGroupCreated(IntCallback callback) {

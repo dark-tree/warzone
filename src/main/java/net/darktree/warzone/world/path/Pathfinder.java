@@ -24,7 +24,7 @@ public class Pathfinder {
 			{+0, +1}, {+1, +1}, {+1, -1}, {-1, +1}
 	};
 
-	// TODO: split max, pattern and within into PathfinderConfig
+	//TODO: split max, pattern and within into PathfinderConfig
 	public Pathfinder(World world, int max, Symbol symbol, Surface surface, PlacedTileIterator pattern, boolean within) {
 		this.world = world;
 		this.width = world.width;

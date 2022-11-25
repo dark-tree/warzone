@@ -24,14 +24,4 @@ public enum PacketType {
 		return values()[type - 0x10 + R2U_WELC.ordinal()];
 	}
 
-	public static PacketType[] r2u() {
-		return new PacketType[] {
-				R2U_WELC,
-				R2U_TEXT,
-				R2U_MADE,
-				R2U_JOIN,
-				R2U_LEFT
-		};
-	}
-
 }

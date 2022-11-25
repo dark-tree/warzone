@@ -47,7 +47,7 @@ public abstract class Action {
 	 */
 	@MustBeInvokedByOverriders
 	public void toNbt(CompoundTag nbt) {
-		nbt.putInt("id", Registries.ACTIONS.identifierOf(this.type));
+		nbt.putInt("id", this.type.id());
 	}
 
 	/**

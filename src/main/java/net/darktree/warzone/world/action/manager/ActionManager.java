@@ -93,7 +93,7 @@ public class ActionManager {
 		@Override
 		public boolean apply(Symbol symbol, Action action, boolean received) {
 			if (super.apply(symbol, action, received)) {
-				new ActionPacket(symbol, action).broadcast();
+				new ActionPacket(symbol, action).broadcastExceptHost();
 				return true;
 			}
 
@@ -103,7 +103,7 @@ public class ActionManager {
 		@Override
 		public boolean undo(Symbol symbol, boolean received) {
 			if (super.undo(symbol, received)) {
-				new UndoPacket(symbol).broadcast();
+				new UndoPacket(symbol).broadcastExceptHost();
 				return true;
 			}
 

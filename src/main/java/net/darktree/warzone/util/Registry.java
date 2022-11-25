@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class Registry<T> {
+public class Registry<T extends ElementType<T>> {
 
 	private final Consumer<Entry<T>> listener;
 	private final ArrayList<Entry<T>> list = new ArrayList<>();

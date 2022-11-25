@@ -99,11 +99,11 @@ public class UserGroup {
 		}
 	}
 
-	public static <T> void broadcast(Packet<T> packet) {
+	public static <T> void broadcast(Packet<T> packet, int except) {
 		UserGroup group = UserGroup.instance;
 
 		if (group != null) {
-			group.relay.broadcastMessage(packet.getBuffer());
+			group.relay.broadcastMessage(except, packet.getBuffer());
 		} else {
 			packet.apply();
 		}

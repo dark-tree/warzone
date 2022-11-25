@@ -35,7 +35,7 @@ public abstract class Packet<T> {
 	/**
 	 * Use this method to acquire the packet buffer
 	 * to be later send with {@link Relay#sendMessage(int, ByteBuffer)}
-	 * or {@link Relay#broadcastMessage(ByteBuffer)}
+	 * or {@link Relay#broadcastMessage(int, ByteBuffer)}
 	 */
 	protected ByteBuffer getBuffer() {
 		ByteBuffer buffer = PacketByteBuffer.getMessageBuffer();
@@ -44,7 +44,11 @@ public abstract class Packet<T> {
 	}
 
 	public final void broadcast() {
-		UserGroup.broadcast(this);
+		UserGroup.broadcast(this, Relay.NULL_USER);
+	}
+
+	public final void broadcastExceptHost() {
+		UserGroup.broadcast(this, UserGroup.instance.host);
 	}
 
 	public final void sendToHost() {
