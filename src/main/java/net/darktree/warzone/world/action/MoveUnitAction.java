@@ -25,7 +25,7 @@ public final class MoveUnitAction extends Action {
 		this.sx = x;
 		this.sy = y;
 		this.entity = world.getEntity(x, y, UnitEntity.class);
-		this.pathfinder = new Pathfinder(world, 5, world.getCurrentSymbol(), Surface.LAND,  Patterns.IDENTITY.place(world, entity.getX(), entity.getY()), false);
+		this.pathfinder = new Pathfinder(world, 5, world.getCurrentSymbol(), Surface.LAND,  Patterns.IDENTITY.place(world, x, y), false);
 	}
 
 	public MoveUnitAction(World world, CompoundTag nbt) {
@@ -59,7 +59,7 @@ public final class MoveUnitAction extends Action {
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return !entity.hasMoved() && path != null;
+		return entity != null && !entity.hasMoved() && path != null;
 	}
 
 	@Override

@@ -3,10 +3,9 @@ package net.darktree.warzone.screen.interactor;
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.network.packet.ColonizePacket;
 import net.darktree.warzone.screen.PlayScreen;
-import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.ColonizeAction;
 import net.darktree.warzone.world.action.MoveUnitAction;
 import net.darktree.warzone.world.action.ToggleArmorAction;
 import net.darktree.warzone.world.entity.UnitEntity;
@@ -33,6 +32,8 @@ public class UnitInteractor extends Interactor {
 
 	@Override
 	public void draw(VertexBuffer texture, VertexBuffer color) {
+		if (entity.isRemoved()) closed = true;
+
 		entity.drawSelection(color, Colors.ENTITY_SELECTION);
 
 		int x = Main.window.input().getMouseMapX(world.getView());
@@ -61,15 +62,11 @@ public class UnitInteractor extends Interactor {
 		super.onKey(key, action, mods);
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
-			if (world.getManager().apply(new ColonizeAction(world, MathHelper.nextRandomDice(), entity.getX(), entity.getY(), false))) {
-				if (entity.isRemoved()) closed = true;
-			}
+			new ColonizePacket(entity.getX(), entity.getY(), false).sendToHost();
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_W) {
-			if (world.getManager().apply(new ColonizeAction(world, MathHelper.nextRandomDice(), entity.getX(), entity.getY(), true))) {
-				if (entity.isRemoved()) closed = true;
-			}
+			new ColonizePacket(entity.getX(), entity.getY(), true).sendToHost();
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_Z) {

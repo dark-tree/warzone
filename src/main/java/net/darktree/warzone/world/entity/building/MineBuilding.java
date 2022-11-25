@@ -16,7 +16,7 @@ public class MineBuilding extends Building {
 	}
 
 	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (event.isPressed()) {
+		if (event.isPressed() && world.getActiveSymbol() != null) {
 			world.getManager().apply(new DeconstructBuildingAction(world, getX(), getY()));
 		}
 	}

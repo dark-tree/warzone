@@ -93,7 +93,6 @@ public class Relay {
 			try {
 				try{
 					packet = Registries.PACKETS.getElement(id).create(side, buffer);
-					Logger.info("Received packet ", id); // TODO remove
 				} catch (IndexOutOfBoundsException e) {
 					Logger.error("Unknown game packet with id: " + id + " received!");
 					return;
@@ -104,7 +103,10 @@ public class Relay {
 				// run apply() on the main thread
 				Main.runSynced(packet::apply);
 			} catch (Exception e) {
-				Logger.error("Exception was thrown while processing game packet with id: " + id + "!");
+				if (packet != null) {
+					Logger.error("Exception was thrown while processing game packet: '" + Registries.PACKETS.keyOf(packet.type) + "'!");
+				}
+
 				e.printStackTrace();
 			}
 
@@ -125,7 +127,13 @@ public class Relay {
 				this.open = false;
 				instance = null;
 
-				// FIXME figure out why sometimes a user joining closes the connection for the host
+				// close the socket if there was a problem
+				// while processing the packet
+				if (socket.isConnected()) {
+					this.close();
+				}
+
+				// FIXME cleanup after a connection drop, on close callback?
 				e.printStackTrace();
 			}
 		}, "NetworkReaderThread");
