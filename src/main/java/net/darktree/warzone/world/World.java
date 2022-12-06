@@ -275,8 +275,12 @@ public class World implements WorldEntityView {
 		}
 	}
 
+	public boolean isActiveSymbol() {
+		return self == getCurrentSymbol();
+	}
+
 	public Symbol getActiveSymbol() {
-		return self == getCurrentSymbol() ? self : null;
+		return isActiveSymbol() ? self : null;
 	}
 
 	public Symbol self = Symbol.CROSS;

@@ -6,6 +6,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.building.production.ProductionState;
@@ -15,13 +16,11 @@ import org.lwjgl.glfw.GLFW;
 public class ProduceScreen extends Screen {
 
 	private final ProductionState state;
-	private final World world;
-	private final Symbol symbol;
+	private final Country country;
 
 	public ProduceScreen(ProductionState state, World world, Symbol symbol) {
 		this.state = state;
-		this.world = world;
-		this.symbol = symbol;
+		this.country = world.getCountry(symbol);
 	}
 
 	@Override
@@ -59,22 +58,23 @@ public class ProduceScreen extends Screen {
 		for (Recipe recipe : state.getRecipes()) {
 			ScreenRenderer.line(0.005f, 1300 - 200, 0);
 
+			Recipe.Type type = recipe.getType();
 			ScreenRenderer.offset(0, -40);
 			ScreenRenderer.push();
-			ScreenRenderer.text(recipe.getNameString(), 30);
+			ScreenRenderer.text(type.getNameString(), 30);
 			ScreenRenderer.offset(400, 0);
-			ScreenRenderer.text(recipe.getCostString(), 30);
+			ScreenRenderer.text(type.getCostString(), 30);
 			ScreenRenderer.offset(200, 0);
 			ScreenRenderer.text("" + recipe.getQuantity(), 30);
 
 			ScreenRenderer.offset(60, 0);
 			if (ScreenRenderer.button(Sprites.ICON_MINUS, 35, 35, recipe.getQuantity() > 0)) {
-				recipe.undo(state, world, symbol);
+				recipe.undo(country);
 			}
 
 			ScreenRenderer.offset(60, 0);
-			if (ScreenRenderer.button(Sprites.ICON_PLUS, 35, 35, recipe.canProduce(state, world, symbol))) {
-				recipe.redo(state, world, symbol);
+			if (ScreenRenderer.button(Sprites.ICON_PLUS, 35, 35, state.canProduce() && recipe.canProduce(country))) {
+				recipe.redo(country);
 			}
 
 			ScreenRenderer.pop();

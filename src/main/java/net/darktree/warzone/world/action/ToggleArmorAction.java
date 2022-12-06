@@ -2,6 +2,7 @@ package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.country.Country;
+import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.UnitEntity;
@@ -33,7 +34,7 @@ public final class ToggleArmorAction extends ToggleableAction {
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return entity.isInHomeland() && (entity.armored || world.getCountry(symbol).armor > 0);
+		return entity.isInHomeland() && (entity.armored || world.getCountry(symbol).getResource(Resources.ARMOR).value > 0);
 	}
 
 	@Override

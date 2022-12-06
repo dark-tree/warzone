@@ -5,6 +5,7 @@ import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.window.Window;
+import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
@@ -58,8 +59,11 @@ public class Main {
 
 		Packets.load();
 		SoundSystem.enable();
+
+		// FIXME let's not
 		Util.load(Sounds.class);
 		Util.load(Actions.class);
+		Util.load(net.darktree.warzone.country.Resources.class);
 
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
@@ -186,6 +190,16 @@ public class Main {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			});
+		}
+
+		if (line.startsWith("give ")) {
+			String[] parts = line.split(" ");
+			int count = Integer.parseInt(parts[2]);
+
+			Main.runSynced(() -> {
+				Resource.Quantified resource = Registries.RESOURCES.getElement(parts[1]).quantify(count);
+				WorldHolder.world.getCountry(WorldHolder.world.getCurrentSymbol()).addResource(resource);
 			});
 		}
 

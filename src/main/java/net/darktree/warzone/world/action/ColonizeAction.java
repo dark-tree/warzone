@@ -1,6 +1,7 @@
 package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.client.Sounds;
+import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.manager.Action;
@@ -40,7 +41,7 @@ public final class ColonizeAction extends Action implements FinalAction, HostAct
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return (!war || world.getCountry(symbol).ammo >= 2) && !world.getCountry(symbol).colonized && !entity.hasMoved() && world.canControl(entity.getX(), entity.getY(), symbol);
+		return (!war || world.getCountry(symbol).getResource(Resources.AMMO).value >= 2) && !world.getCountry(symbol).colonized && !entity.hasMoved() && world.canControl(entity.getX(), entity.getY(), symbol);
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public final class ColonizeAction extends Action implements FinalAction, HostAct
 		Sounds.DICE_ROLL.play(entity).setVolume(2);
 
 		if (war) {
-			world.getCountry(symbol).ammo -= 2;
+			world.getCountry(symbol).getResource(Resources.AMMO).value -= 2;
 		}
 	}
 

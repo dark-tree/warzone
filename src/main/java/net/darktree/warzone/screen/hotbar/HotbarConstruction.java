@@ -23,12 +23,12 @@ public class HotbarConstruction extends HotbarComponent {
 		drawPicker();
 
 		ScreenRenderer.offset(417, 52);
-		if (ScreenRenderer.button(Sprites.BUTTON_BUILDING, 66, 66, true) && world.getActiveSymbol() != null) {
+		if (ScreenRenderer.button(Sprites.BUTTON_BUILDING, 66, 66, true) && world.isActiveSymbol()) {
 			ScreenStack.open(new BuildScreen(world));
 		}
 
 		ScreenRenderer.offset(96, 0);
-		if (ScreenRenderer.button(Sprites.BUTTON_DEMOLISH, 66, 66, true) && world.getActiveSymbol() != null) {
+		if (ScreenRenderer.button(Sprites.BUTTON_DEMOLISH, 66, 66, true) && world.isActiveSymbol()) {
 			PlayScreen.setInteractor(new DeconstructInteractor(world.getCurrentSymbol(), world));
 		}
 	}

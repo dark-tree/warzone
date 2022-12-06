@@ -6,6 +6,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.World;
@@ -42,7 +43,7 @@ public class UnitAttackInteractor extends Interactor {
 		int fx = entity.getX();
 		int fy = entity.getY();
 
-		if (!world.isPositionValid(tx, ty) || world.getCountry(entity.getSymbol()).ammo == 0) {
+		if (!world.isPositionValid(tx, ty) || world.getCountry(entity.getSymbol()).getResource(Resources.AMMO).value == 0) {
 			return false;
 		}
 

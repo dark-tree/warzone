@@ -38,6 +38,11 @@ public class Registry<T extends ElementType<T>> {
 		return value;
 	}
 
+	public <R> Map<T, R> map(Map<T, R> map, Function<T, R> mapper) {
+		list.forEach((entry) -> map.put(entry.value(), mapper.apply(entry.value())));
+		return map;
+	}
+
 	/**
 	 * Query registered element by its key
 	 */

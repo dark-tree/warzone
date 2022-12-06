@@ -113,7 +113,7 @@ public class PlayScreen extends Screen {
 			ScreenStack.open(new BuildScreen(world));
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB && world.getActiveSymbol() != null) {
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB && world.isActiveSymbol()) {
 			new EndTurnPacket().broadcast();
 		}
 
@@ -140,7 +140,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
-			if (world.isPositionValid(x, y)) {
+			if (world.isPositionValid(x, y) && world.isActiveSymbol()) {
 
 				if (action == GLFW.GLFW_PRESS) {
 					Entity entity = world.getEntity(x, y);

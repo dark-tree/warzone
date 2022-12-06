@@ -1,5 +1,6 @@
 package net.darktree.warzone.world.action;
 
+import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.manager.Action;
@@ -38,13 +39,13 @@ public final class EntityShotAction extends Action {
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return !source.hasMoved() && world.getCountry(symbol).ammo > 0;
+		return !source.hasMoved() && world.getCountry(symbol).getResource(Resources.AMMO).value > 0;
 	}
 
 	@Override
 	protected void redo(Symbol symbol) {
 		killed = !target.armored;
-		world.getCountry(symbol).ammo --;
+		world.getCountry(symbol).getResource(Resources.AMMO).value --;
 		source.setAttacked(true);
 
 		if (killed) {
@@ -56,7 +57,7 @@ public final class EntityShotAction extends Action {
 
 	@Override
 	protected void undo(Symbol symbol) {
-		world.getCountry(symbol).ammo ++;
+		world.getCountry(symbol).getResource(Resources.AMMO).value ++;
 		source.setAttacked(false);
 
 		if (killed) {

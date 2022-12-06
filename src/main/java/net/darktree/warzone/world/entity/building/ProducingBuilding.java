@@ -30,7 +30,7 @@ public abstract class ProducingBuilding extends Building {
 	@Override
 	public void onPlayerTurnEnd(Symbol symbol) {
 		if (world.canControl(tx, ty, symbol)) {
-			production.apply(world, symbol);
+			production.apply(world.getCountry(symbol));
 		}
 	}
 
