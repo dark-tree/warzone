@@ -24,6 +24,11 @@ public abstract class Tile extends ElementType<Tile> implements WorldTile {
 		return Registries.TILES;
 	}
 
+	@Override
+	public void onRegister(String id) {
+		SpriteBridge.register(this, id);
+	}
+
 	public TileVariant getDefaultVariant() {
 		return this.variant;
 	}

@@ -14,4 +14,8 @@ public abstract class ElementType<T extends ElementType<T>> {
 		return getRegistry().keyOf((T) this);
 	}
 
+	public void onRegister(String id) {
+
+	}
+
 }

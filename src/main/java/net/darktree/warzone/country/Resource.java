@@ -4,7 +4,7 @@ import net.darktree.warzone.Registries;
 import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.Registry;
 
-public final class Resource extends ElementType<Resource> {
+public class Resource extends ElementType<Resource> {
 
 	private final String shortName;
 	private final String longName;

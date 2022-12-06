@@ -9,19 +9,9 @@ import java.util.function.Function;
 
 public class Registry<T extends ElementType<T>> {
 
-	private final Consumer<Entry<T>> listener;
 	private final ArrayList<Entry<T>> list = new ArrayList<>();
 	private final Map<String, Entry<T>> registry = new HashMap<>();
 	private final Map<T, Entry<T>> lookup = new IdentityHashMap<>();
-
-	public Registry() {
-		this(Function.identity()::apply);
-	}
-
-	@Deprecated
-	public Registry(Consumer<Entry<T>> listener) {
-		this.listener = listener;
-	}
 
 	public <E extends T> E register(String key, E value) {
 		Entry<T> entry = new Entry<>(list.size(), key, value);
@@ -33,14 +23,24 @@ public class Registry<T extends ElementType<T>> {
 		this.list.add(entry);
 		this.registry.put(key, entry);
 		this.lookup.put(value, entry);
-		this.listener.accept(entry);
+		entry.value.onRegister(key);
 
 		return value;
 	}
 
+	/**
+	 * Create a map from the registry where keys are the registry values
+	 */
 	public <R> Map<T, R> map(Map<T, R> map, Function<T, R> mapper) {
-		list.forEach((entry) -> map.put(entry.value(), mapper.apply(entry.value())));
+		iterate(entry -> map.put(entry, mapper.apply(entry)));
 		return map;
+	}
+
+	/**
+	 * Run the given consumer for all entries in the registry
+	 */
+	public void iterate(Consumer<T> consumer) {
+		list.forEach(entry -> consumer.accept(entry.value));
 	}
 
 	/**

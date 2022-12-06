@@ -4,27 +4,19 @@ import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Resource;
-import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.screen.ResourceRenderer;
 import net.darktree.warzone.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class HotbarOverview extends HotbarComponent {
 
 	private static final List<ResourceRenderer> labels = new ArrayList<>();
 
-	public static void registerResourceLabel(Resource resource) {
-		labels.add(country -> ScreenRenderer.text(resource.getShortName().toUpperCase(Locale.ROOT) + country.getResource(resource).value, 30));
-	}
-
-	// TODO this is redundant now, think of a new and flexible system
-	static {
-		registerResourceLabel(Resources.ARMOR);
-		registerResourceLabel(Resources.AMMO);
+	public static void registerResourceLabel(String label, Resource resource) {
+		labels.add(country -> ScreenRenderer.text(label + country.getResource(resource).value, 30));
 	}
 
 	@Override
