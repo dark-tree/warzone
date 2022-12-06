@@ -73,7 +73,7 @@ public class Recipe {
 		}
 
 		public String getNameString() {
-			return output[0].toString();
+			return output[0].resource().getLongName();
 		}
 
 		public void forEachInput(Consumer<Resource.Quantified> consumer) {
