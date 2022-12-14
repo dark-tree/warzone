@@ -10,4 +10,9 @@ public class WaterTile extends Tile {
 		return Surface.WATER;
 	}
 
+	@Override
+	public boolean canColonize() {
+		return false;
+	}
+
 }

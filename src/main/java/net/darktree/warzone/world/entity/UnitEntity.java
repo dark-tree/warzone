@@ -7,8 +7,9 @@ import net.darktree.warzone.event.ClickEvent;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.UnitInteractor;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.pattern.Patterns;
+import net.darktree.warzone.world.pattern.ShapeHelper;
 import net.darktree.warzone.world.tile.TilePos;
+import net.darktree.warzone.world.tile.TileState;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -43,31 +44,29 @@ public class UnitEntity extends MovingEntity {
 		}
 	}
 
+	@Override
+	public boolean canColonize() {
+		return false;
+	}
+
+	private boolean colonizationOwnerCheck(boolean war, boolean midpoint, Symbol symbol, Symbol self) {
+		return midpoint ? (self == symbol) : (war ? symbol != Symbol.NONE : symbol == Symbol.NONE);
+	}
+
+	private boolean colonizationCheck(int x, int y, boolean war, boolean midpoint) {
+		TileState state = world.getTileState(x, y);
+		Entity entity = world.getEntity(x, y);
+		boolean allowed = !war || entity == null || entity.canColonize();
+		return state.getTile().canColonize() && colonizationOwnerCheck(war, midpoint, state.getOwner(), this.symbol) && allowed;
+	}
+
 	public void colonize(int dice, boolean war) {
-		int x = getX();
-		int y = getY();
+		ShapeHelper.TargetPredicate target = (world, x, y) -> colonizationCheck(x, y, war, false);
+		ShapeHelper.MidpointPredicate midpoint = (world, direction, tile, pos) -> colonizationCheck(pos.x, pos.y, war, true);
 
-		if (war) {
-			Patterns.SMALL_CROSS.iterate(world, x, y, this::warColonizeTile);
-
-			if (dice == 2) {
-				Patterns.STAR_SMALL.iterate(world, x, y, this::warColonizeTile);
-
-				Patterns.STAR_LARGE.iterate(world, x, y, pos -> {
-					TilePos middle = pos.getMiddlePointFrom(x, y);
-
-					if (warColonizeTile(middle)) {
-						warColonizeTile(pos);
-					}
-				});
-			}
-		} else {
-			Patterns.nextColonizationPattern(dice).iterate(world, x, y, pos -> {
-				if (world.getTileState(pos).getOwner() == Symbol.NONE) {
-					world.setTileOwner(pos.x, pos.y, this.symbol);
-				}
-			});
-		}
+		ShapeHelper.iterateValid(world, target, midpoint, dice == 2, getX(), getY(), pos -> {
+			world.setTileOwner(pos.x, pos.y, getSymbol());
+		});
 
 		if (dice % 2 != 0) {
 			if (armored) {

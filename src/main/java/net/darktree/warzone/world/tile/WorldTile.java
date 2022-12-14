@@ -15,7 +15,7 @@ public interface WorldTile {
 	/**
 	 * Defines whether a tile can be colonized
 	 */
-	default boolean canColonize(World world, int x, int y) {
+	default boolean canColonize() {
 		return true;
 	}
 

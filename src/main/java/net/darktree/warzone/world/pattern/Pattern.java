@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  */
 public abstract class Pattern {
 
-	protected abstract void forEachTile(Consumer<TilePos> consumer);
+	protected abstract void forEachOffset(Consumer<TilePos> consumer);
 
 	public List<TilePos> list(World world, int ox, int oy, boolean required) {
 		List<TilePos> tiles = new ArrayList<>();
@@ -29,7 +29,7 @@ public abstract class Pattern {
 	public boolean iterate(World world, int ox, int oy, Consumer<TilePos> consumer) {
 		AtomicBoolean perfect = new AtomicBoolean(true);
 
-		forEachTile(pos -> {
+		forEachOffset(pos -> {
 			int x = pos.x + ox;
 			int y = pos.y + oy;
 

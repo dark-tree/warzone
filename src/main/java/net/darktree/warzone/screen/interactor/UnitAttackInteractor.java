@@ -7,13 +7,11 @@ import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.country.Resources;
-import net.darktree.warzone.util.Direction;
-import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.EntityShotAction;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.entity.UnitEntity;
-import net.darktree.warzone.world.tile.TilePos;
+import net.darktree.warzone.world.pattern.ShapeHelper;
 
 public class UnitAttackInteractor extends Interactor {
 
@@ -40,29 +38,13 @@ public class UnitAttackInteractor extends Interactor {
 	}
 
 	private boolean isValid(World world, int tx, int ty) {
+		int ammo = world.getCountry(entity.getSymbol()).getResource(Resources.AMMO).value;
 		int fx = entity.getX();
 		int fy = entity.getY();
 
-		if (!world.isPositionValid(tx, ty) || world.getCountry(entity.getSymbol()).getResource(Resources.AMMO).value == 0) {
-			return false;
-		}
-
-		int md = MathHelper.getManhattanDistance(fx, fy, tx, ty);
-		int cd = MathHelper.getChebyshevDistance(fx, fy, tx, ty);
-
-		if (cd == 0) return false; // the points are equal
-		if (md >= 3) return false; // outside the maximum range
-		if (cd == 1) return isTargetValid(world, tx, ty); // inside inner circle
-
-		// at this point there are only 4 possible positions
-		// each on an axis-aligned line starting from the (fx, fy) point and at a distance of 2 from it,
-		// validity of the selection depends then on the tile in the middle between (fx, fy) and (tx, ty)
-
-		TilePos middle = MathHelper.getMiddlePoint(fx, fy, tx, ty);
-		Direction vector = MathHelper.getDirection(fx, fy, tx, ty);
-		Entity tile = world.getEntity(middle);
-
-		return (tile == null || tile.canPenetrate(vector)) && isTargetValid(world, tx, ty);
+		return ammo > 0 && ShapeHelper.isValid(world, this::isTargetValid, (world1, direction, tile, pos) -> {
+			return tile == null || tile.canPenetrate(direction);
+		}, true, fx, fy, tx, ty);
 	}
 
 	private boolean isTargetValid(World world, int tx, int ty) {

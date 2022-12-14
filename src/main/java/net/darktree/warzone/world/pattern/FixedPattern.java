@@ -17,7 +17,7 @@ public class FixedPattern extends Pattern {
 	}
 
 	@Override
-	protected void forEachTile(Consumer<TilePos> consumer) {
+	protected void forEachOffset(Consumer<TilePos> consumer) {
 		for (TilePos pos : offsets) consumer.accept(pos);
 	}
 

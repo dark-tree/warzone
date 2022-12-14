@@ -45,6 +45,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		world.getTileState(tx, ty).removeEntity(this);
 	}
 
+	@Deprecated
 	public boolean isAt(int x, int y) {
 		return getX() == x && getY() == y;
 	}

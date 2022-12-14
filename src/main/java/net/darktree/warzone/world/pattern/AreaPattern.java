@@ -15,7 +15,7 @@ public class AreaPattern extends Pattern {
 	}
 
 	@Override
-	protected void forEachTile(Consumer<TilePos> consumer) {
+	protected void forEachOffset(Consumer<TilePos> consumer) {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
 				consumer.accept(new TilePos(x, y));
