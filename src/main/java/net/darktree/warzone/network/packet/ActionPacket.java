@@ -3,7 +3,7 @@ package net.darktree.warzone.network.packet;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.Side;
-import net.darktree.warzone.network.VoidPacket;
+import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.util.NBTHelper;
 import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.action.manager.Action;
@@ -11,7 +11,7 @@ import net.querz.nbt.tag.CompoundTag;
 
 import java.nio.ByteBuffer;
 
-public class ActionPacket extends VoidPacket {
+public class ActionPacket extends SimplePacket {
 
 	private final Action action;
 	private final Symbol symbol;

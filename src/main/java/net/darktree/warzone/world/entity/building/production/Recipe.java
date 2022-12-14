@@ -51,6 +51,12 @@ public class Recipe {
 		}
 	}
 
+	public void reset(Country country) {
+		while (quantity > 0) {
+			undo(country);
+		}
+	}
+
 	public final static class Type extends ElementType<Recipe.Type> {
 
 		private final Resource.Quantified[] input;

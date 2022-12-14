@@ -4,6 +4,8 @@ import net.darktree.warzone.Registries;
 import net.darktree.warzone.network.urp.PacketByteBuffer;
 import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.Registry;
+import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.action.manager.ActionManager;
 
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
@@ -57,6 +59,18 @@ public abstract class Packet<T> {
 
 	public final void sendToUser(int uid) {
 		UserGroup.sendToUser(this, uid);
+	}
+
+	public final void send(World world) {
+		ActionManager manager = world.getManager();
+
+		if (!manager.isLocal()) {
+			if (manager.getSide() == Side.CLIENT) {
+				sendToHost();
+			} else {
+				broadcastExceptHost();
+			}
+		}
 	}
 
 	public static class Type extends ElementType<Type> {

@@ -3,12 +3,12 @@ package net.darktree.warzone.network.packet;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.Side;
-import net.darktree.warzone.network.VoidPacket;
+import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.world.WorldHolder;
 
 import java.nio.ByteBuffer;
 
-public class UndoPacket extends VoidPacket {
+public class UndoPacket extends SimplePacket {
 
 	private final Symbol symbol;
 

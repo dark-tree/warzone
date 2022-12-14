@@ -17,14 +17,18 @@ public class ProduceScreen extends Screen {
 
 	private final ProductionState state;
 	private final Country country;
+	private final World world;
 
 	public ProduceScreen(ProductionState state, World world, Symbol symbol) {
 		this.state = state;
 		this.country = world.getCountry(symbol);
+		this.world = world;
 	}
 
 	@Override
 	public void draw(boolean focused) {
+
+		boolean active = world.getActiveSymbol() == country.symbol;
 
 		ScreenRenderer.centerAt(-1, -1);
 		ScreenRenderer.setSprite(Sprites.NONE);
@@ -68,13 +72,15 @@ public class ProduceScreen extends Screen {
 			ScreenRenderer.text("" + recipe.getQuantity(), 30);
 
 			ScreenRenderer.offset(60, 0);
-			if (ScreenRenderer.button(Sprites.ICON_MINUS, 35, 35, recipe.getQuantity() > 0)) {
+			if (active && ScreenRenderer.button(Sprites.ICON_MINUS, 35, 35, recipe.getQuantity() > 0)) {
 				recipe.undo(country);
+				state.sync();
 			}
 
 			ScreenRenderer.offset(60, 0);
-			if (ScreenRenderer.button(Sprites.ICON_PLUS, 35, 35, state.canProduce() && recipe.canProduce(country))) {
+			if (active && ScreenRenderer.button(Sprites.ICON_PLUS, 35, 35, state.canProduce() && recipe.canProduce(country))) {
 				recipe.redo(country);
+				state.sync();
 			}
 
 			ScreenRenderer.pop();

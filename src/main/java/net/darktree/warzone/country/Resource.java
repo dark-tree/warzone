@@ -38,6 +38,10 @@ public class Resource extends ElementType<Resource> {
 			return quantity + resource.getShortName();
 		}
 
+		public Quantified negate() {
+			return new Quantified(resource, -quantity);
+		}
+
 	}
 
 }

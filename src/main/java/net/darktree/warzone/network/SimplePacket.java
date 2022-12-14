@@ -1,8 +1,8 @@
 package net.darktree.warzone.network;
 
-public abstract class VoidPacket extends Packet<Void> {
+public abstract class SimplePacket extends Packet<Void> {
 
-	public VoidPacket(Type type) {
+	public SimplePacket(Type type) {
 		super(type);
 	}
 

@@ -2,14 +2,14 @@ package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.Side;
-import net.darktree.warzone.network.VoidPacket;
+import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.action.ColonizeAction;
 
 import java.nio.ByteBuffer;
 
-public class ColonizePacket  extends VoidPacket {
+public class ColonizePacket  extends SimplePacket {
 
 	private final int x, y;
 	private final boolean war;

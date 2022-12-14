@@ -10,7 +10,7 @@ public class MaterialOreTile extends Tile {
 
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (event.isPressed()) {
+		if (event.isPressed() && world.isActiveSymbol()) { // owner is checked in the action
 			world.getManager().apply(new BuildMineAction(world, x, y));
 		}
 	}

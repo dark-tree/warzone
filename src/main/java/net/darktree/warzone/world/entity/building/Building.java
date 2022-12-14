@@ -4,6 +4,7 @@ import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.DeconstructBuildingAction;
@@ -78,16 +79,20 @@ public abstract class Building extends StructureEntity {
 	@Override
 	public void onAdded() {
 		removed = false;
-		world.getCountry(tx, ty).addBuilding(this);
+		getOwner().addBuilding(this);
 		forEachTile(pos -> world.getTileState(pos).setEntity(this));
 		world.onBuildingChanged();
 	}
 
 	@Override
 	public void onRemoved() {
-		world.getCountry(tx, ty).removeBuilding(this);
+		getOwner().removeBuilding(this);
 		forEachTile(pos -> world.getTileState(pos).removeEntity(this));
 		world.onBuildingChanged();
+	}
+
+	public Country getOwner() {
+		return world.getCountry(tx, ty);
 	}
 
 	public static class Type extends Entity.Type {

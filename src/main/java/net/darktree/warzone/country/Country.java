@@ -20,7 +20,7 @@ import java.util.Map;
 public class Country implements NbtSerializable, WorldListener {
 
 	private final List<Building> buildings = new ArrayList<>();
-	private final Symbol symbol;
+	public final Symbol symbol;
 	public boolean colonized = false;
 
 	public int income = 0;
@@ -83,11 +83,6 @@ public class Country implements NbtSerializable, WorldListener {
 		return buildings.stream().filter(building -> building instanceof CapitolBuilding).findAny().orElse(null);
 	}
 
-	@Deprecated
-	public void addArmor(int i) {
-		resources.get(Resources.ARMOR).value += i;
-	}
-
 	public MutableInt getResource(Resource resource) {
 		return resources.get(resource);
 	}
@@ -102,7 +97,7 @@ public class Country implements NbtSerializable, WorldListener {
 
 	// TODO make better
 	public void removeResource(Resource.Quantified resource) {
-		addResource(new Resource.Quantified(resource.resource(), -resource.quantity()));
+		addResource(resource.negate());
 	}
 
 }

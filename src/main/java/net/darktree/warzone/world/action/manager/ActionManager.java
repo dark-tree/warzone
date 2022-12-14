@@ -2,6 +2,7 @@ package net.darktree.warzone.world.action.manager;
 
 import com.google.common.collect.ImmutableMap;
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.network.Side;
 import net.darktree.warzone.network.packet.ActionPacket;
 import net.darktree.warzone.network.packet.UndoPacket;
 import net.darktree.warzone.util.Logger;
@@ -43,6 +44,14 @@ public class ActionManager {
 		return undo(world.getCurrentSymbol(), false);
 	}
 
+	public boolean isLocal() {
+		return true;
+	}
+
+	public Side getSide() {
+		return Side.HOST;
+	}
+
 	public static class Client extends ActionManager {
 
 		public Client(World world) {
@@ -82,6 +91,14 @@ public class ActionManager {
 			return false;
 		}
 
+		public boolean isLocal() {
+			return false;
+		}
+
+		public Side getSide() {
+			return Side.CLIENT;
+		}
+
 	}
 
 	public static class Host extends ActionManager {
@@ -109,6 +126,15 @@ public class ActionManager {
 
 			return false;
 		}
+
+		public boolean isLocal() {
+			return false;
+		}
+
+		public Side getSide() {
+			return Side.HOST;
+		}
+
 	}
 
 }

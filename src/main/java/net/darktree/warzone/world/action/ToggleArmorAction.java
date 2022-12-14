@@ -53,7 +53,7 @@ public final class ToggleArmorAction extends ToggleableAction {
 	}
 
 	private void toggle(Country country) {
-		country.addArmor(entity.armored ? 1 : -1);
+		country.getResource(Resources.ARMOR).value += (entity.armored ? 1 : -1);
 		entity.armored = !entity.armored;
 	}
 

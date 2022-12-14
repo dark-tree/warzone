@@ -140,7 +140,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
-			if (world.isPositionValid(x, y) && world.isActiveSymbol()) {
+			if (world.isPositionValid(x, y)) {
 
 				if (action == GLFW.GLFW_PRESS) {
 					Entity entity = world.getEntity(x, y);
