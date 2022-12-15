@@ -9,7 +9,7 @@ import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.MoveUnitAction;
 import net.darktree.warzone.world.action.ToggleArmorAction;
 import net.darktree.warzone.world.entity.UnitEntity;
-import net.darktree.warzone.world.overlay.PathfinderOverlay;
+import net.darktree.warzone.world.overlay.PathFinderOverlay;
 import org.lwjgl.glfw.GLFW;
 
 public class UnitInteractor extends Interactor {
@@ -24,7 +24,7 @@ public class UnitInteractor extends Interactor {
 
 		if (!entity.hasActed()) {
 			this.action = new MoveUnitAction(world, entity.getX(), entity.getY());
-			world.setOverlay(new PathfinderOverlay(action.getPathfinder()));
+			world.setOverlay(new PathFinderOverlay(action.getPathfinder()));
 		} else {
 			this.action = null;
 		}

@@ -7,8 +7,8 @@ import net.darktree.warzone.world.action.manager.Action;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.darktree.warzone.world.entity.building.CapitolBuilding;
 import net.darktree.warzone.world.path.Path;
-import net.darktree.warzone.world.path.Pathfinder;
-import net.darktree.warzone.world.tile.Surface;
+import net.darktree.warzone.world.path.PathFinder;
+import net.darktree.warzone.world.path.PathFinderConfig;
 import net.darktree.warzone.world.tile.TilePos;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
@@ -16,7 +16,7 @@ import net.querz.nbt.tag.CompoundTag;
 public final class SummonAction extends Action {
 
 	private final int sx, sy;
-	private final Pathfinder pathfinder;
+	private final PathFinder pathfinder;
 	private final CapitolBuilding building;
 
 	private UnitEntity entity;
@@ -29,7 +29,7 @@ public final class SummonAction extends Action {
 		this.sy = y;
 
 		this.building = world.getEntity(x, y, CapitolBuilding.class);
-		this.pathfinder = new Pathfinder(world, 10, world.getCurrentSymbol(), Surface.LAND, building::forEachTile, Pathfinder.Bound.WITHIN);
+		this.pathfinder = new PathFinder(world, world.getCurrentSymbol(), building::forEachTile, PathFinderConfig.UNIT_SUMMON);
 	}
 
 	public SummonAction(World world, CompoundTag nbt) {
@@ -46,7 +46,7 @@ public final class SummonAction extends Action {
 		nbt.putInt("ty", ty);
 	}
 
-	public Pathfinder getPathfinder() {
+	public PathFinder getPathfinder() {
 		return pathfinder;
 	}
 

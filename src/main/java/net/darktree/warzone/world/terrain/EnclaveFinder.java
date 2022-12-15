@@ -1,34 +1,24 @@
 package net.darktree.warzone.world.terrain;
 
+import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.tile.TilePos;
-import net.darktree.warzone.world.tile.TileState;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class EnclaveFinder {
+public class EnclaveFinder extends AbstractFinder {
 
-	private final int[][] field;
 	private final int[][] marks;
 
 	private final List<Enclave> enclaves = new ArrayList<>();
-
-	private final int width, height;
-	private final World world;
 	private final ControlFinder control;
 
-	private final static int[][] OFFSETS = {
-			{-1, +0}, {+0, -1}, {+0, +1}, {+1, +0}
-	};
-
 	public EnclaveFinder(World world, ControlFinder control) {
-		this.world = world;
-		this.width = world.width;
-		this.height = world.height;
+		super(AbstractFinder.STAR, world);
+
 		this.control = control;
-		this.field = new int[this.width][this.height];
 		this.marks = new int[this.width][this.height];
 
 		compute();
@@ -54,41 +44,24 @@ public class EnclaveFinder {
 		}
 	}
 
-	private void compute() {
+	protected void compute() {
 		int id = 0;
 
 		while(true) {
 			id ++;
 
 			// try finding another enclave
-			Enclave enclave = initializer(id);
+			Enclave enclave = findEnclave(id);
 			if (enclave == null) break;
 
-			int level = 1;
-
 			// propagate current enclave until there are no more tiles
-			for (boolean dirty = true; dirty; level ++) {
-				dirty = false;
-
-				for (int x = 0; x < width; x++) {
-					for (int y = 0; y < height; y++) {
-						if (field[x][y] == level) {
-							dirty = true;
-							propagate(x, y, level + 1, id, enclave);
-						}
-					}
-				}
-			}
-
+			final int fid = id;
+			iterate((x, y, level) -> propagate(x, y, level, fid, enclave));
 		}
 	}
 
-	private Enclave initializer(int id) {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				field[x][y] = 0;
-			}
-		}
+	private Enclave findEnclave(int id) {
+		clearField(this.field);
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -98,7 +71,7 @@ public class EnclaveFinder {
 					marks[x][y] = id;
 
 					// add newly marked enclave to the list
-					Enclave enclave = new Enclave(world.getTileState(x, y).getOwner(), new TilePos(x, y), this, id);
+					Enclave enclave = new Enclave(getOwner(x, y), new TilePos(x, y), this, id);
 					enclaves.add(enclave);
 
 					return enclave;
@@ -111,22 +84,24 @@ public class EnclaveFinder {
 	}
 
 	private void propagate(int x, int y, int value, int id, Enclave enclave) {
-		for (int[] pair : OFFSETS) {
+		for (int[] pair : offsets) {
 			set(x + pair[0], y + pair[1], value, id, enclave);
 		}
 	}
 
 	private void set(int x, int y, int value, int id, Enclave enclave) {
-		if (x >= 0 && y >= 0 && x < width && y < height) {
-			if (this.field[x][y] == 0) {
-				TileState state = world.getTileState(x, y);
+		if (!isPosValid(x, y)) {
+			return;
+		}
 
-				if (enclave.owner == state.getOwner()) {
-					this.field[x][y] = value;
-					this.marks[x][y] = id;
-				}else{
-					enclave.addNeighbour(state.getOwner());
-				}
+		if (this.field[x][y] == 0) {
+			Symbol owner = getOwner(x, y);
+
+			if (enclave.owner == owner) {
+				this.field[x][y] = value;
+				this.marks[x][y] = id;
+			}else{
+				enclave.addNeighbour(owner);
 			}
 		}
 	}

@@ -7,7 +7,7 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.SummonAction;
 import net.darktree.warzone.world.entity.building.Building;
-import net.darktree.warzone.world.overlay.PathfinderOverlay;
+import net.darktree.warzone.world.overlay.PathFinderOverlay;
 
 public class CityInteractor extends Interactor {
 
@@ -19,7 +19,7 @@ public class CityInteractor extends Interactor {
 		this.action = new SummonAction(world, building.getX(), building.getY());
 		this.world = world;
 
-		world.setOverlay(new PathfinderOverlay(action.getPathfinder()));
+		world.setOverlay(new PathFinderOverlay(action.getPathfinder()));
 	}
 
 	@Override

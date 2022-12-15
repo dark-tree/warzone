@@ -6,16 +6,16 @@ import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.manager.Action;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.darktree.warzone.world.path.Path;
-import net.darktree.warzone.world.path.Pathfinder;
+import net.darktree.warzone.world.path.PathFinder;
+import net.darktree.warzone.world.path.PathFinderConfig;
 import net.darktree.warzone.world.pattern.Patterns;
-import net.darktree.warzone.world.tile.Surface;
 import net.querz.nbt.tag.CompoundTag;
 
 public final class MoveUnitAction extends Action {
 
 	private final int sx, sy;
 	private final UnitEntity entity;
-	private final Pathfinder pathfinder;
+	private final PathFinder pathfinder;
 
 	private int tx, ty;
 	private Path path;
@@ -26,8 +26,8 @@ public final class MoveUnitAction extends Action {
 		this.sy = y;
 		this.entity = world.getEntity(x, y, UnitEntity.class);
 
-		Pathfinder.Bound bound = (this.entity.armored || world.getTileState(x, y).getOwner() == Symbol.NONE) ? Pathfinder.Bound.NONE : Pathfinder.Bound.COLONIZED;
-		this.pathfinder = new Pathfinder(world, 5, world.getCurrentSymbol(), Surface.LAND,  Patterns.IDENTITY.place(world, x, y), bound);
+		Symbol owner = world.getTileState(x, y).getOwner();
+		this.pathfinder = new PathFinder(world, world.getCurrentSymbol(), Patterns.IDENTITY.place(world, x, y), PathFinderConfig.getForUnitAt(this.entity, owner));
 	}
 
 	public MoveUnitAction(World world, CompoundTag nbt) {
@@ -44,7 +44,7 @@ public final class MoveUnitAction extends Action {
 		nbt.putInt("ty", ty);
 	}
 
-	public Pathfinder getPathfinder() {
+	public PathFinder getPathfinder() {
 		return pathfinder;
 	}
 

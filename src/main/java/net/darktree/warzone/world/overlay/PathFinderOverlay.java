@@ -3,14 +3,14 @@ package net.darktree.warzone.world.overlay;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.path.Pathfinder;
+import net.darktree.warzone.world.path.PathFinder;
 import net.darktree.warzone.world.tile.TileState;
 
-public class PathfinderOverlay extends Overlay {
+public class PathFinderOverlay extends Overlay {
 
-	private final Pathfinder pathfinder;
+	private final PathFinder pathfinder;
 
-	public PathfinderOverlay(Pathfinder pathfinder) {
+	public PathFinderOverlay(PathFinder pathfinder) {
 		this.pathfinder = pathfinder;
 	}
 
