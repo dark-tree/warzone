@@ -8,16 +8,26 @@ import net.darktree.warzone.world.tile.Surface;
 import net.darktree.warzone.world.tile.Tile;
 import net.darktree.warzone.world.tile.TilePos;
 
+import java.util.Arrays;
+
 public class Pathfinder {
 
+	public enum Bound {
+		NONE,
+		WITHIN,
+		COLONIZED
+	}
+
 	private final int[][] field;
-	private final float[][] distance;
+	private final int[][] distance;
 
 	private final World world;
 	private final int width, height;
 	private final Symbol symbol;
-	private final boolean within;
+	private final Bound bound;
 	private final Surface surface;
+	private final PlacedTileIterator pattern;
+	private final int max;
 
 	private final static int[][] OFFSETS = {
 			{-1, +0}, {+0, -1}, {-1, -1}, {+1, +0},
@@ -25,22 +35,30 @@ public class Pathfinder {
 	};
 
 	//TODO: split max, pattern and within into PathfinderConfig
-	public Pathfinder(World world, int max, Symbol symbol, Surface surface, PlacedTileIterator pattern, boolean within) {
+	public Pathfinder(World world, int max, Symbol symbol, Surface surface, PlacedTileIterator pattern, Bound bound) {
 		this.world = world;
 		this.width = world.width;
 		this.height = world.height;
 		this.field = new int[this.width][this.height];
-		this.distance = new float[this.width][this.height];
+		this.distance = new int[this.width][this.height];
 		this.symbol = symbol;
-		this.within = within;
+		this.bound = bound;
 		this.surface = surface;
+		this.pattern = pattern;
+		this.max = max;
+
+		update();
+	}
+
+	public void update() {
+		for (int[] row : field) Arrays.fill(row, 0);
+		for (int[] row : distance) Arrays.fill(row, 0);
 
 		pattern.iterate(pos -> {
 			this.field[pos.x][pos.y] = 1;
-			this.distance[pos.x][pos.y] = max;
 		});
 
-		compute(max);
+		compute();
 	}
 
 	/**
@@ -67,10 +85,10 @@ public class Pathfinder {
 		return path;
 	}
 
-	private void compute(int max) {
+	private void compute() {
 		int level = 1;
 
-		for (boolean dirty = true; dirty && level <= max; level ++) {
+		for (boolean dirty = true; dirty; level ++) {
 			dirty = false;
 
 			for (int x = 0; x < width; x ++) {
@@ -99,19 +117,19 @@ public class Pathfinder {
 		}
 	}
 
-	private void set(int x, int y, int value, float distance) {
+	private void set(int x, int y, int value, int distance) {
 		if (x >= 0 && y >= 0 && x < width && y < height) {
 
 			Tile tile = world.getTileState(x, y).getTile();
 			Symbol owner = world.getTileState(x, y).getOwner();
 
-			if (!within || owner == this.symbol) {
-				float weight = distance - ((this.symbol != owner) ? 2.0f : 1.0f);
+			if (bound == Bound.NONE || owner == this.symbol || (bound == Bound.COLONIZED && owner != Symbol.NONE)) {
+				distance += (this.symbol == owner ? 1 : 2);
 
 				if (this.field[x][y] == 0 && shouldPropagate(x, y, tile)) {
-					if (weight > 0) {
+					if (distance <= this.max) {
 						this.field[x][y] = value;
-						this.distance[x][y] = weight;
+						this.distance[x][y] = distance;
 					}
 				}
 			}

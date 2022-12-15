@@ -8,7 +8,6 @@ import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.UnitInteractor;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.pattern.ShapeHelper;
-import net.darktree.warzone.world.tile.TilePos;
 import net.darktree.warzone.world.tile.TileState;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
@@ -45,8 +44,8 @@ public class UnitEntity extends MovingEntity {
 	}
 
 	@Override
-	public boolean canColonize() {
-		return false;
+	public boolean canColonize(Symbol enemy) {
+		return enemy == this.symbol;
 	}
 
 	private boolean colonizationOwnerCheck(boolean war, boolean midpoint, Symbol symbol, Symbol self) {
@@ -56,8 +55,8 @@ public class UnitEntity extends MovingEntity {
 	private boolean colonizationCheck(int x, int y, boolean war, boolean midpoint) {
 		TileState state = world.getTileState(x, y);
 		Entity entity = world.getEntity(x, y);
-		boolean allowed = !war || entity == null || entity.canColonize();
-		return state.getTile().canColonize() && colonizationOwnerCheck(war, midpoint, state.getOwner(), this.symbol) && allowed;
+		boolean allowed = !war || entity == null || entity.canColonize(this.symbol);
+		return state.getTile().canColonize(this.symbol) && colonizationOwnerCheck(war, midpoint, state.getOwner(), this.symbol) && allowed;
 	}
 
 	public void colonize(int dice, boolean war) {
@@ -75,23 +74,6 @@ public class UnitEntity extends MovingEntity {
 				remove();
 			}
 		}
-	}
-
-	private boolean warColonizeTile(TilePos pos) {
-		Symbol symbol = world.getTileState(pos.x, pos.y).getOwner();
-
-		if (symbol != Symbol.NONE) {
-			Entity entity = world.getEntity(pos);
-
-			if (entity == null || entity instanceof UnitEntity unit && unit.getSymbol() != getSymbol()) {
-				if (symbol != getSymbol()) {
-					world.setTileOwner(pos.x, pos.y, getSymbol());
-				}
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	public boolean isInHomeland() {

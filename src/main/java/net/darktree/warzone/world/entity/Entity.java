@@ -30,6 +30,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 	public void onAdded() {
 		removed = false;
 		world.getTileState(tx, ty).setEntity(this);
+		world.markOverlayDirty();
 	}
 
 	public final void remove() {
@@ -43,6 +44,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 	@Override
 	public void onRemoved() {
 		world.getTileState(tx, ty).removeEntity(this);
+		world.markOverlayDirty();
 	}
 
 	@Deprecated

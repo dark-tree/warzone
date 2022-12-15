@@ -55,6 +55,7 @@ public final class ToggleArmorAction extends ToggleableAction {
 	private void toggle(Country country) {
 		country.getResource(Resources.ARMOR).value += (entity.armored ? 1 : -1);
 		entity.armored = !entity.armored;
+		world.markOverlayDirty();
 	}
 
 	@Override

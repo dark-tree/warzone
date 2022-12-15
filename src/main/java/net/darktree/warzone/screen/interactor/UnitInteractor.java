@@ -22,7 +22,7 @@ public class UnitInteractor extends Interactor {
 		this.entity = entity;
 		this.world = world;
 
-		if (!entity.hasMoved()) {
+		if (!entity.hasActed()) {
 			this.action = new MoveUnitAction(world, entity.getX(), entity.getY());
 			world.setOverlay(new PathfinderOverlay(action.getPathfinder()));
 		} else {
@@ -73,7 +73,7 @@ public class UnitInteractor extends Interactor {
 			world.getManager().apply(new ToggleArmorAction(world, entity.getX(), entity.getY()));
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_A && !entity.hasMoved()) {
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_A && !entity.hasActed()) {
 			PlayScreen.setInteractor(new UnitAttackInteractor(entity, world));
 		}
 	}

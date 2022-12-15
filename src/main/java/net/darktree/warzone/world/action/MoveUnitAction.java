@@ -25,7 +25,9 @@ public final class MoveUnitAction extends Action {
 		this.sx = x;
 		this.sy = y;
 		this.entity = world.getEntity(x, y, UnitEntity.class);
-		this.pathfinder = new Pathfinder(world, 5, world.getCurrentSymbol(), Surface.LAND,  Patterns.IDENTITY.place(world, x, y), false);
+
+		Pathfinder.Bound bound = (this.entity.armored || world.getTileState(x, y).getOwner() == Symbol.NONE) ? Pathfinder.Bound.NONE : Pathfinder.Bound.COLONIZED;
+		this.pathfinder = new Pathfinder(world, 5, world.getCurrentSymbol(), Surface.LAND,  Patterns.IDENTITY.place(world, x, y), bound);
 	}
 
 	public MoveUnitAction(World world, CompoundTag nbt) {
@@ -59,7 +61,7 @@ public final class MoveUnitAction extends Action {
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return entity != null && !entity.hasMoved() && path != null;
+		return entity != null && !entity.hasActed() && path != null;
 	}
 
 	@Override

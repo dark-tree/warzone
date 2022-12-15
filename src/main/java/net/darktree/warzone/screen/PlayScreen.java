@@ -1,7 +1,6 @@
 package net.darktree.warzone.screen;
 
 import net.darktree.warzone.Main;
-import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
@@ -18,6 +17,7 @@ import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.WorldView;
 import net.darktree.warzone.world.entity.Entity;
+import net.darktree.warzone.world.overlay.MapOverlay;
 import org.lwjgl.glfw.GLFW;
 
 public class PlayScreen extends Screen {
@@ -100,13 +100,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
-			world.setOverlay((world, x, y, state) -> {
-				if (state.getOwner() == world.getSelf()) {
-					return world.canControl(x, y) ? Colors.OVERLAY_NONE : ((Main.window.profiler.getFrameCount() / 30 % 2 == 0) ? Colors.OVERLAY_NONE : Colors.OVERLAY_FOREIGN);
-				}
-
-				return Colors.OVERLAY_FOREIGN;
-			});
+			world.setOverlay(new MapOverlay());
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {

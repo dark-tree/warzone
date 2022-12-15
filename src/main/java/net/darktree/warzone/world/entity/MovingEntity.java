@@ -16,7 +16,7 @@ public abstract class MovingEntity extends Entity {
 	private float sx, sy;
 	private Path path = null;
 	private int px, py;
-	protected boolean moved;
+	protected boolean moved, attacked;
 
 	public MovingEntity(World world, int x, int y, Type type) {
 		super(world, x, y, type);
@@ -28,6 +28,7 @@ public abstract class MovingEntity extends Entity {
 	protected void migrate(int x1, int y1, int x2, int y2) {
 		world.getTileState(x1, y1).removeEntity(this);
 		world.getTileState(x2, y2).setEntity(this);
+		world.markOverlayDirty();
 	}
 
 	protected void move(int x, int y, float speed) {
@@ -90,6 +91,7 @@ public abstract class MovingEntity extends Entity {
 		this.px = this.tx;
 		this.py = this.ty;
 		this.moved = false;
+		this.attacked = false;
 	}
 
 	public void onTargetReached() {
@@ -103,12 +105,16 @@ public abstract class MovingEntity extends Entity {
 		path = null;
 	}
 
+	public boolean hasActed() {
+		return moved || attacked;
+	}
+
 	public boolean hasMoved() {
 		return moved;
 	}
 
 	public void setAttacked(boolean attacked) {
-		moved = attacked;
+		this.attacked = attacked;
 	}
 
 	@Override

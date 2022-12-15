@@ -39,7 +39,7 @@ public final class EntityShotAction extends Action {
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return !source.hasMoved() && world.getCountry(symbol).getResource(Resources.AMMO).value > 0;
+		return !source.hasActed() && world.getCountry(symbol).getResource(Resources.AMMO).value > 0;
 	}
 
 	@Override

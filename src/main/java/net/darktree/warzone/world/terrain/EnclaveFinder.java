@@ -1,8 +1,8 @@
 package net.darktree.warzone.world.terrain;
 
-import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.tile.TilePos;
+import net.darktree.warzone.world.tile.TileState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,13 +119,13 @@ public class EnclaveFinder {
 	private void set(int x, int y, int value, int id, Enclave enclave) {
 		if (x >= 0 && y >= 0 && x < width && y < height) {
 			if (this.field[x][y] == 0) {
-				Symbol symbol = world.getTileState(x, y).getOwner();
+				TileState state = world.getTileState(x, y);
 
-				if (enclave.owner == symbol) {
+				if (enclave.owner == state.getOwner()) {
 					this.field[x][y] = value;
 					this.marks[x][y] = id;
 				}else{
-					enclave.addNeighbour(symbol);
+					enclave.addNeighbour(state.getOwner());
 				}
 			}
 		}

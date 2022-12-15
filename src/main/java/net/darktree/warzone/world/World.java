@@ -184,12 +184,16 @@ public class World implements WorldEntityView {
 	 *
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
-	public void setTileOwner(int x, int y, Symbol variant) {
-		getTileState(x, y).setOwner(this, x, y, variant, true);
+	public void setTileOwner(int x, int y, Symbol owner) {
+		getTileState(x, y).setOwner(this, x, y, owner, true);
 	}
 
 	public void draw(WorldBuffers buffers) {
 		Util.consumeIf(entities, Entity::isRemoved, WorldComponent::onRemoved);
+
+		if (redrawSurface || redrawBuildings) {
+			markOverlayDirty();
+		}
 
 		if (ownershipDirty) {
 			ownershipDirty = false;
@@ -241,6 +245,10 @@ public class World implements WorldEntityView {
 
 		redrawSurface = false;
 		redrawBuildings = false;
+	}
+
+	public void markOverlayDirty() {
+		if (overlay != null) overlay.markDirty();
 	}
 
 	private void drawBorders(VertexBuffer buffer, int x, int y) {

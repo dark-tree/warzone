@@ -29,7 +29,7 @@ public final class SummonAction extends Action {
 		this.sy = y;
 
 		this.building = world.getEntity(x, y, CapitolBuilding.class);
-		this.pathfinder = new Pathfinder(world, 10, world.getCurrentSymbol(), Surface.LAND, building::forEachTile, true);
+		this.pathfinder = new Pathfinder(world, 10, world.getCurrentSymbol(), Surface.LAND, building::forEachTile, Pathfinder.Bound.WITHIN);
 	}
 
 	public SummonAction(World world, CompoundTag nbt) {

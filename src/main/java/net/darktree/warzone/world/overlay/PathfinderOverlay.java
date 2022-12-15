@@ -6,7 +6,7 @@ import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.path.Pathfinder;
 import net.darktree.warzone.world.tile.TileState;
 
-public class PathfinderOverlay implements Overlay {
+public class PathfinderOverlay extends Overlay {
 
 	private final Pathfinder pathfinder;
 
@@ -17,6 +17,11 @@ public class PathfinderOverlay implements Overlay {
 	@Override
 	public Color getColor(World world, int x, int y, TileState state) {
 		return pathfinder.canReach(x, y) ? Colors.OVERLAY_REACHABLE : Colors.OVERLAY_NONE;
+	}
+
+	@Override
+	public void markDirty() {
+		pathfinder.update();
 	}
 
 }
