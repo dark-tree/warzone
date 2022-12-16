@@ -1,6 +1,7 @@
 package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.network.Packets;
+import net.darktree.warzone.network.Relay;
 import net.darktree.warzone.network.Side;
 import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.util.Logger;
@@ -19,7 +20,7 @@ public class ProductionSyncPacket extends SimplePacket {
 	private final CompoundTag nbt;
 	private final Side side;
 
-	public ProductionSyncPacket(Side side, ByteBuffer buffer) {
+	public ProductionSyncPacket(ByteBuffer buffer, Side side, Relay relay) {
 		super(Packets.PRODUCE);
 
 		this.x = buffer.getInt();

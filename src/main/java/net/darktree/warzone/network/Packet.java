@@ -80,8 +80,8 @@ public abstract class Packet<T> {
 			this.constructor = constructor;
 		}
 
-		public Packet<?> create(Side side, ByteBuffer buffer) {
-			return constructor.create(side, buffer);
+		public Packet<?> create(ByteBuffer buffer, Side side, Relay relay) {
+			return constructor.create(buffer, side, relay);
 		}
 
 		@Override
@@ -90,7 +90,7 @@ public abstract class Packet<T> {
 		}
 
 		public interface Constructor {
-			Packet<?> create(Side side, ByteBuffer buffer);
+			Packet<?> create(ByteBuffer buffer, Side side, Relay relay);
 		}
 	}
 

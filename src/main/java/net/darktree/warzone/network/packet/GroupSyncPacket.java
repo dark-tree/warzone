@@ -8,7 +8,7 @@ public class GroupSyncPacket extends Packet<UserGroup> {
 
 	private final UserGroup group;
 
-	public GroupSyncPacket(Side side, ByteBuffer buffer) {
+	public GroupSyncPacket(ByteBuffer buffer, Side side, Relay relay) {
 		super(Packets.GROUP_SYNC);
 		side.expect(Side.CLIENT);
 
@@ -16,7 +16,7 @@ public class GroupSyncPacket extends Packet<UserGroup> {
 		int gid = buffer.getInt();
 		int count = buffer.getInt();
 
-		this.group = new UserGroup(Relay.instance, host, gid);
+		this.group = new UserGroup(relay, host, gid);
 
 		for (int i = 0; i < count; i ++) {
 			group.join(buffer.getInt());

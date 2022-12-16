@@ -1,11 +1,9 @@
 package net.darktree.warzone.network;
 
 import net.darktree.warzone.network.packet.GroupSyncPacket;
-import net.darktree.warzone.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.function.Consumer;
 
 public class UserGroup {
@@ -42,61 +40,54 @@ public class UserGroup {
 		}
 	}
 
-	private void close() {
-		relay.close();
-		instance = null;
+	public void close() {
+		relay.close("Connection closed.");
 	}
 
-	public static void make(String hostname, Consumer<UserGroup> groupCallback, Consumer<String> errorCallback) {
-		Relay.open(Side.HOST, hostname, relay -> {
-			Timer timer = Util.runAsyncAfter(() -> {
-				relay.close();
-				errorCallback.accept("Timeout! Failed to create a group after " + Relay.TIMEOUT + " seconds!");
-			}, Relay.TIMEOUT * 1000);
+	public static void make(String hostname, Consumer<UserGroup> onOpen, Consumer<String> onClose) {
+		Relay relay = Relay.open(hostname, Relay.PORT, new Role.Host(), onClose);
 
-			relay.onGroupCreated(gid -> {
-				UserGroup group = new UserGroup(relay, relay.getUid(), gid);
-
-				timer.cancel();
-
-				relay.onGroupJoined(uid -> {
-					group.join(uid);
-					group.sync();
-				});
-
-				relay.onGroupLeft(uid -> {
-					group.left(uid);
-					group.sync();
-				});
-
-				groupCallback.accept(group);
-				UserGroup.instance = group;
-			});
-
-			relay.createGroup();
-		}, errorCallback);
-	}
-
-	public static void join(String hostname, int gid, Consumer<UserGroup> groupCallback, Consumer<String> errorCallback) {
-		Relay.open(Side.CLIENT, hostname, relay -> {
-			Timer timer = Util.runAsyncAfter(() -> {
-				relay.close();
-				errorCallback.accept("Timeout! Failed to join a group after " + Relay.TIMEOUT + " seconds!");
-			}, Relay.TIMEOUT * 1000);
-
-			relay.setPacketListener(Packets.GROUP_SYNC, group -> {
-				timer.cancel();
-				groupCallback.accept((UserGroup) group);
-				UserGroup.instance = (UserGroup) group;
-			});
-			relay.joinGroup(gid);
-		}, errorCallback);
-	}
-
-	public static void closeAll() {
-		if (instance != null) {
-			instance.close();
+		// onClose already called
+		if (relay == null) {
+			return;
 		}
+
+		relay.onOpen(self -> {
+			UserGroup group = new UserGroup(self, self.getUid(), self.getGid());
+
+			self.onGroupJoined(uid -> {
+				group.join(uid);
+				group.sync();
+			});
+
+			self.onGroupLeft(uid -> {
+				group.left(uid);
+				group.sync();
+			});
+
+			onOpen.accept(group);
+			instance = group;
+		});
+
+		relay.start();
+	}
+
+	public static void join(String hostname, int gid, Consumer<UserGroup> onOpen, Consumer<String> onClose) {
+		Relay relay = Relay.open(hostname, Relay.PORT, new Role.Client(gid), onClose);
+
+		// onClose already called
+		if (relay == null) {
+			return;
+		}
+
+		relay.onOpen(self -> {
+			self.setPacketListener(Packets.GROUP_SYNC, group -> {
+				onOpen.accept((UserGroup) group);
+				instance = (UserGroup) group;
+			});
+		});
+
+		relay.start();
 	}
 
 	public static <T> void broadcast(Packet<T> packet, int except) {

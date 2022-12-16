@@ -1,5 +1,7 @@
 package net.darktree.warzone.network.urp;
 
+import net.darktree.warzone.util.Logger;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -39,7 +41,7 @@ public class PacketSender {
 		try {
 			stream.write(buffer.array(), 0, size + 3);
 		} catch (IOException ignore) {
-
+			Logger.warn("Failed to write to socket output stream!");
 		}
 	}
 

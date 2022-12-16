@@ -1,6 +1,7 @@
 package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.network.Packets;
+import net.darktree.warzone.network.Relay;
 import net.darktree.warzone.network.Side;
 import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.util.math.MathHelper;
@@ -14,7 +15,7 @@ public class ColonizePacket  extends SimplePacket {
 	private final int x, y;
 	private final boolean war;
 
-	public ColonizePacket(Side side, ByteBuffer buffer) {
+	public ColonizePacket(ByteBuffer buffer, Side side, Relay relay) {
 		super(Packets.COLONIZE);
 		this.x = buffer.getInt();
 		this.y = buffer.getInt();

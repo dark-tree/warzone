@@ -101,7 +101,10 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		UserGroup.closeAll();
+		if (UserGroup.instance != null) {
+			UserGroup.instance.close();
+		}
+
 		window.close();
 		SoundSystem.disable();
 	}
@@ -204,11 +207,12 @@ public class Main {
 		}
 
 		if (line.equals("rstop")) {
-			UserGroup.closeAll();
+			UserGroup.instance.close();
 		}
 
 		if (line.startsWith("self ")) {
 			WorldHolder.world.self = Symbol.fromIndex((byte) Integer.parseInt(line.split(" ")[1]));
+			Logger.info("Identity set!");
 		}
 
 		if (line.equals("exit")) {
@@ -218,7 +222,6 @@ public class Main {
 		if (line.startsWith("rmake ")) {
 			String[] parts = line.split(" ");
 			UserGroup.make(parts[1], group -> {
-				Logger.info("Group made! " + group.id);
 				WorldHolder.world.manager = new ActionManager.Host(WorldHolder.world);
 			}, Logger::error);
 		}
@@ -226,7 +229,6 @@ public class Main {
 		if (line.startsWith("rjoin ")) {
 			String[] parts = line.split(" ");
 			UserGroup.join(parts[1], Integer.parseInt(parts[2]), group -> {
-				Logger.info("Group joined! " + group.id);
 				WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
 			}, Logger::error);
 		}

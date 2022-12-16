@@ -81,13 +81,13 @@ public class PlayScreen extends Screen {
 		ScreenRenderer.centerAt(-1, 1);
 		ScreenRenderer.setOffset(0, -40);
 
-		String net = "";
+		String debug = " (" + WorldHolder.world.self.name() + ")";
 
 		if (UserGroup.instance != null) {
-			net = " " + UserGroup.instance.relay.toString();
+			debug += "\n" + UserGroup.instance.relay.toString();
 		}
 
-		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS" + net, 30);
+		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS" + debug, 30);
 
 	}
 

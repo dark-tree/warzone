@@ -2,6 +2,7 @@ package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Packets;
+import net.darktree.warzone.network.Relay;
 import net.darktree.warzone.network.Side;
 import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.util.NBTHelper;
@@ -16,7 +17,7 @@ public class ActionPacket extends SimplePacket {
 	private final Action action;
 	private final Symbol symbol;
 
-	public ActionPacket(Side side, ByteBuffer buffer) {
+	public ActionPacket(ByteBuffer buffer, Side side, Relay relay) {
 		super(Packets.ACTION);
 
 		this.symbol = Symbol.fromIndex(buffer.get());
