@@ -17,6 +17,7 @@ public class OwnEditInteractor extends Interactor {
 	public void onClick(int button, int action, int mods, int x, int y) {
 		if (world.isPositionValid(x, y)) {
 			world.setTileOwner(x, y, target);
+			world.grantBonusTiles(target);
 		}
 	}
 }

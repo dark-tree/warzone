@@ -67,6 +67,9 @@ public class UnitEntity extends MovingEntity {
 			world.setTileOwner(pos.x, pos.y, getSymbol());
 		});
 
+		// check for and grant any bonus tiles
+		world.grantBonusTiles(symbol);
+
 		if (dice % 2 != 0) {
 			if (armored) {
 				armored = false;

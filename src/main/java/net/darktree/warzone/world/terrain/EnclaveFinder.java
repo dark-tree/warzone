@@ -2,13 +2,14 @@ package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class EnclaveFinder extends AbstractFinder {
+public class EnclaveFinder extends AbstractFieldFinder {
 
 	private final int[][] marks;
 
@@ -16,7 +17,7 @@ public class EnclaveFinder extends AbstractFinder {
 	private final ControlFinder control;
 
 	public EnclaveFinder(World world, ControlFinder control) {
-		super(AbstractFinder.STAR, world);
+		super(Patterns.RING, world);
 
 		this.control = control;
 		this.marks = new int[this.width][this.height];
@@ -84,8 +85,8 @@ public class EnclaveFinder extends AbstractFinder {
 	}
 
 	private void propagate(int x, int y, int value, int id, Enclave enclave) {
-		for (int[] pair : offsets) {
-			set(x + pair[0], y + pair[1], value, id, enclave);
+		for (TilePos offset : offsets) {
+			set(x + offset.x, y + offset.y, value, id, enclave);
 		}
 	}
 

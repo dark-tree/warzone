@@ -42,19 +42,20 @@ public class ShapeHelper {
 	}
 
 	public static void iterateValid(World world, TargetPredicate target, MidpointPredicate midpoint, boolean large, int fx, int fy, Consumer<TilePos> consumer) {
-		Consumer<TilePos> offsetConsumer = pos -> {
-			int tx = fx + pos.x;
-			int ty = fy + pos.y;
-
-			if (isValid(world, target, midpoint, large, fx, fy, tx, ty)) {
-				consumer.accept(new TilePos(tx, ty));
-			}
-		};
-
-		Patterns.SMALL_CROSS.forEachOffset(offsetConsumer);
+		for (TilePos offset : Patterns.CROSS.getOffsets()) {
+			consumeValidOffset(world, target, midpoint, large, fx, fy, fx + offset.x, fy + offset.y, consumer);
+		}
 
 		if (large) {
-			Patterns.STAR.forEachOffset(offsetConsumer);
+			for (TilePos offset : Patterns.HALO.getOffsets()) {
+				consumeValidOffset(world, target, midpoint, large, fx, fy, fx + offset.x, fy + offset.y, consumer);
+			}
+		}
+	}
+
+	private static void consumeValidOffset(World world, TargetPredicate target, MidpointPredicate midpoint, boolean large, int fx, int fy, int tx, int ty, Consumer<TilePos> consumer) {
+		if (isValid(world, target, midpoint, large, fx, fy, tx, ty)) {
+			consumer.accept(new TilePos(tx, ty));
 		}
 	}
 

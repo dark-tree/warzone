@@ -12,6 +12,7 @@ import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.overlay.Overlay;
+import net.darktree.warzone.world.terrain.BonusFinder;
 import net.darktree.warzone.world.terrain.ControlFinder;
 import net.darktree.warzone.world.terrain.EnclaveFinder;
 import net.darktree.warzone.world.tile.TilePos;
@@ -328,6 +329,13 @@ public class World implements WorldEntityView {
 	 */
 	public boolean canControl(int x, int y, Symbol symbol) {
 		return control.canControl(x, y) && getTileState(x, y).getOwner() == symbol;
+	}
+
+	/**
+	 * Grants bonus tiles (if there are any) to the given player
+	 */
+	public boolean grantBonusTiles(Symbol symbol) {
+		return new BonusFinder(this, symbol).grant() > 0;
 	}
 
 	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {

@@ -19,6 +19,7 @@ public class SoundSystem {
 	private static long device, context;
 	private static final List<AudioSource> sources = new ArrayList<>();
 	private static final List<AudioBuffer> buffers = new ArrayList<>();
+	private static boolean ready = false;
 
 	/**
 	 * Initialize and enable the sound system
@@ -37,10 +38,11 @@ public class SoundSystem {
 		}
 
 		ALC10.alcMakeContextCurrent(context);
-		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
-		AL.createCapabilities(deviceCaps);
+		ALCCapabilities capabilities = ALC.createCapabilities(device);
+		AL.createCapabilities(capabilities);
 
 		Logger.info("Sound system started!");
+		ready = true;
 	}
 
 	/**
@@ -48,6 +50,7 @@ public class SoundSystem {
 	 */
 	public static void disable() {
 		Logger.info("Shutting down the sound system...");
+		ready = false;
 
 		sources.forEach(AudioSource::close);
 		sources.clear();
@@ -58,6 +61,13 @@ public class SoundSystem {
 		ALC10.alcMakeContextCurrent(0);
 		ALC10.alcDestroyContext(context);
 		ALC10.alcCloseDevice(device);
+	}
+
+	/**
+	 * Checks if the Sound System is ready to play sounds
+	 */
+	public static boolean isReady() {
+		return ready;
 	}
 
 	/**

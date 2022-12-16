@@ -4,18 +4,20 @@ import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.tile.TilePos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PatternBuilder {
 
 	private final List<TilePos> pairs = new ArrayList<>();
 
-	PatternBuilder() {
-
-	}
-
 	public PatternBuilder add(int x, int y) {
 		pairs.add(new TilePos(x, y));
+		return this;
+	}
+
+	public PatternBuilder add(Pattern pattern) {
+		pairs.addAll(Arrays.asList(pattern.getOffsets()));
 		return this;
 	}
 	

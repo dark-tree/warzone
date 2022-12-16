@@ -11,7 +11,6 @@ import net.darktree.warzone.world.action.DeconstructBuildingAction;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.entity.StructureEntity;
 import net.darktree.warzone.world.pattern.Pattern;
-import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -109,7 +108,7 @@ public abstract class Building extends StructureEntity {
 			this.width = width;
 			this.height = height;
 			this.sprite = sprite;
-			this.pattern = Patterns.area(width, height);
+			this.pattern = Pattern.build(width, height);
 		}
 
 	}

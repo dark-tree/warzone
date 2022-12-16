@@ -3,12 +3,13 @@ package net.darktree.warzone.world.path;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.Entity;
+import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.pattern.PlacedTileIterator;
-import net.darktree.warzone.world.terrain.AbstractFinder;
+import net.darktree.warzone.world.terrain.AbstractFieldFinder;
 import net.darktree.warzone.world.tile.Tile;
 import net.darktree.warzone.world.tile.TilePos;
 
-public class PathFinder extends AbstractFinder {
+public class PathFinder extends AbstractFieldFinder {
 
 	private final int[][] distance;
 
@@ -17,7 +18,7 @@ public class PathFinder extends AbstractFinder {
 	private final PlacedTileIterator pattern;
 
 	public PathFinder(World world, Symbol symbol, PlacedTileIterator pattern, PathFinderConfig config) {
-		super(AbstractFinder.RING, world);
+		super(Patterns.RING, world);
 
 		this.distance = new int[this.width][this.height];
 		this.symbol = symbol;
@@ -76,8 +77,8 @@ public class PathFinder extends AbstractFinder {
 	}
 
 	private void propagate(int x, int y, int value) {
-		for (int[] pair : offsets) {
-			set(x + pair[0], y + pair[1], value, this.distance[x][y]);
+		for (TilePos offset : offsets) {
+			set(x + offset.x, y + offset.y, value, this.distance[x][y]);
 		}
 	}
 
@@ -106,9 +107,9 @@ public class PathFinder extends AbstractFinder {
 		int distance = this.distance[x][y];
 		TilePos pos = null;
 
-		for (int[] pair : offsets) {
-			final int ox = x + pair[0];
-			final int oy = y + pair[1];
+		for (TilePos offset : offsets) {
+			final int ox = x + offset.x;
+			final int oy = y + offset.y;
 
 			if (!isPosValid(ox, oy)) {
 				continue;

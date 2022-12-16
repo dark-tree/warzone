@@ -4,11 +4,13 @@ import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.building.Building;
+import net.darktree.warzone.world.pattern.Patterns;
+import net.darktree.warzone.world.tile.TilePos;
 
-public class ControlFinder extends AbstractFinder {
+public class ControlFinder extends AbstractFieldFinder {
 
 	public ControlFinder(World world) {
-		super(AbstractFinder.STAR, world);
+		super(Patterns.NEIGHBOURS, world);
 
 		for (Symbol s : Symbol.values()) {
 			init(s);
@@ -29,8 +31,8 @@ public class ControlFinder extends AbstractFinder {
 	}
 
 	private void propagate(int x, int y, int value, Symbol symbol) {
-		for (int[] pair : offsets) {
-			set(x + pair[0], y + pair[1], value, symbol);
+		for (TilePos offset : offsets) {
+			set(x + offset.x, y + offset.y, value, symbol);
 		}
 	}
 
