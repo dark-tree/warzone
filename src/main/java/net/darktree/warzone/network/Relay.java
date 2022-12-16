@@ -114,6 +114,10 @@ public class Relay {
 				consumer.accept(result);
 			}
 		});
+
+		on(PacketType.R2U_EXIT, State.READY, buffer -> {
+			close("Connection closed by peer.");
+		});
 	}
 
 	protected void on(PacketType type, State assertion, PacketCallback handler) {
@@ -133,6 +137,10 @@ public class Relay {
 	 */
 	public void close(String message) {
 		Exception cause = null;
+
+		if (socket.isClosed() && state == State.CLOSED) {
+			return;
+		}
 
 		// if we are in a group exit cleanly
 		if (state == State.READY) {

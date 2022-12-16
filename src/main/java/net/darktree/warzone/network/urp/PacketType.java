@@ -12,7 +12,8 @@ public enum PacketType {
 	R2U_TEXT(0x11), // message received
 	R2U_MADE(0x12), // new user group made
 	R2U_JOIN(0x13), // user joined group
-	R2U_LEFT(0x14); // user left group
+	R2U_LEFT(0x14), // user left group (to host)
+	R2U_EXIT(0x15); // user left group (to user)
 
 	public final byte value;
 

@@ -11,6 +11,7 @@ import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.screen.BuildScreen;
 import net.darktree.warzone.screen.PlayScreen;
+import net.darktree.warzone.screen.PopupScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.screen.interactor.OwnEditInteractor;
 import net.darktree.warzone.screen.interactor.SetEditInteractor;
@@ -223,14 +224,24 @@ public class Main {
 			String[] parts = line.split(" ");
 			UserGroup.make(parts[1], group -> {
 				WorldHolder.world.manager = new ActionManager.Host(WorldHolder.world);
-			}, Logger::error);
+			}, reason -> {
+				ScreenStack.open(new PopupScreen("CONNECTION CLOSED", reason));
+				WorldHolder.world.manager = new ActionManager(WorldHolder.world);
+				UserGroup.instance.close();
+				UserGroup.instance = null;
+			});
 		}
 
 		if (line.startsWith("rjoin ")) {
 			String[] parts = line.split(" ");
 			UserGroup.join(parts[1], Integer.parseInt(parts[2]), group -> {
 				WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
-			}, Logger::error);
+			}, reason -> {
+				ScreenStack.open(new PopupScreen("CONNECTION CLOSED", reason));
+				WorldHolder.world.manager = new ActionManager(WorldHolder.world);
+				UserGroup.instance.close();
+				UserGroup.instance = null;
+			});
 		}
 	}
 }

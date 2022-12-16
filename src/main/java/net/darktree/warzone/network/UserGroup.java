@@ -27,7 +27,7 @@ public class UserGroup {
 	}
 
 	public void left(int uid) {
-		users.remove(uid);
+		users.remove(Integer.valueOf(uid));
 	}
 
 	private void sync() {
