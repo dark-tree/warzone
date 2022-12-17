@@ -30,7 +30,7 @@ public final class Pair<A, B> {
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
 
-		if (obj instanceof Pair other) {
+		if (obj instanceof Pair<?, ?> other) {
 			return Objects.equals(a, other.a) && Objects.equals(b, other.b);
 		}
 

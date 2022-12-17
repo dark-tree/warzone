@@ -12,6 +12,9 @@ import net.darktree.warzone.world.tile.TilePos;
 
 public abstract class MovingEntity extends Entity {
 
+	protected static final float SPEED = 0.05f;
+	protected static final float EPSILON = 0.0001f;
+
 	protected float x, y;
 	private float sx, sy;
 	private Path path = null;
@@ -31,12 +34,12 @@ public abstract class MovingEntity extends Entity {
 		world.markOverlayDirty();
 	}
 
-	protected void move(int x, int y, float speed) {
+	protected void move(int x, int y) {
 		this.tx = x;
 		this.ty = y;
 
-		sx = (x - this.x) * speed;
-		sy = (y - this.y) * speed;
+		sx = (x - this.x) * SPEED;
+		sy = (y - this.y) * SPEED;
 	}
 
 	public void follow(Path path) {
@@ -53,7 +56,7 @@ public abstract class MovingEntity extends Entity {
 			TilePos target = this.path.getNext();
 
 			if (target != null) {
-				move(target.x, target.y, 0.05f);
+				move(target.x, target.y);
 			}else{
 				this.path = null;
 			}
@@ -77,7 +80,7 @@ public abstract class MovingEntity extends Entity {
 		this.x += sx;
 		this.y += sy;
 
-		if (Math.abs(this.x - this.tx) < 0.0001f && Math.abs(this.y - this.ty) < 0.0001f) {
+		if (Math.abs(this.x - this.tx) < EPSILON && Math.abs(this.y - this.ty) < EPSILON) {
 			this.sx = 0;
 			this.sy = 0;
 			this.x = this.tx;
@@ -100,7 +103,7 @@ public abstract class MovingEntity extends Entity {
 
 	public void revert() {
 		migrate(tx, ty, px, py);
-		move(px, py, 0.05f);
+		move(px, py);
 		moved = false;
 		path = null;
 	}

@@ -90,6 +90,7 @@ public class Main {
 				} catch (Exception e) {
 					Logger.warn("Exception in console thread!");
 					e.printStackTrace();
+					return;
 				}
 			}
 		}, "Console");

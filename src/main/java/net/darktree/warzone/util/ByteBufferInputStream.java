@@ -1,6 +1,5 @@
 package net.darktree.warzone.util;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
@@ -13,7 +12,7 @@ public class ByteBufferInputStream extends InputStream {
 	}
 
 	@Override
-	public int read() throws IOException {
+	public int read() {
 		try {
 			return buffer.get() & 0xff;
 		} catch (Exception e) {

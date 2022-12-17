@@ -48,7 +48,7 @@ public class ShapeHelper {
 
 		if (large) {
 			for (TilePos offset : Patterns.HALO.getOffsets()) {
-				consumeValidOffset(world, target, midpoint, large, fx, fy, fx + offset.x, fy + offset.y, consumer);
+				consumeValidOffset(world, target, midpoint, true, fx, fy, fx + offset.x, fy + offset.y, consumer);
 			}
 		}
 	}

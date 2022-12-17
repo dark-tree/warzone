@@ -4,7 +4,6 @@ import net.darktree.warzone.Registries;
 import net.darktree.warzone.event.TurnEvent;
 import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.math.MutableInt;
-import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldListener;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.entity.building.CapitolBuilding;
@@ -47,7 +46,8 @@ public class Country implements NbtSerializable, WorldListener {
 		});
 	}
 
-	public void onPlayerTurnEvent(World world, TurnEvent event, Symbol symbol) {
+	@Override
+	public void onPlayerTurnEvent(TurnEvent event, Symbol symbol) {
 		if (symbol == this.symbol && event == TurnEvent.TURN_START) {
 			colonized = false;
 			addMaterials(income);
@@ -56,7 +56,7 @@ public class Country implements NbtSerializable, WorldListener {
 
 	@Deprecated
 	public int getTotalMaterials() {
-		return buildings.stream().map(Building::getStored).reduce(resources.get(Resources.MATERIALS).value, Integer::sum);
+		return resources.get(Resources.MATERIALS).value;
 	}
 
 	public void addMaterials(int amount) {

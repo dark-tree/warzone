@@ -44,7 +44,7 @@ public class Util {
 	}
 
 	/**
-	 * Create an immutable map where every key is a enum value and values are
+	 * Create an immutable map where every key is an enum value and values are
 	 * created with the given function.
 	 */
 	public static <T extends Enum<T>, V> ImmutableMap<T, V> enumMapOf(Class<T> clazz, Function<T, V> supplier) {
@@ -57,6 +57,7 @@ public class Util {
 	public static void runAsync(Runnable runnable, String name) {
 		Thread thread = new Thread(runnable);
 		thread.setName(name);
+		thread.setDaemon(true);
 		thread.start();
 	}
 

@@ -11,7 +11,7 @@ public abstract class Property<T> {
 		return values()[0];
 	}
 
-	public int indexOf(Object object) {
+	public int indexOf(T object) {
 		int i = Arrays.asList(values()).indexOf(object);
 
 		if (i == -1) {

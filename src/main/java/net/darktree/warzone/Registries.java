@@ -9,10 +9,10 @@ import net.darktree.warzone.world.entity.building.production.Recipe;
 import net.darktree.warzone.world.tile.Tile;
 
 public class Registries {
-	public static Registry<Tile> TILES = new Registry<>();
-	public static Registry<Entity.Type> ENTITIES = new Registry<>();
-	public static Registry<Packet.Type> PACKETS = new Registry<>();
-	public static Registry<Action.Type> ACTIONS = new Registry<>();
-	public static Registry<Recipe.Type> RECIPES = new Registry<>();
-	public static Registry<Resource> RESOURCES = new Registry<>();
+	public static final Registry<Tile> TILES = new Registry<>();
+	public static final Registry<Entity.Type> ENTITIES = new Registry<>();
+	public static final Registry<Packet.Type> PACKETS = new Registry<>();
+	public static final Registry<Action.Type> ACTIONS = new Registry<>();
+	public static final Registry<Recipe.Type> RECIPES = new Registry<>();
+	public static final Registry<Resource> RESOURCES = new Registry<>();
 }

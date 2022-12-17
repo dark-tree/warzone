@@ -295,7 +295,7 @@ public class World implements WorldEntityView, NbtSerializable {
 
 	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {
 		getEntities().forEach(entity -> entity.onPlayerTurnEvent(event, symbol));
-		this.countries.forEach((key, value) -> value.onPlayerTurnEvent(this, event, symbol));
+		this.countries.forEach((key, value) -> value.onPlayerTurnEvent(event, symbol));
 	}
 
 	public Country getCountry(Symbol symbol) {

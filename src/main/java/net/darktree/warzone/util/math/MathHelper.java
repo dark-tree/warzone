@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class MathHelper {
 
-	public static Random RANDOM = new Random();
+	public static final Random RANDOM = new Random();
 
 	public static int nextRandomDice() {
 		return RANDOM.nextInt(1, 7);

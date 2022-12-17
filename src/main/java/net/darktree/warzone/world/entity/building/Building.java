@@ -70,11 +70,6 @@ public abstract class Building extends StructureEntity {
 		world.getCountry(current).addBuilding(this);
 	}
 
-	@Deprecated
-	public int getStored() {
-		return 0;
-	}
-
 	@Override
 	public void onAdded() {
 		removed = false;
