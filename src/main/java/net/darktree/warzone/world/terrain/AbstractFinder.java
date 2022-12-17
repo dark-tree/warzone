@@ -19,8 +19,8 @@ public abstract class AbstractFinder {
 	protected AbstractFinder(Pattern pattern, World world) {
 		this.offsets = pattern.getOffsets();
 		this.world = world;
-		this.width = world.width;
-		this.height = world.height;
+		this.width = world.getWidth();
+		this.height = world.getHeight();
 	}
 
 	protected final void clearField(int[][] array2d) {

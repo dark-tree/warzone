@@ -19,7 +19,7 @@ public class PacketReader {
 
 	public void next() throws IOException {
 		PacketType type = PacketType.decode(stream.read());
-		short size = (short) (stream.read() | (stream.read() >> 8));
+		short size = (short) (stream.read() | (stream.read() << 8));
 
 		apply(type, ByteBuffer.wrap(stream.readNBytes(size)));
 	}

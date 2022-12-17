@@ -85,8 +85,8 @@ public class Relay {
 
 		on(PacketType.R2U_TEXT, State.READY, buffer -> {
 			final int id = buffer.getInt();
-			Packet<?> packet = null;
-			Object result = null;
+			Packet<?> packet;
+			Object result;
 
 			try {
 				try{
@@ -101,11 +101,9 @@ public class Relay {
 				// run apply() on the main thread
 				Main.runSynced(packet::apply);
 			} catch (Exception e) {
-				if (packet != null) {
-					Logger.error("Exception was thrown while processing game packet: '" + packet.type.key() + "'!");
-				}
-
+				Logger.error("Exception was thrown while processing game packet: '" + Registries.PACKETS.getElement(id).key() + "'!");
 				e.printStackTrace();
+				return;
 			}
 
 			@SuppressWarnings("unchecked")

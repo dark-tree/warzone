@@ -11,6 +11,7 @@ public class Packets {
 	public static final Packet.Type UNDO = new Packet.Type(UndoPacket::new);
 	public static final Packet.Type COLONIZE = new Packet.Type(ColonizePacket::new);
 	public static final Packet.Type PRODUCE = new Packet.Type(ProductionSyncPacket::new);
+	public static final Packet.Type WORLD = new Packet.Type(WorldSyncPacket::new);
 
 	public static void load() {
 		Registries.PACKETS.register("turn", END_TURN);
@@ -19,6 +20,7 @@ public class Packets {
 		Registries.PACKETS.register("undo", UNDO);
 		Registries.PACKETS.register("colonize", COLONIZE);
 		Registries.PACKETS.register("produce", PRODUCE);
+		Registries.PACKETS.register("world", WORLD);
 	}
 
 }

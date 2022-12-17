@@ -36,7 +36,7 @@ public class PacketSender {
 		short size = (short) (buffer.position() - 3);
 
 		buffer.put(1, (byte) (size & 0xFF));
-		buffer.put(2, (byte) ((size << 8) & 0xFF));
+		buffer.put(2, (byte) ((size >> 8) & 0xFF));
 
 		try {
 			stream.write(buffer.array(), 0, size + 3);

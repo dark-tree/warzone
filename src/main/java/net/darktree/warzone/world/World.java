@@ -8,6 +8,7 @@ import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.event.TurnEvent;
 import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entity;
@@ -27,24 +28,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
-public class World implements WorldEntityView {
+public class World implements WorldEntityView, NbtSerializable {
 
-	final public int width, height;
+	private final List<Entity> entities = new ArrayList<>();
+	private final HashMap<Symbol, Country> countries = new HashMap<>();
 
-	final private TileState[][] tiles;
-	final private List<Entity> entities = new ArrayList<>();
-	final private HashMap<Symbol, Country> countries = new HashMap<>();
-
-	private ControlFinder control;
+	private int width, height;
+	private TileState[][] tiles;
 	private Symbol[] symbols = new Symbol[]{};
-	public ActionManager manager = new ActionManager(this);
 	private Overlay overlay = null;
 	private boolean ownershipDirty = true, redrawSurface = true, redrawBuildings = true;
 	private int turn;
+	private WorldView view;
+	private ControlFinder control;
 
-	private final WorldView view;
+	public ActionManager manager = new ActionManager(this);
 
 	public World(int width, int height) {
+		resize(width, height);
+	}
+
+	private void resize(int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.tiles = new TileState[width][height];
@@ -55,8 +59,14 @@ public class World implements WorldEntityView {
 			}
 		}
 
+		this.redrawSurface = true;
+		this.redrawBuildings = true;
+		this.ownershipDirty = true;
 		this.view = new WorldView(width, height);
 		this.control = new ControlFinder(this);
+
+		// FIXME: ugly hack to force buffer reload
+		WorldHolder.setWorld(this);
 	}
 
 	public void toNbt(@NotNull CompoundTag tag) {
@@ -98,15 +108,14 @@ public class World implements WorldEntityView {
 		tag.put("countries", countriesTag);
 	}
 
-	public static void load(CompoundTag tag) {
+	@Override
+	public void fromNbt(@NotNull CompoundTag tag) {
 		CompoundTag tilesTag = tag.getCompoundTag("tiles");
 		ListTag<?> entities = tag.getListTag("entities");
 		CompoundTag countriesTag = tag.getCompoundTag("countries");
 
-		World world = new World(tag.getInt("width"), tag.getInt("height"));
-		world.turn = tag.getByte("turn");
-
-		WorldHolder.setWorld(world);
+		resize(tag.getInt("width"), tag.getInt("height"));
+		turn = tag.getByte("turn");
 
 		List<Symbol> symbols = new ArrayList<>();
 
@@ -114,26 +123,33 @@ public class World implements WorldEntityView {
 			CompoundTag countryTag = countriesTag.getCompoundTag(symbol.name());
 
 			if (countryTag != null) {
-				world.defineCountry(symbol).fromNbt(countryTag);
+				defineCountry(symbol).fromNbt(countryTag);
 				symbols.add(symbol);
 			}
 		}
 
-		world.symbols = symbols.toArray(new Symbol[]{});
+		this.symbols = symbols.toArray(new Symbol[]{});
 
-		for (int x = 0; x < world.width; x++) {
-			for (int y = 0; y < world.height; y++) {
-				world.tiles[x][y].load(world, x, y, tilesTag);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				tiles[x][y].load(this, x, y, tilesTag);
 			}
 		}
 
 		entities.forEach(entry -> {
-			Entity entity = Entity.load(world, (CompoundTag) entry);
+			Entity entity = Entity.load(this, (CompoundTag) entry);
 			entity.onLoaded();
-			world.addEntity(entity);
+			addEntity(entity);
 		});
 
 		Logger.info("World loaded!");
+	}
+
+	@Deprecated
+	public static void load(CompoundTag tag) {
+		World world = new World(0, 0);
+		WorldHolder.setWorld(world);
+		world.fromNbt(tag);
 	}
 
 	public void loadTiles(Function<TilePos, TileVariant> generator) {
@@ -263,7 +279,6 @@ public class World implements WorldEntityView {
 		if (y != 0 && tiles[x][y - 1].getOwner() != self) {
 			Renderer.line(buffer, x, y, x + 1, y, w, Colors.BORDER);
 		}
-
 	}
 
 	public Country defineCountry(Symbol symbol) {
@@ -328,7 +343,7 @@ public class World implements WorldEntityView {
 	 * Returns true if a tile is controlled by the given symbol, or false if it is not
 	 */
 	public boolean canControl(int x, int y, Symbol symbol) {
-		return control.canControl(x, y) && getTileState(x, y).getOwner() == symbol;
+		return canControl(x, y) && getTileState(x, y).getOwner() == symbol;
 	}
 
 	/**
@@ -347,14 +362,16 @@ public class World implements WorldEntityView {
 		return countries.get(symbol);
 	}
 
+	@Deprecated
 	public Country getCountry(int x, int y) {
-		return countries.get(getTileState(x, y).getOwner());
+		return getCountry(getTileState(x, y).getOwner());
 	}
 
 	public void setOverlay(Overlay overlay) {
 		this.overlay = overlay;
 	}
 
+	@Deprecated
 	public TileState[][] getTiles() {
 		return tiles;
 	}
@@ -382,6 +399,14 @@ public class World implements WorldEntityView {
 
 	public WorldView getView() {
 		return view;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 
 }
