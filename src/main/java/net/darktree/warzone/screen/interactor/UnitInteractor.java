@@ -24,7 +24,7 @@ public class UnitInteractor extends Interactor {
 
 		if (!entity.hasActed()) {
 			this.action = new MoveUnitAction(world, entity.getX(), entity.getY());
-			world.setOverlay(new PathFinderOverlay(action.getPathfinder()));
+			world.getView().setOverlay(new PathFinderOverlay(action.getPathfinder()));
 		} else {
 			this.action = null;
 		}
@@ -80,7 +80,7 @@ public class UnitInteractor extends Interactor {
 
 	@Override
 	public void close() {
-		world.setOverlay(null);
+		world.getView().hideOverlay();
 	}
 
 }

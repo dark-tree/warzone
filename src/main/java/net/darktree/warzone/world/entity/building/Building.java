@@ -26,7 +26,7 @@ public abstract class Building extends StructureEntity {
 	public static Building from(int x, int y, World world, @NotNull CompoundTag tag) {
 		Building building = (Building) Registries.ENTITIES.getElement(tag.getString("id")).create(world, x, y);
 		building.fromNbt(tag);
-		world.getCountry(world.getTileState(x, y).getOwner()).addBuilding(building);
+		building.getOwner().addBuilding(building);
 		return building;
 	}
 
@@ -63,7 +63,7 @@ public abstract class Building extends StructureEntity {
 	@Override
 	public void onOwnerUpdate(Symbol previous, Symbol current) {
 		forEachTile(pos -> {
-			world.getTileState(pos).setOwner(world, pos.x, pos.y, current, false);
+			world.getTileState(pos).setOwner(world, current, false);
 		});
 
 		world.getCountry(previous).removeBuilding(this);

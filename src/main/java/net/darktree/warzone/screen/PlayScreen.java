@@ -100,7 +100,7 @@ public class PlayScreen extends Screen {
 		}
 
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
-			world.setOverlay(new MapOverlay());
+			world.getView().setOverlay(new MapOverlay());
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {

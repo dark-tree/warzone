@@ -22,7 +22,7 @@ public class UnitAttackInteractor extends Interactor {
 		this.entity = entity;
 		this.world = world;
 
-		world.setOverlay(null);
+		world.getView().hideOverlay();
 	}
 
 	@Override

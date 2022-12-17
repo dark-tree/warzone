@@ -1,9 +1,5 @@
 package net.darktree.warzone.world;
 
-import net.darktree.warzone.client.Colors;
-import net.darktree.warzone.client.render.WorldBuffers;
-import net.darktree.warzone.client.render.vertex.Renderer;
-import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.event.TurnEvent;
@@ -12,7 +8,6 @@ import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entity;
-import net.darktree.warzone.world.overlay.Overlay;
 import net.darktree.warzone.world.terrain.BonusFinder;
 import net.darktree.warzone.world.terrain.ControlFinder;
 import net.darktree.warzone.world.terrain.EnclaveFinder;
@@ -36,10 +31,9 @@ public class World implements WorldEntityView, NbtSerializable {
 	private int width, height;
 	private TileState[][] tiles;
 	private Symbol[] symbols = new Symbol[]{};
-	private Overlay overlay = null;
-	private boolean ownershipDirty = true, redrawSurface = true, redrawBuildings = true;
+	private boolean ownershipDirty = true;
 	private int turn;
-	private WorldView view;
+	private WorldRenderer renderer;
 	private ControlFinder control;
 
 	public ActionManager manager = new ActionManager(this);
@@ -59,10 +53,8 @@ public class World implements WorldEntityView, NbtSerializable {
 			}
 		}
 
-		this.redrawSurface = true;
-		this.redrawBuildings = true;
 		this.ownershipDirty = true;
-		this.view = new WorldView(width, height);
+		this.renderer = new WorldRenderer(this);
 		this.control = new ControlFinder(this);
 
 		// FIXME: ugly hack to force buffer reload
@@ -193,7 +185,7 @@ public class World implements WorldEntityView, NbtSerializable {
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
 	public void setTileVariant(int x, int y, TileVariant variant) {
-		getTileState(x, y).setVariant(this, x, y, variant);
+		getTileState(x, y).setVariant(this, variant);
 	}
 
 	/**
@@ -202,15 +194,11 @@ public class World implements WorldEntityView, NbtSerializable {
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
 	public void setTileOwner(int x, int y, Symbol owner) {
-		getTileState(x, y).setOwner(this, x, y, owner, true);
+		getTileState(x, y).setOwner(this, owner, true);
 	}
 
-	public void draw(WorldBuffers buffers) {
+	public void update() {
 		Util.consumeIf(entities, Entity::isRemoved, WorldComponent::onRemoved);
-
-		if (redrawSurface || redrawBuildings) {
-			markOverlayDirty();
-		}
 
 		if (ownershipDirty) {
 			ownershipDirty = false;
@@ -222,63 +210,15 @@ public class World implements WorldEntityView, NbtSerializable {
 				Symbol symbol = enclave.encircled();
 
 				if (symbol != null && symbol != Symbol.NONE) {
-					enclave.forEachTile(pos -> {
-						setTileOwner(pos.x, pos.y, symbol);
-					});
+					enclave.forEachTile(pos -> setTileOwner(pos.x, pos.y, symbol));
 				}
 			});
 		}
-
-		if (redrawSurface) {
-			buffers.getSurface().clear();
-
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					TileState state = this.tiles[x][y];
-					state.getTile().draw(x, y, buffers.getSurface());
-
-					drawBorders(buffers.getSurface(), x, y);
-				}
-			}
-
-			Logger.info("Surface redrawn, using " + buffers.getSurface().count() + " vertices");
-		}
-
-		if (redrawBuildings) {
-			buffers.getBuilding().clear();
-		}
-
-		this.entities.forEach(entity -> entity.draw(buffers, redrawBuildings));
-
-		if (overlay != null) {
-			VertexBuffer buffer = buffers.getOverlay();
-
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					Renderer.overlay(buffer, x, y, overlay.getColor(this, x, y, getTileState(x, y)));
-				}
-			}
-		}
-
-		redrawSurface = false;
-		redrawBuildings = false;
 	}
 
+	@Deprecated
 	public void markOverlayDirty() {
-		if (overlay != null) overlay.markDirty();
-	}
-
-	private void drawBorders(VertexBuffer buffer, int x, int y) {
-		Symbol self = tiles[x][y].getOwner();
-		float w = 0.03f;
-
-		if (x != 0 && tiles[x - 1][y].getOwner() != self) {
-			Renderer.line(buffer, x, y, x, y + 1, w, Colors.BORDER);
-		}
-
-		if (y != 0 && tiles[x][y - 1].getOwner() != self) {
-			Renderer.line(buffer, x, y, x + 1, y, w, Colors.BORDER);
-		}
+		renderer.markOverlayDirty();
 	}
 
 	public Country defineCountry(Symbol symbol) {
@@ -362,18 +302,8 @@ public class World implements WorldEntityView, NbtSerializable {
 		return countries.get(symbol);
 	}
 
-	@Deprecated
 	public Country getCountry(int x, int y) {
 		return getCountry(getTileState(x, y).getOwner());
-	}
-
-	public void setOverlay(Overlay overlay) {
-		this.overlay = overlay;
-	}
-
-	@Deprecated
-	public TileState[][] getTiles() {
-		return tiles;
 	}
 
 	public ActionManager getManager() {
@@ -386,19 +316,21 @@ public class World implements WorldEntityView, NbtSerializable {
 
 	public void onOwnershipChanged() {
 		ownershipDirty = true;
-		redrawSurface = true;
+		renderer.markSurfaceDirty();
 	}
 
+	@Deprecated
 	public void onTileChanged() {
-		redrawSurface = true;
+		renderer.markSurfaceDirty();
 	}
 
+	@Deprecated
 	public void onBuildingChanged() {
-		redrawBuildings = true;
+		renderer.markBuildingsDirty();
 	}
 
-	public WorldView getView() {
-		return view;
+	public WorldRenderer getView() {
+		return renderer;
 	}
 
 	public int getWidth() {

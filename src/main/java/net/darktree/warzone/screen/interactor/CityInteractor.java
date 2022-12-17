@@ -19,7 +19,7 @@ public class CityInteractor extends Interactor {
 		this.action = new SummonAction(world, building.getX(), building.getY());
 		this.world = world;
 
-		world.setOverlay(new PathFinderOverlay(action.getPathfinder()));
+		world.getView().setOverlay(new PathFinderOverlay(action.getPathfinder()));
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class CityInteractor extends Interactor {
 
 	@Override
 	public void close() {
-		world.setOverlay(null);
+		world.getView().hideOverlay();
 	}
 
 }
