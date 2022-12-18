@@ -43,35 +43,48 @@ public class Registry<T extends ElementType<T>> {
 		list.forEach(entry -> consumer.accept(entry.value));
 	}
 
-	/**
-	 * Query registered element by its key
-	 */
+	@Deprecated
 	public T getElement(String key) {
 		return this.registry.get(key).value;
 	}
 
-	/**
-	 * Query registered element by its identifier
-	 */
+	@Deprecated
 	public T getElement(int identifier) {
 		return this.list.get(identifier).value;
 	}
 
-	/**
-	 * Get the identifier of an element in this registry
-	 */
+	@Deprecated
 	public int identifierOf(T value) {
-		return this.lookup.get(value).identifier;
+		return this.lookup.get(value).id;
 	}
 
-	/**
-	 * Get the key of an element in this registry
-	 */
+	@Deprecated
 	public String keyOf(T value) {
 		return this.lookup.get(value).key;
 	}
 
-	public record Entry<T>(int identifier, String key, T value) {
+	/**
+	 * Query entry by element's string key
+	 */
+	public Entry<T> byKey(String key) {
+		return this.registry.get(key);
+	}
+
+	/**
+	 * Query entry by element's integer id
+	 */
+	public Entry<T> byId(int index) {
+		return this.list.get(index);
+	}
+
+	/**
+	 * Query entry by element's value
+	 */
+	public Entry<T> byValue(T value) {
+		return this.lookup.get(value);
+	}
+
+	public record Entry<T>(int id, String key, T value) {
 
 	}
 

@@ -75,22 +75,39 @@ public class WorldRenderer extends WorldView {
 		}
 	}
 
+	/**
+	 * Sets a new world overlay
+	 */
 	public void setOverlay(Overlay overlay) {
 		this.overlay = overlay;
 	}
 
+	/**
+	 * Removes an overlay, if present
+	 */
 	public void hideOverlay() {
 		this.overlay = null;
 	}
 
+	/**
+	 * Marks the overlay as outdated
+	 */
 	public void markOverlayDirty() {
 		if (overlay != null) overlay.markDirty();
 	}
 
+	/**
+	 * Marks the world surface as outdated,
+	 * called after a tile or border update
+	 */
 	public void markSurfaceDirty() {
 		redrawSurface = true;
 	}
 
+	/**
+	 * Marks the world building layer as outdated,
+	 * called placing or destroying a building or structure
+	 */
 	public void markBuildingsDirty() {
 		redrawBuildings = true;
 	}

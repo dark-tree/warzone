@@ -41,7 +41,7 @@ public abstract class Packet<T> {
 	 */
 	protected ByteBuffer getBuffer() {
 		ByteBuffer buffer = PacketByteBuffer.getMessageBuffer();
-		buffer.putInt(Registries.PACKETS.identifierOf(type));
+		buffer.putInt(Registries.PACKETS.byValue(type).id());
 		return buffer;
 	}
 

@@ -46,6 +46,11 @@ public class UserGroup {
 		relay.close("Connection closed.");
 	}
 
+	/**
+	 * Create a new user group, will return it with the onOpen callback, if the
+	 * connection is closed the onClose callback will be called. onOpen is not
+	 * guarantied to be called.
+	 */
 	public static void make(String hostname, Consumer<UserGroup> onOpen, Consumer<String> onClose) {
 		Relay relay = Relay.open(hostname, Relay.PORT, new Role.Host(), onClose);
 
@@ -75,6 +80,11 @@ public class UserGroup {
 		relay.start();
 	}
 
+	/**
+	 * Join a group with the given id, will return it with the onOpen callback, if the
+	 * connection is closed the onClose callback will be called. onOpen is not
+	 * guarantied to be called.
+	 */
 	public static void join(String hostname, int gid, Consumer<UserGroup> onOpen, Consumer<String> onClose) {
 		Relay relay = Relay.open(hostname, Relay.PORT, new Role.Client(gid), onClose);
 

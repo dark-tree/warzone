@@ -20,6 +20,10 @@ public class BonusFinder extends AbstractFinder {
 		compute();
 	}
 
+	/**
+	 * Grant all the bonus tiles found
+	 * @return the number of tiles granted
+	 */
 	public int grant() {
 		final int count = bonuses.size();
 		bonuses.forEach(bonus -> bonus.transfer(world));

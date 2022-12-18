@@ -3,6 +3,10 @@ package net.darktree.warzone.network;
 import net.darktree.warzone.network.urp.PacketType;
 import net.darktree.warzone.network.urp.PacketWriter;
 
+/**
+ * This class describes the role of a Relay class, and what it will
+ * do after establishing a connection with the URP server
+ */
 public abstract class Role {
 
 	public final Side side;
@@ -17,6 +21,9 @@ public abstract class Role {
 
 		private final int gid;
 
+		/**
+		 * Creates a role that instructs the relay to join a group of the given id
+		 */
 		public Client(int gid) {
 			super(Side.CLIENT);
 			this.gid = gid;
@@ -31,6 +38,9 @@ public abstract class Role {
 
 	public static class Host extends Role {
 
+		/**
+		 * Creates a role that instructs the relay to create a new group
+		 */
 		public Host() {
 			super(Side.HOST);
 		}

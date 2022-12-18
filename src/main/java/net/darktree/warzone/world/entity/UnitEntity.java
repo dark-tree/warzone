@@ -22,43 +22,31 @@ public class UnitEntity extends MovingEntity {
 		super(world, x, y, Tiles.UNIT);
 	}
 
+	/**
+	 * Set the symbol of this unit,
+	 * this must be called after entity construction, or it will default to CROSS
+	 */
 	public void setSymbol(Symbol symbol) {
 		this.symbol = symbol;
 	}
 
+	/**
+	 * Get the symbol of this unit
+	 */
 	public Symbol getSymbol() {
 		return symbol;
 	}
 
-	@Override
-	public void draw(VertexBuffer buffer) {
-		super.draw(buffer);
-		Renderer.quad(buffer, x, y, 1, 1, armored ? symbol.getArmoredSprite() : symbol.getSprite(), 1, 1, 1, 0);
+	/**
+	 * Check if this unit is in its own country
+	 */
+	public boolean isInHomeland() {
+		return world.canControl(getX(), getY(), symbol);
 	}
 
-	@Override
-	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (symbol == world.getActiveSymbol()) {
-			PlayScreen.setInteractor(new UnitInteractor(this, world));
-		}
-	}
-
-	@Override
-	public boolean canColonize(Symbol enemy) {
-		return enemy == this.symbol;
-	}
-
-	private boolean colonizationOwnerCheck(boolean war, boolean midpoint, Symbol symbol, Symbol self) {
-		return midpoint ? (self == symbol) : (war ? symbol != Symbol.NONE : symbol == Symbol.NONE);
-	}
-
-	private boolean colonizationCheck(int x, int y, boolean war, boolean midpoint) {
-		TileState state = world.getTileState(x, y);
-		Entity entity = world.getEntity(x, y);
-		boolean allowed = !war || entity == null || entity.canColonize(this.symbol);
-		return state.getTile().canColonize(this.symbol) && colonizationOwnerCheck(war, midpoint, state.getOwner(), this.symbol) && allowed;
-	}
-
+	/**
+	 * Colonize at the position of this unit
+	 */
 	public void colonize(int dice, boolean war) {
 		ShapeHelper.TargetPredicate target = (world, x, y) -> colonizationCheck(x, y, war, false);
 		ShapeHelper.MidpointPredicate midpoint = (world, direction, tile, pos) -> colonizationCheck(pos.x, pos.y, war, true);
@@ -79,8 +67,33 @@ public class UnitEntity extends MovingEntity {
 		}
 	}
 
-	public boolean isInHomeland() {
-		return world.canControl(getX(), getY(), symbol);
+	private boolean colonizationOwnerCheck(boolean war, boolean midpoint, Symbol symbol, Symbol self) {
+		return midpoint ? (self == symbol) : (war ? symbol != Symbol.NONE : symbol == Symbol.NONE);
+	}
+
+	private boolean colonizationCheck(int x, int y, boolean war, boolean midpoint) {
+		TileState state = world.getTileState(x, y);
+		Entity entity = world.getEntity(x, y);
+		boolean allowed = !war || entity == null || entity.canColonize(this.symbol);
+		return state.getTile().canColonize(this.symbol) && colonizationOwnerCheck(war, midpoint, state.getOwner(), this.symbol) && allowed;
+	}
+
+	@Override
+	protected void draw(VertexBuffer buffer) {
+		super.draw(buffer);
+		Renderer.quad(buffer, x, y, 1, 1, armored ? symbol.getArmoredSprite() : symbol.getSprite(), 1, 1, 1, 0);
+	}
+
+	@Override
+	public void onInteract(World world, int x, int y, ClickEvent event) {
+		if (symbol == world.getActiveSymbol()) {
+			PlayScreen.setInteractor(new UnitInteractor(this, world));
+		}
+	}
+
+	@Override
+	public boolean canColonize(Symbol enemy) {
+		return enemy == this.symbol;
 	}
 
 	@Override

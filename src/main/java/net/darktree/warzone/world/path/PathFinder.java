@@ -28,6 +28,9 @@ public class PathFinder extends AbstractFieldFinder {
 		update();
 	}
 
+	/**
+	 * Recompute the world, should be called after the world is updated
+	 */
 	public void update() {
 		clearField(this.field);
 		clearField(this.distance);

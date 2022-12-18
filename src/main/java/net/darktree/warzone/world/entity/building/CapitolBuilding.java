@@ -51,7 +51,7 @@ public class CapitolBuilding extends Building {
 	}
 
 	@Override
-	public void draw(VertexBuffer buffer) {
+	protected void draw(VertexBuffer buffer) {
 		super.draw(buffer);
 		Renderer.quad(buffer, tx + 0.5f, ty + 0.5f, 1, 1, symbol.getSprite(), 0, 0, 0, 0);
 	}

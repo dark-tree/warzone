@@ -18,6 +18,12 @@ public class PathFinderConfig {
 		this.boundary = boundary;
 	}
 
+	/**
+	 * Get a pathfinder config for a given unit
+	 *
+	 * @param unit the unit for which to pathfind
+	 * @param owner the owner of the tile this unit stands on
+	 */
 	public static PathFinderConfig getForUnitAt(UnitEntity unit, Symbol owner) {
 		return new PathFinderConfig(5, Surface.LAND, SearchBoundary.getForUnitAt(unit.armored, owner));
 	}

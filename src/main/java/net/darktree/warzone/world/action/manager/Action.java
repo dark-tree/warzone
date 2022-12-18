@@ -54,7 +54,7 @@ public abstract class Action {
 	 * Deserialize action from NBT CompoundTag
 	 */
 	public static Action fromNbt(CompoundTag nbt, World world) {
-		return Registries.ACTIONS.getElement(nbt.getInt("id")).create(nbt, world);
+		return Registries.ACTIONS.byId(nbt.getInt("id")).value().create(nbt, world);
 	}
 
 	public static class Type extends ElementType<Action.Type> {

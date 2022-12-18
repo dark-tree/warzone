@@ -7,14 +7,16 @@ import net.darktree.warzone.world.tile.WorldTile;
 public interface WorldComponent extends WorldListener, WorldTile {
 
 	/**
-	 * Called right before a component is removed
+	 * Called right before a component is removed,
+	 * This method should manually update entity cache.
 	 */
 	default void onRemoved() {
 
 	}
 
 	/**
-	 * Called right after a component is added
+	 * Called right after a component is added to the entity list,
+	 * This method should manually update entity cache.
 	 */
 	default void onAdded() {
 
@@ -59,6 +61,13 @@ public interface WorldComponent extends WorldListener, WorldTile {
 	 * Can an object pass this tile in the give direction
 	 */
 	default boolean canPenetrate(Direction vector) {
+		return false;
+	}
+
+	/**
+	 * Returns if a different world component of the given symbol pass though this one
+	 */
+	default boolean canPathfindThrough(Symbol symbol) {
 		return false;
 	}
 

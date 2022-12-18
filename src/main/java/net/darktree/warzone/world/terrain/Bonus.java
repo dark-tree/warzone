@@ -15,6 +15,9 @@ public class Bonus {
 		this.y = y;
 	}
 
+	/**
+	 * Transfers this bonus tile to the new owner
+	 */
 	public void transfer(World world) {
 		world.setTileOwner(x, y, owner);
 	}

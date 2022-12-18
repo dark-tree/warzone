@@ -27,7 +27,8 @@ public interface WorldListener {
 	}
 
 	/**
-	 * Turn event dispatcher
+	 * Turn event dispatcher, this method is called for all turn events and
+	 * dispatches them to more specialized callbacks
 	 */
 	default void onPlayerTurnEvent(TurnEvent event, Symbol symbol) {
 		if (event == TurnEvent.TURN_START) onPlayerTurnStart(symbol);

@@ -4,14 +4,20 @@ public abstract class ElementType<T extends ElementType<T>> {
 
 	public abstract Registry<T> getRegistry();
 
+	/**
+	 * Get the numerical id of this element
+	 */
 	@SuppressWarnings("unchecked")
 	public final int id() {
-		return getRegistry().identifierOf((T) this);
+		return getRegistry().byValue((T) this).id();
 	}
 
+	/**
+	 * Get the string key of this element
+	 */
 	@SuppressWarnings("unchecked")
 	public final String key() {
-		return getRegistry().keyOf((T) this);
+		return getRegistry().byValue((T) this).key();
 	}
 
 	public void onRegister(String id) {

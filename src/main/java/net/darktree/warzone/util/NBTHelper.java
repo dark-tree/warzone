@@ -15,7 +15,7 @@ public class NBTHelper {
 	private static final NBTSerializer SERIALIZER = new NBTSerializer(true, true);
 	private static final NBTDeserializer DESERIALIZER = new NBTDeserializer(true, true);
 
-	public static void writeCompound(CompoundTag nbt, OutputStream stream) {
+	public static void writeCompoundToStream(CompoundTag nbt, OutputStream stream) {
 		try {
 			SERIALIZER.toStream(new NamedTag(null, nbt), stream);
 		} catch (IOException e) {
@@ -23,7 +23,7 @@ public class NBTHelper {
 		}
 	}
 
-	public static CompoundTag readCompound(InputStream stream) {
+	public static CompoundTag readCompoundFromStream(InputStream stream) {
 		try {
 			return (CompoundTag) DESERIALIZER.fromStream(stream).getTag();
 		} catch (IOException e) {
@@ -32,11 +32,11 @@ public class NBTHelper {
 	}
 
 	public static void writeCompound(CompoundTag nbt, ByteBuffer buffer) {
-		writeCompound(nbt, new ByteBufferOutputStream(buffer));
+		writeCompoundToStream(nbt, new ByteBufferOutputStream(buffer));
 	}
 
 	public static CompoundTag readCompound(ByteBuffer buffer) {
-		return readCompound(new ByteBufferInputStream(buffer));
+		return readCompoundFromStream(new ByteBufferInputStream(buffer));
 	}
 
 }

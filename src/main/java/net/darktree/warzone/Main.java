@@ -139,7 +139,7 @@ public class Main {
 			String[] parts = line.split(" ");
 
 			Main.runSynced(() -> {
-				PlayScreen.setInteractor(new SetEditInteractor(Registries.TILES.getElement(parts[1]).getDefaultVariant(), WorldHolder.world));
+				PlayScreen.setInteractor(new SetEditInteractor(Registries.TILES.byKey(parts[1]).value().getDefaultVariant(), WorldHolder.world));
 			});
 		}
 
@@ -149,7 +149,7 @@ public class Main {
 			int y = Integer.parseInt(parts[2]);
 
 			Main.runSynced(() -> {
-				WorldHolder.world.addEntity(Registries.ENTITIES.getElement(parts[3]).create(WorldHolder.world, x, y));
+				WorldHolder.world.addEntity(Registries.ENTITIES.byKey(parts[3]).value().create(WorldHolder.world, x, y));
 			});
 		}
 
@@ -203,7 +203,7 @@ public class Main {
 			int count = Integer.parseInt(parts[2]);
 
 			Main.runSynced(() -> {
-				Resource.Quantified resource = Registries.RESOURCES.getElement(parts[1]).quantify(count);
+				Resource.Quantified resource = Registries.RESOURCES.byKey(parts[1]).value().quantify(count);
 				WorldHolder.world.getCountry(WorldHolder.world.getCurrentSymbol()).addResource(resource);
 			});
 		}

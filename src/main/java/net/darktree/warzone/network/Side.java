@@ -5,6 +5,6 @@ public enum Side {
 	CLIENT;
 
 	public void expect(Side expected) {
-		if (this != expected) throw new AssertionError("Invalid side!");
+		if (this != expected) throw new AssertionError("Invalid side, expected: '" + expected + "', got: '" + this + "'!");
 	}
 }

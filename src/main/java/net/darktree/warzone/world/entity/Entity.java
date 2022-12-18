@@ -2,7 +2,6 @@ package net.darktree.warzone.world.entity;
 
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.render.WorldBuffers;
-import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.Registry;
@@ -26,28 +25,29 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		setPos(x, y);
 	}
 
-	@Override
-	public void onAdded() {
-		removed = false;
-		world.getTileState(tx, ty).setEntity(this);
-		world.markOverlayDirty();
-	}
+	/**
+	 * Called during world rendering, updateStaticElements is set to true only
+	 * when the building render layer has been cleared
+	 */
+	abstract public void draw(WorldBuffers buffers, boolean updateStaticElements);
 
+	/**
+	 * Mark this entity for removal
+	 */
 	public final void remove() {
 		removed = true;
 	}
 
-	public boolean isRemoved() {
+	/**
+	 * Checks if this entity should be removed
+	 */
+	public final boolean isRemoved() {
 		return removed;
 	}
 
-	@Override
-	public void onRemoved() {
-		world.getTileState(tx, ty).removeEntity(this);
-		world.markOverlayDirty();
-	}
-
-	@Deprecated
+	/**
+	 * Checks if this entity is at the given pos
+	 */
 	public boolean isAt(int x, int y) {
 		return getX() == x && getY() == y;
 	}
@@ -65,10 +65,17 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		this.ty = y;
 	}
 
-	abstract public void draw(WorldBuffers buffers, boolean updateStaticElements);
+	@Override
+	public void onAdded() {
+		removed = false;
+		world.getTileState(tx, ty).setEntity(this);
+		world.markOverlayDirty();
+	}
 
-	public boolean canPathfindThrough(Symbol symbol) {
-		return false;
+	@Override
+	public void onRemoved() {
+		world.getTileState(tx, ty).removeEntity(this);
+		world.markOverlayDirty();
 	}
 
 	@Override
@@ -83,8 +90,12 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 
 	}
 
+	/**
+	 * Used for deserializing an entity from NBT data, called during world loading
+	 * @return the deserialized entity
+	 */
 	public static Entity load(World world, @NotNull CompoundTag tag) {
-		Entity entity = Registries.ENTITIES.getElement(tag.getString("id")).create(world, tag.getInt("x"), tag.getInt("y"));
+		Entity entity = Registries.ENTITIES.byKey(tag.getString("id")).value().create(world, tag.getInt("x"), tag.getInt("y"));
 		entity.fromNbt(tag);
 		return entity;
 	}

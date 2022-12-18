@@ -90,7 +90,7 @@ public class Relay {
 
 			try {
 				try{
-					packet = Registries.PACKETS.getElement(id).create(buffer, role.side, this);
+					packet = Registries.PACKETS.byId(id).value().create(buffer, role.side, this);
 				} catch (IndexOutOfBoundsException e) {
 					Logger.error("Unknown game packet with id: " + id + " received!");
 					return;
@@ -101,7 +101,7 @@ public class Relay {
 				// run apply() on the main thread
 				Main.runSynced(packet::apply);
 			} catch (Exception e) {
-				Logger.error("Exception was thrown while processing game packet: '" + Registries.PACKETS.getElement(id).key() + "'!");
+				Logger.error("Exception was thrown while processing game packet: '" + Registries.PACKETS.byId(id).key() + "'!");
 				e.printStackTrace();
 				return;
 			}
@@ -131,7 +131,7 @@ public class Relay {
 
 	/**
 	 * Close the connection with relay if open,
-	 * this will also stop the worker thread
+	 * this will also stop the network thread
 	 */
 	public void close(String message) {
 		Exception cause = null;

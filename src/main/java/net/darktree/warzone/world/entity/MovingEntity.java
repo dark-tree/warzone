@@ -28,6 +28,56 @@ public abstract class MovingEntity extends Entity {
 		this.py = y;
 	}
 
+	/**
+	 * Make this entity move along the given Path
+	 */
+	public void follow(Path path) {
+		TilePos end = path.getEnd();
+		migrate(getX(), getY(), end.x, end.y);
+
+		this.path = path;
+		this.moved = true;
+		followNext();
+	}
+
+	/**
+	 * Revert the last movement of this entity
+	 */
+	public void revert() {
+		migrate(tx, ty, px, py);
+		move(px, py);
+		moved = false;
+		path = null;
+	}
+
+	/**
+	 * Check if this entity already acted on this turn (attacked or moved)
+	 */
+	public boolean hasActed() {
+		return moved || attacked;
+	}
+
+	/**
+	 * Check if this entity already moved on this turn
+	 */
+	public boolean hasMoved() {
+		return moved;
+	}
+
+	/**
+	 * Set the attack flag for this entity
+	 */
+	public void setAttacked(boolean attacked) {
+		this.attacked = attacked;
+	}
+
+	/**
+	 * Called every time the entity reaches the point on the given path
+	 */
+	protected void onTargetReached() {
+		followNext();
+	}
+
 	protected void migrate(int x1, int y1, int x2, int y2) {
 		world.getTileState(x1, y1).removeEntity(this);
 		world.getTileState(x2, y2).setEntity(this);
@@ -40,15 +90,6 @@ public abstract class MovingEntity extends Entity {
 
 		sx = (x - this.x) * SPEED;
 		sy = (y - this.y) * SPEED;
-	}
-
-	public void follow(Path path) {
-		TilePos end = path.getEnd();
-		migrate(getX(), getY(), end.x, end.y);
-
-		this.path = path;
-		this.moved = true;
-		followNext();
 	}
 
 	private void followNext() {
@@ -76,7 +117,7 @@ public abstract class MovingEntity extends Entity {
 		draw(buffers.getEntity());
 	}
 
-	public void draw(VertexBuffer buffer) {
+	protected void draw(VertexBuffer buffer) {
 		this.x += sx;
 		this.y += sy;
 
@@ -97,29 +138,6 @@ public abstract class MovingEntity extends Entity {
 		this.attacked = false;
 	}
 
-	public void onTargetReached() {
-		followNext();
-	}
-
-	public void revert() {
-		migrate(tx, ty, px, py);
-		move(px, py);
-		moved = false;
-		path = null;
-	}
-
-	public boolean hasActed() {
-		return moved || attacked;
-	}
-
-	public boolean hasMoved() {
-		return moved;
-	}
-
-	public void setAttacked(boolean attacked) {
-		this.attacked = attacked;
-	}
-
 	@Override
 	public int getX() {
 		return path != null ? path.getEnd().x : tx;
@@ -130,6 +148,9 @@ public abstract class MovingEntity extends Entity {
 		return path != null ? path.getEnd().y : ty;
 	}
 
+	/**
+	 * Draw a selection around this entity into the given buffer
+	 */
 	public void drawSelection(VertexBuffer buffer, Color c) {
 		final int x = getX();
 		final int y = getY();

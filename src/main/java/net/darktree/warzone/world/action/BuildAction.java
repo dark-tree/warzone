@@ -27,7 +27,7 @@ public final class BuildAction extends Action {
 	}
 
 	public BuildAction(World world, CompoundTag nbt) {
-		this(world, (Building.Type) Registries.ENTITIES.getElement(nbt.getInt("type")), nbt.getInt("x"), nbt.getInt("y"));
+		this(world, (Building.Type) Registries.ENTITIES.byId(nbt.getInt("type")).value(), nbt.getInt("x"), nbt.getInt("y"));
 	}
 
 	@Override

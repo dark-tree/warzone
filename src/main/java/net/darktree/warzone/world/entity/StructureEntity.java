@@ -32,6 +32,6 @@ public abstract class StructureEntity extends Entity {
 		if (updateStaticElements) draw(buffers.getBuilding());
 	}
 
-	abstract public void draw(VertexBuffer buffer);
+	abstract protected void draw(VertexBuffer buffer);
 
 }

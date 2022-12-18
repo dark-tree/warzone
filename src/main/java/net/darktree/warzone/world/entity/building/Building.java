@@ -24,7 +24,7 @@ public abstract class Building extends StructureEntity {
 	}
 
 	public static Building from(int x, int y, World world, @NotNull CompoundTag tag) {
-		Building building = (Building) Registries.ENTITIES.getElement(tag.getString("id")).create(world, x, y);
+		Building building = (Building) Registries.ENTITIES.byKey(tag.getString("id")).value().create(world, x, y);
 		building.fromNbt(tag);
 		building.getOwner().addBuilding(building);
 		return building;
@@ -56,7 +56,7 @@ public abstract class Building extends StructureEntity {
 		this.world.getManager().apply(new DeconstructBuildingAction(world, getX(), getY()));
 	}
 
-	public void draw(VertexBuffer buffer) {
+	protected void draw(VertexBuffer buffer) {
 		Renderer.quad(buffer, tx, ty, width, height, getSprite(), 0, 0, 0, 0);
 	}
 
