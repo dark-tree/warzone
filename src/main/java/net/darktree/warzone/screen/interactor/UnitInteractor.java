@@ -3,23 +3,18 @@ package net.darktree.warzone.screen.interactor;
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.network.packet.ColonizePacket;
 import net.darktree.warzone.screen.PlayScreen;
-import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.ColonizeAction;
-import net.darktree.warzone.world.action.MoveAction;
+import net.darktree.warzone.world.action.MoveUnitAction;
 import net.darktree.warzone.world.action.ToggleArmorAction;
 import net.darktree.warzone.world.entity.UnitEntity;
-import net.darktree.warzone.world.overlay.PathfinderOverlay;
-import net.darktree.warzone.world.path.Path;
-import net.darktree.warzone.world.path.Pathfinder;
-import net.darktree.warzone.world.pattern.Patterns;
-import net.darktree.warzone.world.tile.Surface;
+import net.darktree.warzone.world.overlay.PathFinderOverlay;
 import org.lwjgl.glfw.GLFW;
 
 public class UnitInteractor extends Interactor {
 
-	private final Pathfinder pathfinder;
+	private final MoveUnitAction action;
 	private final UnitEntity entity;
 	private final World world;
 
@@ -27,32 +22,35 @@ public class UnitInteractor extends Interactor {
 		this.entity = entity;
 		this.world = world;
 
-		if (!entity.hasMoved()) {
-			this.pathfinder = new Pathfinder(world, 5, world.getCurrentSymbol(), Surface.LAND,  Patterns.IDENTITY.place(world, entity.getX(), entity.getY()), false);
-			world.setOverlay(new PathfinderOverlay(pathfinder));
+		if (!entity.hasActed()) {
+			this.action = new MoveUnitAction(world, entity.getX(), entity.getY());
+			world.getView().setOverlay(new PathFinderOverlay(action.getPathfinder()));
 		} else {
-			this.pathfinder = null;
+			this.action = null;
 		}
 	}
 
 	@Override
 	public void draw(VertexBuffer texture, VertexBuffer color) {
+		if (entity.isRemoved()) closed = true;
+
 		entity.drawSelection(color, Colors.ENTITY_SELECTION);
 
 		int x = Main.window.input().getMouseMapX(world.getView());
 		int y = Main.window.input().getMouseMapY(world.getView());
 
-		if (pathfinder != null && world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
-			pathfinder.getPathTo(x, y).draw(color);
+		if (action != null && world.isPositionValid(x, y) && action.getPathfinder().canReach(x, y)) {
+			action.getPathfinder().getPathTo(x, y).draw(color);
 		}
 	}
 
 	@Override
 	public void onClick(int button, int action, int mods, int x, int y) {
 		if (action == GLFW.GLFW_PRESS) {
-			if (pathfinder != null && world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
-				Path path = pathfinder.getPathTo(x, y);
-				world.getManager().apply(new MoveAction(entity, path));
+			if (this.action != null && world.isPositionValid(x, y)) {
+				if (this.action.setTarget(x, y)) {
+					world.getManager().apply(this.action);
+				}
 			}
 
 			closed = true;
@@ -64,29 +62,25 @@ public class UnitInteractor extends Interactor {
 		super.onKey(key, action, mods);
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
-			if (world.getManager().apply(new ColonizeAction(entity, MathHelper.nextRandomDice(), false))) {
-				if (entity.isRemoved()) closed = true;
-			}
+			new ColonizePacket(entity.getX(), entity.getY(), false).sendToHost();
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_W) {
-			if (world.getManager().apply(new ColonizeAction(entity, MathHelper.nextRandomDice(), true))) {
-				if (entity.isRemoved()) closed = true;
-			}
+			new ColonizePacket(entity.getX(), entity.getY(), true).sendToHost();
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_Z) {
-			world.getManager().apply(new ToggleArmorAction(entity));
+			world.getManager().apply(new ToggleArmorAction(world, entity.getX(), entity.getY()));
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_A && !entity.hasMoved()) {
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_A && !entity.hasActed()) {
 			PlayScreen.setInteractor(new UnitAttackInteractor(entity, world));
 		}
 	}
 
 	@Override
 	public void close() {
-		world.setOverlay(null);
+		world.getView().hideOverlay();
 	}
 
 }

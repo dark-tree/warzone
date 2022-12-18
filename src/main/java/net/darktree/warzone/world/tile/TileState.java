@@ -26,12 +26,12 @@ final public class TileState implements NbtSerializable {
 	public void toNbt(@NotNull CompoundTag tag) {
 		variant.toNbt(tag);
 		tag.putByte("owner", (byte) owner.ordinal());
-		tag.putString("id", Registries.TILES.keyOf(variant.getTile()));
+		tag.putString("id", variant.getTile().key());
 	}
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
-		variant = Registries.TILES.getElement(tag.getString("id")).getDefaultVariant().fromNbt(tag);
+		variant = Registries.TILES.byKey(tag.getString("id")).value().getDefaultVariant().fromNbt(tag);
 		owner = Symbol.values()[tag.getByte("owner")];
 	}
 
@@ -46,47 +46,65 @@ final public class TileState implements NbtSerializable {
 		}
 	}
 
-	public void setVariant(World world, int x, int y, TileVariant variant) {
+	/**
+	 * Set the tile variant for this tile state
+	 */
+	public void setVariant(World world, TileVariant variant) {
 		this.variant = variant;
 		world.onTileChanged();
 	}
 
-	public void setOwner(World world, int x, int y, Symbol owner, boolean notify) {
-		if (notify && this.owner != owner) {
-			world.getOptionalEntity(x, y).ifPresent(entity -> entity.onOwnerUpdate(this.owner, owner));
-			this.owner = owner;
+	/**
+	 * Set the tile owner for this tile state
+	 */
+	public void setOwner(World world, Symbol owner, boolean notify) {
+		if (notify && this.owner != owner && entity != null) {
+			entity.onOwnerUpdate(this.owner, owner);
 		}
 
+		this.owner = owner;
 		world.onOwnershipChanged();
 	}
 
+	/**
+	 * Get the tile from this tile state
+	 */
 	public Tile getTile() {
 		return this.variant.getTile();
 	}
 
+	/**
+	 * Get the tile variant from this tile state
+	 */
 	public TileVariant getVariant() {
 		return variant;
 	}
 
+	/**
+	 * Get the tile owner from this tile state
+	 */
 	public Symbol getOwner() {
 		return this.owner;
 	}
 
+	/**
+	 * Get the entity (or null) from this tile state
+	 */
 	public Entity getEntity() {
 		return entity;
 	}
 
 	/**
-	 * Place an entity on this tile,
-	 * for internal use only!
+	 * Place an entity on this tile.<br>
+	 * <b>For internal use only!</b>
 	 */
 	public void setEntity(Entity entity) {
 		if (this.entity == null) this.entity = entity;
 	}
 
 	/**
-	 * Remove an entity from this tile,
-	 * for internal use only!
+	 * Remove an entity from this tile.<br>
+	 * <b>For internal use only!</b>
 	 */
 	public void removeEntity(Entity entity) {
 		if (this.entity == entity) this.entity = null;

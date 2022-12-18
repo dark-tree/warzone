@@ -20,6 +20,7 @@ public class PlacedPattern implements PlacedTileIterator {
 		this.pattern = pattern;
 	}
 
+	@Override
 	public void iterate(Consumer<TilePos> consumer) {
 		pattern.iterate(world, x, y, consumer);
 	}

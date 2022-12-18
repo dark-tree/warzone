@@ -6,6 +6,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.building.production.ProductionState;
@@ -15,17 +16,19 @@ import org.lwjgl.glfw.GLFW;
 public class ProduceScreen extends Screen {
 
 	private final ProductionState state;
+	private final Country country;
 	private final World world;
-	private final Symbol symbol;
 
 	public ProduceScreen(ProductionState state, World world, Symbol symbol) {
 		this.state = state;
+		this.country = world.getCountry(symbol);
 		this.world = world;
-		this.symbol = symbol;
 	}
 
 	@Override
 	public void draw(boolean focused) {
+
+		boolean active = world.getActiveSymbol() == country.symbol;
 
 		ScreenRenderer.centerAt(-1, -1);
 		ScreenRenderer.setSprite(Sprites.NONE);
@@ -59,22 +62,25 @@ public class ProduceScreen extends Screen {
 		for (Recipe recipe : state.getRecipes()) {
 			ScreenRenderer.line(0.005f, 1300 - 200, 0);
 
+			Recipe.Type type = recipe.getType();
 			ScreenRenderer.offset(0, -40);
 			ScreenRenderer.push();
-			ScreenRenderer.text(recipe.getNameString(), 30);
+			ScreenRenderer.text(type.getNameString(), 30);
 			ScreenRenderer.offset(400, 0);
-			ScreenRenderer.text(recipe.getCostString(), 30);
+			ScreenRenderer.text(type.getCostString(), 30);
 			ScreenRenderer.offset(200, 0);
 			ScreenRenderer.text("" + recipe.getQuantity(), 30);
 
 			ScreenRenderer.offset(60, 0);
-			if (ScreenRenderer.button(Sprites.ICON_MINUS, 35, 35, recipe.getQuantity() > 0)) {
-				recipe.undo(state, world, symbol);
+			if (active && ScreenRenderer.button(Sprites.ICON_MINUS, 35, 35, recipe.getQuantity() > 0)) {
+				recipe.undo(country);
+				state.sync();
 			}
 
 			ScreenRenderer.offset(60, 0);
-			if (ScreenRenderer.button(Sprites.ICON_PLUS, 35, 35, recipe.canProduce(state, world, symbol))) {
-				recipe.redo(state, world, symbol);
+			if (active && ScreenRenderer.button(Sprites.ICON_PLUS, 35, 35, state.canProduce() && recipe.canProduce(country))) {
+				recipe.redo(country);
+				state.sync();
 			}
 
 			ScreenRenderer.pop();

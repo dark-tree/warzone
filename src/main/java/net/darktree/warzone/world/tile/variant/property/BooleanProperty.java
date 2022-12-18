@@ -19,7 +19,8 @@ public class BooleanProperty extends Property<Boolean> {
 		return VALUES;
 	}
 
-	public int indexOf(Object object) {
+	@Override
+	public int indexOf(Boolean object) {
 		if (object.equals(true)) return 1;
 		if (object.equals(false)) return 0;
 

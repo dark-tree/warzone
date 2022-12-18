@@ -1,29 +1,45 @@
 package net.darktree.warzone.world.action;
 
+import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.action.manager.Action;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.tile.Surface;
 import net.darktree.warzone.world.tile.Tile;
 import net.darktree.warzone.world.tile.TilePos;
 import net.darktree.warzone.world.tile.TileState;
+import net.querz.nbt.tag.CompoundTag;
 
-public class BuildAction extends Action {
+public final class BuildAction extends Action {
 
 	private final Building.Type type;
 	private final int x, y;
 
 	private Building building;
 
-	public BuildAction(Building.Type type, int x, int y) {
+	public BuildAction(World world, Building.Type type, int x, int y) {
+		super(world, Actions.BUILD);
 		this.type = type;
 		this.x = x;
 		this.y = y;
 	}
 
+	public BuildAction(World world, CompoundTag nbt) {
+		this(world, (Building.Type) Registries.ENTITIES.byId(nbt.getInt("type")).value(), nbt.getInt("x"), nbt.getInt("y"));
+	}
+
 	@Override
-	boolean verify(World world, Symbol symbol) {
+	public void toNbt(CompoundTag nbt) {
+		super.toNbt(nbt);
+		nbt.putInt("type", type.id());
+		nbt.putInt("x", x);
+		nbt.putInt("y", y);
+	}
+
+	@Override
+	protected boolean verify(Symbol symbol) {
 		if (type.value > world.getCountry(symbol).getTotalMaterials()) {
 			return false;
 		}
@@ -41,15 +57,14 @@ public class BuildAction extends Action {
 	}
 
 	@Override
-	void redo(World world, Symbol symbol) {
-		building = (Building) type.create(world, x, y);
-		world.addEntity(building);
+	protected void redo(Symbol symbol) {
+		building = (Building) world.addEntity(type, x, y);
 		world.getCountry(symbol).addMaterials(-type.value);
 		Sounds.STAMP.play(x, y);
 	}
 
 	@Override
-	void undo(World world, Symbol symbol) {
+	protected void undo(Symbol symbol) {
 		building.remove();
 		world.getCountry(symbol).addMaterials(type.value);
 	}

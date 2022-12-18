@@ -1,17 +1,14 @@
 package net.darktree.warzone.world;
 
-import net.darktree.warzone.client.Colors;
-import net.darktree.warzone.client.render.WorldBuffers;
-import net.darktree.warzone.client.render.vertex.Renderer;
-import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.event.TurnEvent;
 import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.Util;
-import net.darktree.warzone.world.action.ActionManager;
+import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entity;
-import net.darktree.warzone.world.overlay.Overlay;
+import net.darktree.warzone.world.terrain.BonusFinder;
 import net.darktree.warzone.world.terrain.ControlFinder;
 import net.darktree.warzone.world.terrain.EnclaveFinder;
 import net.darktree.warzone.world.tile.TilePos;
@@ -26,24 +23,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
-public class World implements WorldEntityView {
+public class World implements WorldEntityView, NbtSerializable {
 
-	final public int width, height;
+	private final List<Entity> entities = new ArrayList<>();
+	private final HashMap<Symbol, Country> countries = new HashMap<>();
 
-	final private TileState[][] tiles;
-	final private List<Entity> entities = new ArrayList<>();
-	final private HashMap<Symbol, Country> countries = new HashMap<>();
-
-	private ControlFinder control;
+	private int width, height;
+	private TileState[][] tiles;
 	private Symbol[] symbols = new Symbol[]{};
-	final private ActionManager manager = new ActionManager(this);
-	private Overlay overlay = null;
-	private boolean ownershipDirty = true, redrawSurface = true, redrawBuildings = true;
+	private boolean ownershipDirty = true;
 	private int turn;
+	private WorldRenderer renderer;
+	private ControlFinder control;
 
-	private final WorldView view;
+	public ActionManager manager = new ActionManager(this);
 
 	public World(int width, int height) {
+		resize(width, height);
+	}
+
+	private void resize(int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.tiles = new TileState[width][height];
@@ -54,8 +53,12 @@ public class World implements WorldEntityView {
 			}
 		}
 
-		this.view = new WorldView(width, height);
+		this.ownershipDirty = true;
+		this.renderer = new WorldRenderer(this);
 		this.control = new ControlFinder(this);
+
+		// FIXME: ugly hack to force buffer reload
+		WorldHolder.setWorld(this);
 	}
 
 	public void toNbt(@NotNull CompoundTag tag) {
@@ -97,15 +100,14 @@ public class World implements WorldEntityView {
 		tag.put("countries", countriesTag);
 	}
 
-	public static void load(CompoundTag tag) {
+	@Override
+	public void fromNbt(@NotNull CompoundTag tag) {
 		CompoundTag tilesTag = tag.getCompoundTag("tiles");
 		ListTag<?> entities = tag.getListTag("entities");
 		CompoundTag countriesTag = tag.getCompoundTag("countries");
 
-		World world = new World(tag.getInt("width"), tag.getInt("height"));
-		world.turn = tag.getByte("turn");
-
-		WorldHolder.setWorld(world);
+		resize(tag.getInt("width"), tag.getInt("height"));
+		turn = tag.getByte("turn");
 
 		List<Symbol> symbols = new ArrayList<>();
 
@@ -113,26 +115,33 @@ public class World implements WorldEntityView {
 			CompoundTag countryTag = countriesTag.getCompoundTag(symbol.name());
 
 			if (countryTag != null) {
-				world.defineCountry(symbol).fromNbt(countryTag);
+				defineCountry(symbol).fromNbt(countryTag);
 				symbols.add(symbol);
 			}
 		}
 
-		world.symbols = symbols.toArray(new Symbol[]{});
+		this.symbols = symbols.toArray(new Symbol[]{});
 
-		for (int x = 0; x < world.width; x++) {
-			for (int y = 0; y < world.height; y++) {
-				world.tiles[x][y].load(world, x, y, tilesTag);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				tiles[x][y].load(this, x, y, tilesTag);
 			}
 		}
 
 		entities.forEach(entry -> {
-			Entity entity = Entity.load(world, (CompoundTag) entry);
+			Entity entity = Entity.load(this, (CompoundTag) entry);
 			entity.onLoaded();
-			world.addEntity(entity);
+			addEntity(entity);
 		});
 
 		Logger.info("World loaded!");
+	}
+
+	@Deprecated
+	public static void load(CompoundTag tag) {
+		World world = new World(0, 0);
+		WorldHolder.setWorld(world);
+		world.fromNbt(tag);
 	}
 
 	public void loadTiles(Function<TilePos, TileVariant> generator) {
@@ -176,7 +185,7 @@ public class World implements WorldEntityView {
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
 	public void setTileVariant(int x, int y, TileVariant variant) {
-		getTileState(x, y).setVariant(this, x, y, variant);
+		getTileState(x, y).setVariant(this, variant);
 	}
 
 	/**
@@ -184,11 +193,11 @@ public class World implements WorldEntityView {
 	 *
 	 *  @throws IndexOutOfBoundsException if the given position is invalid
 	 */
-	public void setTileOwner(int x, int y, Symbol variant) {
-		getTileState(x, y).setOwner(this, x, y, variant, true);
+	public void setTileOwner(int x, int y, Symbol owner) {
+		getTileState(x, y).setOwner(this, owner, true);
 	}
 
-	public void draw(WorldBuffers buffers) {
+	public void update() {
 		Util.consumeIf(entities, Entity::isRemoved, WorldComponent::onRemoved);
 
 		if (ownershipDirty) {
@@ -201,60 +210,15 @@ public class World implements WorldEntityView {
 				Symbol symbol = enclave.encircled();
 
 				if (symbol != null && symbol != Symbol.NONE) {
-					enclave.forEachTile(pos -> {
-						setTileOwner(pos.x, pos.y, symbol);
-					});
+					enclave.forEachTile(pos -> setTileOwner(pos.x, pos.y, symbol));
 				}
 			});
 		}
-
-		if (redrawSurface) {
-			buffers.getSurface().clear();
-
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					TileState state = this.tiles[x][y];
-					state.getTile().draw(x, y, buffers.getSurface());
-
-					drawBorders(buffers.getSurface(), x, y);
-				}
-			}
-
-			Logger.info("Surface redrawn, using " + buffers.getSurface().count() + " vertices");
-		}
-
-		if (redrawBuildings) {
-			buffers.getBuilding().clear();
-		}
-
-		this.entities.forEach(entity -> entity.draw(buffers, redrawBuildings));
-
-		if (overlay != null) {
-			VertexBuffer buffer = buffers.getOverlay();
-
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					Renderer.overlay(buffer, x, y, overlay.getColor(this, x, y, getTileState(x, y)));
-				}
-			}
-		}
-
-		redrawSurface = false;
-		redrawBuildings = false;
 	}
 
-	private void drawBorders(VertexBuffer buffer, int x, int y) {
-		Symbol self = tiles[x][y].getOwner();
-		float w = 0.03f;
-
-		if (x != 0 && tiles[x - 1][y].getOwner() != self) {
-			Renderer.line(buffer, x, y, x, y + 1, w, Colors.BORDER);
-		}
-
-		if (y != 0 && tiles[x][y - 1].getOwner() != self) {
-			Renderer.line(buffer, x, y, x + 1, y, w, Colors.BORDER);
-		}
-
+	@Deprecated
+	public void markOverlayDirty() {
+		renderer.markOverlayDirty();
 	}
 
 	public Country defineCountry(Symbol symbol) {
@@ -264,7 +228,7 @@ public class World implements WorldEntityView {
 	}
 
 	/**
-	 * Get the symbol of current active player,
+	 * Get the symbol of currently active player,
 	 * returns null if there was an issue.
 	 */
 	public Symbol getCurrentSymbol() {
@@ -275,6 +239,20 @@ public class World implements WorldEntityView {
 		}
 	}
 
+	public boolean isActiveSymbol() {
+		return self == getCurrentSymbol();
+	}
+
+	public Symbol getActiveSymbol() {
+		return isActiveSymbol() ? self : null;
+	}
+
+	public Symbol self = Symbol.CROSS;
+
+	public Symbol getSelf() {
+		return self;
+	}
+
 	/**
 	 * Advance the game to the next player and sends map updates
 	 */
@@ -283,7 +261,7 @@ public class World implements WorldEntityView {
 
 		Symbol symbol = getCurrentSymbol();
 		sendPlayerTurnEvent(TurnEvent.TURN_END, symbol);
-		manager.pointOfNoReturn(symbol);
+		manager.clear(symbol);
 
 		turn = (turn + 1) % len;
 
@@ -305,12 +283,19 @@ public class World implements WorldEntityView {
 	 * Returns true if a tile is controlled by the given symbol, or false if it is not
 	 */
 	public boolean canControl(int x, int y, Symbol symbol) {
-		return control.canControl(x, y) && getTileState(x, y).getOwner() == symbol;
+		return canControl(x, y) && getTileState(x, y).getOwner() == symbol;
+	}
+
+	/**
+	 * Grants bonus tiles (if there are any) to the given player
+	 */
+	public boolean grantBonusTiles(Symbol symbol) {
+		return new BonusFinder(this, symbol).grant() > 0;
 	}
 
 	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {
 		getEntities().forEach(entity -> entity.onPlayerTurnEvent(event, symbol));
-		this.countries.forEach((key, value) -> value.onPlayerTurnEvent(this, event, symbol));
+		this.countries.forEach((key, value) -> value.onPlayerTurnEvent(event, symbol));
 	}
 
 	public Country getCountry(Symbol symbol) {
@@ -318,15 +303,7 @@ public class World implements WorldEntityView {
 	}
 
 	public Country getCountry(int x, int y) {
-		return countries.get(getTileState(x, y).getOwner());
-	}
-
-	public void setOverlay(Overlay overlay) {
-		this.overlay = overlay;
-	}
-
-	public TileState[][] getTiles() {
-		return tiles;
+		return getCountry(getTileState(x, y).getOwner());
 	}
 
 	public ActionManager getManager() {
@@ -339,19 +316,29 @@ public class World implements WorldEntityView {
 
 	public void onOwnershipChanged() {
 		ownershipDirty = true;
-		redrawSurface = true;
+		renderer.markSurfaceDirty();
 	}
 
+	@Deprecated
 	public void onTileChanged() {
-		redrawSurface = true;
+		renderer.markSurfaceDirty();
 	}
 
+	@Deprecated
 	public void onBuildingChanged() {
-		redrawBuildings = true;
+		renderer.markBuildingsDirty();
 	}
 
-	public WorldView getView() {
-		return view;
+	public WorldRenderer getView() {
+		return renderer;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 
 }

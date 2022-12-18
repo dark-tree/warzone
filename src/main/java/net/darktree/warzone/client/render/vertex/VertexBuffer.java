@@ -138,7 +138,7 @@ public class VertexBuffer implements AutoCloseable {
 		}
 
 		/**
-		 * Make a immediate-like buffer (clear after use)
+		 * Make an immediate-like buffer (clear after use)
 		 */
 		public Builder immediate() {
 			immediate = true;

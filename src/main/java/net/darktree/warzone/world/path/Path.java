@@ -16,18 +16,46 @@ public class Path {
 	private int index;
 	private final List<TilePos> positions = new ArrayList<>();
 
+	/**
+	 * Add a node to the path
+	 */
 	public void addTarget(int x, int y) {
 		positions.add(new TilePos(x, y));
 	}
 
+	/**
+	 * Add a node to the path
+	 */
 	public void addTarget(TilePos pos) {
 		positions.add(pos);
 	}
 
+	/**
+	 * Reverse the order of all nodes in this path
+	 */
 	public void reverseAll() {
 		Collections.reverse(positions);
 	}
 
+	/**
+	 * Get the starting position
+	 */
+	public TilePos getStart() {
+		return this.positions.get(0);
+	}
+
+	/**
+	 * Get the end position
+	 */
+	public TilePos getEnd() {
+		return this.positions.get(positions.size() - 1);
+	}
+
+	/**
+	 * Get the next node in this path, calling it repeatedly
+	 * will return all the subsequent path nodes until
+	 * the end is reached, then null will be returned.
+	 */
 	public TilePos getNext() {
 		if (index == positions.size()) {
 			return null;
@@ -36,16 +64,8 @@ public class Path {
 		return this.positions.get(index ++);
 	}
 
-	public TilePos getStart() {
-		return this.positions.get(0);
-	}
-
-	public TilePos getEnd() {
-		return this.positions.get(positions.size() - 1);
-	}
-
 	/**
-	 * Draw this path as a series of lines and boxes
+	 * Draw this path as a series of lines and boxes into the given buffer
 	 */
 	public void draw(VertexBuffer buffer) {
 

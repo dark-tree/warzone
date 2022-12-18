@@ -1,5 +1,7 @@
 package net.darktree.warzone.network.urp;
 
+import net.darktree.warzone.util.Logger;
+
 import java.io.OutputStream;
 
 public class PacketWriter {
@@ -12,6 +14,14 @@ public class PacketWriter {
 
 	public PacketSender of(PacketType type) {
 		return new PacketSender(this.stream, type);
+	}
+
+	public void flush() {
+		try {
+			stream.flush();
+		} catch (Exception e) {
+			Logger.warn("Failed to flush socket output stream!");
+		}
 	}
 
 }

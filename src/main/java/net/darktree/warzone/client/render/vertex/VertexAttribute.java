@@ -10,7 +10,6 @@ public class VertexAttribute {
 	/**
 	 * Helper for setting VAO attributes,
 	 * learn more here: <a href="https://learnopengl.com/Getting-started/Hello-Triangle">https://learnopengl.com/Getting-started/Hello-Triangle</a>
-	 *
 	 * This method provides no way to normalize the data, or use types other than float
 	 *
 	 * @param index - id of this attribute

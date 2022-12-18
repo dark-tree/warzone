@@ -4,13 +4,13 @@ import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.DeconstructBuildingAction;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.entity.StructureEntity;
 import net.darktree.warzone.world.pattern.Pattern;
-import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +24,9 @@ public abstract class Building extends StructureEntity {
 	}
 
 	public static Building from(int x, int y, World world, @NotNull CompoundTag tag) {
-		Building building = (Building) Registries.ENTITIES.getElement(tag.getString("id")).create(world, x, y);
+		Building building = (Building) Registries.ENTITIES.byKey(tag.getString("id")).value().create(world, x, y);
 		building.fromNbt(tag);
-		world.getCountry(world.getTileState(x, y).getOwner()).addBuilding(building);
+		building.getOwner().addBuilding(building);
 		return building;
 	}
 
@@ -53,40 +53,40 @@ public abstract class Building extends StructureEntity {
 
 	@Override
 	public void deconstruct() {
-		this.world.getManager().apply(new DeconstructBuildingAction(this, getX(), getY()));
+		this.world.getManager().apply(new DeconstructBuildingAction(world, getX(), getY()));
 	}
 
-	public void draw(VertexBuffer buffer) {
+	protected void draw(VertexBuffer buffer) {
 		Renderer.quad(buffer, tx, ty, width, height, getSprite(), 0, 0, 0, 0);
 	}
 
 	@Override
 	public void onOwnerUpdate(Symbol previous, Symbol current) {
 		forEachTile(pos -> {
-			world.getTileState(pos).setOwner(world, pos.x, pos.y, current, false);
+			world.getTileState(pos).setOwner(world, current, false);
 		});
 
 		world.getCountry(previous).removeBuilding(this);
 		world.getCountry(current).addBuilding(this);
 	}
 
-	@Deprecated
-	public int getStored() {
-		return 0;
-	}
-
 	@Override
 	public void onAdded() {
-		world.getCountry(tx, ty).addBuilding(this);
+		removed = false;
+		getOwner().addBuilding(this);
 		forEachTile(pos -> world.getTileState(pos).setEntity(this));
 		world.onBuildingChanged();
 	}
 
 	@Override
 	public void onRemoved() {
-		world.getCountry(tx, ty).removeBuilding(this);
+		getOwner().removeBuilding(this);
 		forEachTile(pos -> world.getTileState(pos).removeEntity(this));
 		world.onBuildingChanged();
+	}
+
+	public Country getOwner() {
+		return world.getCountry(tx, ty);
 	}
 
 	public static class Type extends Entity.Type {
@@ -103,7 +103,7 @@ public abstract class Building extends StructureEntity {
 			this.width = width;
 			this.height = height;
 			this.sprite = sprite;
-			this.pattern = Patterns.area(width, height);
+			this.pattern = Pattern.build(width, height);
 		}
 
 	}

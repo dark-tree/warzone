@@ -13,11 +13,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class CapitolBuilding extends Building {
 
-	private Symbol symbol = Symbol.CROSS;
+	private Symbol symbol;
 	public boolean summoned;
 
 	public CapitolBuilding(World world, int x, int y) {
 		super(world, x, y, Tiles.CAPITOL);
+		this.symbol = world.getTileState(x, y).getOwner();
 	}
 
 	@Override
@@ -44,13 +45,13 @@ public class CapitolBuilding extends Building {
 
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (!summoned && world.getCurrentSymbol() == this.symbol) {
+		if (!summoned && world.getActiveSymbol() == this.symbol) {
 			PlayScreen.setInteractor(new CityInteractor(world.getCurrentSymbol(), world));
 		}
 	}
 
 	@Override
-	public void draw(VertexBuffer buffer) {
+	protected void draw(VertexBuffer buffer) {
 		super.draw(buffer);
 		Renderer.quad(buffer, tx + 0.5f, ty + 0.5f, 1, 1, symbol.getSprite(), 0, 0, 0, 0);
 	}

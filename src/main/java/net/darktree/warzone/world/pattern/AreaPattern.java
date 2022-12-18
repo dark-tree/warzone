@@ -2,23 +2,16 @@ package net.darktree.warzone.world.pattern;
 
 import net.darktree.warzone.world.tile.TilePos;
 
-import java.util.function.Consumer;
-
-public class AreaPattern extends Pattern {
-
-	private final int width;
-	private final int height;
+public class AreaPattern extends FixedPattern {
 
 	AreaPattern(int width, int height) {
-		this.width = width;
-		this.height = height;
-	}
+		super(new TilePos[width * height]);
 
-	@Override
-	protected void forEachTile(Consumer<TilePos> consumer) {
+		int i = 0;
+
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				consumer.accept(new TilePos(x, y));
+				offsets[i ++] = new TilePos(x, y);
 			}
 		}
 	}

@@ -6,7 +6,6 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.pipeline.Pipeline;
 import net.darktree.warzone.client.render.pipeline.WorldPipeline;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
-import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldView;
 
 public class WorldBuffers implements AutoCloseable {
@@ -16,9 +15,7 @@ public class WorldBuffers implements AutoCloseable {
 	private final Pipeline entities;
 	private final Pipeline overlay;
 
-	public WorldBuffers(World world) {
-		final WorldView view = world.getView();
-
+	public WorldBuffers(WorldView view) {
 		surface = WorldPipeline.of(Buffers.STATIC, Shaders.WORLD, Sprites.ATLAS, view);
 		buildings = WorldPipeline.of(Buffers.STATIC, Shaders.WORLD, Sprites.ATLAS, view);
 		entities = WorldPipeline.of(Buffers.IMMEDIATE, Shaders.WORLD, Sprites.ATLAS, view);

@@ -4,23 +4,13 @@ import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.building.Building;
+import net.darktree.warzone.world.pattern.Patterns;
+import net.darktree.warzone.world.tile.TilePos;
 
-public class ControlFinder {
-
-	private final int[][] field;
-
-	private final int width, height;
-	private final World world;
-
-	private final static int[][] OFFSETS = {
-			{-1, +0}, {+0, -1}, {+0, +1}, {+1, +0}
-	};
+public class ControlFinder extends AbstractFieldFinder {
 
 	public ControlFinder(World world) {
-		this.world = world;
-		this.width = world.width;
-		this.height = world.height;
-		this.field = new int[this.width][this.height];
+		super(Patterns.NEIGHBOURS, world);
 
 		for (Symbol s : Symbol.values()) {
 			init(s);
@@ -36,36 +26,23 @@ public class ControlFinder {
 		return field[x][y] != 0;
 	}
 
-	private void compute() {
-		int level = 1;
-
-		for (boolean dirty = true; dirty; level ++) {
-			dirty = false;
-
-			for (int x = 0; x < width; x ++) {
-				for (int y = 0; y < height; y ++) {
-					if (field[x][y] == level) {
-						dirty = true;
-						propagate(x, y, level + 1, world.getTileState(x, y).getOwner());
-					}
-				}
-			}
-		}
+	protected void compute() {
+		iterate((x, y, level) -> propagate(x, y, level, getOwner(x, y)));
 	}
 
 	private void propagate(int x, int y, int value, Symbol symbol) {
-		for (int[] pair : OFFSETS) {
-			set(x + pair[0], y + pair[1], value, symbol);
+		for (TilePos offset : offsets) {
+			set(x + offset.x, y + offset.y, value, symbol);
 		}
 	}
 
 	private void set(int x, int y, int value, Symbol symbol) {
-		if (x >= 0 && y >= 0 && x < width && y < height) {
-			Symbol owner = world.getTileState(x, y).getOwner();
+		if (!isPosValid(x, y)) {
+			return;
+		}
 
-			if (owner == symbol && this.field[x][y] == 0) {
-				this.field[x][y] = value;
-			}
+		if (getOwner(x, y) == symbol && this.field[x][y] == 0) {
+			this.field[x][y] = value;
 		}
 	}
 
@@ -97,9 +74,7 @@ public class ControlFinder {
 	}
 
 	private void write(Symbol symbol, int x, int y) {
-		if (world.getTileState(x, y).getOwner() == symbol) {
-			field[x][y] = 1;
-		}
+		if (getOwner(x, y) == symbol) field[x][y] = 1;
 	}
 
 }

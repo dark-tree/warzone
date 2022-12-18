@@ -12,11 +12,14 @@ import net.darktree.warzone.world.tile.TilePos;
 
 public abstract class MovingEntity extends Entity {
 
+	protected static final float SPEED = 0.05f;
+	protected static final float EPSILON = 0.0001f;
+
 	protected float x, y;
 	private float sx, sy;
 	private Path path = null;
 	private int px, py;
-	protected boolean moved;
+	protected boolean moved, attacked;
 
 	public MovingEntity(World world, int x, int y, Type type) {
 		super(world, x, y, type);
@@ -25,19 +28,9 @@ public abstract class MovingEntity extends Entity {
 		this.py = y;
 	}
 
-	protected void migrate(int x1, int y1, int x2, int y2) {
-		world.getTileState(x1, y1).removeEntity(this);
-		world.getTileState(x2, y2).setEntity(this);
-	}
-
-	protected void move(int x, int y, float speed) {
-		this.tx = x;
-		this.ty = y;
-
-		sx = (x - this.x) * speed;
-		sy = (y - this.y) * speed;
-	}
-
+	/**
+	 * Make this entity move along the given Path
+	 */
 	public void follow(Path path) {
 		TilePos end = path.getEnd();
 		migrate(getX(), getY(), end.x, end.y);
@@ -47,12 +40,64 @@ public abstract class MovingEntity extends Entity {
 		followNext();
 	}
 
+	/**
+	 * Revert the last movement of this entity
+	 */
+	public void revert() {
+		migrate(tx, ty, px, py);
+		move(px, py);
+		moved = false;
+		path = null;
+	}
+
+	/**
+	 * Check if this entity already acted on this turn (attacked or moved)
+	 */
+	public boolean hasActed() {
+		return moved || attacked;
+	}
+
+	/**
+	 * Check if this entity already moved on this turn
+	 */
+	public boolean hasMoved() {
+		return moved;
+	}
+
+	/**
+	 * Set the attack flag for this entity
+	 */
+	public void setAttacked(boolean attacked) {
+		this.attacked = attacked;
+	}
+
+	/**
+	 * Called every time the entity reaches the point on the given path
+	 */
+	protected void onTargetReached() {
+		followNext();
+	}
+
+	protected void migrate(int x1, int y1, int x2, int y2) {
+		world.getTileState(x1, y1).removeEntity(this);
+		world.getTileState(x2, y2).setEntity(this);
+		world.markOverlayDirty();
+	}
+
+	protected void move(int x, int y) {
+		this.tx = x;
+		this.ty = y;
+
+		sx = (x - this.x) * SPEED;
+		sy = (y - this.y) * SPEED;
+	}
+
 	private void followNext() {
 		if (path != null) {
 			TilePos target = this.path.getNext();
 
 			if (target != null) {
-				move(target.x, target.y, 0.05f);
+				move(target.x, target.y);
 			}else{
 				this.path = null;
 			}
@@ -72,11 +117,11 @@ public abstract class MovingEntity extends Entity {
 		draw(buffers.getEntity());
 	}
 
-	public void draw(VertexBuffer buffer) {
+	protected void draw(VertexBuffer buffer) {
 		this.x += sx;
 		this.y += sy;
 
-		if (Math.abs(this.x - this.tx) < 0.0001f && Math.abs(this.y - this.ty) < 0.0001f) {
+		if (Math.abs(this.x - this.tx) < EPSILON && Math.abs(this.y - this.ty) < EPSILON) {
 			this.sx = 0;
 			this.sy = 0;
 			this.x = this.tx;
@@ -90,25 +135,7 @@ public abstract class MovingEntity extends Entity {
 		this.px = this.tx;
 		this.py = this.ty;
 		this.moved = false;
-	}
-
-	public void onTargetReached() {
-		followNext();
-	}
-
-	public void revert() {
-		migrate(tx, ty, px, py);
-		move(px, py, 0.05f);
-		moved = false;
-		path = null;
-	}
-
-	public boolean hasMoved() {
-		return moved;
-	}
-
-	public void setAttacked(boolean attacked) {
-		moved = attacked;
+		this.attacked = false;
 	}
 
 	@Override
@@ -121,6 +148,9 @@ public abstract class MovingEntity extends Entity {
 		return path != null ? path.getEnd().y : ty;
 	}
 
+	/**
+	 * Draw a selection around this entity into the given buffer
+	 */
 	public void drawSelection(VertexBuffer buffer, Color c) {
 		final int x = getX();
 		final int y = getY();

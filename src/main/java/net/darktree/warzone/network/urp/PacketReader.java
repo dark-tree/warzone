@@ -19,7 +19,7 @@ public class PacketReader {
 
 	public void next() throws IOException {
 		PacketType type = PacketType.decode(stream.read());
-		short size = (short) (stream.read() | (stream.read() >> 8));
+		short size = (short) (stream.read() | (stream.read() << 8));
 
 		apply(type, ByteBuffer.wrap(stream.readNBytes(size)));
 	}
@@ -34,6 +34,7 @@ public class PacketReader {
 		try {
 			Objects.requireNonNull(types.get(type)).call(body);
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 			throw new RuntimeException("No callback for packet type '" + type + "' defined!");
 		}
 	}

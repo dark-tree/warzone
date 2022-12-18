@@ -14,7 +14,15 @@ import java.util.function.Consumer;
  */
 public abstract class Pattern {
 
-	protected abstract void forEachTile(Consumer<TilePos> consumer);
+	public static PatternBuilder create() {
+		return new PatternBuilder();
+	}
+
+	public static Pattern build(int width, int height) {
+		return new AreaPattern(width, height);
+	}
+
+	public abstract TilePos[] getOffsets();
 
 	public List<TilePos> list(World world, int ox, int oy, boolean required) {
 		List<TilePos> tiles = new ArrayList<>();
@@ -29,14 +37,14 @@ public abstract class Pattern {
 	public boolean iterate(World world, int ox, int oy, Consumer<TilePos> consumer) {
 		AtomicBoolean perfect = new AtomicBoolean(true);
 
-		forEachTile(pos -> {
+		for(TilePos pos : getOffsets()) {
 			int x = pos.x + ox;
 			int y = pos.y + oy;
 
 			if (world.isPositionValid(x, y)) {
 				consumer.accept(new TilePos(x, y));
 			} else perfect.set(false);
-		});
+		}
 
 		return perfect.get();
 	}

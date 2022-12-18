@@ -1,6 +1,7 @@
 package net.darktree.warzone.world.tile;
 
 import net.darktree.warzone.util.math.MathHelper;
+import net.querz.nbt.tag.CompoundTag;
 
 public class TilePos {
 
@@ -34,6 +35,14 @@ public class TilePos {
 
 	public TilePos getMiddlePointFrom(int x, int y) {
 		return MathHelper.getMiddlePoint(x, y, this.x, this.y);
+	}
+
+	public CompoundTag toNbt() {
+		CompoundTag nbt = new CompoundTag();
+		nbt.putInt("x", x);
+		nbt.putInt("y", y);
+
+		return nbt;
 	}
 
 }

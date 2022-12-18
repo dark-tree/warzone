@@ -7,8 +7,8 @@ import net.darktree.warzone.event.ClickEvent;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.UnitInteractor;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.pattern.Patterns;
-import net.darktree.warzone.world.tile.TilePos;
+import net.darktree.warzone.world.pattern.ShapeHelper;
+import net.darktree.warzone.world.tile.TileState;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -22,52 +22,41 @@ public class UnitEntity extends MovingEntity {
 		super(world, x, y, Tiles.UNIT);
 	}
 
+	/**
+	 * Set the symbol of this unit,
+	 * this must be called after entity construction, or it will default to CROSS
+	 */
 	public void setSymbol(Symbol symbol) {
 		this.symbol = symbol;
 	}
 
+	/**
+	 * Get the symbol of this unit
+	 */
 	public Symbol getSymbol() {
 		return symbol;
 	}
 
-	@Override
-	public void draw(VertexBuffer buffer) {
-		super.draw(buffer);
-		Renderer.quad(buffer, x, y, 1, 1, armored ? symbol.getArmoredSprite() : symbol.getSprite(), 1, 1, 1, 0);
+	/**
+	 * Check if this unit is in its own country
+	 */
+	public boolean isInHomeland() {
+		return world.canControl(getX(), getY(), symbol);
 	}
 
-	@Override
-	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (symbol == world.getCurrentSymbol()) {
-			PlayScreen.setInteractor(new UnitInteractor(this, world));
-		}
-	}
-
+	/**
+	 * Colonize at the position of this unit
+	 */
 	public void colonize(int dice, boolean war) {
-		int x = getX();
-		int y = getY();
+		ShapeHelper.TargetPredicate target = (world, x, y) -> colonizationCheck(x, y, war, false);
+		ShapeHelper.MidpointPredicate midpoint = (world, direction, tile, pos) -> colonizationCheck(pos.x, pos.y, war, true);
 
-		if (war) {
-			Patterns.SMALL_CROSS.iterate(world, x, y, this::warColonizeTile);
+		ShapeHelper.iterateValid(world, target, midpoint, dice == 2, getX(), getY(), pos -> {
+			world.setTileOwner(pos.x, pos.y, getSymbol());
+		});
 
-			if (dice == 2) {
-				Patterns.STAR_SMALL.iterate(world, x, y, this::warColonizeTile);
-
-				Patterns.STAR_LARGE.iterate(world, x, y, pos -> {
-					TilePos middle = pos.getMiddlePointFrom(x, y);
-
-					if (warColonizeTile(middle)) {
-						warColonizeTile(pos);
-					}
-				});
-			}
-		} else {
-			Patterns.nextColonizationPattern(dice).iterate(world, x, y, pos -> {
-				if (world.getTileState(pos).getOwner() == Symbol.NONE) {
-					world.setTileOwner(pos.x, pos.y, this.symbol);
-				}
-			});
-		}
+		// check for and grant any bonus tiles
+		world.grantBonusTiles(symbol);
 
 		if (dice % 2 != 0) {
 			if (armored) {
@@ -78,25 +67,33 @@ public class UnitEntity extends MovingEntity {
 		}
 	}
 
-	private boolean warColonizeTile(TilePos pos) {
-		Symbol symbol = world.getTileState(pos.x, pos.y).getOwner();
-
-		if (symbol != Symbol.NONE) {
-			Entity entity = world.getEntity(pos);
-
-			if (entity == null || entity instanceof UnitEntity unit && unit.getSymbol() != getSymbol()) {
-				if (symbol != getSymbol()) {
-					world.setTileOwner(pos.x, pos.y, getSymbol());
-				}
-				return true;
-			}
-		}
-
-		return false;
+	private boolean colonizationOwnerCheck(boolean war, boolean midpoint, Symbol symbol, Symbol self) {
+		return midpoint ? (self == symbol) : (war ? symbol != Symbol.NONE : symbol == Symbol.NONE);
 	}
 
-	public boolean isInHomeland() {
-		return world.canControl(getX(), getY(), symbol);
+	private boolean colonizationCheck(int x, int y, boolean war, boolean midpoint) {
+		TileState state = world.getTileState(x, y);
+		Entity entity = world.getEntity(x, y);
+		boolean allowed = !war || entity == null || entity.canColonize(this.symbol);
+		return state.getTile().canColonize(this.symbol) && colonizationOwnerCheck(war, midpoint, state.getOwner(), this.symbol) && allowed;
+	}
+
+	@Override
+	protected void draw(VertexBuffer buffer) {
+		super.draw(buffer);
+		Renderer.quad(buffer, x, y, 1, 1, armored ? symbol.getArmoredSprite() : symbol.getSprite(), 1, 1, 1, 0);
+	}
+
+	@Override
+	public void onInteract(World world, int x, int y, ClickEvent event) {
+		if (symbol == world.getActiveSymbol()) {
+			PlayScreen.setInteractor(new UnitInteractor(this, world));
+		}
+	}
+
+	@Override
+	public boolean canColonize(Symbol enemy) {
+		return enemy == this.symbol;
 	}
 
 	@Override

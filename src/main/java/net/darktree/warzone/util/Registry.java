@@ -5,17 +5,13 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-public class Registry<T> {
+public class Registry<T extends ElementType<T>> {
 
-	private final Consumer<Entry<T>> listener;
 	private final ArrayList<Entry<T>> list = new ArrayList<>();
 	private final Map<String, Entry<T>> registry = new HashMap<>();
 	private final Map<T, Entry<T>> lookup = new IdentityHashMap<>();
-
-	public Registry(@Deprecated Consumer<Entry<T>> listener) {
-		this.listener = listener;
-	}
 
 	public <E extends T> E register(String key, E value) {
 		Entry<T> entry = new Entry<>(list.size(), key, value);
@@ -27,40 +23,68 @@ public class Registry<T> {
 		this.list.add(entry);
 		this.registry.put(key, entry);
 		this.lookup.put(value, entry);
-		this.listener.accept(entry);
+		entry.value.onRegister(key);
 
 		return value;
 	}
 
 	/**
-	 * Query registered element by its key
+	 * Create a map from the registry where keys are the registry values
 	 */
+	public <R> Map<T, R> map(Map<T, R> map, Function<T, R> mapper) {
+		iterate(entry -> map.put(entry, mapper.apply(entry)));
+		return map;
+	}
+
+	/**
+	 * Run the given consumer for all entries in the registry
+	 */
+	public void iterate(Consumer<T> consumer) {
+		list.forEach(entry -> consumer.accept(entry.value));
+	}
+
+	@Deprecated
 	public T getElement(String key) {
 		return this.registry.get(key).value;
 	}
 
-	/**
-	 * Query registered element by its identifier
-	 */
+	@Deprecated
 	public T getElement(int identifier) {
 		return this.list.get(identifier).value;
 	}
 
-	/**
-	 * Get the identifier of an element in this registry
-	 */
+	@Deprecated
 	public int identifierOf(T value) {
-		return this.lookup.get(value).identifier;
+		return this.lookup.get(value).id;
 	}
 
-	/**
-	 * Get the key of an element in this registry
-	 */
+	@Deprecated
 	public String keyOf(T value) {
 		return this.lookup.get(value).key;
 	}
 
-	public record Entry<T>(int identifier, String key, T value) {
+	/**
+	 * Query entry by element's string key
+	 */
+	public Entry<T> byKey(String key) {
+		return this.registry.get(key);
+	}
+
+	/**
+	 * Query entry by element's integer id
+	 */
+	public Entry<T> byId(int index) {
+		return this.list.get(index);
+	}
+
+	/**
+	 * Query entry by element's value
+	 */
+	public Entry<T> byValue(T value) {
+		return this.lookup.get(value);
+	}
+
+	public record Entry<T>(int id, String key, T value) {
 
 	}
 

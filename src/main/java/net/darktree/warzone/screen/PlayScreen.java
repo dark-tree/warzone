@@ -1,7 +1,6 @@
 package net.darktree.warzone.screen;
 
 import net.darktree.warzone.Main;
-import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
@@ -10,18 +9,16 @@ import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.event.ClickEvent;
+import net.darktree.warzone.network.UserGroup;
+import net.darktree.warzone.network.packet.EndTurnPacket;
 import net.darktree.warzone.screen.hotbar.Hotbar;
 import net.darktree.warzone.screen.interactor.Interactor;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.WorldView;
 import net.darktree.warzone.world.entity.Entity;
-import net.querz.nbt.io.NBTUtil;
-import net.querz.nbt.tag.CompoundTag;
+import net.darktree.warzone.world.overlay.MapOverlay;
 import org.lwjgl.glfw.GLFW;
-
-import java.io.IOException;
-import java.util.Scanner;
 
 public class PlayScreen extends Screen {
 
@@ -57,7 +54,7 @@ public class PlayScreen extends Screen {
 
 		WorldHolder.buffers.draw();
 
-		Symbol symbol = world.getCurrentSymbol();
+		Symbol symbol = world.getActiveSymbol();
 
 		// render HUD
 		if (symbol != null) {
@@ -71,8 +68,7 @@ public class PlayScreen extends Screen {
 
 			ScreenRenderer.offset(300, 20);
 			if (ScreenRenderer.button("END", 2, 38, 80, true)) {
-//				Packets.NEXT_TURN_PACKET.send(Main.relay);
-				world.nextPlayerTurn();
+				new EndTurnPacket().broadcast();
 			}
 
 			ScreenRenderer.setSprite(symbol.getSprite());
@@ -84,7 +80,14 @@ public class PlayScreen extends Screen {
 
 		ScreenRenderer.centerAt(-1, 1);
 		ScreenRenderer.setOffset(0, -40);
-		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS", 30);
+
+		String debug = " (" + WorldHolder.world.self.name() + ")";
+
+		if (UserGroup.instance != null) {
+			debug += "\n" + UserGroup.instance.relay.toString();
+		}
+
+		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS" + debug, 30);
 
 	}
 
@@ -96,55 +99,20 @@ public class PlayScreen extends Screen {
 			return;
 		}
 
-		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_S) {
-			CompoundTag tag = new CompoundTag();
-			world.toNbt(tag);
-			try {
-				NBTUtil.write(tag, "./map.dat", true);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_L) {
-			try {
-				World.load((CompoundTag) NBTUtil.read("./map.dat", true).getTag());
-//				Main.relay.createGroup();
-				ScreenStack.closeAll();
-				ScreenStack.open(new PlayScreen(WorldHolder.world));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
 		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
-			world.setOverlay((world, x, y, state) -> {
-				if (state.getOwner() == world.getCurrentSymbol()) {
-					return world.canControl(x, y) ? Colors.OVERLAY_NONE : ((Main.window.profiler.getFrameCount() / 30 % 2 == 0) ? Colors.OVERLAY_NONE : Colors.OVERLAY_FOREIGN);
-				}
-
-				return Colors.OVERLAY_FOREIGN;
-			});
-		}
-
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_J) {
-			Scanner in = new Scanner(System.in);
-			int i = Integer.decode(in.next());
-
-//			Main.relay.joinGroup(i);
+			world.getView().setOverlay(new MapOverlay());
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
 			ScreenStack.open(new BuildScreen(world));
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB) {
-//			Packets.NEXT_TURN_PACKET.send(Main.relay);
-			world.nextPlayerTurn();
+		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB && world.isActiveSymbol()) {
+			new EndTurnPacket().broadcast();
 		}
 
 		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_BACKSPACE) {
-			world.getManager().undo(world.getCurrentSymbol());
+			world.getManager().undo();
 		}
 	}
 

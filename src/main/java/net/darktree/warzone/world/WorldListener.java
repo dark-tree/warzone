@@ -13,7 +13,7 @@ public interface WorldListener {
 	}
 
 	/**
-	 * Called when a turn of 'symbol' player end
+	 * Called when a turn of 'symbol' player ends
 	 */
 	default void onPlayerTurnEnd(Symbol symbol) {
 
@@ -27,7 +27,8 @@ public interface WorldListener {
 	}
 
 	/**
-	 * Turn even dispatcher
+	 * Turn event dispatcher, this method is called for all turn events and
+	 * dispatches them to more specialized callbacks
 	 */
 	default void onPlayerTurnEvent(TurnEvent event, Symbol symbol) {
 		if (event == TurnEvent.TURN_START) onPlayerTurnStart(symbol);

@@ -19,14 +19,14 @@ public class BufferTest {
 			buffer.reserve(4).putFloat(69.0f);
 		}
 
-		ByteBuffer rwbuf = buffer.asByteBuffer();
+		ByteBuffer buf = buffer.asByteBuffer();
 
-		rwbuf.position(0);
+		buf.position(0);
 
 		for( int i = 0; i < 100; i ++ ) {
-			assertEquals(12, rwbuf.get());
-			assertEquals(420, rwbuf.getInt());
-			assertEquals(69.0f, rwbuf.getFloat());
+			assertEquals(12, buf.get());
+			assertEquals(420, buf.getInt());
+			assertEquals(69.0f, buf.getFloat());
 		}
 
 		buffer.close();

@@ -2,7 +2,7 @@ package net.darktree.warzone.world.entity.building;
 
 import net.darktree.warzone.event.ClickEvent;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.ToggleMineAction;
+import net.darktree.warzone.world.action.DeconstructBuildingAction;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 
 public class MineBuilding extends Building {
@@ -16,19 +16,14 @@ public class MineBuilding extends Building {
 	}
 
 	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (event.isPressed()) {
-			world.getManager().apply(new ToggleMineAction(x, y));
+		if (event.isPressed() && world.getActiveSymbol() == world.getTileState(this.tx, this.ty).getOwner()) {
+			world.getManager().apply(new DeconstructBuildingAction(world, getX(), getY()));
 		}
 	}
 
 	@Override
 	public boolean isDeconstructable() {
 		return true;
-	}
-
-	@Override
-	public void deconstruct() {
-		this.world.getManager().apply(new ToggleMineAction(tx, ty));
 	}
 
 }

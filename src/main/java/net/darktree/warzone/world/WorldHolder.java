@@ -14,12 +14,12 @@ public class WorldHolder {
 		}
 
 		WorldHolder.world = world;
-		WorldHolder.buffers = new WorldBuffers(world);
+		WorldHolder.buffers = new WorldBuffers(world.getView());
 	}
 
 	public static void draw() {
 		SoundSystem.tick();
-		world.draw(buffers);
+		world.getView().draw(buffers);
 	}
 
 }
