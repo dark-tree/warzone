@@ -22,7 +22,7 @@ public class MaterialOreTile extends Tile {
 
 	@Override
 	public boolean canStayOn() {
-		return false;
+		return true;
 	}
 
 }

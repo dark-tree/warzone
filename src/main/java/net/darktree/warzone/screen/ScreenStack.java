@@ -1,5 +1,7 @@
 package net.darktree.warzone.screen;
 
+import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
 
@@ -17,6 +19,9 @@ public class ScreenStack {
 			boolean focused = (i == last);
 
 			ScreenRenderer.setFocus(focused);
+			ScreenRenderer.setOffset(0, 0);
+			ScreenRenderer.setAlignment(Alignment.LEFT);
+			ScreenRenderer.setColor(Colors.NONE);
 			stack.get(i).draw(focused);
 			ScreenRenderer.flush();
 		}
