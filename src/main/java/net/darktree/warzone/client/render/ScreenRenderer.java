@@ -22,7 +22,6 @@ public class ScreenRenderer {
 
 	private static final Input INPUT = Window.INSTANCE.input();
 	private static final Map<TextureConvertible, Pipeline> pipelines = new IdentityHashMap<>();
-
 	private static final Pipeline quads = new Pipeline(Buffers.IMMEDIATE.build(), Shaders.GUI, Sprites.ATLAS);
 
 	private static float scale, psx, psy;
@@ -122,30 +121,11 @@ public class ScreenRenderer {
 	/**
 	 * Set output color, used for tinting textures and text coloring
 	 */
-	@Deprecated
-	public static void setColor(float r, float g, float b, float a) {
-		cr = r;
-		cg = g;
-		cb = b;
-		ca = a;
-	}
-
-	/**
-	 * Set output color, used for tinting textures and text coloring
-	 */
 	public static void setColor(Color color) {
 		cr = color.r;
 		cg = color.g;
 		cb = color.b;
 		ca = color.a;
-	}
-
-	/**
-	 * Set output color with no alpha, used for text coloring
-	 * for tinting quads use {@link #setColor(float r, float g, float b, float a)} and set alpha to >0
-	 */
-	public static void setColor(float r, float g, float b) {
-		setColor(r, g, b, 0);
 	}
 
 	/**
@@ -184,6 +164,15 @@ public class ScreenRenderer {
 		Renderer.quad(quads.buffer, x + ox * psx, y + oy * psy, right * psx, top * psy, quadSprite, cr, cg, cb, ca);
 		return isMouseOver(right, top);
 	}
+
+	/**
+	 * Render textured centered box
+	 */
+	public static boolean centeredBox(int width, int height) {
+		ScreenRenderer.offset(-width/2, -height/2);
+		return box(width, height);
+	}
+
 
 	/**
 	 * Render textured box
@@ -272,7 +261,7 @@ public class ScreenRenderer {
 		text(text, size);
 
 		setAlignment(alignment);
-		setColor(0, 0, 0, 0);
+		setColor(Colors.NONE);
 
 		return status;
 	}

@@ -14,4 +14,8 @@ public enum Alignment {
 	public float getOffset(float size) {
 		return -multiplier * size;
 	}
+
+	public float getMultiplier() {
+		return multiplier;
+	}
 }

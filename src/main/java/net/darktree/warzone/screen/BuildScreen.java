@@ -25,7 +25,7 @@ public class BuildScreen extends Screen {
 	}
 
 	private void option(EntryConfig entry, World world) {
-		boolean verify = entry.type.value <= world.getCountry(world.getCurrentSymbol()).getTotalMaterials();
+		boolean enough = entry.type.value <= world.getCountry(world.getCurrentSymbol()).getTotalMaterials();
 
 		if (ScreenRenderer.isMouseOver(400, 100)) {
 			ScreenRenderer.setColor(Colors.BUTTON_HOVER);
@@ -35,7 +35,7 @@ public class BuildScreen extends Screen {
 				ScreenRenderer.setColor(Colors.BUTTON_PRESSED);
 			}
 
-			if (verify && Main.window.input().hasClicked()) {
+			if (enough && Main.window.input().hasClicked()) {
 				PlayScreen.setInteractor(new BuildInteractor(entry.type, world));
 				this.close();
 			}
@@ -45,9 +45,8 @@ public class BuildScreen extends Screen {
 		ScreenRenderer.setSprite(entry.type.sprite);
 		ScreenRenderer.box(100, 100);
 		ScreenRenderer.offset(100, 6);
-		if (!verify) {
-			ScreenRenderer.setColor(Colors.SPOT_INVALID);
-		}
+
+		if (!enough) ScreenRenderer.setColor(Colors.TOO_EXPENSIVE);
 		ScreenRenderer.text(entry.type.value + "m", 30);
 		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.offset(0, 54);
@@ -63,19 +62,7 @@ public class BuildScreen extends Screen {
 	@Override
 	public void draw(boolean focused) {
 
-		ScreenRenderer.centerAt(-1, -1);
-		ScreenRenderer.setSprite(Sprites.NONE);
-		ScreenRenderer.setColor(Colors.SCREEN_SEPARATOR);
-		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
-
-		ScreenRenderer.centerAt(0, 0);
-		ScreenRenderer.setColor(Colors.NONE);
-		ScreenRenderer.setSprite(Sprites.BUILD);
-
-		text(0, 310, "SELECT A BUILDING", Alignment.CENTER);
-		text(0, 270, "PAGE 1/1", Alignment.CENTER);
-		box(-650, -400, 1300, 800);
-
+		drawTitledScreen("SELECT A BUILDING", "PAGE 1/1", Sprites.BUILD, 1300, 800);
 		ScreenRenderer.setOffset(-550, 60);
 
 		for (int i = 0; i < 4 && i < entries.size(); i ++) {

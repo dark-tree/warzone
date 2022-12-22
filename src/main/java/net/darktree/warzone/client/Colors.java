@@ -21,5 +21,6 @@ public class Colors {
 	public static final Color SPOT_INVALID = ATLAS.getColor("spot_invalid");
 	public static final Color ENTITY_SELECTION = ATLAS.getColor("entity_selection");
 	public static final Color SCREEN_SEPARATOR = ATLAS.getColor("screen_separator");
+	public static final Color TOO_EXPENSIVE = ATLAS.getColor("too_expensive");
 
 }
