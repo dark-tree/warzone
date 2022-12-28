@@ -81,6 +81,7 @@ public class Main {
 
 		BuildScreen.register(Tiles.FACTORY, "FACTORY", "ALLOWS YOU TO PRODUCE\nAMMUNITION AND ARMORS\nFOR YOUR UNITS.");
 
+
 		Util.runAsync(() -> {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 

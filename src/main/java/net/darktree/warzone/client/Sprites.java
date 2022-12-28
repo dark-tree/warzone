@@ -25,11 +25,13 @@ public class Sprites {
 	public final static Sprite TOP = getSprite("gui/top.png");
 	public final static Sprite BUILD = getSprite("gui/build_screen.png");
 	public final static Sprite HOTBAR = getSprite("gui/hotbar.png");
-	public final static Sprite BUTTON_LEFT = getSprite("gui/button/left.png");
-	public final static Sprite BUTTON_CENTER = getSprite("gui/button/center.png");
-	public final static Sprite BUTTON_RIGHT = getSprite("gui/button/right.png");
+	public final static Sprite BUTTON_PART_LEFT = getSprite("gui/button/left.png");
+	public final static Sprite BUTTON_PART_CENTER = getSprite("gui/button/center.png");
+	public final static Sprite BUTTON_PART_RIGHT = getSprite("gui/button/right.png");
 	public final static Sprite BUTTON_BUILDING = getSprite("gui/button/building.png");
 	public final static Sprite BUTTON_DEMOLISH = getSprite("gui/button/demolish.png");
+	public final static Sprite BUTTON_LEFT = getSprite("gui/button/arrow_left.png");
+	public final static Sprite BUTTON_RIGHT = getSprite("gui/button/arrow_right.png");
 	public final static Sprite ICON_PLUS = getSprite("gui/button/plus.png");
 	public final static Sprite ICON_MINUS = getSprite("gui/button/minus.png");
 	public final static Sprite FRAME = getSprite("gui/button/frame.png");

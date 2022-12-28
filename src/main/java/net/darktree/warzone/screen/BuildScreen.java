@@ -20,8 +20,12 @@ public class BuildScreen extends Screen {
 	private final World world;
 	private static final List<EntryConfig> entries = new ArrayList<>();
 
+	private int page = 0;
+	private final int pages;
+
 	public BuildScreen(World world) {
 		this.world = world;
+		this.pages = (int) Math.ceil(entries.size() / 4.0f);
 	}
 
 	private void option(EntryConfig entry, World world) {
@@ -56,23 +60,31 @@ public class BuildScreen extends Screen {
 	}
 
 	private void description(String text, int value) {
-		text(-100, 120, text + "\n\nCOST: " + value + "m", Alignment.LEFT);
+		text(-100, 130, text + "\n\nCOST: " + value + "m", Alignment.LEFT);
 	}
 
 	@Override
 	public void draw(boolean focused) {
 
-		drawTitledScreen("SELECT A BUILDING", "PAGE 1/1", Sprites.BUILD, 1300, 800);
-		ScreenRenderer.setOffset(-550, 60);
+		drawTitledScreen("SELECT A BUILDING", "PAGE " + (page + 1) + "/" + pages, Sprites.BUILD, 1300, 800);
+		ScreenRenderer.setOffset(-540, 70);
 
-		for (int i = 0; i < 4 && i < entries.size(); i ++) {
+		final int start = this.page * 4;
+		final int end = Math.min(start + 4, entries.size());
+
+		for (int i = start; i < end; i ++) {
 			option(entries.get(i), world);
 		}
 
-		ScreenRenderer.setOffset(650 - 300, -400 + 100);
-		ScreenRenderer.button("<", 1, 50, 50, false);
-		ScreenRenderer.offset(44, 0);
-		ScreenRenderer.button(">", 1, 50, 50, false);
+		ScreenRenderer.setOffset(650 - 250, -400 + 100);
+		if (ScreenRenderer.button(Sprites.BUTTON_LEFT, 64, 64, page > 0)) {
+			this.page --;
+		}
+
+		ScreenRenderer.offset(70, 0);
+		if (ScreenRenderer.button(Sprites.BUTTON_RIGHT, 64, 64, page < (pages - 1))) {
+			this.page ++;
+		}
 
 	}
 

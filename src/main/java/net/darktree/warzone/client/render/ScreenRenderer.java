@@ -241,16 +241,16 @@ public class ScreenRenderer {
 		int sx = ox;
 		Alignment alignment = currentAlignment;
 
-		setSprite(Sprites.BUTTON_LEFT);
+		setSprite(Sprites.BUTTON_PART_LEFT);
 		box(width, height);
 
 		for (int i = 0; i < count; i ++) {
-			setSprite(Sprites.BUTTON_CENTER);
+			setSprite(Sprites.BUTTON_PART_CENTER);
 			offset(width, 0);
 			box(width, height);
 		}
 
-		setSprite(Sprites.BUTTON_RIGHT);
+		setSprite(Sprites.BUTTON_PART_RIGHT);
 		offset(width, 0);
 		box(width, height);
 
