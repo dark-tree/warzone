@@ -1,6 +1,7 @@
 package net.darktree.warzone.screen;
 
 import net.darktree.warzone.Main;
+import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
@@ -68,6 +69,7 @@ public class PlayScreen extends Screen {
 
 			ScreenRenderer.offset(300, 20);
 			if (ScreenRenderer.button("END", 2, 38, 80, true)) {
+				Sounds.PEN_CLICK.play();
 				new EndTurnPacket().broadcast();
 			}
 

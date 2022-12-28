@@ -1,6 +1,7 @@
 package net.darktree.warzone.screen;
 
 import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
@@ -62,12 +63,14 @@ public class ProduceScreen extends Screen {
 			if (active && ScreenRenderer.button(Sprites.ICON_MINUS, 35, 35, recipe.getQuantity() > 0)) {
 				recipe.undo(country);
 				state.sync();
+				Sounds.DRAW_MARK.play();
 			}
 
 			ScreenRenderer.offset(60, 0);
 			if (active && ScreenRenderer.button(Sprites.ICON_PLUS, 35, 35, state.canProduce() && recipe.canProduce(country))) {
 				recipe.redo(country);
 				state.sync();
+				Sounds.DRAW_MARK.play();
 			}
 
 			ScreenRenderer.pop();

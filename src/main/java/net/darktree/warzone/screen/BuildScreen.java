@@ -2,6 +2,7 @@ package net.darktree.warzone.screen;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
@@ -79,11 +80,13 @@ public class BuildScreen extends Screen {
 		ScreenRenderer.setOffset(650 - 250, -400 + 100);
 		if (ScreenRenderer.button(Sprites.BUTTON_LEFT, 64, 64, page > 0)) {
 			this.page --;
+			Sounds.PAGE.play();
 		}
 
 		ScreenRenderer.offset(70, 0);
 		if (ScreenRenderer.button(Sprites.BUTTON_RIGHT, 64, 64, page < (pages - 1))) {
 			this.page ++;
+			Sounds.PAGE.play();
 		}
 
 	}

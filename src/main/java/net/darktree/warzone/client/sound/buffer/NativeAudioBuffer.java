@@ -1,9 +1,10 @@
-package net.darktree.warzone.client.sound;
+package net.darktree.warzone.client.sound.buffer;
 
+import net.darktree.warzone.client.sound.SoundSystem;
+import net.darktree.warzone.client.sound.source.AudioSource;
+import net.darktree.warzone.client.sound.source.NativeAudioSource;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
-import net.darktree.warzone.world.entity.Entity;
-import net.darktree.warzone.world.tile.TilePos;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.stb.STBVorbis;
 import org.lwjgl.system.MemoryStack;
@@ -12,16 +13,16 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.Objects;
 
-public class AudioBuffer {
+public final class NativeAudioBuffer implements AudioBuffer {
 
 	private int buffer;
 
-	AudioBuffer(String path) {
+	public NativeAudioBuffer(String path) {
 		buffer = AL10.alGenBuffers();
 		load(path);
 	}
 
-	void close() {
+	public void close() {
 		if (buffer != 0) {
 			AL10.alDeleteBuffers(buffer);
 			buffer = 0;
@@ -66,28 +67,22 @@ public class AudioBuffer {
 		return buffer;
 	}
 
+	@Override
 	public AudioSource play() {
-		AudioSource source = SoundSystem.createSource(this);
+		NativeAudioSource source = SoundSystem.createSource(this);
 		source.play();
 
 		return source;
 	}
 
+	@Override
 	public AudioSource play(int x, int y) {
-		AudioSource source = SoundSystem.createSource(this);
+		NativeAudioSource source = SoundSystem.createSource(this);
 		source.setPosition(x, y, 0);
 		source.setAttenuation(true);
 		source.play();
 
 		return source;
-	}
-
-	public AudioSource play(Entity entity) {
-		return play(entity.getX(), entity.getX());
-	}
-
-	public AudioSource play(TilePos pos) {
-		return play(pos.x, pos.y);
 	}
 
 }

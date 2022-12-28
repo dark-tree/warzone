@@ -1,5 +1,7 @@
 package net.darktree.warzone.client.sound;
 
+import net.darktree.warzone.client.sound.buffer.NativeAudioBuffer;
+import net.darktree.warzone.client.sound.source.NativeAudioSource;
 import net.darktree.warzone.util.Logger;
 import org.lwjgl.openal.*;
 
@@ -17,8 +19,8 @@ import java.util.List;
 public class SoundSystem {
 
 	private static long device, context;
-	private static final List<AudioSource> sources = new ArrayList<>();
-	private static final List<AudioBuffer> buffers = new ArrayList<>();
+	private static final List<NativeAudioSource> sources = new ArrayList<>();
+	private static final List<NativeAudioBuffer> buffers = new ArrayList<>();
 	private static boolean ready = false;
 
 	/**
@@ -52,10 +54,10 @@ public class SoundSystem {
 		Logger.info("Shutting down the sound system...");
 		ready = false;
 
-		sources.forEach(AudioSource::close);
+		sources.forEach(NativeAudioSource::close);
 		sources.clear();
 
-		buffers.forEach(AudioBuffer::close);
+		buffers.forEach(NativeAudioBuffer::close);
 		buffers.clear();
 
 		ALC10.alcMakeContextCurrent(0);
@@ -80,8 +82,8 @@ public class SoundSystem {
 	/**
 	 * Load a new audio buffer from file
 	 */
-	public static AudioBuffer createBuffer(String path) {
-		AudioBuffer buffer = new AudioBuffer(path);
+	public static NativeAudioBuffer createBuffer(String path) {
+		NativeAudioBuffer buffer = new NativeAudioBuffer(path);
 		buffers.add(buffer);
 
 		return buffer;
@@ -90,9 +92,8 @@ public class SoundSystem {
 	/**
 	 * Get a new audio source of a particular buffer
 	 */
-	public static AudioSource createSource(AudioBuffer buffer) {
-		AudioSource source = new AudioSource();
-		source.setBuffer(buffer);
+	public static NativeAudioSource createSource(NativeAudioBuffer buffer) {
+		NativeAudioSource source = new NativeAudioSource(buffer);
 
 		sources.add(source);
 
@@ -103,7 +104,7 @@ public class SoundSystem {
 	 * Stop all sounds
 	 */
 	public static void stopAll() {
-		sources.forEach(AudioSource::stop);
+		sources.forEach(NativeAudioSource::stop);
 	}
 
 	/**

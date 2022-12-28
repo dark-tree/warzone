@@ -5,3 +5,4 @@ plastic_stamp.ogg - kermite607 - https://freesound.org/people/kermite607/sounds/
 draw_thing.ogg - 123jorre456 - https://freesound.org/people/123jorre456/sounds/46624/
 draw_path.ogg - 123jorre456 - https://freesound.org/people/123jorre456/sounds/46624/
 equip.ogg - mrickey13 - https://freesound.org/people/mrickey13/sounds/518850/ (remixed)
+page_turn.ogg - flag2 - https://freesound.org/people/flag2/sounds/63318/

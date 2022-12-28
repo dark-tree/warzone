@@ -1,6 +1,7 @@
 package net.darktree.warzone.screen.hotbar;
 
 import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.ScreenRenderer;
@@ -25,11 +26,13 @@ public class HotbarConstruction extends HotbarComponent {
 		ScreenRenderer.offset(417, 52);
 		if (ScreenRenderer.button(Sprites.BUTTON_BUILDING, 66, 66, true) && world.isActiveSymbol()) {
 			ScreenStack.open(new BuildScreen(world));
+			Sounds.PEN_CLICK.play();
 		}
 
 		ScreenRenderer.offset(96, 0);
 		if (ScreenRenderer.button(Sprites.BUTTON_DEMOLISH, 66, 66, true) && world.isActiveSymbol()) {
 			PlayScreen.setInteractor(new DeconstructInteractor(world.getCurrentSymbol(), world));
+			Sounds.PEN_CLICK.play();
 		}
 	}
 

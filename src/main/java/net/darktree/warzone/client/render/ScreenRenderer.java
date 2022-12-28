@@ -1,7 +1,10 @@
 package net.darktree.warzone.client.render;
 
 import net.darktree.warzone.Main;
-import net.darktree.warzone.client.*;
+import net.darktree.warzone.client.Buffers;
+import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.Shaders;
+import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.image.Sprite;
@@ -225,13 +228,7 @@ public class ScreenRenderer {
 			setColor(active ? Colors.BUTTON_DEFAULT : Colors.BUTTON_INACTIVE);
 		}
 
-		boolean clicked = hover && Main.window.input().hasClicked();
-
-		if (clicked) {
-			Sounds.PEN_CLICK.play();
-		}
-
-		return clicked;
+		return hover && Main.window.input().hasClicked();
 	}
 
 	public static boolean button(String text, int count, int size, int height, boolean active) {
