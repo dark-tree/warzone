@@ -5,8 +5,11 @@ import net.darktree.warzone.country.Resource;
 
 public abstract class Storage {
 
+	public static final int LARGE = 100;
+	public static final int SMALL = 10;
+
 	public static Storage simple(Resource resource, Country country) {
-		return new LocalStorage(100);
+		return new LocalStorage(LARGE);
 	}
 
 	public static Storage distributed(Resource resource, Country country) {

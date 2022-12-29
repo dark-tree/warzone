@@ -21,6 +21,7 @@ import java.util.Map;
 public class Country implements NbtSerializable, WorldListener {
 
 	private final List<Building> buildings = new ArrayList<>();
+	private final List<StorageNodeSupplier> storages = new ArrayList<>();
 	public final Symbol symbol;
 	public boolean colonized = false;
 
@@ -32,7 +33,7 @@ public class Country implements NbtSerializable, WorldListener {
 	public Country(Symbol symbol) {
 		this.symbol = symbol;
 		this.resources = Registries.RESOURCES.map(new IdentityHashMap<>(), resource -> resource.createStorage(this));
-		this.local = new StorageNode(Resources.MATERIALS, 10);
+		this.local = new StorageNode(Resources.MATERIALS, Storage.SMALL);
 	}
 
 	@Override
@@ -75,6 +76,10 @@ public class Country implements NbtSerializable, WorldListener {
 		if (building instanceof MineBuilding provider) {
 			this.income -= provider.getIncome();
 		}
+
+		if (building instanceof StorageNodeSupplier storage) {
+			this.storages.remove(storage);
+		}
 	}
 
 	public void addBuilding(Building building) {
@@ -82,6 +87,10 @@ public class Country implements NbtSerializable, WorldListener {
 
 		if (building instanceof MineBuilding provider) {
 			this.income += provider.getIncome();
+		}
+
+		if (building instanceof StorageNodeSupplier storage) {
+			this.storages.add(storage);
 		}
 	}
 
@@ -112,10 +121,8 @@ public class Country implements NbtSerializable, WorldListener {
 			nodes.add(local);
 		}
 
-		for (Building building : buildings) {
-			if (building instanceof StorageNodeSupplier provider) {
-				provider.appendStorageNodes(resource, nodes);
-			}
+		for (StorageNodeSupplier storage : this.storages) {
+			storage.appendStorageNodes(resource, nodes);
 		}
 
 		return nodes;

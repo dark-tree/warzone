@@ -1,6 +1,7 @@
 package net.darktree.warzone.country.storage;
 
 import net.darktree.warzone.country.Resource;
+import net.darktree.warzone.util.BiIterable;
 
 import java.util.List;
 import java.util.function.Function;
@@ -48,7 +49,8 @@ public class DistributedStorage extends Storage {
 
 	@Override
 	public void add(int amount) {
-		for (StorageNode node : getNodes()) {
+		
+		for (StorageNode node : BiIterable.of(getNodes(), amount < 0)) {
 			amount = node.insert(amount);
 
 			if (amount == 0) {

@@ -9,7 +9,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MultiStorageNode implements NbtSerializable, StorageNodeSupplier {
+public class StorageStack implements NbtSerializable, StorageNodeSupplier {
 
 	private final Map<Resource, StorageNode> nodes = new IdentityHashMap<>();
 
