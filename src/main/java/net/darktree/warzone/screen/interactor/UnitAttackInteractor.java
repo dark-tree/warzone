@@ -38,7 +38,7 @@ public class UnitAttackInteractor extends Interactor {
 	}
 
 	private boolean isValid(World world, int tx, int ty) {
-		int ammo = world.getCountry(entity.getSymbol()).getResource(Resources.AMMO).value;
+		int ammo = world.getCountry(entity.getSymbol()).getResource(Resources.AMMO).get();
 		int fx = entity.getX();
 		int fy = entity.getY();
 

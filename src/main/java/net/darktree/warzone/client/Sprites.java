@@ -42,5 +42,7 @@ public class Sprites {
 	public static final Sprite BUILDING_CAPITOL = getSprite("building/capitol.png");
 	public static final Sprite BUILDING_FACTORY = getSprite("building/factory.png");
 	public static final Sprite BUILDING_MINE = getSprite("building/mine.png");
+	public static final Sprite BUILDING_WAREHOUSE = getSprite("building/warehouse.png");
+	public static final Sprite BUILDING_WAREHOUSE_LONG = getSprite("building/warehouse_long.png");
 
 }

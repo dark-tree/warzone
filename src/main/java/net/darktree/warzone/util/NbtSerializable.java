@@ -4,6 +4,6 @@ import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 public interface NbtSerializable {
-	void toNbt(@NotNull CompoundTag tag);
-	void fromNbt(@NotNull CompoundTag tag);
+	void toNbt(@NotNull CompoundTag nbt);
+	void fromNbt(@NotNull CompoundTag nbt);
 }

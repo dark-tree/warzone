@@ -19,6 +19,14 @@ public class MathHelper {
 	}
 
 	/**
+	 * clamp value to range (inclusive)
+	 */
+	public static int clamp(int value, int min, int max) {
+		if (value < min) return min;
+		return Math.min(value, max);
+	}
+
+	/**
 	 * Returns a manhattan distance between two points
 	 */
 	public static int getManhattanDistance(int x1, int y1, int x2, int y2) {

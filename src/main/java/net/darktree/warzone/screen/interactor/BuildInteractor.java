@@ -73,7 +73,7 @@ public class BuildInteractor extends Interactor {
 
 		Color c = valid ? Colors.SPOT_VALID : Colors.SPOT_INVALID;
 
-		Renderer.quad(texture, this.x, this.y, 2, 2, type.sprite, c.r, c.g, c.b, c.a * wave);
+		Renderer.quad(texture, this.x, this.y, type.width, type.height, type.sprite, c.r, c.g, c.b, c.a * wave);
 	}
 
 	@Override

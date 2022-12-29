@@ -26,11 +26,11 @@ public class BuildScreen extends Screen {
 
 	public BuildScreen(World world) {
 		this.world = world;
-		this.pages = (int) Math.ceil(entries.size() / 4.0f);
+		this.pages = (int) Math.ceil(entries.size() / 3.0f);
 	}
 
-	private void option(EntryConfig entry, World world) {
-		boolean enough = entry.type.value <= world.getCountry(world.getCurrentSymbol()).getTotalMaterials();
+	private void option(EntryConfig entry, World world, int materials) {
+		final boolean enough = entry.type.value <= materials;
 
 		if (ScreenRenderer.isMouseOver(400, 100)) {
 			ScreenRenderer.setColor(Colors.BUTTON_HOVER);
@@ -47,7 +47,7 @@ public class BuildScreen extends Screen {
 		}
 
 		ScreenRenderer.setAlignment(Alignment.LEFT);
-		ScreenRenderer.setSprite(entry.type.sprite);
+		ScreenRenderer.setSprite(entry.type.icon);
 		ScreenRenderer.box(100, 100);
 		ScreenRenderer.offset(100, 6);
 
@@ -68,13 +68,18 @@ public class BuildScreen extends Screen {
 	public void draw(boolean focused) {
 
 		drawTitledScreen("SELECT A BUILDING", "PAGE " + (page + 1) + "/" + pages, Sprites.BUILD, 1300, 800);
+
+		final int materials = world.getCountry(world.getCurrentSymbol()).getTotalMaterials();
+		final int start = this.page * 3;
+		final int end = Math.min(start + 3, entries.size());
+
+		ScreenRenderer.offset(100, 100);
+		ScreenRenderer.setAlignment(Alignment.LEFT);
+		ScreenRenderer.text("MATERIALS: " + materials, 30);
 		ScreenRenderer.setOffset(-540, 70);
 
-		final int start = this.page * 4;
-		final int end = Math.min(start + 4, entries.size());
-
 		for (int i = start; i < end; i ++) {
-			option(entries.get(i), world);
+			option(entries.get(i), world, materials);
 		}
 
 		ScreenRenderer.setOffset(650 - 250, -400 + 100);

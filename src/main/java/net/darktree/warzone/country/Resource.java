@@ -1,6 +1,8 @@
 package net.darktree.warzone.country;
 
 import net.darktree.warzone.Registries;
+import net.darktree.warzone.country.storage.Storage;
+import net.darktree.warzone.country.storage.StorageSupplier;
 import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.Registry;
 
@@ -8,10 +10,12 @@ public class Resource extends ElementType<Resource> {
 
 	private final String shortName;
 	private final String longName;
+	private final StorageSupplier storage;
 
-	public Resource(String shortName, String longName) {
+	public Resource(String shortName, String longName, StorageSupplier storage) {
 		this.shortName = shortName;
 		this.longName = longName;
+		this.storage = storage;
 	}
 
 	@Override
@@ -29,6 +33,10 @@ public class Resource extends ElementType<Resource> {
 
 	public Quantified quantify(int quantity) {
 		return new Quantified(this, quantity);
+	}
+
+	public Storage createStorage(Country country) {
+		return storage.get(this, country);
 	}
 
 	public record Quantified(Resource resource, int quantity) {

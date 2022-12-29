@@ -93,17 +93,22 @@ public abstract class Building extends StructureEntity {
 
 		public final int value;
 		public final int width, height;
-		public final Sprite sprite;
+		public final Sprite icon, sprite;
 		public final Pattern pattern;
 
-		public Type(Constructor constructor, int value, int width, int height, Sprite sprite) {
+		public Type(Constructor constructor, int value, int width, int height, Sprite icon, Sprite sprite) {
 			super(constructor);
 
 			this.value = value;
 			this.width = width;
 			this.height = height;
+			this.icon = icon;
 			this.sprite = sprite;
 			this.pattern = Pattern.build(width, height);
+		}
+
+		public Type(Constructor constructor, int value, int width, int height, Sprite sprite) {
+			this(constructor, value, width, height, sprite, sprite);
 		}
 
 	}

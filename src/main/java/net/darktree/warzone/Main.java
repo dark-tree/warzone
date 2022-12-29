@@ -79,8 +79,8 @@ public class Main {
 
 		ScreenStack.open(new PlayScreen(WorldHolder.world));
 
+		BuildScreen.register(Tiles.WAREHOUSE, "WAREHOUSE", "ALLOWS YOU TO STORE\nMORE MATERIALS AND BUILD\nMORE EXPENSIVE BUILDS.");
 		BuildScreen.register(Tiles.FACTORY, "FACTORY", "ALLOWS YOU TO PRODUCE\nAMMUNITION AND ARMORS\nFOR YOUR UNITS.");
-
 
 		Util.runAsync(() -> {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

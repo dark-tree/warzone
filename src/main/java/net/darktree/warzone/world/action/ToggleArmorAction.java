@@ -34,7 +34,7 @@ public final class ToggleArmorAction extends ToggleableAction {
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return entity.isInHomeland() && (entity.armored || world.getCountry(symbol).getResource(Resources.ARMOR).value > 0);
+		return entity.isInHomeland() && (entity.armored || world.getCountry(symbol).getResource(Resources.ARMOR).has(1));
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public final class ToggleArmorAction extends ToggleableAction {
 	}
 
 	private void toggle(Country country) {
-		country.getResource(Resources.ARMOR).value += (entity.armored ? 1 : -1);
+		country.getResource(Resources.ARMOR).add(entity.armored ? 1 : -1);
 		entity.armored = !entity.armored;
 		world.markOverlayDirty();
 	}

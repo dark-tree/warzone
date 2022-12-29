@@ -39,13 +39,13 @@ public final class EntityShotAction extends Action {
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return !source.hasActed() && world.getCountry(symbol).getResource(Resources.AMMO).value > 0;
+		return !source.hasActed() && world.getCountry(symbol).getResource(Resources.AMMO).has(1);
 	}
 
 	@Override
 	protected void redo(Symbol symbol) {
 		killed = !target.armored;
-		world.getCountry(symbol).getResource(Resources.AMMO).value --;
+		world.getCountry(symbol).getResource(Resources.AMMO).dec();
 		source.setAttacked(true);
 
 		if (killed) {
@@ -57,7 +57,7 @@ public final class EntityShotAction extends Action {
 
 	@Override
 	protected void undo(Symbol symbol) {
-		world.getCountry(symbol).getResource(Resources.AMMO).value ++;
+		world.getCountry(symbol).getResource(Resources.AMMO).inc();
 		source.setAttacked(false);
 
 		if (killed) {

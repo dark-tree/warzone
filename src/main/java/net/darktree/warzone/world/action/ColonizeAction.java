@@ -41,7 +41,7 @@ public final class ColonizeAction extends Action implements FinalAction, HostAct
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return (!war || world.getCountry(symbol).getResource(Resources.AMMO).value >= 2) && !world.getCountry(symbol).colonized && !entity.hasMoved() && world.canControl(entity.getX(), entity.getY(), symbol);
+		return (!war || world.getCountry(symbol).getResource(Resources.AMMO).has(2)) && !world.getCountry(symbol).colonized && !entity.hasMoved() && world.canControl(entity.getX(), entity.getY(), symbol);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public final class ColonizeAction extends Action implements FinalAction, HostAct
 		Sounds.DICE_ROLL.play(entity).setVolume(2);
 
 		if (war) {
-			world.getCountry(symbol).getResource(Resources.AMMO).value -= 2;
+			world.getCountry(symbol).getResource(Resources.AMMO).take(2);
 		}
 	}
 

@@ -1,9 +1,11 @@
 package net.darktree.warzone.country;
 
 import net.darktree.warzone.Registries;
+import net.darktree.warzone.country.storage.Storage;
+import net.darktree.warzone.country.storage.StorageNode;
+import net.darktree.warzone.country.storage.StorageNodeSupplier;
 import net.darktree.warzone.event.TurnEvent;
 import net.darktree.warzone.util.NbtSerializable;
-import net.darktree.warzone.util.math.MutableInt;
 import net.darktree.warzone.world.WorldListener;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.entity.building.CapitolBuilding;
@@ -24,25 +26,29 @@ public class Country implements NbtSerializable, WorldListener {
 
 	public int income = 0;
 
-	private final Map<Resource, MutableInt> resources;
+	private final Map<Resource, Storage> resources;
+	private final StorageNode local;
 
 	public Country(Symbol symbol) {
 		this.symbol = symbol;
-		this.resources = Registries.RESOURCES.map(new IdentityHashMap<>(), resource -> new MutableInt(0));
+		this.resources = Registries.RESOURCES.map(new IdentityHashMap<>(), resource -> resource.createStorage(this));
+		this.local = new StorageNode(Resources.MATERIALS, 10);
 	}
 
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		tag.putByte("symbol", (byte) symbol.ordinal());
+		local.toNbt(tag);
 		resources.forEach((resource, entry) -> {
-			tag.putInt(resource.key(), entry.value);
+			if (entry.serialize()) tag.putInt(resource.key(), entry.get());
 		});
 	}
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
+		local.fromNbt(tag);
 		resources.forEach((resource, entry) -> {
-			entry.value = tag.getInt(resource.key());
+			if (entry.serialize()) entry.set(tag.getInt(resource.key()));
 		});
 	}
 
@@ -56,11 +62,11 @@ public class Country implements NbtSerializable, WorldListener {
 
 	@Deprecated
 	public int getTotalMaterials() {
-		return resources.get(Resources.MATERIALS).value;
+		return resources.get(Resources.MATERIALS).get();
 	}
 
 	public void addMaterials(int amount) {
-		resources.get(Resources.MATERIALS).value += amount;
+		resources.get(Resources.MATERIALS).add(amount);
 	}
 
 	public void removeBuilding(Building building) {
@@ -83,21 +89,40 @@ public class Country implements NbtSerializable, WorldListener {
 		return buildings.stream().filter(building -> building instanceof CapitolBuilding).findAny().orElse(null);
 	}
 
-	public MutableInt getResource(Resource resource) {
+	public Storage getResource(Resource resource) {
 		return resources.get(resource);
 	}
 
 	public void addResource(Resource.Quantified resource) {
-		getResource(resource.resource()).addNonNegative(resource.quantity());
+		getResource(resource.resource()).add(resource.quantity());
 	}
 
 	public boolean hasResource(Resource.Quantified resource) {
-		return getResource(resource.resource()).value >= resource.quantity();
+		return getResource(resource.resource()).has(resource.quantity());
 	}
 
-	// TODO make better
 	public void removeResource(Resource.Quantified resource) {
 		addResource(resource.negate());
+	}
+
+	public List<StorageNode> getStorageNodes(Resource resource) {
+		List<StorageNode> nodes = new ArrayList<>();
+
+		if (resource == Resources.MATERIALS) {
+			nodes.add(local);
+		}
+
+		for (Building building : buildings) {
+			if (building instanceof StorageNodeSupplier provider) {
+				provider.appendStorageNodes(resource, nodes);
+			}
+		}
+
+		return nodes;
+	}
+
+	public int getLocalMaterials() {
+		return local.amount();
 	}
 
 }

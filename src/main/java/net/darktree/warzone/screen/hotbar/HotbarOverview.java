@@ -16,7 +16,7 @@ public class HotbarOverview extends HotbarComponent {
 	private static final List<ResourceRenderer> labels = new ArrayList<>();
 
 	public static void registerResourceLabel(String label, Resource resource) {
-		labels.add(country -> ScreenRenderer.text(label + country.getResource(resource).value, 30));
+		labels.add(country -> ScreenRenderer.text(label + country.getResource(resource).get(), 30));
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class HotbarOverview extends HotbarComponent {
 
 		ScreenRenderer.offset(130, 16);
 		ScreenRenderer.setAlignment(Alignment.CENTER);
-		ScreenRenderer.text(country.getTotalMaterials() + "", 38);
+		ScreenRenderer.text(country.getLocalMaterials() + "", 38);
 
 		ScreenRenderer.offset(90, 0);
 		ScreenRenderer.setAlignment(Alignment.LEFT);

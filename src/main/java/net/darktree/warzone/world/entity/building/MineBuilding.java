@@ -21,9 +21,4 @@ public class MineBuilding extends Building {
 		}
 	}
 
-	@Override
-	public boolean isDeconstructable() {
-		return true;
-	}
-
 }
