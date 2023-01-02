@@ -65,6 +65,13 @@ public class ScreenRenderer {
 	}
 
 	/**
+	 * Get the size of the offset stack
+	 */
+	public static int getStackSize() {
+		return offsets.size();
+	}
+
+	/**
 	 * Save the current offset onto a stack
 	 */
 	public static void push() {

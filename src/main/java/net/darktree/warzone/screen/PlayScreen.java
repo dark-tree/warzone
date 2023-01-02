@@ -95,6 +95,7 @@ public class PlayScreen extends Screen {
 
 	@Override
 	public void onKey(int key, int action, int mods) {
+		super.onKey(key, action, mods);
 
 		if (interactor != null) {
 			interactor.onKey(key, action, mods);
@@ -120,7 +121,6 @@ public class PlayScreen extends Screen {
 
 	@Override
 	public void onClick(int button, int action, int mods) {
-
 		if (!isMapFocused || button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
 			return;
 		}
@@ -151,6 +151,11 @@ public class PlayScreen extends Screen {
 
 			}
 		}
+	}
+
+	@Override
+	public boolean closeOnEscape() {
+		return false;
 	}
 
 	@Override

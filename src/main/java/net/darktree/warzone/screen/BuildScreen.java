@@ -11,7 +11,6 @@ import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.screen.interactor.BuildInteractor;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.building.Building;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,13 +93,6 @@ public class BuildScreen extends Screen {
 			Sounds.PAGE.play();
 		}
 
-	}
-
-	@Override
-	public void onKey(int key, int action, int mods) {
-		if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS) {
-			this.close();
-		}
 	}
 
 	public static void register(Building.Type type, String name, String description) {

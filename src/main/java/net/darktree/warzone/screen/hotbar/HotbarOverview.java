@@ -43,7 +43,7 @@ public class HotbarOverview extends HotbarComponent {
 		ScreenRenderer.setSprite(symbol.getSprite());
 		ScreenRenderer.box(80, 80);
 
-		ScreenRenderer.offset(130, 16);
+		ScreenRenderer.offset(127, 16);
 		ScreenRenderer.setAlignment(Alignment.CENTER);
 		ScreenRenderer.text(country.getLocalMaterials() + "", 38);
 

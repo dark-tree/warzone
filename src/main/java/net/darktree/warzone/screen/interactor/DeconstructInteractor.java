@@ -48,6 +48,7 @@ public class DeconstructInteractor extends Interactor {
 		}
 	}
 
+	// FIXME: this thing is buggy and half broken
 	@Override
 	public void onClick(int button, int action, int mods, int x, int y) {
 		if (this.x == x && this.y == y) {

@@ -4,6 +4,7 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.util.Logger;
 
 import java.util.Stack;
 import java.util.function.Consumer;
@@ -17,13 +18,20 @@ public class ScreenStack {
 
 		for (int i = 0; i < stack.size(); i ++) {
 			boolean focused = (i == last);
+			Screen screen = stack.get(i);
 
 			ScreenRenderer.setFocus(focused);
 			ScreenRenderer.setOffset(0, 0);
 			ScreenRenderer.setAlignment(Alignment.LEFT);
 			ScreenRenderer.setColor(Colors.NONE);
-			stack.get(i).draw(focused);
+			screen.draw(focused);
 			ScreenRenderer.flush();
+
+			// useful for catching stupid mistakes
+			if (ScreenRenderer.getStackSize() != 0) {
+				Logger.fatal("Unmatched push() call detected, stack size: ", ScreenRenderer.getStackSize(), ", but expected: 0! Offending screen class: ", screen.getClass().getSimpleName(), ".");
+				throw new RuntimeException("Invalid ScreenRenderer state!");
+			}
 		}
 
 		stack.removeIf(Screen::isClosed);

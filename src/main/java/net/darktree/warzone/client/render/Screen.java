@@ -5,6 +5,9 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.image.Sprite;
+import org.lwjgl.glfw.GLFW;
+
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 public abstract class Screen {
 
@@ -46,8 +49,15 @@ public abstract class Screen {
 
 	public abstract void draw(boolean focused);
 
+	@OverridingMethodsMustInvokeSuper
 	public void onKey(int key, int action, int mods) {
+		if (closeOnEscape() && key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS) {
+			this.close();
+		}
+	}
 
+	public boolean closeOnEscape() {
+		return true;
 	}
 
 	public void onClick(int button, int action, int mods) {

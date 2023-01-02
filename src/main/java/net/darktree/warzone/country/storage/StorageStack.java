@@ -17,6 +17,10 @@ public class StorageStack implements NbtSerializable, StorageNodeSupplier {
 		nodes.put(resource, new StorageNode(resource, limit));
 	}
 
+	public StorageNode getResource(Resource resource) {
+		return nodes.get(resource);
+	}
+
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		nodes.values().forEach(node -> node.toNbt(tag));
@@ -29,7 +33,7 @@ public class StorageStack implements NbtSerializable, StorageNodeSupplier {
 
 	@Override
 	public void appendStorageNodes(Resource resource, List<StorageNode> list) {
-		final StorageNode node = nodes.get(resource);
+		final StorageNode node = getResource(resource);
 
 		if (node != null) {
 			list.add(node);

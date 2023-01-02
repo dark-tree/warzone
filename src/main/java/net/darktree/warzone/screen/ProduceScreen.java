@@ -11,7 +11,6 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.building.production.ProductionState;
 import net.darktree.warzone.world.entity.building.production.Recipe;
-import org.lwjgl.glfw.GLFW;
 
 public class ProduceScreen extends Screen {
 
@@ -88,12 +87,4 @@ public class ProduceScreen extends Screen {
 
 	}
 
-	@Override
-	public void onKey(int key, int action, int mods) {
-		super.onKey(key, action, mods);
-
-		if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS) {
-			this.close();
-		}
-	}
 }

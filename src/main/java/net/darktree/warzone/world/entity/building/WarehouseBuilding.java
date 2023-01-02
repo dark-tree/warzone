@@ -6,6 +6,9 @@ import net.darktree.warzone.country.storage.Storage;
 import net.darktree.warzone.country.storage.StorageNode;
 import net.darktree.warzone.country.storage.StorageNodeSupplier;
 import net.darktree.warzone.country.storage.StorageStack;
+import net.darktree.warzone.event.ClickEvent;
+import net.darktree.warzone.screen.ScreenStack;
+import net.darktree.warzone.screen.WarehouseScreen;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
@@ -20,6 +23,13 @@ public class WarehouseBuilding extends Building implements StorageNodeSupplier {
 	public WarehouseBuilding(World world, int x, int y) {
 		super(world, x, y, Tiles.WAREHOUSE);
 		storage.addResourceNode(Resources.MATERIALS, Storage.LARGE);
+	}
+
+	@Override
+	public void onInteract(World world, int x, int y, ClickEvent event) {
+		if (event.isPressed()) {
+			ScreenStack.open(new WarehouseScreen(storage));
+		}
 	}
 
 	@Override
