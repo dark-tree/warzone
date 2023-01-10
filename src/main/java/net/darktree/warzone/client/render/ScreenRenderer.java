@@ -239,6 +239,7 @@ public class ScreenRenderer {
 	}
 
 	public static boolean button(String text, int count, int size, int height, boolean active) {
+		push();
 		int width = height / 2;
 		boolean status = button(width * (count + 2), height, active);
 
@@ -266,6 +267,7 @@ public class ScreenRenderer {
 
 		setAlignment(alignment);
 		setColor(Colors.NONE);
+		pop();
 
 		return status;
 	}

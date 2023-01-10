@@ -2,10 +2,10 @@ package net.darktree.warzone.world.entity.building;
 
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Resources;
+import net.darktree.warzone.country.storage.LimitedStorageStack;
 import net.darktree.warzone.country.storage.Storage;
 import net.darktree.warzone.country.storage.StorageNode;
 import net.darktree.warzone.country.storage.StorageNodeSupplier;
-import net.darktree.warzone.country.storage.StorageStack;
 import net.darktree.warzone.event.ClickEvent;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.screen.WarehouseScreen;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class WarehouseBuilding extends Building implements StorageNodeSupplier {
 
-	private final StorageStack storage = new StorageStack();
+	private final LimitedStorageStack storage = new LimitedStorageStack();
 
 	public WarehouseBuilding(World world, int x, int y) {
 		super(world, x, y, Tiles.WAREHOUSE);

@@ -2,10 +2,7 @@ package net.darktree.warzone.util;
 
 import com.google.common.collect.ImmutableMap;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -78,6 +75,15 @@ public class Util {
 				timeout
 		);
 		return timer;
+	}
+
+	/**
+	 * Convert the given registry into a list
+	 */
+	public static <T extends ElementType<T>> List<T> registryAsList(Registry<T> registry) {
+		List<T> list = new ArrayList<>();
+		registry.iterate(list::add);
+		return list;
 	}
 
 }

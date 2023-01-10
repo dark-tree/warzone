@@ -24,6 +24,7 @@ public class Sprites {
 
 	public final static Sprite TOP = getSprite("gui/top.png");
 	public final static Sprite BUILD = getSprite("gui/build_screen.png");
+	public final static Sprite POPUP = getSprite("gui/small_popup.png");
 	public final static Sprite HOTBAR = getSprite("gui/hotbar.png");
 	public final static Sprite BUTTON_PART_LEFT = getSprite("gui/button/left.png");
 	public final static Sprite BUTTON_PART_CENTER = getSprite("gui/button/center.png");
@@ -39,10 +40,16 @@ public class Sprites {
 	public final static Sprite ICON_WALL_1 = getSprite("gui/wall.png");
 	public final static Sprite ICON_WALL_2 = getSprite("gui/wall2.png");
 
+	public static final Sprite UPGRADE_DOUBLE = getSprite("gui/icon/upgrade/double.png");
+	public static final Sprite UPGRADE_RECYCLE = getSprite("gui/icon/upgrade/recycle.png");
+	public static final Sprite UPGRADE_LOCAL = getSprite("gui/icon/upgrade/local.png");
+	public static final Sprite UPGRADE_MAPS = getSprite("gui/icon/upgrade/maps.png");
+
 	public static final Sprite BUILDING_CAPITOL = getSprite("building/capitol.png");
 	public static final Sprite BUILDING_FACTORY = getSprite("building/factory.png");
 	public static final Sprite BUILDING_MINE = getSprite("building/mine.png");
 	public static final Sprite BUILDING_WAREHOUSE = getSprite("building/warehouse.png");
 	public static final Sprite BUILDING_WAREHOUSE_LONG = getSprite("building/warehouse_long.png");
+	public static final Sprite BUILDING_PARLIAMENT = getSprite("building/parliament.png");
 
 }

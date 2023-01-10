@@ -78,6 +78,11 @@ public abstract class MovingEntity extends Entity {
 		followNext();
 	}
 
+	/**
+	 * Return the pathfinder range for this entity
+	 */
+	public abstract int getRange();
+
 	protected void migrate(int x1, int y1, int x2, int y2) {
 		world.getTileState(x1, y1).removeEntity(this);
 		world.getTileState(x2, y2).setEntity(this);

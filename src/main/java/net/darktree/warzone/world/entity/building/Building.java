@@ -6,6 +6,7 @@ import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.DeconstructBuildingAction;
 import net.darktree.warzone.world.entity.Entity;
@@ -87,6 +88,10 @@ public abstract class Building extends StructureEntity {
 
 	public Country getOwner() {
 		return world.getCountry(tx, ty);
+	}
+
+	public static int remainder(Country country, int materials) {
+		return (int) Math.floor(materials * country.upgrades.get(Upgrades.RECYCLE));
 	}
 
 	public static class Type extends Entity.Type {

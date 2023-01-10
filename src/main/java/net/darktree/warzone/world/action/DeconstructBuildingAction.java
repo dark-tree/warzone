@@ -17,7 +17,7 @@ public final class DeconstructBuildingAction extends Action {
 		this.x = x;
 		this.y = y;
 		this.building = world.getEntity(x, y, Building.class);
-		this.value = (int) Math.floor(building.getType().value * 0.4f);
+		this.value = Building.remainder(building.getOwner(), building.getType().value);
 	}
 
 	public DeconstructBuildingAction(World world, CompoundTag nbt) {

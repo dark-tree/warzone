@@ -12,6 +12,7 @@ public class Packets {
 	public static final Packet.Type COLONIZE = new Packet.Type(ColonizePacket::new);
 	public static final Packet.Type PRODUCE = new Packet.Type(ProductionSyncPacket::new);
 	public static final Packet.Type WORLD = new Packet.Type(WorldSyncPacket::new);
+	public static final Packet.Type UPGRADE = new Packet.Type(UpgradePacket::new);
 
 	public static void load() {
 		Registries.PACKETS.register("turn", END_TURN);
@@ -21,6 +22,7 @@ public class Packets {
 		Registries.PACKETS.register("colonize", COLONIZE);
 		Registries.PACKETS.register("produce", PRODUCE);
 		Registries.PACKETS.register("world", WORLD);
+		Registries.PACKETS.register("upgrade", UPGRADE);
 	}
 
 }

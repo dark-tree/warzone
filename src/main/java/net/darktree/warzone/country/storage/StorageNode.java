@@ -6,15 +6,13 @@ import net.darktree.warzone.util.math.MathHelper;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public class StorageNode implements NbtSerializable {
+public abstract class StorageNode implements NbtSerializable {
 
 	private final Resource resource;
-	private int limit;
 	private int amount;
 
-	public StorageNode(Resource resource, int limit) {
+	public StorageNode(Resource resource) {
 		this.resource = resource;
-		this.limit = limit;
 		this.amount = 0;
 	}
 
@@ -25,33 +23,28 @@ public class StorageNode implements NbtSerializable {
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
-		amount = MathHelper.clamp(tag.getInt(resource.key()), 0, limit);
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
+		amount = MathHelper.clamp(tag.getInt(resource.key()), 0, limit());
 	}
 
 	public int amount() {
 		return amount;
 	}
 
-	public int limit() {
-		return limit;
-	}
+	public abstract int limit();
 
 	public int insert(int amount) {
 		this.amount += amount;
 		int current = this.amount;
+		int max = limit();
 
 		if (current < 0) {
 			this.amount = 0;
 			return current;
 		}
 
-		if (current > limit) {
-			this.amount = limit;
-			return current - limit;
+		if (current > max) {
+			this.amount = max;
+			return current - max;
 		}
 
 		return 0;

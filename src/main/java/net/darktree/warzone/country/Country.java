@@ -1,15 +1,17 @@
 package net.darktree.warzone.country;
 
 import net.darktree.warzone.Registries;
+import net.darktree.warzone.country.storage.LocalStorageNode;
 import net.darktree.warzone.country.storage.Storage;
 import net.darktree.warzone.country.storage.StorageNode;
 import net.darktree.warzone.country.storage.StorageNodeSupplier;
+import net.darktree.warzone.country.upgrade.UpgradeManager;
+import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.event.TurnEvent;
+import net.darktree.warzone.util.NbtAccess;
 import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.world.WorldListener;
-import net.darktree.warzone.world.entity.building.Building;
-import net.darktree.warzone.world.entity.building.CapitolBuilding;
-import net.darktree.warzone.world.entity.building.MineBuilding;
+import net.darktree.warzone.world.entity.building.*;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,45 +22,57 @@ import java.util.Map;
 
 public class Country implements NbtSerializable, WorldListener {
 
+	public final Symbol symbol;
+	public final UpgradeManager upgrades = new UpgradeManager(this::hasParliament);
 	private final List<Building> buildings = new ArrayList<>();
 	private final List<StorageNodeSupplier> storages = new ArrayList<>();
-	public final Symbol symbol;
-	public boolean colonized = false;
-
-	public int income = 0;
-
 	private final Map<Resource, Storage> resources;
 	private final StorageNode local;
+
+	private int colonizations = 0;
+	private int parliaments = 0;
+	private int income = 0;
 
 	public Country(Symbol symbol) {
 		this.symbol = symbol;
 		this.resources = Registries.RESOURCES.map(new IdentityHashMap<>(), resource -> resource.createStorage(this));
-		this.local = new StorageNode(Resources.MATERIALS, Storage.SMALL);
+		this.local = new LocalStorageNode(Resources.MATERIALS, this);
 	}
 
 	@Override
 	public void toNbt(@NotNull CompoundTag tag) {
 		tag.putByte("symbol", (byte) symbol.ordinal());
-		local.toNbt(tag);
+
+		CompoundTag resourcesTag = NbtAccess.getTag("resources", tag);
 		resources.forEach((resource, entry) -> {
-			if (entry.serialize()) tag.putInt(resource.key(), entry.get());
+			if (entry.serialize()) resourcesTag.putInt(resource.key(), entry.get());
 		});
+
+		local.toNbt(tag);
+		upgrades.toNbt(tag);
 	}
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
-		local.fromNbt(tag);
+		CompoundTag resourcesTag = NbtAccess.getTag("resources", tag);
 		resources.forEach((resource, entry) -> {
-			if (entry.serialize()) entry.set(tag.getInt(resource.key()));
+			if (entry.serialize()) entry.set(resourcesTag.getInt(resource.key()));
 		});
+
+		local.fromNbt(tag);
+		upgrades.fromNbt(tag);
 	}
 
 	@Override
 	public void onPlayerTurnEvent(TurnEvent event, Symbol symbol) {
 		if (symbol == this.symbol && event == TurnEvent.TURN_START) {
-			colonized = false;
+			colonizations = 0;
 			addMaterials(income);
 		}
+	}
+
+	public boolean hasParliament() {
+		return parliaments > 0;
 	}
 
 	@Deprecated
@@ -66,6 +80,7 @@ public class Country implements NbtSerializable, WorldListener {
 		return resources.get(Resources.MATERIALS).get();
 	}
 
+	@Deprecated
 	public void addMaterials(int amount) {
 		resources.get(Resources.MATERIALS).add(amount);
 	}
@@ -73,24 +88,32 @@ public class Country implements NbtSerializable, WorldListener {
 	public void removeBuilding(Building building) {
 		buildings.remove(building);
 
-		if (building instanceof MineBuilding provider) {
-			this.income -= provider.getIncome();
+		if (building instanceof MineBuilding mine) {
+			this.income -= mine.getIncome();
 		}
 
-		if (building instanceof StorageNodeSupplier storage) {
-			this.storages.remove(storage);
+		if (building instanceof WarehouseBuilding warehouse) {
+			this.storages.remove(warehouse);
+		}
+
+		if (building instanceof ParliamentBuilding) {
+			parliaments --;
 		}
 	}
 
 	public void addBuilding(Building building) {
 		buildings.add(building);
 
-		if (building instanceof MineBuilding provider) {
-			this.income += provider.getIncome();
+		if (building instanceof MineBuilding mine) {
+			this.income += mine.getIncome();
 		}
 
-		if (building instanceof StorageNodeSupplier storage) {
-			this.storages.add(storage);
+		if (building instanceof WarehouseBuilding warehouse) {
+			this.storages.add(warehouse);
+		}
+
+		if (building instanceof ParliamentBuilding) {
+			parliaments ++;
 		}
 	}
 
@@ -130,6 +153,18 @@ public class Country implements NbtSerializable, WorldListener {
 
 	public int getLocalMaterials() {
 		return local.amount();
+	}
+
+	public int getIncome() {
+		return income;
+	}
+
+	public boolean canColonize() {
+		return colonizations < upgrades.get(Upgrades.DOUBLE);
+	}
+
+	public void onColonize() {
+		colonizations ++;
 	}
 
 }

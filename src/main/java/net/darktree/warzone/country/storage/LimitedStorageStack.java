@@ -9,12 +9,12 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StorageStack implements NbtSerializable, StorageNodeSupplier {
+public class LimitedStorageStack implements NbtSerializable, StorageNodeSupplier {
 
 	private final Map<Resource, StorageNode> nodes = new IdentityHashMap<>();
 
 	public void addResourceNode(Resource resource, int limit) {
-		nodes.put(resource, new StorageNode(resource, limit));
+		nodes.put(resource, new LimitedStorageNode(resource, limit));
 	}
 
 	public StorageNode getResource(Resource resource) {

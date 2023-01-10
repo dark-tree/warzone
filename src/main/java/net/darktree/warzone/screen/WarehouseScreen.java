@@ -6,14 +6,14 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.country.storage.LimitedStorageStack;
 import net.darktree.warzone.country.storage.StorageNode;
-import net.darktree.warzone.country.storage.StorageStack;
 
 public class WarehouseScreen extends Screen {
 
-	private final StorageStack storage;
+	private final LimitedStorageStack storage;
 
-	public WarehouseScreen(StorageStack storage) {
+	public WarehouseScreen(LimitedStorageStack storage) {
 		this.storage = storage;
 	}
 

@@ -43,24 +43,11 @@ public class Registry<T extends ElementType<T>> {
 		list.forEach(entry -> consumer.accept(entry.value));
 	}
 
-	@Deprecated
-	public T getElement(String key) {
-		return this.registry.get(key).value;
-	}
-
-	@Deprecated
-	public T getElement(int identifier) {
-		return this.list.get(identifier).value;
-	}
-
-	@Deprecated
-	public int identifierOf(T value) {
-		return this.lookup.get(value).id;
-	}
-
-	@Deprecated
-	public String keyOf(T value) {
-		return this.lookup.get(value).key;
+	/**
+	 * Get the number of entries in this registry
+	 */
+	public int count() {
+		return lookup.size();
 	}
 
 	/**

@@ -49,7 +49,7 @@ public class HotbarOverview extends HotbarComponent {
 
 		ScreenRenderer.offset(90, 0);
 		ScreenRenderer.setAlignment(Alignment.LEFT);
-		ScreenRenderer.text(country.income + "", 40);
+		ScreenRenderer.text(country.getIncome() + "", 40);
 	}
 
 }

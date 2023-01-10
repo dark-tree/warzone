@@ -25,7 +25,7 @@ public class PathFinderConfig {
 	 * @param owner the owner of the tile this unit stands on
 	 */
 	public static PathFinderConfig getForUnitAt(UnitEntity unit, Symbol owner) {
-		return new PathFinderConfig(5, Surface.LAND, SearchBoundary.getForUnitAt(unit.armored, owner));
+		return new PathFinderConfig(unit.getRange(), Surface.LAND, SearchBoundary.getForUnitAt(unit.armored, owner));
 	}
 
 }

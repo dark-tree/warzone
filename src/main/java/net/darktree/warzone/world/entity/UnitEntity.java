@@ -3,6 +3,7 @@ package net.darktree.warzone.world.entity;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.event.ClickEvent;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.UnitInteractor;
@@ -76,6 +77,11 @@ public class UnitEntity extends MovingEntity {
 		Entity entity = world.getEntity(x, y);
 		boolean allowed = !war || entity == null || entity.canColonize(this.symbol);
 		return state.getTile().canColonize(this.symbol) && colonizationOwnerCheck(war, midpoint, state.getOwner(), this.symbol) && allowed;
+	}
+
+	@Override
+	public int getRange() {
+		return world.getCountry(symbol).upgrades.get(Upgrades.MAPS);
 	}
 
 	@Override

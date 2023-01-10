@@ -1,6 +1,7 @@
 package net.darktree.warzone;
 
 import net.darktree.warzone.country.Resource;
+import net.darktree.warzone.country.upgrade.Upgrade;
 import net.darktree.warzone.network.Packet;
 import net.darktree.warzone.util.Registry;
 import net.darktree.warzone.world.action.manager.Action;
@@ -15,4 +16,5 @@ public class Registries {
 	public static final Registry<Action.Type> ACTIONS = new Registry<>();
 	public static final Registry<Recipe.Type> RECIPES = new Registry<>();
 	public static final Registry<Resource> RESOURCES = new Registry<>();
+	public static final Registry<Upgrade<?>> UPGRADES = new Registry<>();
 }

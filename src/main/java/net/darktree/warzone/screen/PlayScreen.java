@@ -154,8 +154,8 @@ public class PlayScreen extends Screen {
 	}
 
 	@Override
-	public boolean closeOnEscape() {
-		return false;
+	public void onEscape() {
+		// override as the default behaviour is to close the screen
 	}
 
 	@Override

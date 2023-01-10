@@ -7,6 +7,9 @@ import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.country.upgrade.Upgrade;
+import net.darktree.warzone.country.upgrade.UpgradeManager;
+import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.screen.BuildScreen;
@@ -64,6 +67,7 @@ public class Main {
 		// FIXME let's not
 		Util.load(Sounds.class);
 		Util.load(Actions.class);
+		Util.load(Upgrades.class);
 		Util.load(net.darktree.warzone.country.Resources.class);
 
 		// Set the clear color, evil blue from LT3D (patent pending)
@@ -81,6 +85,7 @@ public class Main {
 
 		BuildScreen.register(Tiles.WAREHOUSE, "WAREHOUSE", "ALLOWS YOU TO STORE\nMORE MATERIALS AND BUILD\nMORE EXPENSIVE BUILDS.");
 		BuildScreen.register(Tiles.FACTORY, "FACTORY", "ALLOWS YOU TO PRODUCE\nAMMUNITION AND ARMORS\nFOR YOUR UNITS.");
+		BuildScreen.register(Tiles.PARLIAMENT, "PARLIAMENT", "ALLOWS YOU TO PURCHASE\nAND USE UPGRADES.");
 
 		Util.runAsync(() -> {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -193,6 +198,7 @@ public class Main {
 				WorldHolder.world.toNbt(tag);
 				try {
 					NBTUtil.write(tag, line.split(" ")[1], true);
+					Logger.info("Saved!");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -206,6 +212,26 @@ public class Main {
 			Main.runSynced(() -> {
 				Resource.Quantified resource = Registries.RESOURCES.byKey(parts[1]).value().quantify(count);
 				WorldHolder.world.getCountry(WorldHolder.world.getCurrentSymbol()).addResource(resource);
+				Logger.info("Done!");
+			});
+		}
+
+		if (line.startsWith("upgrade ")) {
+			String[] parts = line.split(" ");
+
+			Main.runSynced(() -> {
+				Upgrade<?> upgrade = Registries.UPGRADES.byKey(parts[1]).value();
+				WorldHolder.world.getCountry(WorldHolder.world.getCurrentSymbol()).upgrades.grant(upgrade);
+				Logger.info("Done!");
+			});
+		}
+
+		if (line.startsWith("uplist")) {
+			Main.runSynced(() -> {
+				UpgradeManager upgrades = WorldHolder.world.getCountry(WorldHolder.world.getCurrentSymbol()).upgrades;
+				Registries.UPGRADES.iterate(upgrade -> {
+					Logger.info("Upgrade '", upgrade.key(), "', enabled: ", upgrades.isEnabled(upgrade));
+				});
 			});
 		}
 

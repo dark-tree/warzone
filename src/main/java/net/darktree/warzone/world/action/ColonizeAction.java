@@ -1,6 +1,7 @@
 package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.client.Sounds;
+import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
@@ -41,12 +42,13 @@ public final class ColonizeAction extends Action implements FinalAction, HostAct
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		return (!war || world.getCountry(symbol).getResource(Resources.AMMO).has(2)) && !world.getCountry(symbol).colonized && !entity.hasMoved() && world.canControl(entity.getX(), entity.getY(), symbol);
+		final Country country = world.getCountry(symbol);
+		return (!war || country.getResource(Resources.AMMO).has(2)) && country.canColonize() && !entity.hasMoved() && world.canControl(entity.getX(), entity.getY(), symbol);
 	}
 
 	@Override
 	protected void redo(Symbol symbol) {
-		world.getCountry(symbol).colonized = true;
+		world.getCountry(symbol).onColonize();
 		entity.colonize(dice, this.war);
 		Sounds.DICE_ROLL.play(entity).setVolume(2);
 

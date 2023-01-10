@@ -51,13 +51,13 @@ public abstract class Screen {
 
 	@OverridingMethodsMustInvokeSuper
 	public void onKey(int key, int action, int mods) {
-		if (closeOnEscape() && key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS) {
-			this.close();
+		if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS) {
+			onEscape();
 		}
 	}
 
-	public boolean closeOnEscape() {
-		return true;
+	public void onEscape() {
+		this.close();
 	}
 
 	public void onClick(int button, int action, int mods) {
