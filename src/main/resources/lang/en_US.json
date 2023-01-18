@@ -1,0 +1,76 @@
+{
+	"gui": {
+		"yes": "YES",
+		"no": "NO",
+		"end": "END",
+		"cost": "%s\n\nCOST: %s",
+		"page": "PAGE %s/%s",
+		"materials": "MATERIALS: %s",
+		"produce": {
+			"title": "SELECT A RESOURCE TO PRODUCE IN THIS FACTORY",
+			"capacity": "CAPACITY: %s",
+			"resource": "RESOURCE",
+			"cost": "COST",
+			"quantity": "QUANTITY"
+		},
+		"build": {
+			"title": "SELECT A BUILDING"
+		},
+		"parliament": {
+			"title": "PARLIAMENTARY UPGRADES",
+			"enabled": "ENABLED",
+			"disabled":  "DISABLED",
+			"confirm.title": "ARE YOU SURE?",
+			"confirm.buy": "[BUY %s?]"
+		},
+		"warehouse": {
+			"title": "WAREHOUSE REPORT",
+			"resource": "RESOURCE",
+			"quantity": "QUANTITY",
+			"capacity": "CAPACITY"
+		},
+		"hotbar": {
+			"construction": "CONSTRUCTION"
+		}
+	},
+
+	"resource": {
+		"material": "MATERIALS",
+		"armor": "ARMOR",
+		"ammo": "AMMO"
+	},
+
+	"upgrade": {
+		"double": {
+			"name": "COLONIZE TWICE",
+			"description": "*TODO*"
+		},
+		"recycle": {
+			"name": "RECYCLING",
+			"description": "*TODO*"
+		},
+		"local": {
+			"name": "EXPANDED STORAGE",
+			"description": "*TODO*"
+		},
+		"maps": {
+			"name": "TACTICAL MAPS",
+			"description": "*TODO*"
+		}
+	},
+
+	"building": {
+		"warehouse": {
+			"name": "WAREHOUSE",
+			"description": "ALLOWS YOU TO STORE\nMORE MATERIALS AND BUILD\nMORE EXPENSIVE BUILDS."
+		},
+		"factory": {
+			"name": "FACTORY",
+			"description": "ALLOWS YOU TO PRODUCE\nAMMUNITION AND ARMORS\nFOR YOUR UNITS."
+		},
+		"parliament": {
+			"name": "PARLIAMENT",
+			"description": "ALLOWS YOU TO PURCHASE\nAND USE UPGRADES."
+		}
+	}
+}

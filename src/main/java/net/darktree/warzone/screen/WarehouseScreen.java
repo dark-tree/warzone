@@ -6,6 +6,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.country.storage.LimitedStorageStack;
 import net.darktree.warzone.country.storage.StorageNode;
 
@@ -13,21 +14,26 @@ public class WarehouseScreen extends Screen {
 
 	private final LimitedStorageStack storage;
 
+	private static final Text TEXT_TITLE = Text.translated("gui.warehouse.title");
+	private static final Text TEXT_RESOURCE = Text.translated("gui.warehouse.resource");
+	private static final Text TEXT_QUANTITY = Text.translated("gui.warehouse.quantity");
+	private static final Text TEXT_CAPACITY = Text.translated("gui.warehouse.capacity");
+
 	public WarehouseScreen(LimitedStorageStack storage) {
 		this.storage = storage;
 	}
 
-	private void drawTableRow(String s1, String s2, String s3) {
-		ScreenRenderer.text(s1, 30);
+	private void drawTableRow(CharSequence a, CharSequence b, CharSequence c) {
+		ScreenRenderer.literalText(30, a.toString());
 		ScreenRenderer.offset(400, 0);
-		ScreenRenderer.text(s2, 30);
+		ScreenRenderer.literalText(30, b.toString());
 		ScreenRenderer.offset(400, 0);
-		ScreenRenderer.text(s3, 30);
+		ScreenRenderer.literalText(30, c.toString());
 	}
 
 	@Override
 	public void draw(boolean focused) {
-		drawTitledScreen("WAREHOUSE REPORT", "PAGE 1/1", Sprites.BUILD, 1300, 800);
+		drawTitledScreen(TEXT_TITLE, TEXT_PAGE.str(1, 1), Sprites.BUILD, 1300, 800);
 
 		ScreenRenderer.setAlignment(Alignment.LEFT);
 		ScreenRenderer.setColor(Colors.BORDER);
@@ -35,7 +41,7 @@ public class WarehouseScreen extends Screen {
 
 		// table heading
 		ScreenRenderer.push();
-		drawTableRow("RESOURCE", "QUANTITY", "CAPACITY");
+		drawTableRow(TEXT_RESOURCE, TEXT_QUANTITY, TEXT_CAPACITY);
 		ScreenRenderer.pop();
 
 		ScreenRenderer.offset(0, -6);
@@ -51,7 +57,7 @@ public class WarehouseScreen extends Screen {
 
 			ScreenRenderer.offset(0, -40);
 			ScreenRenderer.push();
-			drawTableRow(resource.getLongName(), node.amount() + "", node.limit() + "");
+			drawTableRow(Text.translated(resource.getNameKey()), node.amount() + "", node.limit() + "");
 			ScreenRenderer.pop();
 			ScreenRenderer.offset(0, -6);
 		});

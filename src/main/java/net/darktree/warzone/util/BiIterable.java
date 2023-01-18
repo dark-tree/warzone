@@ -1,5 +1,7 @@
 package net.darktree.warzone.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -60,6 +62,7 @@ public final class BiIterable<T> implements Iterable<T> {
 		return of(list, true);
 	}
 
+	@NotNull
 	@Override
 	public Iterator<T> iterator() {
 		return reversed ? new ReverseIterator<>(list.listIterator(list.size())) : list.iterator();

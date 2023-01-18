@@ -5,7 +5,7 @@ import net.darktree.warzone.world.World;
 
 public abstract class HotbarComponent {
 
-	protected String getName() {
+	protected String getNameKey() {
 		return null;
 	}
 

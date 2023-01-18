@@ -2,6 +2,7 @@ package net.darktree.warzone.screen;
 
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.image.Sprite;
+import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.country.Purchasable;
 import net.darktree.warzone.screen.interactor.BuildInteractor;
 import net.darktree.warzone.world.World;
@@ -14,6 +15,8 @@ public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 
 	private final World world;
 	private static final List<EntryConfig> entries = new ArrayList<>();
+
+	private static final Text TEXT_TITLE = Text.translated("gui.build.title");
 
 	public BuildScreen(World world) {
 		this.world = world;
@@ -37,8 +40,9 @@ public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 		drawElementList(materials);
 	}
 
-	public static void register(Building.Type type, String name, String description) {
-		entries.add(new EntryConfig(type, name, description));
+	public static void register(Building.Type type) {
+		String suffix = "building.";
+		entries.add(new EntryConfig(type, suffix + type.key() + ".name", suffix + type.key() + ".description"));
 	}
 
 	public static class EntryConfig implements Purchasable {
@@ -53,13 +57,13 @@ public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 		}
 
 		@Override
-		public String getName() {
-			return name;
+		public String getNameKey() {
+			return "building." + type.key() + ".name";
 		}
 
 		@Override
-		public String getDescription() {
-			return description;
+		public String getDescriptionKey() {
+			return "building." + type.key() + ".description";
 		}
 
 		@Override

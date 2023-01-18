@@ -78,8 +78,8 @@ public class Recipe {
 			return cost;
 		}
 
-		public String getNameString() {
-			return output[0].resource().getLongName();
+		public String getNameKey() {
+			return output[0].resource().getNameKey();
 		}
 
 		public void forEachInput(Consumer<Resource.Quantified> consumer) {

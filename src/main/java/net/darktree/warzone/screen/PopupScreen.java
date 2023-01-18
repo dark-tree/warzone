@@ -5,10 +5,10 @@ import net.darktree.warzone.client.render.Screen;
 
 public class PopupScreen extends Screen {
 
-	private final String title;
-	private final String message;
+	private final CharSequence title;
+	private final CharSequence message;
 
-	public PopupScreen(String title, String message) {
+	public PopupScreen(CharSequence title, CharSequence message) {
 		this.title = title;
 		this.message = message;
 	}

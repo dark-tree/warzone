@@ -4,6 +4,7 @@ import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
+import net.darktree.warzone.client.text.Language;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Symbol;
@@ -42,6 +43,7 @@ import static org.lwjgl.opengl.GL32.glClearColor;
 public class Main {
 
 	public static Window window;
+	public static Language lang;
 	private static final List<Runnable> tasks = Collections.synchronizedList(new ArrayList<>());
 
 	/**
@@ -70,6 +72,8 @@ public class Main {
 		Util.load(Upgrades.class);
 		Util.load(net.darktree.warzone.country.Resources.class);
 
+		lang = Language.load("en_US");
+
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
 
@@ -83,9 +87,9 @@ public class Main {
 
 		ScreenStack.open(new PlayScreen(WorldHolder.world));
 
-		BuildScreen.register(Tiles.WAREHOUSE, "WAREHOUSE", "ALLOWS YOU TO STORE\nMORE MATERIALS AND BUILD\nMORE EXPENSIVE BUILDS.");
-		BuildScreen.register(Tiles.FACTORY, "FACTORY", "ALLOWS YOU TO PRODUCE\nAMMUNITION AND ARMORS\nFOR YOUR UNITS.");
-		BuildScreen.register(Tiles.PARLIAMENT, "PARLIAMENT", "ALLOWS YOU TO PURCHASE\nAND USE UPGRADES.");
+		BuildScreen.register(Tiles.WAREHOUSE);
+		BuildScreen.register(Tiles.FACTORY);
+		BuildScreen.register(Tiles.PARLIAMENT);
 
 		Util.runAsync(() -> {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

@@ -5,6 +5,7 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.image.Sprite;
+import net.darktree.warzone.client.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -12,6 +13,10 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 public abstract class Screen {
 
 	private boolean closed;
+
+	public static final Text TEXT_YES = Text.translated("gui.yes");
+	public static final Text TEXT_NO = Text.translated("gui.no");
+	public static final Text TEXT_PAGE = Text.translated("gui.page");
 
 	public Screen() {
 		closed = false;
@@ -21,7 +26,7 @@ public abstract class Screen {
 		ScreenRenderer.push();
 		ScreenRenderer.setOffset(ox, oy);
 		ScreenRenderer.setAlignment(alignment);
-		ScreenRenderer.text(text, 30);
+		ScreenRenderer.literalText(30, text);
 		ScreenRenderer.pop();
 	}
 
@@ -32,7 +37,7 @@ public abstract class Screen {
 		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
 	}
 
-	protected void drawTitledScreen(String title, String subtitle, Sprite sprite, int width, int height) {
+	protected void drawTitledScreen(CharSequence title, CharSequence subtitle, Sprite sprite, int width, int height) {
 		drawBackground();
 		ScreenRenderer.centerAt(0, 0);
 		ScreenRenderer.setColor(Colors.NONE);
@@ -43,8 +48,8 @@ public abstract class Screen {
 		final int y1 = half - 90;
 		final int y2 = y1 - 40;
 
-		text(0, y1, title, Alignment.CENTER);
-		text(0, y2, subtitle, Alignment.CENTER);
+		text(0, y1, title.toString(), Alignment.CENTER);
+		text(0, y2, subtitle.toString(), Alignment.CENTER);
 	}
 
 	public abstract void draw(boolean focused);

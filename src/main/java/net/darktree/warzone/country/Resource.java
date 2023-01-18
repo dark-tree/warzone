@@ -9,12 +9,10 @@ import net.darktree.warzone.util.Registry;
 public class Resource extends ElementType<Resource> {
 
 	private final String shortName;
-	private final String longName;
 	private final StorageSupplier storage;
 
-	public Resource(String shortName, String longName, StorageSupplier storage) {
+	public Resource(String shortName, StorageSupplier storage) {
 		this.shortName = shortName;
-		this.longName = longName;
 		this.storage = storage;
 	}
 
@@ -27,8 +25,8 @@ public class Resource extends ElementType<Resource> {
 		return shortName;
 	}
 
-	public String getLongName() {
-		return longName;
+	public String getNameKey() {
+		return "resource." + key();
 	}
 
 	public Quantified quantify(int quantity) {

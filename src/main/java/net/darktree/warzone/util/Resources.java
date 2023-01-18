@@ -35,7 +35,6 @@ public class Resources {
 			return of;
 		}
 
-		Logger.warn("Failed to locate resource ", path);
 		return null;
 	}
 
@@ -52,24 +51,24 @@ public class Resources {
 		return Files.list(Objects.requireNonNull(location(path)));
 	}
 
-	public static JsonElement json(String path) throws IOException {
+	public static JsonElement json(String path) throws Exception {
 		try {
 			Reader reader = Files.newBufferedReader(Objects.requireNonNull(location(path)));
 			JsonElement element = JsonParser.parseReader(reader);
 			reader.close();
 			return element;
-		}catch (IOException exception) {
+		}catch (Exception exception) {
 			Logger.error("Requested resource '", path, "' could not be found!");
 			throw exception;
 		}
 	}
 
-	public static <T> T json(String path, Class<T> clazz) throws IOException {
+	public static <T> T json(String path, Class<T> clazz) throws Exception {
 		try {
 			Gson gson = new Gson();
 			Reader reader = Files.newBufferedReader(Objects.requireNonNull(location(path)));
 			return gson.fromJson(reader, clazz);
-		}catch (IOException exception) {
+		}catch (Exception exception) {
 			Logger.error("Requested resource '", path, "' could not be found!");
 			throw exception;
 		}

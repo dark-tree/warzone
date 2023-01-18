@@ -9,12 +9,12 @@ public class LabeledResource extends Resource {
 
 	private final String label;
 
-	public LabeledResource(String shortName, String longName, StorageSupplier storage) {
-		this(shortName.toUpperCase(Locale.ROOT), shortName, longName, storage);
+	public LabeledResource(String shortName, StorageSupplier storage) {
+		this(shortName.toUpperCase(Locale.ROOT), shortName, storage);
 	}
 
-	public LabeledResource(String label, String shortName, String longName, StorageSupplier storage) {
-		super(shortName, longName, storage);
+	public LabeledResource(String label, String shortName, StorageSupplier storage) {
+		super(shortName, storage);
 		this.label = label;
 	}
 

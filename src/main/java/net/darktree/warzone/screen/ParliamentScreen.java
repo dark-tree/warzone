@@ -5,6 +5,7 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.upgrade.Upgrade;
 import net.darktree.warzone.network.packet.UpgradePacket;
@@ -18,6 +19,12 @@ public class ParliamentScreen extends ElementListScreen<Upgrade<?>> {
 	private final World world;
 	private final Symbol symbol;
 
+	private final static Text TEXT_ENABLED = Text.translated("gui.parliament.enabled");
+	private final static Text TEXT_DISABLED = Text.translated("gui.parliament.disabled");
+	private final static Text TEXT_TITLE = Text.translated("gui.parliament.title");
+	private final static Text TEXT_CONFIRM = Text.translated("gui.parliament.confirm.title");
+	private final static Text TEXT_BUY = Text.translated("gui.parliament.confirm.buy");
+
 	public ParliamentScreen(World world, Symbol symbol) {
 		this.world = world;
 		this.symbol = symbol;
@@ -30,7 +37,7 @@ public class ParliamentScreen extends ElementListScreen<Upgrade<?>> {
 
 	@Override
 	protected void onElementClicked(Upgrade<?> element) {
-		ScreenStack.open(new ConfirmScreen("ARE YOU SURE?", "[BUY " + element.getName() + "?]", confirmed -> {
+		ScreenStack.open(new ConfirmScreen(TEXT_CONFIRM, TEXT_BUY.str(Text.translated(element.getNameKey())), confirmed -> {
 			if (confirmed) new UpgradePacket(world.getCurrentSymbol(), element).sendToHost();
 		}));
 	}
@@ -50,17 +57,17 @@ public class ParliamentScreen extends ElementListScreen<Upgrade<?>> {
 
 		ScreenRenderer.push();
 		ScreenRenderer.offset(104, 6);
-		ScreenRenderer.text(bought ? "ENABLED" : (self ? element.getCost() + "m" : "DISABLED"), 30);
+		ScreenRenderer.text(30, bought ? TEXT_ENABLED : (self ? element.getCost() + "m" : TEXT_DISABLED));
 
 		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.offset(0, 54);
-		ScreenRenderer.text(element.getName(), 30);
+		ScreenRenderer.translatedText(30, element.getNameKey());
 		ScreenRenderer.pop();
 	}
 
 	@Override
 	public void draw(boolean focused) {
-		drawTitledScreen("PARLIAMENTARY UPGRADES", getPageString(), Sprites.BUILD, 1300, 800);
+		drawTitledScreen(TEXT_TITLE, getPageString(), Sprites.BUILD, 1300, 800);
 		final int materials = world.getCountry(symbol).getTotalMaterials();
 		drawElementList(materials);
 	}

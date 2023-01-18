@@ -3,14 +3,13 @@ package net.darktree.warzone.client.render.color;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 public class ColorAtlas extends HashMap<String, float[]> {
 	public static ColorAtlas load(String path) {
 		try {
 			return Resources.json(path, ColorAtlas.class);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Logger.warn("Unable to load color definitions file!");
 			return new ColorAtlas();
 		}

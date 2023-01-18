@@ -6,7 +6,6 @@ import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
 import org.lwjgl.opengl.GL32;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class Program implements AutoCloseable {
 					.add("shader/" + blob.fragment, GL32.GL_FRAGMENT_SHADER)
 					.link();
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

@@ -6,6 +6,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.render.WorldBuffers;
+import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.country.Symbol;
@@ -24,6 +25,8 @@ import org.lwjgl.glfw.GLFW;
 public class PlayScreen extends Screen {
 
 	private Interactor interactor = null;
+
+	public static final Text TEXT_END = Text.translated("gui.end");
 
 	public static void setInteractor(Interactor interactor) {
 		ScreenStack.asInstance(PlayScreen.class, screen -> screen.interactor = interactor);
@@ -68,7 +71,7 @@ public class PlayScreen extends Screen {
 			}
 
 			ScreenRenderer.offset(300, 20);
-			if (ScreenRenderer.button("END", 2, 38, 80, true)) {
+			if (ScreenRenderer.button(TEXT_END, 2, 38, 80, true)) {
 				Sounds.PEN_CLICK.play();
 				new EndTurnPacket().broadcast();
 			}
@@ -83,14 +86,19 @@ public class PlayScreen extends Screen {
 		ScreenRenderer.centerAt(-1, 1);
 		ScreenRenderer.setOffset(0, -40);
 
-		String debug = " (" + WorldHolder.world.self.name() + ")";
+		// draw debug overlay
+		StringBuilder builder = new StringBuilder();
+		appendDebugInfo(builder);
+		ScreenRenderer.literalText(30, builder.toString());
+	}
+
+	private void appendDebugInfo(StringBuilder builder) {
+		builder.append(Main.window.profiler.getFrameRate()).append(" FPS");
+		builder.append(" (").append(WorldHolder.world.self.name()).append(')');
 
 		if (UserGroup.instance != null) {
-			debug += "\n" + UserGroup.instance.relay.toString();
+			builder.append('\n').append(UserGroup.instance.relay);
 		}
-
-		ScreenRenderer.text(Main.window.profiler.getFrameRate() + " FPS" + debug, 30);
-
 	}
 
 	@Override

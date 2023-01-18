@@ -14,14 +14,12 @@ public class Upgrade <T> extends ElementType<Upgrade<?>> implements Purchasable 
 	private final T disabled;
 	private final T enabled;
 	private final int cost;
-	private final String name;
 	private final Sprite icon;
 
-	public Upgrade(int cost, String name, Sprite icon, T disabled, T enabled) {
+	public Upgrade(int cost, Sprite icon, T disabled, T enabled) {
 		this.cost = cost;
 		this.disabled = disabled;
 		this.enabled = enabled;
-		this.name = name;
 		this.icon = icon;
 	}
 
@@ -35,13 +33,13 @@ public class Upgrade <T> extends ElementType<Upgrade<?>> implements Purchasable 
 	}
 
 	@Override
-	public String getName() {
-		return name;
+	public String getNameKey() {
+		return "upgrade." + key() + ".name";
 	}
 
 	@Override
-	public String getDescription() {
-		return "NOTHING HERE YET!"; // TODO
+	public String getDescriptionKey() {
+		return "upgrade." + key() + ".description";
 	}
 
 	@Override
@@ -54,8 +52,8 @@ public class Upgrade <T> extends ElementType<Upgrade<?>> implements Purchasable 
 		return Registries.UPGRADES;
 	}
 
-	public static UpgradeBuilder create(int cost, String name, Sprite icon) {
-		return new UpgradeBuilder(cost, name, icon);
+	public static UpgradeBuilder create(int cost, Sprite icon) {
+		return new UpgradeBuilder(cost, icon);
 	}
 
 	public boolean buy(Country country) {
