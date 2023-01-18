@@ -41,7 +41,7 @@ public class HotbarConstruction extends HotbarComponent {
 
 		ScreenRenderer.offset(68, 56);
 		ScreenRenderer.setAlignment(Alignment.RIGHT);
-		ScreenRenderer.literalText(50, "<");
+		ScreenRenderer.text(50, "<");
 
 		ScreenRenderer.button(Sprites.FRAME, 58, 58, false);
 		ScreenRenderer.setColor(Colors.NONE);
@@ -62,7 +62,7 @@ public class HotbarConstruction extends HotbarComponent {
 
 		ScreenRenderer.setAlignment(Alignment.LEFT);
 		ScreenRenderer.offset(50, 0);
-		ScreenRenderer.literalText(50, ">");
+		ScreenRenderer.text(50, ">");
 
 		ScreenRenderer.pop();
 	}

@@ -24,11 +24,11 @@ public class WarehouseScreen extends Screen {
 	}
 
 	private void drawTableRow(CharSequence a, CharSequence b, CharSequence c) {
-		ScreenRenderer.literalText(30, a.toString());
+		ScreenRenderer.text(30, a);
 		ScreenRenderer.offset(400, 0);
-		ScreenRenderer.literalText(30, b.toString());
+		ScreenRenderer.text(30, b);
 		ScreenRenderer.offset(400, 0);
-		ScreenRenderer.literalText(30, c.toString());
+		ScreenRenderer.text(30, c);
 	}
 
 	@Override

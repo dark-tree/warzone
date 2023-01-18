@@ -22,11 +22,11 @@ public abstract class Screen {
 		closed = false;
 	}
 
-	protected void text(int ox, int oy, String text, Alignment alignment) {
+	protected void text(int ox, int oy, CharSequence text, Alignment alignment) {
 		ScreenRenderer.push();
 		ScreenRenderer.setOffset(ox, oy);
 		ScreenRenderer.setAlignment(alignment);
-		ScreenRenderer.literalText(30, text);
+		ScreenRenderer.text(30, text);
 		ScreenRenderer.pop();
 	}
 
@@ -48,8 +48,8 @@ public abstract class Screen {
 		final int y1 = half - 90;
 		final int y2 = y1 - 40;
 
-		text(0, y1, title.toString(), Alignment.CENTER);
-		text(0, y2, subtitle.toString(), Alignment.CENTER);
+		text(0, y1, title, Alignment.CENTER);
+		text(0, y2, subtitle, Alignment.CENTER);
 	}
 
 	public abstract void draw(boolean focused);

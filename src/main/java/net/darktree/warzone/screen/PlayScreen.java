@@ -89,7 +89,7 @@ public class PlayScreen extends Screen {
 		// draw debug overlay
 		StringBuilder builder = new StringBuilder();
 		appendDebugInfo(builder);
-		ScreenRenderer.literalText(30, builder.toString());
+		ScreenRenderer.text(30, builder);
 	}
 
 	private void appendDebugInfo(StringBuilder builder) {

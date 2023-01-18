@@ -11,7 +11,6 @@ import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.render.image.TextureConvertible;
 import net.darktree.warzone.client.render.pipeline.Pipeline;
 import net.darktree.warzone.client.render.vertex.Renderer;
-import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.client.window.input.MouseButton;
@@ -203,22 +202,17 @@ public class ScreenRenderer {
 		Renderer.line(quads.buffer, sx, sy, sx + vx * psx, sy + vy * psy, width * scale, cr, cg, cb, ca);
 	}
 
-	@Deprecated
-	public static void text(String text, float size) {
-		Renderer.text(text, currentFont, pipelines.get(currentFont).buffer, x + ox * psx, y + oy * psy, size * psx, size * psy, cr, cg, cb, ca, currentAlignment);
-	}
-
 	public static void translatedText(float size, String value, Object... values) {
-		literalText(size, Main.lang.formatted(value, values));
+		text(size, Main.lang.formatted(value, values));
 	}
 
 	@Deprecated
 	public static void literalText(float size, String value) {
-		text(value, size);
+		text(size, value);
 	}
 
 	public static void text(float size, CharSequence text) {
-		text(text.toString(), size);
+		Renderer.text(text.toString(), currentFont, pipelines.get(currentFont).buffer, x + ox * psx, y + oy * psy, size * psx, size * psy, cr, cg, cb, ca, currentAlignment);
 	}
 
 	public static boolean isMouseOver(int right, int top) {
@@ -250,7 +244,7 @@ public class ScreenRenderer {
 		return hover && Main.window.input().hasClicked();
 	}
 
-	public static boolean button(Text text, int count, int size, int height, boolean active) {
+	public static boolean button(CharSequence text, int count, int size, int height, boolean active) {
 		push();
 		int width = height / 2;
 		boolean status = button(width * (count + 2), height, active);

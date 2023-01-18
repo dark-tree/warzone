@@ -34,6 +34,10 @@
 		}
 	},
 
+	"network": {
+		"error.closed": "CONNECTION CLOSED"
+	},
+
 	"resource": {
 		"material": "MATERIALS",
 		"armor": "ARMOR",
@@ -43,19 +47,19 @@
 	"upgrade": {
 		"double": {
 			"name": "COLONIZE TWICE",
-			"description": "*TODO*"
+			"description": "ALLOWS YOU TO COLONIZE \nTWO TIMES PER TURN."
 		},
 		"recycle": {
 			"name": "RECYCLING",
-			"description": "*TODO*"
+			"description": "ALLOWS YOU TO RECOVER \n60% (FROM 40%) OF THE \nRESOURCES WHEN DEMOLISHING \nA BUILDING."
 		},
 		"local": {
 			"name": "EXPANDED STORAGE",
-			"description": "*TODO*"
+			"description": "EXPANDS THE CAPACITY \nOF LOCAL WAREHOUSE FROM \n10 to 20 MATERIALS."
 		},
 		"maps": {
 			"name": "TACTICAL MAPS",
-			"description": "*TODO*"
+			"description": "GRANTS YOUR UNITS \nAN EXTRA MOVEMENT POINT."
 		}
 	},
 

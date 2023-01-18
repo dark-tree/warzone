@@ -5,6 +5,7 @@ import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.text.Language;
+import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Symbol;
@@ -37,6 +38,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import static org.lwjgl.opengl.GL32.glClearColor;
 
@@ -257,7 +259,7 @@ public class Main {
 			UserGroup.make(parts[1], group -> {
 				WorldHolder.world.manager = new ActionManager.Host(WorldHolder.world);
 			}, reason -> {
-				ScreenStack.open(new PopupScreen("CONNECTION CLOSED", reason));
+				ScreenStack.open(new PopupScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
 				WorldHolder.world.manager = new ActionManager(WorldHolder.world);
 				UserGroup.instance.close();
 				UserGroup.instance = null;
@@ -269,7 +271,7 @@ public class Main {
 			UserGroup.join(parts[1], Integer.parseInt(parts[2]), group -> {
 				WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
 			}, reason -> {
-				ScreenStack.open(new PopupScreen("CONNECTION CLOSED", reason));
+				ScreenStack.open(new PopupScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
 				WorldHolder.world.manager = new ActionManager(WorldHolder.world);
 				UserGroup.instance.close();
 				UserGroup.instance = null;

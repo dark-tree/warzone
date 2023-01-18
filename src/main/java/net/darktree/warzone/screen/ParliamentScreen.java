@@ -53,7 +53,7 @@ public class ParliamentScreen extends ElementListScreen<Upgrade<?>> {
 		ScreenRenderer.setAlignment(Alignment.LEFT);
 		ScreenRenderer.setSprite(element.getIcon());
 		ScreenRenderer.box(100, 100);
-		ScreenRenderer.setColor(enough || !self ? Colors.PRICE_TAG : Colors.TOO_EXPENSIVE);
+		ScreenRenderer.setColor(enough || !self || bought ? Colors.PRICE_TAG : Colors.TOO_EXPENSIVE);
 
 		ScreenRenderer.push();
 		ScreenRenderer.offset(104, 6);
