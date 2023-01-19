@@ -20,6 +20,7 @@ import net.darktree.warzone.screen.PopupScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.screen.interactor.OwnEditInteractor;
 import net.darktree.warzone.screen.interactor.SetEditInteractor;
+import net.darktree.warzone.screen.menu.MainMenuScreen;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
 import net.darktree.warzone.util.Util;
@@ -63,7 +64,7 @@ public class Main {
 
 		long start = System.currentTimeMillis();
 
-		window = Window.init(800, 500, "Game");
+		window = Window.init(800, 500, "Warzone Open Rules | Java Edition");
 
 		Packets.load();
 		SoundSystem.enable();
@@ -87,7 +88,7 @@ public class Main {
 
 		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
 
-		ScreenStack.open(new PlayScreen(WorldHolder.world));
+		ScreenStack.open(new MainMenuScreen());
 
 		BuildScreen.register(Tiles.WAREHOUSE);
 		BuildScreen.register(Tiles.FACTORY);

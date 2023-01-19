@@ -23,5 +23,8 @@ public class Colors {
 	public static final Color SCREEN_SEPARATOR = ATLAS.getColor("screen_separator");
 	public static final Color TOO_EXPENSIVE = ATLAS.getColor("too_expensive");
 	public static final Color PRICE_TAG = ATLAS.getColor("price_tag");
+	public static final Color CARD_SEPARATOR = ATLAS.getColor("card_separator");
+	public static final Color CARD_SEPIA = ATLAS.getColor("card_sepia");
+	public static final Color CARD_BACKGROUND = ATLAS.getColor("card_background");
 
 }

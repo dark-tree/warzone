@@ -70,4 +70,37 @@ public class MathHelper {
 		throw new RuntimeException("The given points are equal!");
 	}
 
+	public static float radians(float deg) {
+		return deg * 0.01745329f;
+	}
+
+	public static int random(int max) {
+		return RANDOM.nextInt(max + 1);
+	}
+
+	public static float randomFloat() {
+		return RANDOM.nextFloat();
+	}
+
+	/**
+	 * Interpolate between value A and B, by the amount delta
+	 */
+	public static float lerp(float a, float b, float delta){
+		return a + delta * (b - a);
+	}
+
+	/**
+	 * Returns the trigonometric sine of an angle in radians.
+	 */
+	public static float sin(float value) {
+		return (float) Math.sin(value);
+	}
+
+	/**
+	 * Returns the trigonometric cosine of an angle in radians.
+	 */
+	public static float cos(float value) {
+		return (float) Math.cos(value);
+	}
+
 }

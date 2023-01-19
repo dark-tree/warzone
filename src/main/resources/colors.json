@@ -14,5 +14,8 @@
   "entity_selection": [0.4, 0.6, 1.0, 1.0],
   "screen_separator": [0.0, 0.0, 0.0, 0.4],
   "too_expensive": [0.7, 0.1, 0.1, 1],
-  "price_tag": [0.3, 0.3, 0.3, 1.0]
+  "price_tag": [0.3, 0.3, 0.3, 1.0],
+  "card_separator": [0.0, 0.0, 0.0, 0.02],
+  "card_sepia": [0.4392157, 0.25882354, 0.078431375, 1.0],
+  "card_background": [0.674, 0.568, 0.517, 1]
 }

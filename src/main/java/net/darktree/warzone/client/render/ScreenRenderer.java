@@ -167,6 +167,10 @@ public class ScreenRenderer {
 		currentAlignment = alignment;
 	}
 
+	public static void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+		Renderer.quad(quads.buffer, x + x1 * psx, y + y1 * psy, x + x2 * psx, y + y2 * psy, x + x3 * psx, y + y3 * psy, x + x4 * psx, y + y4 * psy, quadSprite, cr, cg, cb, ca);
+	}
+
 	/**
 	 * Render textured box
 	 */

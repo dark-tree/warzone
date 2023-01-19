@@ -36,6 +36,8 @@ public class Sprites {
 	public final static Sprite ICON_PLUS = getSprite("gui/button/plus.png");
 	public final static Sprite ICON_MINUS = getSprite("gui/button/minus.png");
 	public final static Sprite FRAME = getSprite("gui/button/frame.png");
+	public static final Sprite MENU_BAR = getSprite("gui/menu_bar.png");
+	public static final Sprite MENU_BAR_TOP = getSprite("gui/menu_bar_top.png");
 
 	public final static Sprite ICON_WALL_1 = getSprite("gui/wall.png");
 	public final static Sprite ICON_WALL_2 = getSprite("gui/wall2.png");

@@ -20,6 +20,7 @@ public class Window implements AutoCloseable {
 	private static final Map<Integer, String> ERROR_CODES = APIUtil.apiClassTokens((field, value) -> 0x10000 < value && value < 0x20000, null, org.lwjgl.glfw.GLFW.class);
 	private final Input input;
 	private int width, height;
+	private int initialWidth, initialHeight;
 
 	public final FrameCounter profiler;
 	public final long handle;
@@ -46,6 +47,9 @@ public class Window implements AutoCloseable {
 		if (!glfwInit()) {
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
+
+		initialWidth = width;
+		initialHeight = height;
 
 		// window creation hints
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
@@ -128,6 +132,10 @@ public class Window implements AutoCloseable {
 
 	public int height() {
 		return this.height;
+	}
+
+	public float scale() {
+		return Math.min(width / (float) initialWidth, height / (float) initialHeight);
 	}
 
 	public Input input() {

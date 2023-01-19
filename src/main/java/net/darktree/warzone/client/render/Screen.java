@@ -4,6 +4,7 @@ import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -30,15 +31,15 @@ public abstract class Screen {
 		ScreenRenderer.pop();
 	}
 
-	protected void drawBackground() {
+	protected void drawBackground(Color color) {
 		ScreenRenderer.centerAt(-1, -1);
 		ScreenRenderer.setSprite(Sprites.NONE);
-		ScreenRenderer.setColor(Colors.SCREEN_SEPARATOR);
+		ScreenRenderer.setColor(color);
 		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
 	}
 
 	protected void drawTitledScreen(CharSequence title, CharSequence subtitle, Sprite sprite, int width, int height) {
-		drawBackground();
+		drawBackground(Colors.SCREEN_SEPARATOR);
 		ScreenRenderer.centerAt(0, 0);
 		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.setSprite(sprite);
