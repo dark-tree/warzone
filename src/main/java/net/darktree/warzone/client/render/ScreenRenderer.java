@@ -168,7 +168,10 @@ public class ScreenRenderer {
 	}
 
 	public static void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-		Renderer.quad(quads.buffer, x + x1 * psx, y + y1 * psy, x + x2 * psx, y + y2 * psy, x + x3 * psx, y + y3 * psy, x + x4 * psx, y + y4 * psy, quadSprite, cr, cg, cb, ca);
+		float tx = x + ox * psx;
+		float ty = y + oy * psy;
+
+		Renderer.quad(quads.buffer, tx + x1 * psx, ty + y1 * psy, tx + x2 * psx, ty + y2 * psy, tx + x3 * psx, ty + y3 * psy, tx + x4 * psx, ty + y4 * psy, quadSprite, cr, cg, cb, ca);
 	}
 
 	/**

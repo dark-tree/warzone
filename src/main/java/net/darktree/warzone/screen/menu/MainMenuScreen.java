@@ -8,6 +8,7 @@ import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.util.math.Parallax;
 import net.darktree.warzone.world.WorldHolder;
 import org.lwjgl.glfw.GLFW;
 
@@ -16,8 +17,10 @@ import java.util.List;
 
 public class MainMenuScreen extends Screen {
 
+	private final Parallax parallax = new Parallax(Main.window, 0.1f);
 	private final List<DecorCard> cards = new ArrayList<>();
 	private final CardSource source = new CardSource(8);
+	private final int margin = 20;
 
 	public MainMenuScreen() {
 		init();
@@ -31,17 +34,21 @@ public class MainMenuScreen extends Screen {
 		float scale = Main.window.scale();
 		long start = System.currentTimeMillis();
 		cards.clear();
-		fillVisible(2 * Main.window.width(), 2 * Main.window.height(), scale, 8);
+		fillVisible(2 * Main.window.width(), 2 * Main.window.height(), scale, 1, margin);
 		Logger.info("MainMenuScreen took ", System.currentTimeMillis() - start, "ms to open!");
 	}
 
 	@Override
 	public void draw(boolean focused) {
-		int sw = 2* Main.window.width();
-		int sh = 2* Main.window.height();
+		int sw = 2 * Main.window.width();
+		int sh = 2 * Main.window.height();
 
 		int wp = sw / 7;
 		int bw = Math.min((int) (wp * 1.45f), 600);
+
+		parallax.update();
+		int px = (int) (parallax.getX() * margin);
+		int py = (int) (parallax.getY() * margin);
 
 		// if there are some empty spots
 		// this will make them stick out a little less
@@ -49,7 +56,7 @@ public class MainMenuScreen extends Screen {
 
 		for (DecorCard card : cards) {
 			drawBackground(Colors.CARD_SEPARATOR);
-			card.draw();
+			card.draw(px, py);
 		}
 
 		ScreenRenderer.setColor(Colors.NONE);
@@ -86,9 +93,12 @@ public class MainMenuScreen extends Screen {
 		ScreenRenderer.offset(0, -a);
 	}
 
-	void fillVisible(int w, int h, float scale, int spacing) {
-		for (int x = 0; x <= w; x += spacing) {
-			for (int y = 0; y <= h; y += spacing) {
+	void fillVisible(int w, int h, float scale, int spacing, int margin) {
+		int wm = w + margin;
+		int hm = h + margin;
+
+		for (int x = -margin; x <= wm; x += spacing) {
+			for (int y = -margin; y <= hm; y += spacing) {
 				boolean contained = false;
 
 				for (DecorCard card : cards) {
@@ -112,6 +122,11 @@ public class MainMenuScreen extends Screen {
 		if (key == GLFW.GLFW_KEY_R && action == GLFW.GLFW_PRESS) {
 			init();
 		}
+	}
+
+	@Override
+	public void onEscape() {
+		// don't close
 	}
 
 }

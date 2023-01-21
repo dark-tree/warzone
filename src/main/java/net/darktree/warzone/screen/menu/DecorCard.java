@@ -77,8 +77,9 @@ public class DecorCard {
 	/**
 	 * Draw this card in the correct orientation and position
 	 */
-	public void draw() {
+	public void draw(int px, int py) {
 		ScreenRenderer.centerAt(-1, -1);
+		ScreenRenderer.setOffset(px, py);
 		ScreenRenderer.setColor(color);
 		ScreenRenderer.setSprite(sprite);
 		ScreenRenderer.quad(w4.x, w4.y, w1.x, w1.y, w2.x, w2.y, w3.x, w3.y);
