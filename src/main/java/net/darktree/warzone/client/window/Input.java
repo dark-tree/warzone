@@ -52,7 +52,7 @@ public class Input {
 	}
 
 	public void updateScale(int w, int h) {
-		ScreenStack.asFocused(screen -> screen.onResize(w, h));
+		ScreenStack.forEach(screen -> screen.onResize(w, h));
 	}
 
 	public float getMouseScreenX() {

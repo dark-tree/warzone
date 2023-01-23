@@ -5,6 +5,8 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.client.text.Text;
+import net.darktree.warzone.screen.ConfirmScreen;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.util.Logger;
@@ -21,6 +23,8 @@ public class MainMenuScreen extends Screen {
 	private final List<DecorCard> cards = new ArrayList<>();
 	private final CardSource source = new CardSource(8);
 	private final int margin = 20;
+
+	private final static Text TEXT_CONFIRM = Text.translated("gui.menu.main.quit.title");
 
 	public MainMenuScreen() {
 		init();
@@ -47,8 +51,8 @@ public class MainMenuScreen extends Screen {
 		int bw = Math.min((int) (wp * 1.45f), 600);
 
 		parallax.update();
-		int px = (int) (parallax.getX() * margin);
-		int py = (int) (parallax.getY() * margin);
+		int px = (int) ((1 - parallax.getX()) * margin);
+		int py = (int) ((1 - parallax.getY()) * margin);
 
 		// if there are some empty spots
 		// this will make them stick out a little less
@@ -78,8 +82,10 @@ public class MainMenuScreen extends Screen {
 //		ScreenRenderer.button("OPTIONS", 4, 38, 80, true);
 
 		ScreenRenderer.offset(0, -100);
-		if (ScreenRenderer.button("QUIT", 4, 38, 80, true) ){
-			GLFW.glfwSetWindowShouldClose(Main.window.handle, true);
+		if (ScreenRenderer.button("QUIT", 4, 38, 80, true) ) {
+			ScreenStack.open(new ConfirmScreen(TEXT_CONFIRM, Text.EMPTY, (confirmed) -> {
+				if (confirmed) Main.window.quit();
+			}));
 		}
 
 		ScreenRenderer.centerAt(-1, -1);

@@ -185,10 +185,10 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 			assertFrozen(true);
 
 			return new Sprite(
-					(this.minX + 0.001f) / (float) image.width,
-					(this.maxY + 0.999f) / (float) image.height,
-					(this.maxX + 0.999f) / (float) image.width,
-					(this.minY + 0.001f) / (float) image.height
+					(this.minX + 0.5f) / (float) image.width,
+					(this.maxY + 0.5f) / (float) image.height,
+					(this.maxX + 0.5f) / (float) image.width,
+					(this.minY + 0.5f) / (float) image.height
 			);
 		}
 

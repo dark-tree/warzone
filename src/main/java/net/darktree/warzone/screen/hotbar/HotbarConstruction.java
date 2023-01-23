@@ -16,7 +16,7 @@ public class HotbarConstruction extends HotbarComponent {
 
 	@Override
 	public String getNameKey() {
-		return "hotbar.construction";
+		return "gui.hotbar.construction";
 	}
 
 	@Override

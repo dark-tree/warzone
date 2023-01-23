@@ -157,4 +157,8 @@ public class Window implements AutoCloseable {
 		JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 
+	public void quit() {
+		glfwSetWindowShouldClose(handle, true);
+	}
+
 }

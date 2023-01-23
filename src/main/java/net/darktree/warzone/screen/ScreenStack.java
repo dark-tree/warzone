@@ -51,6 +51,10 @@ public class ScreenStack {
 		}
 	}
 
+	public static void forEach(Consumer<Screen> consumer) {
+		stack.forEach(consumer);
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <T extends Screen> void asInstance(Class<T> clazz, Consumer<T> consumer) {
 		for (Screen screen : stack) {

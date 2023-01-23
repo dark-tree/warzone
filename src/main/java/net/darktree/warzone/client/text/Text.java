@@ -6,6 +6,8 @@ package net.darktree.warzone.client.text;
  */
 public abstract class Text implements CharSequence {
 
+	public static final Text EMPTY = Text.literal("");
+
 	@Override
 	public abstract int length();
 	public abstract String str();
