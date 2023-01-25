@@ -1,7 +1,9 @@
 package net.darktree.warzone.util;
 
+import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 
+import java.io.File;
 import java.util.Optional;
 
 public class NbtAccess {
@@ -16,6 +18,14 @@ public class NbtAccess {
 			nbt.put(name, tag);
 			return tag;
 		});
+	}
+
+	public static CompoundTag readFile(File file) {
+		try {
+			return (CompoundTag) NBTUtil.read(file, true).getTag();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }

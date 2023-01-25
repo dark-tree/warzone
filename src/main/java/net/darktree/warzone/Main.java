@@ -4,7 +4,6 @@ import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
-import net.darktree.warzone.client.text.Language;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.country.Resource;
@@ -46,7 +45,8 @@ import static org.lwjgl.opengl.GL32.glClearColor;
 public class Main {
 
 	public static Window window;
-	public static Language lang;
+	public static Game game;
+
 	private static final List<Runnable> tasks = Collections.synchronizedList(new ArrayList<>());
 
 	/**
@@ -75,8 +75,6 @@ public class Main {
 		Util.load(Upgrades.class);
 		Util.load(net.darktree.warzone.country.Resources.class);
 
-		lang = Language.load("en_US");
-
 		// Set the clear color, evil blue from LT3D (patent pending)
 		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
 
@@ -85,6 +83,7 @@ public class Main {
 
 		// load and set font
 		Font scribble = Font.load("scribble");
+		game = new Game();
 
 		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
 
@@ -184,18 +183,6 @@ public class Main {
 				WorldHolder.world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
 				ScreenStack.closeAll();
 				ScreenStack.open(new PlayScreen(WorldHolder.world));
-			});
-		}
-
-		if (line.startsWith("load ")) {
-			Main.runSynced(() -> {
-				try {
-					World.load((CompoundTag) NBTUtil.read(line.split(" ")[1], true).getTag());
-					ScreenStack.closeAll();
-					ScreenStack.open(new PlayScreen(WorldHolder.world));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			});
 		}
 

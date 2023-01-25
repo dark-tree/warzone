@@ -35,25 +35,20 @@ public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 
 	@Override
 	public void draw(boolean focused) {
-		drawTitledScreen("SELECT A BUILDING", getPageString(), Sprites.BUILD, 1300, 800);
+		drawTitledScreen(TEXT_TITLE, getPageString(), Sprites.BUILD, 1300, 800);
 		final int materials = world.getCountry(world.getCurrentSymbol()).getTotalMaterials();
 		drawElementList(materials);
 	}
 
 	public static void register(Building.Type type) {
-		String suffix = "building.";
-		entries.add(new EntryConfig(type, suffix + type.key() + ".name", suffix + type.key() + ".description"));
+		entries.add(new EntryConfig(type));
 	}
 
 	public static class EntryConfig implements Purchasable {
 		private final Building.Type type;
-		private final String name;
-		private final String description;
 
-		public EntryConfig(Building.Type type, String name, String description) {
+		public EntryConfig(Building.Type type) {
 			this.type = type;
-			this.name = name;
-			this.description = description;
 		}
 
 		@Override

@@ -210,7 +210,7 @@ public class ScreenRenderer {
 	}
 
 	public static void translatedText(float size, String value, Object... values) {
-		text(size, Main.lang.formatted(value, values));
+		text(size, Main.game.lang.formatted(value, values));
 	}
 
 	@Deprecated
@@ -276,10 +276,10 @@ public class ScreenRenderer {
 		oy += (height - size) / 2f;
 
 		setAlignment(Alignment.CENTER);
+		setColor(Colors.NONE);
 		text(size, text);
 
 		setAlignment(alignment);
-		setColor(Colors.NONE);
 		pop();
 
 		return status;

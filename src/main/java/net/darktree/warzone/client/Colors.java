@@ -26,5 +26,8 @@ public class Colors {
 	public static final Color CARD_SEPARATOR = ATLAS.getColor("card_separator");
 	public static final Color CARD_SEPIA = ATLAS.getColor("card_sepia");
 	public static final Color CARD_BACKGROUND = ATLAS.getColor("card_background");
+	public static final Color MAP_LIST_DEFAULT = ATLAS.getColor("map_list_default");
+	public static final Color MAP_LIST_HOVER = ATLAS.getColor("map_list_hover");
+	public static final Color MAP_LIST_SELECTED = ATLAS.getColor("map_list_selected");
 
 }

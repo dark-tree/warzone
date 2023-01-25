@@ -3,11 +3,9 @@ package net.darktree.warzone.client.render.image;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Atlas implements AutoCloseable, TextureConvertible {
 
@@ -113,23 +111,17 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 	}
 
 	private void loadAll(String source, String resource, Path root) {
-		try {
-			Stream<Path> paths = Resources.listing(resource);
+		Resources.listing(resource).forEach(path -> {
+			if (Files.isDirectory(path)) {
+				loadAll(source, resource + "/" + path.getFileName(), root);
+			}
 
-			paths.forEach(path -> {
-				if (Files.isDirectory(path)) {
-					loadAll(source, resource + "/" + path.getFileName(), root);
-				}
+			String identifier = root.relativize(path).toString().replace('\\', '/');
 
-				String identifier = root.relativize(path).toString().replace('\\', '/');
-
-				if (identifier.endsWith(".png")) {
-					addPath(source + "/" + identifier, identifier);
-				}
-			});
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+			if (identifier.endsWith(".png")) {
+				addPath(source + "/" + identifier, identifier);
+			}
+		});
 	}
 
 	protected void freeze() {

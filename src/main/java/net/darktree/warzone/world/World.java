@@ -138,10 +138,11 @@ public class World implements WorldEntityView, NbtSerializable {
 	}
 
 	@Deprecated
-	public static void load(CompoundTag tag) {
+	public static World load(CompoundTag tag) {
 		World world = new World(0, 0);
 		WorldHolder.setWorld(world);
 		world.fromNbt(tag);
+		return world;
 	}
 
 	public void loadTiles(Function<TilePos, TileVariant> generator) {

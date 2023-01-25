@@ -7,6 +7,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.text.Text;
+import net.darktree.warzone.screen.ScreenStack;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -85,6 +86,11 @@ public abstract class Screen {
 	public void close() {
 		this.closed = true;
 		Sounds.PEN_CLOSE.play();
+	}
+
+	public void emplace(Screen screen) {
+		this.close();
+		ScreenStack.open(screen);
 	}
 
 	public boolean isClosed() {

@@ -47,8 +47,13 @@ public class Resources {
 		}
 	}
 
-	public static Stream<Path> listing(String path) throws IOException {
-		return Files.list(Objects.requireNonNull(location(path)));
+	public static Stream<Path> listing(String path) {
+		try {
+			return Files.list(Objects.requireNonNull(location(path)));
+		} catch (Exception exception) {
+			Logger.warn("Failed to create a listing of: ", path);
+			return Stream.of();
+		}
 	}
 
 	public static JsonElement json(String path) throws Exception {
