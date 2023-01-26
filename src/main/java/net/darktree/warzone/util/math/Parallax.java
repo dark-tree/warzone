@@ -24,11 +24,11 @@ public class Parallax {
 	}
 
 	public float getX() {
-		return px;
+		return 1 - px;
 	}
 
 	public float getY() {
-		return py;
+		return 1 - py;
 	}
 
 	private float getRawX() {

@@ -26,8 +26,8 @@ public abstract class DecoratedScreen extends Screen {
 
 	public void drawDecorBackground() {
 		parallax.update();
-		int px = (int) ((1 - parallax.getX()) * margin);
-		int py = (int) ((1 - parallax.getY()) * margin);
+		int px = (int) (parallax.getX() * margin);
+		int py = (int) (parallax.getY() * margin);
 
 		// if there are some empty spots
 		// this will make them stick out a little less

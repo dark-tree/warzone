@@ -1,7 +1,7 @@
 package net.darktree.warzone.client.sound.source;
 
+import net.darktree.warzone.Main;
 import net.darktree.warzone.client.sound.buffer.NativeAudioBuffer;
-import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.WorldView;
 import org.lwjgl.openal.AL10;
 
@@ -90,8 +90,10 @@ public final class NativeAudioSource implements AudioSource {
 
 	private void positionUpdate() {
 		if (attenuation) {
-			WorldView view = WorldHolder.world.getView();
-			AL10.alSource3f(source, AL10.AL_POSITION, (view.offsetX + x) * view.scaleX, (view.offsetY + y) * view.scaleY, (z + 1 - view.zoom) * 10);
+			Main.game.getWorld().ifPresent(world -> {
+				WorldView view = world.getView();
+				AL10.alSource3f(source, AL10.AL_POSITION, (view.offsetX + x) * view.scaleX, (view.offsetY + y) * view.scaleY, (z + 1 - view.zoom) * 10);
+			});
 		}
 	}
 

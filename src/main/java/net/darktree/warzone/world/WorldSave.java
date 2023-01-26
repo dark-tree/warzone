@@ -11,7 +11,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-public class SaveState {
+public class WorldSave {
 
 	private final String name;
 	private final String code;
@@ -22,7 +22,7 @@ public class SaveState {
 		return Optional.ofNullable(nbt.getStringTag(key)).orElse(new StringTag("*UNSET*")).getValue();
 	}
 
-	public SaveState(CompoundTag nbt) {
+	public WorldSave(CompoundTag nbt) {
 		CompoundTag info = NbtAccess.getTag("info", nbt);
 		this.name = getDefaultedString(info, "name");
 		this.code = getDefaultedString(info, "code");

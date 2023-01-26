@@ -33,7 +33,14 @@
 			"construction": "CONSTRUCTION"
 		},
 		"menu.main": {
-			"quit.title": "ARE YOU SURE?"
+			"quit.title": "QUIT THE GAME?"
+		},
+		"menu.freeplay": {
+			"title": "CREATE OR SELECT AN ACTIVE MAP",
+			"enter": "ENTER",
+			"delete": "DELETE",
+			"create": "CREATE",
+			"subtitle": "MAP: %s (%s)"
 		}
 	},
 

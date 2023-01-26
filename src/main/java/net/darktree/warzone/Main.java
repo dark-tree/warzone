@@ -2,7 +2,6 @@ package net.darktree.warzone;
 
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.render.image.Font;
-import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Window;
@@ -85,13 +84,13 @@ public class Main {
 		Font scribble = Font.load("scribble");
 		game = new Game();
 
-		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
-
 		ScreenStack.open(new MainMenuScreen());
 
 		BuildScreen.register(Tiles.WAREHOUSE);
 		BuildScreen.register(Tiles.FACTORY);
 		BuildScreen.register(Tiles.PARLIAMENT);
+
+		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
 
 		Util.runAsync(() -> {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -125,8 +124,7 @@ public class Main {
 
 	private static void loop() {
 		while (!window.shouldClose()) {
-			ScreenStack.draw();
-			Renderer.next();
+			game.draw();
 
 			synchronized (tasks) {
 				tasks.forEach(Runnable::run);

@@ -6,32 +6,38 @@ import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.ScreenRenderer;
-import net.darktree.warzone.world.SaveState;
+import net.darktree.warzone.client.text.Text;
+import net.darktree.warzone.world.WorldSave;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class FreeplayMenuScreen extends DecoratedScreen {
 
-	private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	public static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-	List<SaveState> saves;
+	private final static Text TEXT_TITLE = Text.translated("gui.menu.freeplay.title");
+	private final static Text TEXT_ENTER = Text.translated("gui.menu.freeplay.enter");
+	private final static Text TEXT_DELETE = Text.translated("gui.menu.freeplay.delete");
+	private final static Text TEXT_CREATE = Text.translated("gui.menu.freeplay.create");
+	private final static Text TEXT_MAP = Text.translated("gui.menu.freeplay.subtitle");
 
-	FreeplayMenuScreen() {
-		saves = Main.game.getSaves();
-		pages = (int) Math.ceil(saves.size() / 5.0f);
+	private final List<WorldSave> saves;
+	private WorldSave selected;
+	private final int pages;
+	private int page;
+
+	public FreeplayMenuScreen() {
+		this.saves = Main.game.getSaves();
+		this.pages = (int) Math.ceil(saves.size() / 5.0f);
 	}
 
-	protected int page;
-	protected int pages;
-	SaveState active;
-
-	void drawEntry(SaveState entry, boolean clicked) {
+	void drawEntry(WorldSave entry, boolean clicked) {
 		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.text(30, entry.getName());
 		ScreenRenderer.offset(0, -30);
 		ScreenRenderer.setColor(Colors.PRICE_TAG);
-		ScreenRenderer.text(30, "MAP: " + entry.getCode() + " (" + entry.getTime(FORMAT) + ")");
+		ScreenRenderer.text(30, TEXT_MAP.str(entry.getCode(), entry.getTime(FORMAT)));
 
 		ScreenRenderer.setColor(Colors.MAP_LIST_DEFAULT);
 		ScreenRenderer.setSprite(Sprites.NONE);
@@ -39,13 +45,10 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 
 		if (ScreenRenderer.isMouseOver(540 * 2 + 20, 80)) {
 			ScreenRenderer.setColor(Colors.MAP_LIST_HOVER);
-
-			if (clicked) {
-				active = entry;
-			}
+			if (clicked) selected = entry;
 		}
 
-		if (active == entry) {
+		if (selected == entry) {
 			ScreenRenderer.setColor(Colors.MAP_LIST_SELECTED);
 		}
 
@@ -53,9 +56,9 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		ScreenRenderer.offset(10, -20);
 	}
 
-	protected void drawEntryList(int size, boolean clicked) {
-		final int start = this.page * size;
-		final int end = Math.min(start + size, saves.size());
+	protected void drawEntryList(boolean clicked) {
+		final int start = this.page * 5;
+		final int end = Math.min(start + 5, saves.size());
 
 		ScreenRenderer.push();
 		for (int i = start; i < end; i ++) {
@@ -68,9 +71,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 	@Override
 	public void draw(boolean focused) {
 		drawDecorBackground();
-		drawTitledScreen("CREATE OR SELECT AN ACTIVE MAP", getPageString(), Sprites.BUILD, 1300, 800);
-
-//		ScreenRenderer.centerAt();
+		drawTitledScreen(TEXT_TITLE, getPageString(), Sprites.BUILD, 1300, 800);
 
 		ScreenRenderer.setOffset(-540, 180);
 		ScreenRenderer.setAlignment(Alignment.LEFT);
@@ -82,39 +83,37 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		ScreenRenderer.pop();
 
 		// draw the map list
-		drawEntryList(5, Main.window.input().hasClicked());
+		drawEntryList(Main.window.input().hasClicked());
 
 		ScreenRenderer.offset(-40, 40 - 30 * 3 * 5);
 		ScreenRenderer.setColor(Colors.BORDER);
 		ScreenRenderer.line(0.005f, 540 * 2 + 80, 0);
 
-//		ScreenRenderer.setOffset(-550, -300);
 		ScreenRenderer.offset(0, -110);
-
 		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.push();
-		if (ScreenRenderer.button("ENTER", 4, 35, 70, active != null)) {
-			active.load();
+		if (ScreenRenderer.button(TEXT_ENTER, 4, 35, 70, selected != null)) {
+			selected.load();
 		}
 
 		ScreenRenderer.offset(250, 0);
-		ScreenRenderer.button("DELETE", 4, 35, 70, active != null);
+		ScreenRenderer.button(TEXT_DELETE, 4, 35, 70, selected != null);
 
 		ScreenRenderer.offset(250, 0);
-		ScreenRenderer.button("CREATE", 4, 35, 70, true);
+		ScreenRenderer.button(TEXT_CREATE, 4, 35, 70, true);
 		ScreenRenderer.pop();
 
 		ScreenRenderer.offset(1020, 0);
 		if (ScreenRenderer.button(Sprites.BUTTON_LEFT, 64, 64, page > 0)) {
 			Sounds.PAGE.play();
-			active = null;
+			selected = null;
 			page --;
 		}
 
 		ScreenRenderer.offset(70, 0);
 		if (ScreenRenderer.button(Sprites.BUTTON_RIGHT, 64, 64, page < (pages - 1))) {
 			Sounds.PAGE.play();
-			active = null;
+			selected = null;
 			page ++;
 		}
 	}

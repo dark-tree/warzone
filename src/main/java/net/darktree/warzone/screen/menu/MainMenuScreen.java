@@ -41,9 +41,7 @@ public class MainMenuScreen extends DecoratedScreen {
 
 		ScreenRenderer.offset(0, -100);
 		if (ScreenRenderer.button("QUIT", 4, 38, 80, true) ) {
-			ScreenStack.open(new ConfirmScreen(TEXT_CONFIRM, Text.EMPTY, (confirmed) -> {
-				if (confirmed) Main.window.quit();
-			}));
+			tryClose();
 		}
 
 		ScreenRenderer.centerAt(-1, -1);
@@ -68,7 +66,13 @@ public class MainMenuScreen extends DecoratedScreen {
 
 	@Override
 	public void onEscape() {
-		// don't close
+		tryClose();
+	}
+
+	private void tryClose() {
+		ScreenStack.open(new ConfirmScreen(TEXT_CONFIRM, Text.EMPTY, (confirmed) -> {
+			if (confirmed) Main.window.quit();
+		}));
 	}
 
 }

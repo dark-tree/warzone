@@ -94,7 +94,7 @@ public class PlayScreen extends Screen {
 
 	private void appendDebugInfo(StringBuilder builder) {
 		builder.append(Main.window.profiler.getFrameRate()).append(" FPS");
-		builder.append(" (").append(WorldHolder.world.self.name()).append(')');
+		builder.append(" (").append(world.self.name()).append(')');
 
 		if (UserGroup.instance != null) {
 			builder.append('\n').append(UserGroup.instance.relay);
