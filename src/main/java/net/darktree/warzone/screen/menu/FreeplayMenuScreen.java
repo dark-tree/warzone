@@ -105,7 +105,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		}
 
 		ScreenRenderer.offset(250, 0);
-		ScreenRenderer.button(TEXT_CREATE, 4, 35, 70, true);
+		ScreenRenderer.button(TEXT_CREATE, 4, 35, 70, false);
 		ScreenRenderer.pop();
 
 		ScreenRenderer.offset(1020, 0);

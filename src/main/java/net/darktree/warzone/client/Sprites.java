@@ -25,6 +25,7 @@ public class Sprites {
 	public final static Sprite TOP = getSprite("gui/top.png");
 	public final static Sprite BUILD = getSprite("gui/build_screen.png");
 	public final static Sprite POPUP = getSprite("gui/small_popup.png");
+	public final static Sprite PAUSE = getSprite("gui/pause_screen.png");
 	public final static Sprite HOTBAR = getSprite("gui/hotbar.png");
 	public final static Sprite BUTTON_PART_LEFT = getSprite("gui/button/left.png");
 	public final static Sprite BUTTON_PART_CENTER = getSprite("gui/button/center.png");

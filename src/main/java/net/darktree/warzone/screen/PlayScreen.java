@@ -15,6 +15,7 @@ import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.network.packet.EndTurnPacket;
 import net.darktree.warzone.screen.hotbar.Hotbar;
 import net.darktree.warzone.screen.interactor.Interactor;
+import net.darktree.warzone.screen.menu.PauseMenuScreen;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.WorldView;
@@ -163,7 +164,7 @@ public class PlayScreen extends Screen {
 
 	@Override
 	public void onEscape() {
-		// override as the default behaviour is to close the screen
+		ScreenStack.open(new PauseMenuScreen());
 	}
 
 	@Override
