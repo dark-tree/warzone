@@ -4,18 +4,25 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
 
-import java.util.function.Consumer;
-
 public class ConfirmScreen extends Screen {
 
 	private final CharSequence title;
 	private final CharSequence message;
-	private final Consumer<Boolean> consumer;
+	private Runnable yes, no;
 
-	public ConfirmScreen(CharSequence title, CharSequence message, Consumer<Boolean> consumer) {
+	public ConfirmScreen(CharSequence title, CharSequence message) {
 		this.title = title;
 		this.message = message;
-		this.consumer = consumer;
+	}
+
+	public ConfirmScreen onYes(Runnable runnable) {
+		this.yes = runnable;
+		return this;
+	}
+
+	public ConfirmScreen onNo(Runnable runnable) {
+		this.no = runnable;
+		return this;
 	}
 
 	@Override
@@ -28,21 +35,26 @@ public class ConfirmScreen extends Screen {
 
 		ScreenRenderer.setOffset(buttonOffset, -120);
 		if (ScreenRenderer.button(TEXT_YES, buttonParts, 38, 80, true)) {
-			consumer.accept(true);
+			runAction(true);
 			super.close();
 		}
 
 		ScreenRenderer.offset(-(buttonParts + 2) * buttonSize / 2 - 2 * buttonOffset, 0);
 		if (ScreenRenderer.button(TEXT_NO, buttonParts, 38, buttonSize, true)) {
-			consumer.accept(false);
+			runAction(false);
 			super.close();
 		}
 	}
 
 	@Override
 	public void onEscape() {
-		consumer.accept(false);
+		runAction(false);
 		super.close();
+	}
+
+	private void runAction(boolean state) {
+		if (state && yes != null) yes.run();
+		if (!state && no != null) no.run();
 	}
 
 }

@@ -1,6 +1,7 @@
 package net.darktree.warzone;
 
 import net.darktree.warzone.client.render.vertex.Renderer;
+import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.text.Language;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.util.Resources;
@@ -29,6 +30,7 @@ public class Game {
 	}
 
 	public void draw() {
+		SoundSystem.tick();
 		ScreenStack.draw();
 		Renderer.next();
 	}

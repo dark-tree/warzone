@@ -1,7 +1,6 @@
 package net.darktree.warzone.world;
 
 import net.darktree.warzone.client.render.WorldBuffers;
-import net.darktree.warzone.client.sound.SoundSystem;
 
 @Deprecated
 public class WorldHolder {
@@ -19,7 +18,6 @@ public class WorldHolder {
 	}
 
 	public static void draw() {
-		SoundSystem.tick();
 		world.getView().draw(buffers);
 	}
 

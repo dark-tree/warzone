@@ -37,8 +37,8 @@ public class ParliamentScreen extends ElementListScreen<Upgrade<?>> {
 
 	@Override
 	protected void onElementClicked(Upgrade<?> element) {
-		ScreenStack.open(new ConfirmScreen(TEXT_CONFIRM, TEXT_BUY.str(Text.translated(element.getNameKey())), confirmed -> {
-			if (confirmed) new UpgradePacket(world.getCurrentSymbol(), element).sendToHost();
+		ScreenStack.open(new ConfirmScreen(TEXT_CONFIRM, TEXT_BUY.str(Text.translated(element.getNameKey()))).onYes(() -> {
+			new UpgradePacket(world.getCurrentSymbol(), element).sendToHost();
 		}));
 	}
 

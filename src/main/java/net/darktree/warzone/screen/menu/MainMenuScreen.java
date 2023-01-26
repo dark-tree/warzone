@@ -70,9 +70,7 @@ public class MainMenuScreen extends DecoratedScreen {
 	}
 
 	private void tryClose() {
-		ScreenStack.open(new ConfirmScreen(TEXT_CONFIRM, Text.EMPTY, (confirmed) -> {
-			if (confirmed) Main.window.quit();
-		}));
+		ScreenStack.open(new ConfirmScreen(TEXT_CONFIRM, Text.EMPTY).onYes(Main.window::quit));
 	}
 
 }

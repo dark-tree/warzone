@@ -101,9 +101,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 
 		ScreenRenderer.offset(250, 0);
 		if (ScreenRenderer.button(TEXT_DELETE, 4, 35, 70, selected != null)) {
-			ScreenStack.open(new ConfirmScreen(TEXT_DELETE_CONFIRM, Text.EMPTY, (confirmed) -> {
-				if (confirmed) selected.delete();
-			}));
+			ScreenStack.open(new ConfirmScreen(TEXT_DELETE_CONFIRM, Text.EMPTY).onYes(selected::delete));
 		}
 
 		ScreenRenderer.offset(250, 0);
