@@ -2,6 +2,8 @@ package net.darktree.warzone.util;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -84,6 +86,27 @@ public class Util {
 		List<T> list = new ArrayList<>();
 		registry.iterate(list::add);
 		return list;
+	}
+
+	/**
+	 * Safely delete a directory
+	 */
+	public static boolean deleteDirectory(File file, boolean recursive) {
+		File[] contents = file.listFiles();
+
+		if (contents != null) {
+			for (File child : contents) {
+				if (!Files.isSymbolicLink(child.toPath())) {
+					if (recursive) {
+						deleteDirectory(child, true);
+					} else {
+						child.delete();
+					}
+				}
+			}
+		}
+
+		return file.delete();
 	}
 
 }

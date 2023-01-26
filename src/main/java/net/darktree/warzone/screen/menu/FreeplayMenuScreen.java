@@ -7,6 +7,8 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.text.Text;
+import net.darktree.warzone.screen.ConfirmScreen;
+import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.world.WorldSave;
 
 import java.time.format.DateTimeFormatter;
@@ -21,6 +23,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 	private final static Text TEXT_DELETE = Text.translated("gui.menu.freeplay.delete");
 	private final static Text TEXT_CREATE = Text.translated("gui.menu.freeplay.create");
 	private final static Text TEXT_MAP = Text.translated("gui.menu.freeplay.subtitle");
+	private final static Text TEXT_DELETE_CONFIRM = Text.translated("gui.menu.freeplay.delete.confirm");
 
 	private final List<WorldSave> saves;
 	private WorldSave selected;
@@ -97,7 +100,11 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		}
 
 		ScreenRenderer.offset(250, 0);
-		ScreenRenderer.button(TEXT_DELETE, 4, 35, 70, selected != null);
+		if (ScreenRenderer.button(TEXT_DELETE, 4, 35, 70, selected != null)) {
+			ScreenStack.open(new ConfirmScreen(TEXT_DELETE_CONFIRM, Text.EMPTY, (confirmed) -> {
+				if (confirmed) selected.delete();
+			}));
+		}
 
 		ScreenRenderer.offset(250, 0);
 		ScreenRenderer.button(TEXT_CREATE, 4, 35, 70, true);

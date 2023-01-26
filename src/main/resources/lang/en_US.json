@@ -40,7 +40,8 @@
 			"enter": "ENTER",
 			"delete": "DELETE",
 			"create": "CREATE",
-			"subtitle": "MAP: %s (%s)"
+			"subtitle": "MAP: %s (%s)",
+			"delete.confirm": "ARE YOU SURE?"
 		}
 	},
 
