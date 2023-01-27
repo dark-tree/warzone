@@ -8,7 +8,6 @@ import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.upgrade.Upgrade;
-import net.darktree.warzone.country.upgrade.UpgradeManager;
 import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
@@ -27,8 +26,6 @@ import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.action.Actions;
 import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.tile.tiles.Tiles;
-import net.querz.nbt.io.NBTUtil;
-import net.querz.nbt.tag.CompoundTag;
 import org.lwjgl.Version;
 
 import java.io.BufferedReader;
@@ -180,20 +177,7 @@ public class Main {
 				WorldHolder.setWorld(new World(w, h));
 				WorldHolder.world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
 				ScreenStack.closeAll();
-				ScreenStack.open(new PlayScreen(WorldHolder.world));
-			});
-		}
-
-		if (line.startsWith("save ")) {
-			Main.runSynced(() -> {
-				CompoundTag tag = new CompoundTag();
-				WorldHolder.world.toNbt(tag);
-				try {
-					NBTUtil.write(tag, line.split(" ")[1], true);
-					Logger.info("Saved!");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				ScreenStack.open(new PlayScreen(null, WorldHolder.world));
 			});
 		}
 
@@ -218,15 +202,6 @@ public class Main {
 			});
 		}
 
-		if (line.startsWith("uplist")) {
-			Main.runSynced(() -> {
-				UpgradeManager upgrades = WorldHolder.world.getCountry(WorldHolder.world.getCurrentSymbol()).upgrades;
-				Registries.UPGRADES.iterate(upgrade -> {
-					Logger.info("Upgrade '", upgrade.key(), "', enabled: ", upgrades.isEnabled(upgrade));
-				});
-			});
-		}
-
 		if (line.equals("rstop")) {
 			UserGroup.instance.close();
 		}
@@ -234,10 +209,6 @@ public class Main {
 		if (line.startsWith("self ")) {
 			WorldHolder.world.self = Symbol.fromIndex((byte) Integer.parseInt(line.split(" ")[1]));
 			Logger.info("Identity set!");
-		}
-
-		if (line.equals("exit")) {
-			return;
 		}
 
 		if (line.startsWith("rmake ")) {

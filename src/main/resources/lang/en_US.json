@@ -2,6 +2,7 @@
 	"gui": {
 		"yes": "YES",
 		"no": "NO",
+		"ok": "OKAY",
 		"end": "END",
 		"cost": "%s\n\nCOST: %s",
 		"page": "PAGE %s/%s",
@@ -41,7 +42,14 @@
 			"delete": "DELETE",
 			"create": "CREATE",
 			"subtitle": "MAP: %s (%s)",
-			"delete.confirm": "ARE YOU SURE?"
+			"delete.confirm": "ARE YOU SURE?",
+			"load.error": "UNABLE TO LOAD!"
+		},
+		"menu.pause": {
+			"title": "GAME MENU",
+			"exit": "SAVE AND EXIT",
+			"settings": "SETTINGS",
+			"save.error": "UNABLE TO SAVE!"
 		}
 	},
 

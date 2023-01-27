@@ -26,7 +26,7 @@ public class Game {
 	}
 
 	public List<WorldSave> getSaves() {
-		return Resources.listing("state/saves").parallel().map(WorldSave::read).filter(Objects::nonNull).toList();
+		return Resources.listing("state/saves").parallel().map(WorldSave::read).filter(Objects::nonNull).sorted().toList();
 	}
 
 	public void draw() {

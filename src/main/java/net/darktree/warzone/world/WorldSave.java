@@ -6,20 +6,23 @@ import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.NbtAccess;
 import net.darktree.warzone.util.Util;
 import net.querz.nbt.tag.CompoundTag;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-public class WorldSave {
+public class WorldSave implements Comparable<WorldSave> {
 
 	private final Path path;
 	private final File meta, map;
 	private final String name;
 	private final String code;
 	private final long time;
+	private final CompoundTag nbt;
 
 	protected WorldSave(Path path, File map, File meta, CompoundTag nbt) {
 		this.path = path;
@@ -28,6 +31,7 @@ public class WorldSave {
 		this.name = nbt.getString("name");
 		this.code = nbt.getString("code");
 		this.time = nbt.getLong("time");
+		this.nbt = nbt;
 	}
 
 	public static WorldSave read(Path path) {
@@ -61,21 +65,40 @@ public class WorldSave {
 		return code;
 	}
 
-	public void load() {
+	public boolean load() {
 		CompoundTag nbt = NbtAccess.readFile(map);
 
 		if (nbt == null) {
 			Logger.error("Unable to read save map state!");
-			return;
+			return false;
 		}
 
-		World world = World.load(nbt);
-		ScreenStack.closeAll();
-		ScreenStack.open(new PlayScreen(world));
+		try {
+			World world = World.load(nbt);
+			ScreenStack.closeAll();
+			ScreenStack.open(new PlayScreen(this, world));
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public void delete() {
 		Util.deleteDirectory(path.toFile(), true);
+	}
+
+	public boolean save(World world) {
+		nbt.putLong("time", Instant.now().getEpochSecond());
+		CompoundTag worldNbt = new CompoundTag();
+		world.toNbt(worldNbt);
+		return NbtAccess.writeFile(meta, nbt) && NbtAccess.writeFile(map, worldNbt);
+	}
+
+	@Override
+	public int compareTo(@NotNull WorldSave other) {
+		if (other.time == this.time) return 0;
+		return (other.time > this.time) ? 1 : -1;
 	}
 
 }

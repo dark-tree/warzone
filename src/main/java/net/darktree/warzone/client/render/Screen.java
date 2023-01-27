@@ -16,6 +16,7 @@ public abstract class Screen {
 
 	private boolean closed;
 
+	public static final Text TEXT_OK = Text.translated("gui.ok");
 	public static final Text TEXT_YES = Text.translated("gui.yes");
 	public static final Text TEXT_NO = Text.translated("gui.no");
 	public static final Text TEXT_PAGE = Text.translated("gui.page");

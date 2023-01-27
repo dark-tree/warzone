@@ -28,4 +28,14 @@ public class NbtAccess {
 		}
 	}
 
+	public static boolean writeFile(File file, CompoundTag nbt) {
+		try {
+			NBTUtil.write(nbt, file, true);
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
+	}
+
 }

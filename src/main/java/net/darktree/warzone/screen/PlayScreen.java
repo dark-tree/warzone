@@ -18,6 +18,7 @@ import net.darktree.warzone.screen.interactor.Interactor;
 import net.darktree.warzone.screen.menu.PauseMenuScreen;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldHolder;
+import net.darktree.warzone.world.WorldSave;
 import net.darktree.warzone.world.WorldView;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.overlay.MapOverlay;
@@ -35,9 +36,11 @@ public class PlayScreen extends Screen {
 
 	private boolean isMapFocused = true;
 	private final World world;
+	private final WorldSave save;
 
-	public PlayScreen(World world) {
+	public PlayScreen(WorldSave save, World world) {
 		this.world = world;
+		this.save = save;
 	}
 
 	@Override
@@ -164,7 +167,7 @@ public class PlayScreen extends Screen {
 
 	@Override
 	public void onEscape() {
-		ScreenStack.open(new PauseMenuScreen());
+		ScreenStack.open(new PauseMenuScreen(save, world));
 	}
 
 	@Override

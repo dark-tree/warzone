@@ -1,18 +1,13 @@
 package net.darktree.warzone.screen;
 
-import net.darktree.warzone.client.Sprites;
-import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
 
-public class ConfirmScreen extends Screen {
+public class ConfirmScreen extends AcceptScreen {
 
-	private final CharSequence title;
-	private final CharSequence message;
 	private Runnable yes, no;
 
 	public ConfirmScreen(CharSequence title, CharSequence message) {
-		this.title = title;
-		this.message = message;
+		super(title, message);
 	}
 
 	public ConfirmScreen onYes(Runnable runnable) {
@@ -26,9 +21,7 @@ public class ConfirmScreen extends Screen {
 	}
 
 	@Override
-	public void draw(boolean focused) {
-		drawTitledScreen(title, message, Sprites.POPUP, 610, 340);
-
+	protected void drawButtons() {
 		final int buttonParts = 2;
 		final int buttonSize = 80;
 		final int buttonOffset = 80;
