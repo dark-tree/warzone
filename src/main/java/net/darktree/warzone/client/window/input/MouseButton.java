@@ -5,10 +5,9 @@ import org.lwjgl.glfw.GLFW;
 public enum MouseButton {
 	LEFT(GLFW.GLFW_MOUSE_BUTTON_1),
 	MIDDLE(GLFW.GLFW_MOUSE_BUTTON_3),
-	RIGHT(GLFW.GLFW_MOUSE_BUTTON_2),
-	OTHER(0);
+	RIGHT(GLFW.GLFW_MOUSE_BUTTON_2);
 
-	public final int code;
+	private final int code;
 
 	MouseButton(int code) {
 		this.code = code;
@@ -19,6 +18,10 @@ public enum MouseButton {
 		if (button == GLFW.GLFW_MOUSE_BUTTON_2) return RIGHT;
 		if (button == GLFW.GLFW_MOUSE_BUTTON_3) return MIDDLE;
 
-		return OTHER;
+		return null;
+	}
+
+	public int getCode() {
+		return code;
 	}
 }

@@ -53,12 +53,12 @@ public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 
 		@Override
 		public String getNameKey() {
-			return "building." + type.key() + ".name";
+			return type.getNameKey();
 		}
 
 		@Override
 		public String getDescriptionKey() {
-			return "building." + type.key() + ".description";
+			return type.getDescriptionKey();
 		}
 
 		@Override

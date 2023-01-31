@@ -1,7 +1,8 @@
 package net.darktree.warzone.screen.interactor;
 
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
-import org.lwjgl.glfw.GLFW;
+import net.darktree.warzone.client.window.input.ClickEvent;
+import net.darktree.warzone.client.window.input.KeyEvent;
 
 public class Interactor {
 
@@ -11,13 +12,11 @@ public class Interactor {
 
 	}
 
-	public void onKey(int key, int action, int mods) {
-		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_ESCAPE) {
-			closed = true;
-		}
+	public void onKey(KeyEvent event) {
+		if (event.isEscape()) closed = true;
 	}
 
-	public void onClick(int button, int action, int mods, int x, int y) {
+	public void onClick(ClickEvent event, int x, int y) {
 
 	}
 

@@ -1,13 +1,12 @@
 package net.darktree.warzone.network.packet;
 
+import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
-import net.darktree.warzone.network.Relay;
 import net.darktree.warzone.network.Side;
 import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.NBTHelper;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.WorldHolder;
 import net.querz.nbt.tag.CompoundTag;
 
 import java.nio.ByteBuffer;
@@ -16,9 +15,9 @@ public class WorldSyncPacket extends SimplePacket {
 
 	private final CompoundTag nbt;
 
-	public WorldSyncPacket(ByteBuffer buffer, Side side, Relay relay) {
+	public WorldSyncPacket(ByteBuffer buffer, PacketContext context) {
 		super(Packets.WORLD);
-		side.expect(Side.CLIENT);
+		context.expect(Side.CLIENT);
 		this.nbt = NBTHelper.readCompound(buffer);
 	}
 
@@ -29,8 +28,8 @@ public class WorldSyncPacket extends SimplePacket {
 	}
 
 	@Override
-	public void apply() {
-		WorldHolder.world.fromNbt(this.nbt);
+	public void apply(PacketContext context) {
+		context.getWorld().fromNbt(this.nbt);
 	}
 
 	@Override

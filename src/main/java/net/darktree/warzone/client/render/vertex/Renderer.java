@@ -72,10 +72,9 @@ public class Renderer {
 			return;
 		}
 
-		// FIXME
 		// this doesn't respect the winding order for some directions
 		// (when the line is pointing to the left and/or downwards)
-		// it would be a good idea to fix this, for now I disabled back face culling to mitigate this
+		// it would be a good idea to fix this
 
 		float ax1 = ((2 * x1) + d) / 2;
 		float ax2 = ((2 * x1) - d) / 2;
@@ -93,7 +92,6 @@ public class Renderer {
 	/**
 	 * Finish this frame and prepare for the next one
 	 */
-	@Deprecated
 	public static void swap() {
 		Main.window.swap();
 	}

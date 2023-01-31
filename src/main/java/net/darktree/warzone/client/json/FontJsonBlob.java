@@ -1,4 +1,4 @@
-package net.darktree.warzone.json;
+package net.darktree.warzone.client.json;
 
 public class FontJsonBlob {
 	public String name;

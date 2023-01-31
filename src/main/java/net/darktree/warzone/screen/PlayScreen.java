@@ -8,9 +8,10 @@ import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.render.WorldBuffers;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Input;
+import net.darktree.warzone.client.window.input.ClickEvent;
+import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.event.ClickEvent;
 import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.network.packet.EndTurnPacket;
 import net.darktree.warzone.screen.hotbar.Hotbar;
@@ -106,61 +107,59 @@ public class PlayScreen extends Screen {
 	}
 
 	@Override
-	public void onKey(int key, int action, int mods) {
-		super.onKey(key, action, mods);
+	public void onKey(KeyEvent event) {
+		super.onKey(event);
 
 		if (interactor != null) {
-			interactor.onKey(key, action, mods);
+			interactor.onKey(event);
 			return;
 		}
 
-		if(action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_M) {
+		if (event.isPressed(GLFW.GLFW_KEY_M)) {
 			world.getView().setOverlay(new MapOverlay());
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_B) {
+		if (event.isPressed(GLFW.GLFW_KEY_B)) {
 			ScreenStack.open(new BuildScreen(world));
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_TAB && world.isActiveSymbol()) {
+		if (event.isPressed(GLFW.GLFW_KEY_TAB) && world.isActiveSymbol()) {
 			new EndTurnPacket().broadcast();
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_BACKSPACE) {
+		if (event.isPressed(GLFW.GLFW_KEY_BACKSPACE)) {
 			world.getManager().undo();
 		}
 	}
 
 	@Override
-	public void onClick(int button, int action, int mods) {
-		if (!isMapFocused || button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+	public void onClick(ClickEvent event) {
+		if (!isMapFocused || event.button == MouseButton.MIDDLE) {
 			return;
 		}
 
 		Input input = Main.window.input();
-
 		int x = input.getMouseMapX(world.getView());
 		int y = input.getMouseMapY(world.getView());
 
 		if (interactor != null) {
-			interactor.onClick(button, action, mods, x, y);
+			interactor.onClick(event, x, y);
 			return;
 		}
 
-		if(button == GLFW.GLFW_MOUSE_BUTTON_1 || button == GLFW.GLFW_MOUSE_BUTTON_2) {
+		// TODO
+		// there is a bit of stupid here, most WCs check event.isPressed() even though it
+		// will ALWAYS return true, also every action can be performed with right click, is this intended?
+
+		if(event.isLeftClick() || event.isRightClick()) {
 			if (world.isPositionValid(x, y)) {
+				Entity entity = world.getEntity(x, y);
 
-				if (action == GLFW.GLFW_PRESS) {
-					Entity entity = world.getEntity(x, y);
-					ClickEvent event = new ClickEvent(button, action);
-
-					if (entity != null) {
-						entity.onInteract(world, x, y, event);
-					} else {
-						world.getTileState(x, y).getTile().onInteract(world, x, y, event);
-					}
+				if (entity != null) {
+					entity.onInteract(world, x, y, event);
+				} else {
+					world.getTileState(x, y).getTile().onInteract(world, x, y, event);
 				}
-
 			}
 		}
 	}

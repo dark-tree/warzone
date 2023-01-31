@@ -6,6 +6,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.Entity;
@@ -50,7 +51,7 @@ public class DeconstructInteractor extends Interactor {
 
 	// FIXME: this thing is buggy and half broken
 	@Override
-	public void onClick(int button, int action, int mods, int x, int y) {
+	public void onClick(ClickEvent event, int x, int y) {
 		if (this.x == x && this.y == y) {
 			Entity entity = world.getEntity(this.x, this.y);
 

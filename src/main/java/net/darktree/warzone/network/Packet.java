@@ -30,7 +30,7 @@ public abstract class Packet<T> {
 	 * constructed and packet listeners fired, if the packet
 	 * is fired locally this will be called immediately
 	 */
-	public void apply() {
+	public void apply(PacketContext context) {
 
 	}
 
@@ -80,8 +80,8 @@ public abstract class Packet<T> {
 			this.constructor = constructor;
 		}
 
-		public Packet<?> create(ByteBuffer buffer, Side side, Relay relay) {
-			return constructor.create(buffer, side, relay);
+		public Packet<?> create(ByteBuffer buffer, PacketContext context) {
+			return constructor.create(buffer, context);
 		}
 
 		@Override
@@ -90,7 +90,7 @@ public abstract class Packet<T> {
 		}
 
 		public interface Constructor {
-			Packet<?> create(ByteBuffer buffer, Side side, Relay relay);
+			Packet<?> create(ByteBuffer buffer, PacketContext relay);
 		}
 	}
 

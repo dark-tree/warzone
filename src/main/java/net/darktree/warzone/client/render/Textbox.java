@@ -1,6 +1,7 @@
 package net.darktree.warzone.client.render;
 
 import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.window.input.KeyEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Predicate;
@@ -25,16 +26,16 @@ public class Textbox {
 		}
 	}
 
-	public void onKey(int keycode) {
-		if (selected) {
-			if (keycode == GLFW.GLFW_KEY_BACKSPACE) {
+	public void onKey(KeyEvent event) {
+		if (selected && event.isTyped()) {
+			if (event.key == GLFW.GLFW_KEY_BACKSPACE) {
 				pop();
 				return;
 			}
 
-			if (keycode >= GLFW.GLFW_KEY_SPACE && keycode <= GLFW.GLFW_KEY_Z) {
+			if (event.isPrintable()) {
 				String prev = value;
-				value += glfwToAscii(keycode);
+				value += event.getAscii();
 
 				if (!valid()) {
 					value = prev;

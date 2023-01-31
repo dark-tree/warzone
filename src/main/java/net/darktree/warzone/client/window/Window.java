@@ -20,7 +20,7 @@ public class Window implements AutoCloseable {
 	private static final Map<Integer, String> ERROR_CODES = APIUtil.apiClassTokens((field, value) -> 0x10000 < value && value < 0x20000, null, org.lwjgl.glfw.GLFW.class);
 	private final Input input;
 	private int width, height;
-	private int initialWidth, initialHeight;
+	private final int initialWidth, initialHeight;
 
 	public final FrameCounter profiler;
 	public final long handle;
@@ -93,11 +93,9 @@ public class Window implements AutoCloseable {
 		// load OpenGL
 		GL.createCapabilities();
 
+		// configure OpenGL
 		GLManager.useBlend(true);
 		GLManager.useDepth(true);
-
-		// enable some basic opengl functions
-//		glEnable(GL_CULL_FACE); causes problems with Renderer.line()
 		glActiveTexture(GL_TEXTURE0);
 
 		glfwSetWindowSizeCallback(handle, (window, w, h) -> {

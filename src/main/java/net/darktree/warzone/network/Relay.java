@@ -89,8 +89,10 @@ public class Relay {
 			Object result;
 
 			try {
+				PacketContext context = new PacketContext(role.side, this);
+
 				try{
-					packet = Registries.PACKETS.byId(id).value().create(buffer, role.side, this);
+					packet = Registries.PACKETS.byId(id).value().create(buffer, context);
 				} catch (IndexOutOfBoundsException e) {
 					Logger.error("Unknown game packet with id: " + id + " received!");
 					return;
@@ -99,7 +101,7 @@ public class Relay {
 				result = packet.getListenerValue();
 
 				// run apply() on the main thread
-				Main.runSynced(packet::apply);
+				Main.runSynced(() -> packet.apply(context));
 			} catch (Exception e) {
 				Logger.error("Exception was thrown while processing game packet: '" + Registries.PACKETS.byId(id).key() + "'!");
 				e.printStackTrace();

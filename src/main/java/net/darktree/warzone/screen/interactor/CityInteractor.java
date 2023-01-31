@@ -3,6 +3,7 @@ package net.darktree.warzone.screen.interactor;
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.client.window.Input;
+import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.SummonAction;
@@ -34,7 +35,7 @@ public class CityInteractor extends Interactor {
 	}
 
 	@Override
-	public void onClick(int button, int action, int mods, int x, int y) {
+	public void onClick(ClickEvent event, int x, int y) {
 		if (world.isPositionValid(x, y)) {
 			if (this.action.setTarget(x, y)) {
 				world.getManager().apply(this.action);

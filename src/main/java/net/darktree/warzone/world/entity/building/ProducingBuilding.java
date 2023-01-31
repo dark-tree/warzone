@@ -1,7 +1,7 @@
 package net.darktree.warzone.world.entity.building;
 
+import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.event.ClickEvent;
 import net.darktree.warzone.network.packet.ProductionSyncPacket;
 import net.darktree.warzone.screen.ProduceScreen;
 import net.darktree.warzone.screen.ScreenStack;

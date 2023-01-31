@@ -109,7 +109,7 @@ public class UserGroup {
 		if (group != null) {
 			group.relay.broadcastMessage(except, packet.getBuffer());
 		} else {
-			packet.apply();
+			packet.apply(PacketContext.LOCAL);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class UserGroup {
 		if (group != null) {
 			group.relay.sendMessage(uid, packet.getBuffer());
 		} else {
-			packet.apply();
+			packet.apply(PacketContext.LOCAL);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class UserGroup {
 		if (group != null) {
 			group.relay.sendMessage(group.host, packet.getBuffer());
 		} else {
-			packet.apply();
+			packet.apply(PacketContext.LOCAL);
 		}
 	}
 

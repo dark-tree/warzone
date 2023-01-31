@@ -1,11 +1,9 @@
 package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
-import net.darktree.warzone.network.Relay;
-import net.darktree.warzone.network.Side;
 import net.darktree.warzone.network.SimplePacket;
-import net.darktree.warzone.world.WorldHolder;
 
 import java.nio.ByteBuffer;
 
@@ -13,7 +11,7 @@ public class UndoPacket extends SimplePacket {
 
 	private final Symbol symbol;
 
-	public UndoPacket(ByteBuffer buffer, Side side, Relay relay) {
+	public UndoPacket(ByteBuffer buffer, PacketContext context) {
 		super(Packets.UNDO);
 		this.symbol = Symbol.fromIndex(buffer.get());
 	}
@@ -24,8 +22,8 @@ public class UndoPacket extends SimplePacket {
 	}
 
 	@Override
-	public void apply() {
-		WorldHolder.world.getManager().undo(symbol, true);
+	public void apply(PacketContext context) {
+		context.getWorld().getManager().undo(symbol, true);
 	}
 
 	@Override

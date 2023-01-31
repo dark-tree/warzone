@@ -6,6 +6,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.EntityShotAction;
@@ -59,7 +60,7 @@ public class UnitAttackInteractor extends Interactor {
 	}
 
 	@Override
-	public void onClick(int button, int action, int mods, int x, int y) {
+	public void onClick(ClickEvent event, int x, int y) {
 		if (isValid(world, x, y)) {
 
 			Entity target = world.getEntity(x, y);

@@ -1,4 +1,4 @@
-package net.darktree.warzone.event;
+package net.darktree.warzone.world;
 
 public enum TurnEvent {
 	TURN_START,

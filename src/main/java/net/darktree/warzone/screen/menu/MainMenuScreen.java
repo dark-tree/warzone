@@ -5,6 +5,7 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.text.Text;
+import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.screen.ConfirmScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import org.lwjgl.glfw.GLFW;
@@ -53,10 +54,10 @@ public class MainMenuScreen extends DecoratedScreen {
 	}
 
 	@Override
-	public void onKey(int key, int action, int mods) {
-		super.onKey(key, action, mods);
+	public void onKey(KeyEvent event) {
+		super.onKey(event);
 
-		if (key == GLFW.GLFW_KEY_R && action == GLFW.GLFW_PRESS) {
+		if (event.isPressed(GLFW.GLFW_KEY_R)) {
 			reloadBackground();
 		}
 	}

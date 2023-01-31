@@ -1,12 +1,12 @@
 package net.darktree.warzone.world.entity.building;
 
+import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.country.storage.LimitedStorageStack;
 import net.darktree.warzone.country.storage.Storage;
 import net.darktree.warzone.country.storage.StorageNode;
 import net.darktree.warzone.country.storage.StorageNodeSupplier;
-import net.darktree.warzone.event.ClickEvent;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.screen.WarehouseScreen;
 import net.darktree.warzone.world.World;

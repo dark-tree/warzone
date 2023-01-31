@@ -1,7 +1,7 @@
 package net.darktree.warzone.client.render.shader;
 
+import net.darktree.warzone.client.json.ShaderJsonBlob;
 import net.darktree.warzone.client.render.GLManager;
-import net.darktree.warzone.json.ShaderJsonBlob;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
 import org.lwjgl.opengl.GL32;

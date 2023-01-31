@@ -1,7 +1,6 @@
 package net.darktree.warzone.world;
 
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.event.TurnEvent;
 
 public interface WorldListener {
 

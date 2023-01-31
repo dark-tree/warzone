@@ -3,6 +3,8 @@ package net.darktree.warzone.screen.interactor;
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.client.window.input.ClickEvent;
+import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.network.packet.ColonizePacket;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.world.World;
@@ -45,8 +47,8 @@ public class UnitInteractor extends Interactor {
 	}
 
 	@Override
-	public void onClick(int button, int action, int mods, int x, int y) {
-		if (action == GLFW.GLFW_PRESS) {
+	public void onClick(ClickEvent event, int x, int y) {
+		if (event.isPressed()) {
 			if (this.action != null && world.isPositionValid(x, y)) {
 				if (this.action.setTarget(x, y)) {
 					world.getManager().apply(this.action);
@@ -58,22 +60,22 @@ public class UnitInteractor extends Interactor {
 	}
 
 	@Override
-	public void onKey(int key, int action, int mods) {
-		super.onKey(key, action, mods);
+	public void onKey(KeyEvent event) {
+		super.onKey(event);
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_K) {
+		if (event.isPressed(GLFW.GLFW_KEY_K)) {
 			new ColonizePacket(entity.getX(), entity.getY(), false).sendToHost();
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_W) {
+		if (event.isPressed(GLFW.GLFW_KEY_W)) {
 			new ColonizePacket(entity.getX(), entity.getY(), true).sendToHost();
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_Z) {
+		if (event.isPressed(GLFW.GLFW_KEY_Z)) {
 			world.getManager().apply(new ToggleArmorAction(world, entity.getX(), entity.getY()));
 		}
 
-		if (action == GLFW.GLFW_PRESS && key == GLFW.GLFW_KEY_A && !entity.hasActed()) {
+		if (event.isPressed(GLFW.GLFW_KEY_A) && !entity.hasActed()) {
 			PlayScreen.setInteractor(new UnitAttackInteractor(entity, world));
 		}
 	}

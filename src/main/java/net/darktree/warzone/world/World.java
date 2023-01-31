@@ -2,7 +2,6 @@ package net.darktree.warzone.world;
 
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.event.TurnEvent;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.Util;

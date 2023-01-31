@@ -5,7 +5,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.render.Textbox;
 import net.darktree.warzone.client.text.Text;
-import org.lwjgl.glfw.GLFW;
+import net.darktree.warzone.client.window.input.KeyEvent;
 
 public class LoginScreen extends DecoratedScreen {
 
@@ -35,12 +35,9 @@ public class LoginScreen extends DecoratedScreen {
 	}
 
 	@Override
-	public void onKey(int key, int action, int mods) {
-		super.onKey(key, action, mods);
-
-		if (action == GLFW.GLFW_PRESS || action == GLFW.GLFW_REPEAT) {
-			username.onKey(key);
-		}
+	public void onKey(KeyEvent event) {
+		super.onKey(event);
+		username.onKey(event);
 	}
 
 	@Override

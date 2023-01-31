@@ -116,6 +116,14 @@ public abstract class Building extends StructureEntity {
 			this(constructor, value, width, height, sprite, sprite);
 		}
 
+		public String getNameKey() {
+			return "building." + key() + ".name";
+		}
+
+		public String getDescriptionKey() {
+			return "building." + key() + ".description";
+		}
+
 	}
 
 }

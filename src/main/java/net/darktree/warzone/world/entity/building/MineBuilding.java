@@ -1,6 +1,6 @@
 package net.darktree.warzone.world.entity.building;
 
-import net.darktree.warzone.event.ClickEvent;
+import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.DeconstructBuildingAction;
 import net.darktree.warzone.world.tile.tiles.Tiles;

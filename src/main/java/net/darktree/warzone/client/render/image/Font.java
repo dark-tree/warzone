@@ -1,7 +1,7 @@
 package net.darktree.warzone.client.render.image;
 
+import net.darktree.warzone.client.json.FontJsonBlob;
 import net.darktree.warzone.client.render.ScreenRenderer;
-import net.darktree.warzone.json.FontJsonBlob;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
 

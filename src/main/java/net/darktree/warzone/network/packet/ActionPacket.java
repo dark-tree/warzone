@@ -1,12 +1,10 @@
 package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
-import net.darktree.warzone.network.Relay;
-import net.darktree.warzone.network.Side;
 import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.util.NBTHelper;
-import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.action.manager.Action;
 import net.querz.nbt.tag.CompoundTag;
 
@@ -17,11 +15,11 @@ public class ActionPacket extends SimplePacket {
 	private final Action action;
 	private final Symbol symbol;
 
-	public ActionPacket(ByteBuffer buffer, Side side, Relay relay) {
+	public ActionPacket(ByteBuffer buffer, PacketContext context) {
 		super(Packets.ACTION);
 
 		this.symbol = Symbol.fromIndex(buffer.get());
-		this.action = Action.fromNbt(NBTHelper.readCompound(buffer), WorldHolder.world);
+		this.action = Action.fromNbt(NBTHelper.readCompound(buffer), context.getWorld());
 	}
 
 	public ActionPacket(Symbol symbol, Action action) {
@@ -32,8 +30,8 @@ public class ActionPacket extends SimplePacket {
 	}
 
 	@Override
-	public void apply() {
-		WorldHolder.world.getManager().apply(symbol, action, true);
+	public void apply(PacketContext context) {
+		context.getWorld().getManager().apply(symbol, action, true);
 	}
 
 	@Override

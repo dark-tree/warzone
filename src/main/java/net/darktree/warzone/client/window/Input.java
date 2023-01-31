@@ -1,7 +1,11 @@
 package net.darktree.warzone.client.window;
 
+import net.darktree.warzone.client.window.input.ClickAction;
+import net.darktree.warzone.client.window.input.ClickEvent;
+import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.screen.ScreenStack;
+import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.WorldView;
 import org.lwjgl.glfw.GLFW;
 
@@ -26,7 +30,8 @@ public class Input {
 	}
 
 	void keyHandle(long handle, int key, int scancode, int action, int mods) {
-		ScreenStack.asFocused(screen -> screen.onKey(key, action, mods));
+		KeyEvent event = new KeyEvent(key, scancode, action, mods);
+		ScreenStack.asFocused(screen -> screen.onKey(event));
 	}
 
 	void cursorHandle(long handle, double x, double y) {
@@ -37,10 +42,11 @@ public class Input {
 	}
 
 	void clickHandle(long handle, int button, int action, int mods) {
-		ScreenStack.asFocused(screen -> screen.onClick(button, action, mods));
+		ClickEvent event = new ClickEvent(button, action, mods);
+		ScreenStack.asFocused(screen -> screen.onClick(event));
 
 		// if button was RELEASED the click is complete
-		clicked = (button == GLFW.GLFW_MOUSE_BUTTON_1 && action == GLFW.GLFW_RELEASE);
+		clicked = event.button == MouseButton.LEFT && event.action == ClickAction.RELEASE;
 	}
 
 	void scrollHandle(long handle, double x, double y) {
@@ -76,11 +82,18 @@ public class Input {
 	}
 
 	public boolean isButtonPressed(MouseButton button) {
-		return GLFW.glfwGetMouseButton(window.handle, button.code) == GLFW.GLFW_PRESS;
+		return GLFW.glfwGetMouseButton(window.handle, button.getCode()) == GLFW.GLFW_PRESS;
 	}
 
 	public boolean hasClicked() {
 		return clicked;
+	}
+
+	/**
+	 * An ugly hack to translate glfw keys to ASCII
+	 */
+	public static char glfwToAscii(int code) {
+		return (char) MathHelper.clamp(' ' + (code - GLFW.GLFW_KEY_SPACE), 32, 126);
 	}
 
 }

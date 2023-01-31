@@ -1,6 +1,7 @@
 package net.darktree.warzone;
 
 import net.darktree.warzone.client.Sounds;
+import net.darktree.warzone.client.render.GLManager;
 import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
@@ -27,7 +28,6 @@ import net.darktree.warzone.world.action.Actions;
 import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import org.lwjgl.Version;
-import org.lwjgl.opengl.GL30;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,8 +36,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import static org.lwjgl.opengl.GL32.glClearColor;
 
 public class Main {
 
@@ -65,8 +63,7 @@ public class Main {
 		window = Window.init(800, 500, "Warzone Open Rules | Java Edition");
 
 		// Set the clear color, evil blue from LT3D (patent pending)
-		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
-		GL30.glClear(GL30.GL_COLOR_BUFFER_BIT);
+		GLManager.useColor(0.01f, 0.66f, 0.92f);
 		Renderer.clear();
 		Renderer.swap();
 
@@ -94,9 +91,8 @@ public class Main {
 
 		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
 
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		Util.runAsync(() -> {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
 			while (true) {
 				try {
 					console(reader);
@@ -137,39 +133,40 @@ public class Main {
 
 	private static void console(BufferedReader reader) throws IOException {
 		String line = reader.readLine();
+		World world = game.getWorld().orElse(null);
 
-		if (line.startsWith("town ")) {
+		if (world != null && line.startsWith("town ")) {
 			String[] parts = line.split(" ");
 			int i = Integer.parseInt(parts[1]);
 
 			Main.runSynced(() -> {
-				PlayScreen.setInteractor(new OwnEditInteractor(Symbol.fromIndex((byte) i), WorldHolder.world));
+				PlayScreen.setInteractor(new OwnEditInteractor(Symbol.fromIndex((byte) i), world));
 			});
 		}
 
-		if (line.startsWith("tset ")) {
+		if (world != null && line.startsWith("tset ")) {
 			String[] parts = line.split(" ");
 
 			Main.runSynced(() -> {
-				PlayScreen.setInteractor(new SetEditInteractor(Registries.TILES.byKey(parts[1]).value().getDefaultVariant(), WorldHolder.world));
+				PlayScreen.setInteractor(new SetEditInteractor(Registries.TILES.byKey(parts[1]).value().getDefaultVariant(), world));
 			});
 		}
 
-		if (line.startsWith("tput ")) {
+		if (world != null && line.startsWith("tput ")) {
 			String[] parts = line.split(" ");
 			int x = Integer.parseInt(parts[1]);
 			int y = Integer.parseInt(parts[2]);
 
 			Main.runSynced(() -> {
-				WorldHolder.world.addEntity(Registries.ENTITIES.byKey(parts[3]).value().create(WorldHolder.world, x, y));
+				world.addEntity(Registries.ENTITIES.byKey(parts[3]).value().create(world, x, y));
 			});
 		}
 
-		if (line.startsWith("mkplayer ")) {
+		if (world != null && line.startsWith("mkplayer ")) {
 			String[] parts = line.split(" ");
 			int s = Integer.parseInt(parts[1]);
 
-			WorldHolder.world.defineCountry(Symbol.fromIndex((byte) s));
+			world.defineCountry(Symbol.fromIndex((byte) s));
 			Logger.warn("The world needs to be re-loaded for this change to fully apply!");
 		}
 
@@ -186,23 +183,23 @@ public class Main {
 			});
 		}
 
-		if (line.startsWith("give ")) {
+		if (world != null && line.startsWith("give ")) {
 			String[] parts = line.split(" ");
 			int count = Integer.parseInt(parts[2]);
 
 			Main.runSynced(() -> {
 				Resource.Quantified resource = Registries.RESOURCES.byKey(parts[1]).value().quantify(count);
-				WorldHolder.world.getCountry(WorldHolder.world.getCurrentSymbol()).addResource(resource);
+				world.getCountry(world.getCurrentSymbol()).addResource(resource);
 				Logger.info("Done!");
 			});
 		}
 
-		if (line.startsWith("upgrade ")) {
+		if (world != null && line.startsWith("upgrade ")) {
 			String[] parts = line.split(" ");
 
 			Main.runSynced(() -> {
 				Upgrade<?> upgrade = Registries.UPGRADES.byKey(parts[1]).value();
-				WorldHolder.world.getCountry(WorldHolder.world.getCurrentSymbol()).upgrades.grant(upgrade);
+				world.getCountry(world.getCurrentSymbol()).upgrades.grant(upgrade);
 				Logger.info("Done!");
 			});
 		}
@@ -211,30 +208,30 @@ public class Main {
 			UserGroup.instance.close();
 		}
 
-		if (line.startsWith("self ")) {
-			WorldHolder.world.self = Symbol.fromIndex((byte) Integer.parseInt(line.split(" ")[1]));
+		if (world != null && line.startsWith("self ")) {
+			world.self = Symbol.fromIndex((byte) Integer.parseInt(line.split(" ")[1]));
 			Logger.info("Identity set!");
 		}
 
-		if (line.startsWith("rmake ")) {
+		if (world != null && line.startsWith("rmake ")) {
 			String[] parts = line.split(" ");
 			UserGroup.make(parts[1], group -> {
-				WorldHolder.world.manager = new ActionManager.Host(WorldHolder.world);
+				world.manager = new ActionManager.Host(world);
 			}, reason -> {
 				ScreenStack.open(new PopupScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
-				WorldHolder.world.manager = new ActionManager(WorldHolder.world);
+				world.manager = new ActionManager(world);
 				UserGroup.instance.close();
 				UserGroup.instance = null;
 			});
 		}
 
-		if (line.startsWith("rjoin ")) {
+		if (world != null && line.startsWith("rjoin ")) {
 			String[] parts = line.split(" ");
 			UserGroup.join(parts[1], Integer.parseInt(parts[2]), group -> {
-				WorldHolder.world.manager = new ActionManager.Client(WorldHolder.world);
+				world.manager = new ActionManager.Client(world);
 			}, reason -> {
 				ScreenStack.open(new PopupScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
-				WorldHolder.world.manager = new ActionManager(WorldHolder.world);
+				world.manager = new ActionManager(world);
 				UserGroup.instance.close();
 				UserGroup.instance = null;
 			});

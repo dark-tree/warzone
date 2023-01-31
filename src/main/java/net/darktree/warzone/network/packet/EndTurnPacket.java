@@ -1,16 +1,14 @@
 package net.darktree.warzone.network.packet;
 
+import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
-import net.darktree.warzone.network.Relay;
-import net.darktree.warzone.network.Side;
 import net.darktree.warzone.network.SimplePacket;
-import net.darktree.warzone.world.WorldHolder;
 
 import java.nio.ByteBuffer;
 
 public class EndTurnPacket extends SimplePacket {
 
-	public EndTurnPacket(ByteBuffer buffer, Side side, Relay relay) {
+	public EndTurnPacket(ByteBuffer buffer, PacketContext context) {
 		super(Packets.END_TURN);
 	}
 
@@ -19,8 +17,8 @@ public class EndTurnPacket extends SimplePacket {
 	}
 
 	@Override
-	public void apply() {
-		WorldHolder.world.nextPlayerTurn();
+	public void apply(PacketContext context) {
+		context.getWorld().nextPlayerTurn();
 	}
 
 }

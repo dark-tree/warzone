@@ -8,15 +8,15 @@ public class GroupSyncPacket extends Packet<UserGroup> {
 
 	private final UserGroup group;
 
-	public GroupSyncPacket(ByteBuffer buffer, Side side, Relay relay) {
+	public GroupSyncPacket(ByteBuffer buffer, PacketContext context) {
 		super(Packets.GROUP_SYNC);
-		side.expect(Side.CLIENT);
+		context.expect(Side.CLIENT);
 
 		int host = buffer.getInt();
 		int gid = buffer.getInt();
 		int count = buffer.getInt();
 
-		this.group = new UserGroup(relay, host, gid);
+		this.group = new UserGroup(context.getRelay(), host, gid);
 
 		for (int i = 0; i < count; i ++) {
 			group.join(buffer.getInt());

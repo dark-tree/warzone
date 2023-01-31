@@ -2,9 +2,9 @@ package net.darktree.warzone.world.entity;
 
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.upgrade.Upgrades;
-import net.darktree.warzone.event.ClickEvent;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.UnitInteractor;
 import net.darktree.warzone.world.World;

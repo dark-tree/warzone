@@ -5,6 +5,7 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
+import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.BuildAction;
@@ -77,7 +78,7 @@ public class BuildInteractor extends Interactor {
 	}
 
 	@Override
-	public void onClick(int button, int action, int mods, int x, int y) {
+	public void onClick(ClickEvent event, int x, int y) {
 		if (valid && this.x == x && this.y == y) {
 			world.getManager().apply(new BuildAction(world, type, this.x, this.y));
 			this.closed = true;
