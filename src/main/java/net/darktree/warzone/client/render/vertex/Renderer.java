@@ -93,8 +93,15 @@ public class Renderer {
 	/**
 	 * Finish this frame and prepare for the next one
 	 */
-	public static void next() {
+	@Deprecated
+	public static void swap() {
 		Main.window.swap();
+	}
+
+	/**
+	 * Clear the screen
+	 */
+	public static void clear() {
 		GL32.glClear(GL32.GL_COLOR_BUFFER_BIT | GL32.GL_DEPTH_BUFFER_BIT);
 	}
 

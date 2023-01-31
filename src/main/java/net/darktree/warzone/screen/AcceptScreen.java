@@ -22,7 +22,7 @@ public class AcceptScreen extends Screen {
 
 	protected void drawButtons() {
 		ScreenRenderer.setOffset(80, -120);
-		if (ScreenRenderer.button(TEXT_OK, 2, 38, 80, true)) {
+		if (ScreenRenderer.button(TEXT_OKAY, 2, 38, 80, true)) {
 			super.close();
 		}
 	}

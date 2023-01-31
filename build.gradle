@@ -5,6 +5,7 @@ plugins {
     id 'application'
 }
 
+mainClassName = 'net.darktree.warzone.Main'
 group 'net.darktree'
 version '1.0'
 
@@ -63,9 +64,15 @@ test {
     useJUnitPlatform()
 }
 
+run {
+    File runDirectory = new File('build/run/')
+    runDirectory.mkdirs()
+    workingDir = runDirectory
+}
+
 jar {
     manifest {
-        attributes 'Main-Class': 'net.darktree.warzone.Main'
+        attributes 'Main-Class': mainClassName
         attributes 'Application-Version': version
     }
 }

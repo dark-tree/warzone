@@ -36,9 +36,6 @@ public class MainMenuScreen extends DecoratedScreen {
 			this.emplace(new FreeplayMenuScreen());
 		}
 
-//		ScreenRenderer.offset(0, -100);
-//		ScreenRenderer.button("OPTIONS", 4, 38, 80, true);
-
 		ScreenRenderer.offset(0, -100);
 		if (ScreenRenderer.button("QUIT", 4, 38, 80, true) ) {
 			tryClose();

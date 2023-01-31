@@ -235,7 +235,7 @@ public class ScreenRenderer {
 		return focus && !(mx > bx + right * psx || my > by + top * psy);
 	}
 
-	private static boolean button(int width, int height, boolean active) {
+	private static boolean button(int width, int height, boolean active, Color override) {
 		boolean hover = active && isMouseOver(width, height);
 
 		if (hover) {
@@ -248,13 +248,21 @@ public class ScreenRenderer {
 			setColor(active ? Colors.BUTTON_DEFAULT : Colors.BUTTON_INACTIVE);
 		}
 
+		if (override != null) {
+			setColor(override);
+		}
+
 		return hover && Main.window.input().hasClicked();
 	}
 
 	public static boolean button(CharSequence text, int count, int size, int height, boolean active) {
+		return button(text, count, size, height, active, null);
+	}
+
+	public static boolean button(CharSequence text, int count, int size, int height, boolean active, Color override) {
 		push();
 		int width = height / 2;
-		boolean status = button(width * (count + 2), height, active);
+		boolean status = button(width * (count + 2), height, active, override);
 
 		int sx = ox;
 		Alignment alignment = currentAlignment;
@@ -286,7 +294,11 @@ public class ScreenRenderer {
 	}
 
 	public static boolean button(Sprite sprite, int width, int height, boolean active) {
-		boolean status = button(width, height, active);
+		return button(sprite, width, height, active, null);
+	}
+
+	public static boolean button(Sprite sprite, int width, int height, boolean active, Color override) {
+		boolean status = button(width, height, active, override);
 
 		ScreenRenderer.setSprite(sprite);
 		ScreenRenderer.box(width, height);

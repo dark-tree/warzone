@@ -24,11 +24,10 @@ public class Resources {
 		try {
 			Path location = Path.of(Objects.requireNonNull(LOADER.getResource(path)).toURI());
 
-			if( Files.exists(location) ) {
+			if (Files.exists(location)) {
 				return location;
 			}
-		}catch (Exception ignored) {
-		}
+		}catch (Exception ignored) {}
 
 		Path of = Path.of(WORKPLACE + "/" + path);
 		if (Files.exists(of)) {

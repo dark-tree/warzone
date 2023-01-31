@@ -29,5 +29,6 @@ public class Colors {
 	public static final Color MAP_LIST_DEFAULT = ATLAS.getColor("map_list_default");
 	public static final Color MAP_LIST_HOVER = ATLAS.getColor("map_list_hover");
 	public static final Color MAP_LIST_SELECTED = ATLAS.getColor("map_list_selected");
+	public static final Color TEXTBOX_SELECTED = ATLAS.getColor("textbox_selected");
 
 }

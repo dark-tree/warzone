@@ -20,5 +20,6 @@
   "card_background": [0.674, 0.568, 0.517, 1],
   "map_list_default": [0.0, 0.0, 0.0, 0.2],
   "map_list_hover": [0.0, 0.0, 0.0, 0.3],
-  "map_list_selected": [0.1, 0.6, 0.9, 0.5]
+  "map_list_selected": [0.1, 0.6, 0.9, 0.5],
+  "textbox_selected": [0.1, 0.7, 0.9, 0.3]
 }

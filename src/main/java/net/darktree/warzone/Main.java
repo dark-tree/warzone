@@ -2,6 +2,7 @@ package net.darktree.warzone;
 
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.render.image.Font;
+import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Window;
@@ -17,7 +18,6 @@ import net.darktree.warzone.screen.PopupScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.screen.interactor.OwnEditInteractor;
 import net.darktree.warzone.screen.interactor.SetEditInteractor;
-import net.darktree.warzone.screen.menu.MainMenuScreen;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
 import net.darktree.warzone.util.Util;
@@ -27,6 +27,7 @@ import net.darktree.warzone.world.action.Actions;
 import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import org.lwjgl.Version;
+import org.lwjgl.opengl.GL30;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,10 +58,17 @@ public class Main {
 	public static void main(String[] args) {
 		Logger.info("Current working directory: ", Resources.path());
 		Logger.info("Using LWJGL ", Version.getVersion());
+		Logger.info("Using Java ", Runtime.version().feature(), " (", Runtime.version(), ")");
 
 		long start = System.currentTimeMillis();
 
 		window = Window.init(800, 500, "Warzone Open Rules | Java Edition");
+
+		// Set the clear color, evil blue from LT3D (patent pending)
+		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
+		GL30.glClear(GL30.GL_COLOR_BUFFER_BIT);
+		Renderer.clear();
+		Renderer.swap();
 
 		Packets.load();
 		SoundSystem.enable();
@@ -71,17 +79,14 @@ public class Main {
 		Util.load(Upgrades.class);
 		Util.load(net.darktree.warzone.country.Resources.class);
 
-		// Set the clear color, evil blue from LT3D (patent pending)
-		glClearColor(0.01f, 0.66f, 0.92f, 0.00f);
-
 		WorldHolder.setWorld(new World(8, 8));
 		WorldHolder.world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
 
 		// load and set font
 		Font scribble = Font.load("scribble");
-		game = new Game();
 
-		ScreenStack.open(new MainMenuScreen());
+		game = new Game();
+		game.initialize();
 
 		BuildScreen.register(Tiles.WAREHOUSE);
 		BuildScreen.register(Tiles.FACTORY);
