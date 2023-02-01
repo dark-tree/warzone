@@ -67,7 +67,9 @@ test {
 run {
     File runDirectory = new File('build/run/')
     runDirectory.mkdirs()
+
     workingDir = runDirectory
+    standardInput = System.in
 }
 
 jar {
