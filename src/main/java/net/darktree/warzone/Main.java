@@ -23,7 +23,6 @@ import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Resources;
 import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.action.Actions;
 import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.tile.tiles.Tiles;
@@ -76,14 +75,11 @@ public class Main {
 		Util.load(Upgrades.class);
 		Util.load(net.darktree.warzone.country.Resources.class);
 
-		WorldHolder.setWorld(new World(8, 8));
-		WorldHolder.world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
+		game = new Game();
+		game.initialize();
 
 		// load and set font
 		Font scribble = Font.load("scribble");
-
-		game = new Game();
-		game.initialize();
 
 		BuildScreen.register(Tiles.WAREHOUSE);
 		BuildScreen.register(Tiles.FACTORY);
@@ -176,10 +172,10 @@ public class Main {
 			int h = Integer.parseInt(parts[2]);
 
 			Main.runSynced(() -> {
-				WorldHolder.setWorld(new World(w, h));
-				WorldHolder.world.loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
+				game.setWorld(new World(w, h));
+				game.getWorld().orElseThrow().loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
 				ScreenStack.closeAll();
-				ScreenStack.open(new PlayScreen(null, WorldHolder.world));
+				ScreenStack.open(new PlayScreen(null, game.getWorld().orElseThrow()));
 			});
 		}
 

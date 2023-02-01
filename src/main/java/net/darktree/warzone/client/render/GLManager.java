@@ -1,6 +1,5 @@
 package net.darktree.warzone.client.render;
 
-import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL32.*;
 
 public class GLManager {

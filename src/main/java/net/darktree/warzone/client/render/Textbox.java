@@ -16,10 +16,6 @@ public class Textbox {
 		this.validator = validator;
 	}
 
-	private char glfwToAscii(int code) {
-		return (char) (' ' + (code - GLFW.GLFW_KEY_SPACE));
-	}
-
 	public void pop() {
 		if (value.length() > 0) {
 			value = value.substring(0, value.length() - 1);

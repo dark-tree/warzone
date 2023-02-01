@@ -1,8 +1,8 @@
 package net.darktree.warzone.network;
 
+import net.darktree.warzone.Main;
 import net.darktree.warzone.network.packet.GroupSyncPacket;
 import net.darktree.warzone.network.packet.WorldSyncPacket;
-import net.darktree.warzone.world.WorldHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class UserGroup {
 			self.onGroupJoined(uid -> {
 				group.join(uid);
 				group.sync();
-				new WorldSyncPacket(WorldHolder.world).sendToUser(uid);
+				new WorldSyncPacket(Main.game.getWorld().orElseThrow()).sendToUser(uid);
 			});
 
 			self.onGroupLeft(uid -> {

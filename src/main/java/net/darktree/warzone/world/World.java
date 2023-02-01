@@ -1,5 +1,6 @@
 package net.darktree.warzone.world;
 
+import net.darktree.warzone.Main;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Logger;
@@ -56,8 +57,7 @@ public class World implements WorldEntityView, NbtSerializable {
 		this.renderer = new WorldRenderer(this);
 		this.control = new ControlFinder(this);
 
-		// FIXME: ugly hack to force buffer reload
-		WorldHolder.setWorld(this);
+		// FIXME: reload world buffers here, reopen the PlayScreen(?)
 	}
 
 	public void toNbt(@NotNull CompoundTag tag) {
@@ -139,7 +139,7 @@ public class World implements WorldEntityView, NbtSerializable {
 	@Deprecated
 	public static World load(CompoundTag tag) {
 		World world = new World(0, 0);
-		WorldHolder.setWorld(world);
+		Main.game.setWorld(world);
 		world.fromNbt(tag);
 		return world;
 	}

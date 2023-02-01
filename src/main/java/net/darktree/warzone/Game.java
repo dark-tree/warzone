@@ -10,7 +10,6 @@ import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.NbtAccess;
 import net.darktree.warzone.util.Resources;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.WorldSave;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
@@ -25,6 +24,7 @@ public class Game {
 
 	private static final File location = Path.of(Resources.path() + "/state/game.dat").toFile();
 	private CompoundTag state;
+	private World world;
 	public Language lang;
 
 	public Game() {
@@ -32,7 +32,11 @@ public class Game {
 	}
 
 	public Optional<World> getWorld() {
-		return Optional.ofNullable(WorldHolder.world);
+		return Optional.ofNullable(world);
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
 	}
 
 	public List<WorldSave> getSaves() {

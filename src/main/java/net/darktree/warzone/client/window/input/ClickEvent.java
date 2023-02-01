@@ -20,7 +20,6 @@ public class ClickEvent {
 		return isPressed() && button == MouseButton.RIGHT;
 	}
 
-
 	public boolean isPressed() {
 		return action == ClickAction.PRESS;
 	}

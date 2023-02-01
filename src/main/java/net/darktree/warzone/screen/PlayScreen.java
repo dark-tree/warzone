@@ -3,9 +3,7 @@ package net.darktree.warzone.screen;
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
-import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
-import net.darktree.warzone.client.render.WorldBuffers;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.ClickEvent;
@@ -18,14 +16,13 @@ import net.darktree.warzone.screen.hotbar.Hotbar;
 import net.darktree.warzone.screen.interactor.Interactor;
 import net.darktree.warzone.screen.menu.PauseMenuScreen;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.WorldHolder;
 import net.darktree.warzone.world.WorldSave;
 import net.darktree.warzone.world.WorldView;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.overlay.MapOverlay;
 import org.lwjgl.glfw.GLFW;
 
-public class PlayScreen extends Screen {
+public class PlayScreen extends WorldScreen {
 
 	private Interactor interactor = null;
 
@@ -36,23 +33,19 @@ public class PlayScreen extends Screen {
 	}
 
 	private boolean isMapFocused = true;
-	private final World world;
 	private final WorldSave save;
 
 	public PlayScreen(WorldSave save, World world) {
-		this.world = world;
+		super(world);
 		this.save = save;
 	}
 
 	@Override
 	public void draw(boolean focused) {
-
+		super.draw(focused);
 		isMapFocused = focused;
 
-		WorldHolder.draw();
-
 		if (interactor != null) {
-			WorldBuffers buffers = WorldHolder.buffers;
 			interactor.draw(buffers.getEntity(), buffers.getOverlay());
 
 			if (interactor.isClosed()) {
@@ -61,8 +54,7 @@ public class PlayScreen extends Screen {
 			}
 		}
 
-		WorldHolder.buffers.draw();
-
+		buffers.draw();
 		Symbol symbol = world.getActiveSymbol();
 
 		// render HUD
