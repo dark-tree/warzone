@@ -1,5 +1,7 @@
 package net.darktree.warzone.client.sound.source;
 
+import net.darktree.warzone.client.sound.buffer.AudioBuffer;
+
 final class DummyAudioSource implements AudioSource {
 
 	@Override
@@ -30,6 +32,11 @@ final class DummyAudioSource implements AudioSource {
 	@Override
 	public void stop() {
 
+	}
+
+	@Override
+	public boolean isOfBuffer(AudioBuffer buffer) {
+		return true;
 	}
 
 }

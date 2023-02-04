@@ -4,12 +4,12 @@ import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.screen.ParliamentScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.tile.tiles.Tiles;
+import net.darktree.warzone.world.entity.Entities;
 
 public class ParliamentBuilding extends Building {
 
 	public ParliamentBuilding(World world, int x, int y) {
-		super(world, x, y, Tiles.PARLIAMENT);
+		super(world, x, y, Entities.PARLIAMENT);
 	}
 
 	@Override

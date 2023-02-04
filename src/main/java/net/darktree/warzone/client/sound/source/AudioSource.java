@@ -1,9 +1,15 @@
 package net.darktree.warzone.client.sound.source;
 
+import net.darktree.warzone.client.sound.buffer.AudioBuffer;
+
 public interface AudioSource {
 
 	static AudioSource dummy() {
 		return new DummyAudioSource();
+	}
+
+	default SmoothSource getInterpolated(float time, float volume) {
+		return new SmoothSource(this, time, volume);
 	}
 
 	/**
@@ -35,5 +41,10 @@ public interface AudioSource {
 	 * Stop playing
 	 */
 	void stop();
+
+	/**
+	 * Check if this source is an instance of AudioBuffer
+	 */
+	boolean isOfBuffer(AudioBuffer buffer);
 
 }

@@ -30,18 +30,11 @@ public final class NativeAudioBuffer implements AudioBuffer {
 	}
 
 	private int formatOf(int channels) {
-		boolean stereo = channels > 1;
-
-		if (stereo) {
-			Logger.warn("Stereo audio detected, attenuation is not supported!");
-			return AL10.AL_FORMAT_STEREO16;
-		}
-
-		return AL10.AL_FORMAT_MONO16;
+		return (channels > 1) ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
 	}
 
 	private void load(String path) {
-		Logger.info("Loading sound file: ", path);
+		int format = 0;
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer channelCount = stack.mallocInt(1);
@@ -50,15 +43,22 @@ public final class NativeAudioBuffer implements AudioBuffer {
 			ShortBuffer data = STBVorbis.stb_vorbis_decode_filename(Objects.requireNonNull(Resources.location(path)).toString(), channelCount, sampleRate);
 
 			if (data == null) {
-				Logger.warn("Failed to decode sound file: ", path);
+				Logger.error("Loading sound: '", path, "' failed, unable to decode data!");
 				return;
 			}
 
 			try {
-				AL10.alBufferData(buffer, formatOf(channelCount.get()), data, sampleRate.get());
+				format = formatOf(channelCount.get());
+				AL10.alBufferData(buffer, format, data, sampleRate.get());
 			}catch (Exception e) {
-				Logger.warn("Failed to upload sound file: ", path);
+				Logger.error("Loading sound: '", path, "' failed, unable to upload data!");
 				e.printStackTrace();
+			}
+
+			if (format == AL10.AL_FORMAT_STEREO16) {
+				Logger.warn("Loading sound: '", path, "' completed. Attenuation not supported!");
+			} else {
+				Logger.info("Loading sound: '", path, "' completed.");
 			}
 		}
 	}

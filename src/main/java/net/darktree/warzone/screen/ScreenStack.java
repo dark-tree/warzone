@@ -16,6 +16,7 @@ public class ScreenStack {
 	public static void draw() {
 		int last = stack.size() - 1;
 
+		ScreenRenderer.prepare();
 		for (int i = 0; i < stack.size(); i ++) {
 			boolean focused = (i == last);
 			Screen screen = stack.get(i);

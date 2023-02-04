@@ -159,4 +159,8 @@ public class Window implements AutoCloseable {
 		glfwSetWindowShouldClose(handle, true);
 	}
 
+	public double getRunTime() {
+		return glfwGetTime();
+	}
+
 }

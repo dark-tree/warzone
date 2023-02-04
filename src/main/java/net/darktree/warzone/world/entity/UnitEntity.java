@@ -10,7 +10,6 @@ import net.darktree.warzone.screen.interactor.UnitInteractor;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.pattern.ShapeHelper;
 import net.darktree.warzone.world.tile.TileState;
-import net.darktree.warzone.world.tile.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +19,7 @@ public class UnitEntity extends MovingEntity {
 	public boolean armored = false;
 
 	public UnitEntity(World world, int x, int y) {
-		super(world, x, y, Tiles.UNIT);
+		super(world, x, y, Entities.UNIT);
 	}
 
 	/**

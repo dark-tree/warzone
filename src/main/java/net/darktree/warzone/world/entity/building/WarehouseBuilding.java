@@ -10,7 +10,7 @@ import net.darktree.warzone.country.storage.StorageNodeSupplier;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.screen.WarehouseScreen;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.tile.tiles.Tiles;
+import net.darktree.warzone.world.entity.Entities;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ public class WarehouseBuilding extends Building implements StorageNodeSupplier {
 	private final LimitedStorageStack storage = new LimitedStorageStack();
 
 	public WarehouseBuilding(World world, int x, int y) {
-		super(world, x, y, Tiles.WAREHOUSE);
+		super(world, x, y, Entities.WAREHOUSE);
 		storage.addResourceNode(Resources.MATERIALS, Storage.LARGE);
 	}
 

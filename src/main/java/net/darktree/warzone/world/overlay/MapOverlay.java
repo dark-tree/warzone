@@ -10,7 +10,7 @@ public class MapOverlay extends Overlay {
 
 	@Override
 	public Color getColor(World world, int x, int y, TileState state) {
-		if (state.getOwner() == world.getSelf()) {
+		if (state.getOwner() == world.getCurrentSymbol()) {
 			return world.canControl(x, y) ? Colors.OVERLAY_NONE : ((Main.window.profiler.getFrameCount() / 30 % 2 == 0) ? Colors.OVERLAY_NONE : Colors.OVERLAY_FOREIGN);
 		}
 

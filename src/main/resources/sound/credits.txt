@@ -6,3 +6,5 @@ draw_thing.ogg - 123jorre456 - https://freesound.org/people/123jorre456/sounds/4
 draw_path.ogg - 123jorre456 - https://freesound.org/people/123jorre456/sounds/46624/
 equip.ogg - mrickey13 - https://freesound.org/people/mrickey13/sounds/518850/ (remixed)
 page_turn.ogg - flag2 - https://freesound.org/people/flag2/sounds/63318/
+pop.ogg - SunnySideSound - https://freesound.org/people/SunnySideSound/sounds/67095/
+select.ogg - coltures - https://freesound.org/people/coltures/sounds/391477/

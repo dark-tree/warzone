@@ -4,6 +4,7 @@ import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.ClickEvent;
@@ -91,7 +92,8 @@ public class PlayScreen extends WorldScreen {
 
 	private void appendDebugInfo(StringBuilder builder) {
 		builder.append(Main.window.profiler.getFrameRate()).append(" FPS");
-		builder.append(" (").append(world.self.name()).append(')');
+		builder.append("\nP=").append(SoundSystem.getSourceCount()).append(' ');
+		ScreenRenderer.appendDebugInfo(builder);
 
 		if (UserGroup.instance != null) {
 			builder.append('\n').append(UserGroup.instance.relay);

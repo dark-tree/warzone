@@ -1,5 +1,6 @@
 package net.darktree.warzone.client.sound;
 
+import net.darktree.warzone.client.sound.buffer.AudioBuffer;
 import net.darktree.warzone.client.sound.buffer.NativeAudioBuffer;
 import net.darktree.warzone.client.sound.source.NativeAudioSource;
 import net.darktree.warzone.util.Logger;
@@ -22,6 +23,7 @@ public class SoundSystem {
 	private static final List<NativeAudioSource> sources = new ArrayList<>();
 	private static final List<NativeAudioBuffer> buffers = new ArrayList<>();
 	private static boolean ready = false;
+	private static final MusicPlayer music = new MusicPlayer(4, 0.25f);
 
 	/**
 	 * Initialize and enable the sound system
@@ -43,8 +45,8 @@ public class SoundSystem {
 		ALCCapabilities capabilities = ALC.createCapabilities(device);
 		AL.createCapabilities(capabilities);
 
-		Logger.info("Sound system started!");
 		ready = true;
+		Logger.info("Sound system started!");
 	}
 
 	/**
@@ -77,6 +79,7 @@ public class SoundSystem {
 	 */
 	public static void tick() {
 		sources.removeIf(source -> !source.tick());
+		music.tick();
 	}
 
 	/**
@@ -98,6 +101,20 @@ public class SoundSystem {
 		sources.add(source);
 
 		return source;
+	}
+
+	/**
+	 * Play a buffer as music
+	 */
+	public static void startMusic(AudioBuffer buffer) {
+		music.play(buffer);
+	}
+
+	/**
+	 * Stop all music
+	 */
+	public static void stopMusic() {
+		music.stopAll();
 	}
 
 	/**

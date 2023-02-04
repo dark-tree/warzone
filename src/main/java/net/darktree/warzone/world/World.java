@@ -240,17 +240,11 @@ public class World implements WorldEntityView, NbtSerializable {
 	}
 
 	public boolean isActiveSymbol() {
-		return self == getCurrentSymbol();
+		return getCountry(getCurrentSymbol()).getController().isSelf();
 	}
 
 	public Symbol getActiveSymbol() {
-		return isActiveSymbol() ? self : null;
-	}
-
-	public Symbol self = Symbol.CROSS;
-
-	public Symbol getSelf() {
-		return self;
+		return isActiveSymbol() ? getCurrentSymbol() : null;
 	}
 
 	/**

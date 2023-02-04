@@ -1,6 +1,7 @@
 package net.darktree.warzone.country;
 
 import net.darktree.warzone.Registries;
+import net.darktree.warzone.country.controller.NullController;
 import net.darktree.warzone.country.storage.LocalStorageNode;
 import net.darktree.warzone.country.storage.Storage;
 import net.darktree.warzone.country.storage.StorageNode;
@@ -29,6 +30,7 @@ public class Country implements NbtSerializable, WorldListener {
 	private final Map<Resource, Storage> resources;
 	private final StorageNode local;
 
+	public Controller controller = new NullController();
 	private int colonizations = 0;
 	private int parliaments = 0;
 	private int income = 0;
@@ -151,6 +153,10 @@ public class Country implements NbtSerializable, WorldListener {
 		return nodes;
 	}
 
+	public float getRelationWith(Symbol symbol) {
+		return 0;
+	}
+
 	public int getLocalMaterials() {
 		return local.amount();
 	}
@@ -165,6 +171,10 @@ public class Country implements NbtSerializable, WorldListener {
 
 	public void onColonize() {
 		colonizations ++;
+	}
+
+	public Controller getController() {
+		return controller;
 	}
 
 }

@@ -1,10 +1,7 @@
 package net.darktree.warzone.client.render;
 
 import net.darktree.warzone.Main;
-import net.darktree.warzone.client.Buffers;
-import net.darktree.warzone.client.Colors;
-import net.darktree.warzone.client.Shaders;
-import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.*;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.image.Sprite;
@@ -14,9 +11,11 @@ import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.client.window.input.MouseButton;
+import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.math.Vec2i;
 import net.darktree.warzone.world.WorldView;
 
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -26,7 +25,10 @@ public class ScreenRenderer {
 	private static final Input INPUT = Window.INSTANCE.input();
 	private static final Map<TextureConvertible, Pipeline> pipelines = new IdentityHashMap<>();
 	private static final Pipeline quads = new Pipeline(Buffers.IMMEDIATE.build(), Shaders.GUI, Sprites.ATLAS);
+	private static final HashMap<Integer, ScreenComponent> components = new HashMap<>();
+	private static final Stack<Vec2i> offsets = new Stack<>();
 
+	private static int identifier;
 	private static float scale, psx, psy;
 	private static float x, y;
 	private static int ox, oy;
@@ -35,7 +37,6 @@ public class ScreenRenderer {
 	private static Sprite quadSprite;
 	private static Font currentFont;
 	private static Alignment currentAlignment = Alignment.LEFT;
-	private static final Stack<Vec2i> offsets = new Stack<>();
 
 	private static float projectMapIntoScreenX(WorldView view, int x) {
 		return (x + view.offsetX) * view.scaleX;
@@ -47,6 +48,10 @@ public class ScreenRenderer {
 
 	public static void registerFontPipeline(TextureConvertible texture) {
 		pipelines.put(texture, new Pipeline(Buffers.IMMEDIATE.build(), Shaders.TEXT, texture));
+	}
+
+	public static void appendDebugInfo(StringBuilder builder) {
+		builder.append("SC=").append(components.size());
 	}
 
 	/**
@@ -62,6 +67,18 @@ public class ScreenRenderer {
 		for (Pipeline pipeline : pipelines.values()) {
 			pipeline.flush();
 		}
+	}
+
+	/**
+	 * Prepare screen renderer for the next frame
+	 */
+	public static void prepare() {
+		if (identifier == 0 && !components.isEmpty()) {
+			Logger.info("Cleared ", components.size(), " GUI components, this should not happen too often!");
+			components.clear();
+		}
+
+		identifier = 0;
 	}
 
 	/**
@@ -86,6 +103,26 @@ public class ScreenRenderer {
 
 		ox = offset.x;
 		oy = offset.y;
+	}
+
+	/**
+	 * Get (or create default) screen component with the given ID
+	 */
+	private static ScreenComponent getComponent(int identifier) {
+		ScreenComponent component = components.get(identifier);
+		if (component == null) {
+			component = new ScreenComponent();
+			components.put(identifier, component);
+		}
+
+		return component;
+	}
+
+	/**
+	 * Get the last used screen component
+	 */
+	public static ScreenComponent getLastComponent() {
+		return getComponent(identifier);
 	}
 
 	/**
@@ -152,7 +189,6 @@ public class ScreenRenderer {
 		currentFont = font;
 	}
 
-
 	/**
 	 * Set sprite for quad renderer
 	 */
@@ -190,7 +226,6 @@ public class ScreenRenderer {
 		return box(width, height);
 	}
 
-
 	/**
 	 * Render textured box
 	 */
@@ -209,15 +244,16 @@ public class ScreenRenderer {
 		Renderer.line(quads.buffer, sx, sy, sx + vx * psx, sy + vy * psy, width * scale, cr, cg, cb, ca);
 	}
 
+	/**
+	 * Draw a string based on its translation key
+	 */
 	public static void translatedText(float size, String value, Object... values) {
 		text(size, Main.game.lang.formatted(value, values));
 	}
 
-	@Deprecated
-	public static void literalText(float size, String value) {
-		text(size, value);
-	}
-
+	/**
+	 * Draw a text
+	 */
 	public static void text(float size, CharSequence text) {
 		Renderer.text(text.toString(), currentFont, pipelines.get(currentFont).buffer, x + ox * psx, y + oy * psy, size * psx, size * psy, cr, cg, cb, ca, currentAlignment);
 	}
@@ -237,8 +273,13 @@ public class ScreenRenderer {
 
 	private static boolean button(int width, int height, boolean active, Color override) {
 		boolean hover = active && isMouseOver(width, height);
+		ScreenComponent component = getComponent(identifier ++);
 
 		if (hover) {
+			if (!component.selected) {
+				Sounds.SELECT.play().setVolume(0.5f);
+			}
+
 			setColor(Colors.BUTTON_HOVER);
 
 			if (INPUT.isButtonPressed(MouseButton.LEFT)) {
@@ -252,6 +293,7 @@ public class ScreenRenderer {
 			setColor(override);
 		}
 
+		component.selected = hover;
 		return hover && Main.window.input().hasClicked();
 	}
 

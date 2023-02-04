@@ -9,6 +9,8 @@ import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.country.controller.LocalController;
+import net.darktree.warzone.country.controller.NullController;
 import net.darktree.warzone.country.upgrade.Upgrade;
 import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.network.Packets;
@@ -25,6 +27,7 @@ import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.Actions;
 import net.darktree.warzone.world.action.manager.ActionManager;
+import net.darktree.warzone.world.entity.Entities;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import org.lwjgl.Version;
 
@@ -81,9 +84,9 @@ public class Main {
 		// load and set font
 		Font scribble = Font.load("scribble");
 
-		BuildScreen.register(Tiles.WAREHOUSE);
-		BuildScreen.register(Tiles.FACTORY);
-		BuildScreen.register(Tiles.PARLIAMENT);
+		BuildScreen.register(Entities.WAREHOUSE);
+		BuildScreen.register(Entities.FACTORY);
+		BuildScreen.register(Entities.PARLIAMENT);
 
 		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
 
@@ -205,7 +208,11 @@ public class Main {
 		}
 
 		if (world != null && line.startsWith("self ")) {
-			world.self = Symbol.fromIndex((byte) Integer.parseInt(line.split(" ")[1]));
+			String[] parts = line.split(" ");
+			Symbol symbol = Symbol.fromIndex((byte) Integer.parseInt(parts[1]));
+			boolean self = Boolean.parseBoolean(parts[2]);
+
+			world.getCountry(symbol).controller = self ? new LocalController() : new NullController();
 			Logger.info("Identity set!");
 		}
 

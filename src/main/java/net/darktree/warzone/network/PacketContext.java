@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 public class PacketContext {
 
-	public static PacketContext LOCAL = new PacketContext(null, null);
+	public static final PacketContext LOCAL = new PacketContext(null, null);
 
 	private final Side side;
 	private final Relay relay;

@@ -7,7 +7,7 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.CityInteractor;
 import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.tile.tiles.Tiles;
+import net.darktree.warzone.world.entity.Entities;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +17,7 @@ public class CapitolBuilding extends Building {
 	public boolean summoned;
 
 	public CapitolBuilding(World world, int x, int y) {
-		super(world, x, y, Tiles.CAPITOL);
+		super(world, x, y, Entities.CAPITOL);
 		this.symbol = world.getTileState(x, y).getOwner();
 	}
 

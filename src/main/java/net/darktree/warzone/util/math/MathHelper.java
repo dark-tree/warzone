@@ -27,6 +27,14 @@ public class MathHelper {
 	}
 
 	/**
+	 * clamp value to range (inclusive)
+	 */
+	public static float clamp(float value, float min, float max) {
+		if (value < min) return min;
+		return Math.min(value, max);
+	}
+
+	/**
 	 * Returns a manhattan distance between two points
 	 */
 	public static int getManhattanDistance(int x1, int y1, int x2, int y2) {
@@ -70,14 +78,27 @@ public class MathHelper {
 		throw new RuntimeException("The given points are equal!");
 	}
 
+	/**
+	 * Return the value of a sigmoid for the given x,
+	 * this functions returns values from 0 to 1, with 0.5 at x=0
+	 */
+	public static float sigmoid(float x) {
+		return (float) (1 / (1 + Math.pow(Math.E, -x)));
+	}
+
+	/**
+	 * Convert degrees to radians
+	 */
 	public static float radians(float deg) {
 		return deg * 0.01745329f;
 	}
 
+	@Deprecated
 	public static int random(int max) {
 		return RANDOM.nextInt(max + 1);
 	}
 
+	@Deprecated
 	public static float randomFloat() {
 		return RANDOM.nextFloat();
 	}

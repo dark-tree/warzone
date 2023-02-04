@@ -75,6 +75,6 @@ run {
 jar {
     manifest {
         attributes 'Main-Class': mainClassName
-        attributes 'Application-Version': version
+        attributes 'Application-Version': archiveVersion.get()
     }
 }

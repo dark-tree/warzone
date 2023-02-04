@@ -1,23 +1,26 @@
 package net.darktree.warzone.client.sound.source;
 
 import net.darktree.warzone.Main;
+import net.darktree.warzone.client.sound.buffer.AudioBuffer;
 import net.darktree.warzone.client.sound.buffer.NativeAudioBuffer;
 import net.darktree.warzone.world.WorldView;
 import org.lwjgl.openal.AL10;
 
 public final class NativeAudioSource implements AudioSource {
 
+	private final int buffer;
 	private boolean attenuation;
 	private float x, y, z;
 	private int source;
 
 	public NativeAudioSource(NativeAudioBuffer buffer) {
-		source = AL10.alGenSources();
-		attenuation = false;
+		this.source = AL10.alGenSources();
+		this.buffer = buffer.getHandle();
+		this.attenuation = false;
 
 		// the distance at which only half of the volume is heard
 		AL10.alSourcef(source, AL10.AL_REFERENCE_DISTANCE, 5);
-		AL10.alSourcei(source, AL10.AL_BUFFER, buffer.getHandle());
+		AL10.alSourcei(source, AL10.AL_BUFFER, this.buffer);
 	}
 
 	public void close() {
@@ -95,6 +98,16 @@ public final class NativeAudioSource implements AudioSource {
 				AL10.alSource3f(source, AL10.AL_POSITION, (view.offsetX + x) * view.scaleX, (view.offsetY + y) * view.scaleY, (z + 1 - view.zoom) * 10);
 			});
 		}
+	}
+
+	@Override
+	public boolean isOfBuffer(AudioBuffer buffer) {
+		if (buffer instanceof NativeAudioBuffer nativeBuffer) {
+			return nativeBuffer.getHandle() == this.buffer;
+		}
+
+		// a native source cannot be created from dummy buffer
+		return false;
 	}
 
 }
