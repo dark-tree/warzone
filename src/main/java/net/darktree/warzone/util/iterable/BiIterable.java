@@ -1,4 +1,4 @@
-package net.darktree.warzone.util;
+package net.darktree.warzone.util.iterable;
 
 import org.jetbrains.annotations.NotNull;
 

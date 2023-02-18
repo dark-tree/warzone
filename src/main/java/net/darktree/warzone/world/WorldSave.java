@@ -3,7 +3,7 @@ package net.darktree.warzone.world;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.util.Logger;
-import net.darktree.warzone.util.NbtAccess;
+import net.darktree.warzone.util.NbtHelper;
 import net.darktree.warzone.util.Util;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ public class WorldSave implements Comparable<WorldSave> {
 			return null;
 		}
 
-		CompoundTag nbt = NbtAccess.readFile(meta);
+		CompoundTag nbt = NbtHelper.readFile(meta);
 
 		if (nbt == null) {
 			Logger.error("Unable to read save metadata for: ", path);
@@ -66,7 +66,7 @@ public class WorldSave implements Comparable<WorldSave> {
 	}
 
 	public boolean load() {
-		CompoundTag nbt = NbtAccess.readFile(map);
+		CompoundTag nbt = NbtHelper.readFile(map);
 
 		if (nbt == null) {
 			Logger.error("Unable to read save map state!");
@@ -92,7 +92,7 @@ public class WorldSave implements Comparable<WorldSave> {
 		nbt.putLong("time", Instant.now().getEpochSecond());
 		CompoundTag worldNbt = new CompoundTag();
 		world.toNbt(worldNbt);
-		return NbtAccess.writeFile(meta, nbt) && NbtAccess.writeFile(map, worldNbt);
+		return NbtHelper.writeFile(meta, nbt) && NbtHelper.writeFile(map, worldNbt);
 	}
 
 	@Override

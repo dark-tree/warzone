@@ -20,7 +20,11 @@ import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldSave;
 import net.darktree.warzone.world.WorldView;
 import net.darktree.warzone.world.entity.Entity;
+import net.darktree.warzone.world.overlay.FearOverlay;
 import net.darktree.warzone.world.overlay.MapOverlay;
+import net.darktree.warzone.world.overlay.PrincipalityOverlay;
+import net.darktree.warzone.world.terrain.ChokepointFinder;
+import net.darktree.warzone.world.terrain.DangerFinder;
 import org.lwjgl.glfw.GLFW;
 
 public class PlayScreen extends WorldScreen {
@@ -39,6 +43,7 @@ public class PlayScreen extends WorldScreen {
 	public PlayScreen(WorldSave save, World world) {
 		super(world);
 		this.save = save;
+		SoundSystem.stopMusic();
 	}
 
 	@Override
@@ -111,6 +116,14 @@ public class PlayScreen extends WorldScreen {
 
 		if (event.isPressed(GLFW.GLFW_KEY_M)) {
 			world.getView().setOverlay(new MapOverlay());
+		}
+
+		if (event.isPressed(GLFW.GLFW_KEY_P)) {
+			world.getView().setOverlay(new PrincipalityOverlay(world));
+		}
+
+		if (event.isPressed(GLFW.GLFW_KEY_O)) {
+			world.getView().setOverlay(new FearOverlay(new DangerFinder(Symbol.CROSS, world), new ChokepointFinder(world)));
 		}
 
 		if (event.isPressed(GLFW.GLFW_KEY_B)) {

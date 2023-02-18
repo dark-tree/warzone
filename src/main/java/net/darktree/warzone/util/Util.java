@@ -63,7 +63,7 @@ public class Util {
 	/**
 	 * Run given lambda on a new thread after some time passes
 	 */
-	public static Timer runAsyncAfter(Runnable runnable, int timeout) {
+	public static Timer runAsyncAfter(Runnable runnable, int milliseconds) {
 		Timer timer = new Timer();
 		timer.schedule(
 				new TimerTask() {
@@ -74,7 +74,7 @@ public class Util {
 					}
 
 				},
-				timeout
+				milliseconds
 		);
 		return timer;
 	}
@@ -107,6 +107,25 @@ public class Util {
 		}
 
 		return file.delete();
+	}
+
+	/**
+	 * Find min (-1) or max (1) value of a list
+	 */
+	public static <T, C> T getExtremeValue(List<T> list, Function<T, C> indexer, Comparator<C> comparator, int direction) {
+		C index = null;
+		T extreme = null;
+
+		for (T entry : list) {
+			C current = indexer.apply(entry);
+
+			if (index == null || Integer.signum(comparator.compare(index, current)) == direction) {
+				extreme = entry;
+				index = current;
+			}
+		}
+
+		return extreme;
 	}
 
 }

@@ -63,9 +63,9 @@ public class Upgrade <T> extends ElementType<Upgrade<?>> implements Purchasable 
 			return false;
 		}
 
-
 		country.removeResource(resource);
 		country.upgrades.grant(this);
+
 		return true;
 	}
 

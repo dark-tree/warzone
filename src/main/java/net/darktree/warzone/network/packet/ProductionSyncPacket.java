@@ -1,15 +1,13 @@
 package net.darktree.warzone.network.packet;
 
+import net.darktree.warzone.network.PacketBuffer;
 import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.util.Logger;
-import net.darktree.warzone.util.NBTHelper;
 import net.darktree.warzone.world.entity.building.ProducingBuilding;
 import net.darktree.warzone.world.entity.building.production.ProductionState;
 import net.querz.nbt.tag.CompoundTag;
-
-import java.nio.ByteBuffer;
 
 public class ProductionSyncPacket extends SimplePacket {
 
@@ -17,12 +15,12 @@ public class ProductionSyncPacket extends SimplePacket {
 	private final int y;
 	private final CompoundTag nbt;
 
-	public ProductionSyncPacket(ByteBuffer buffer, PacketContext context) {
+	public ProductionSyncPacket(PacketBuffer buffer, PacketContext context) {
 		super(Packets.PRODUCE);
 
 		this.x = buffer.getInt();
 		this.y = buffer.getInt();
-		this.nbt = NBTHelper.readCompound(buffer);
+		this.nbt = buffer.getNbt();
 	}
 
 	public ProductionSyncPacket(int x, int y, ProductionState production) {
@@ -44,12 +42,12 @@ public class ProductionSyncPacket extends SimplePacket {
 		}
 	}
 
-	protected ByteBuffer getBuffer() {
-		ByteBuffer buffer = super.getBuffer();
+	protected PacketBuffer getBuffer() {
+		PacketBuffer buffer = super.getBuffer();
 
 		buffer.putInt(x);
 		buffer.putInt(y);
-		NBTHelper.writeCompound(nbt, buffer);
+		buffer.putNbt(nbt);
 
 		return buffer;
 	}

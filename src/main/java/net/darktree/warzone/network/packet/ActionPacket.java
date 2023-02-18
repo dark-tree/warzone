@@ -1,25 +1,23 @@
 package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.network.PacketBuffer;
 import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.SimplePacket;
-import net.darktree.warzone.util.NBTHelper;
 import net.darktree.warzone.world.action.manager.Action;
 import net.querz.nbt.tag.CompoundTag;
-
-import java.nio.ByteBuffer;
 
 public class ActionPacket extends SimplePacket {
 
 	private final Action action;
 	private final Symbol symbol;
 
-	public ActionPacket(ByteBuffer buffer, PacketContext context) {
+	public ActionPacket(PacketBuffer buffer, PacketContext context) {
 		super(Packets.ACTION);
 
-		this.symbol = Symbol.fromIndex(buffer.get());
-		this.action = Action.fromNbt(NBTHelper.readCompound(buffer), context.getWorld());
+		this.symbol = buffer.getEnum(Symbol.class);
+		this.action = Action.fromNbt(buffer.getNbt(), context.getWorld());
 	}
 
 	public ActionPacket(Symbol symbol, Action action) {
@@ -35,13 +33,14 @@ public class ActionPacket extends SimplePacket {
 	}
 
 	@Override
-	public ByteBuffer getBuffer() {
-		ByteBuffer buffer = super.getBuffer();
+	public PacketBuffer getBuffer() {
+		PacketBuffer buffer = super.getBuffer();
 
-		buffer.put((byte) symbol.ordinal());
 		CompoundTag nbt = new CompoundTag();
 		action.toNbt(nbt);
-		NBTHelper.writeCompound(nbt, buffer);
+
+		buffer.putEnum(symbol);
+		buffer.putNbt(nbt);
 
 		return buffer;
 	}

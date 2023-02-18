@@ -8,9 +8,10 @@ import net.darktree.warzone.country.storage.StorageNode;
 import net.darktree.warzone.country.storage.StorageNodeSupplier;
 import net.darktree.warzone.country.upgrade.UpgradeManager;
 import net.darktree.warzone.country.upgrade.Upgrades;
-import net.darktree.warzone.util.NbtAccess;
+import net.darktree.warzone.util.NbtHelper;
 import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.world.TurnEvent;
+import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldListener;
 import net.darktree.warzone.world.entity.building.*;
 import net.querz.nbt.tag.CompoundTag;
@@ -25,6 +26,7 @@ public class Country implements NbtSerializable, WorldListener {
 
 	public final Symbol symbol;
 	public final UpgradeManager upgrades = new UpgradeManager(this::hasParliament);
+	private final World world;
 	private final List<Building> buildings = new ArrayList<>();
 	private final List<StorageNodeSupplier> storages = new ArrayList<>();
 	private final Map<Resource, Storage> resources;
@@ -35,8 +37,9 @@ public class Country implements NbtSerializable, WorldListener {
 	private int parliaments = 0;
 	private int income = 0;
 
-	public Country(Symbol symbol) {
+	public Country(Symbol symbol, World world) {
 		this.symbol = symbol;
+		this.world = world;
 		this.resources = Registries.RESOURCES.map(new IdentityHashMap<>(), resource -> resource.createStorage(this));
 		this.local = new LocalStorageNode(Resources.MATERIALS, this);
 	}
@@ -45,7 +48,7 @@ public class Country implements NbtSerializable, WorldListener {
 	public void toNbt(@NotNull CompoundTag tag) {
 		tag.putByte("symbol", (byte) symbol.ordinal());
 
-		CompoundTag resourcesTag = NbtAccess.getTag("resources", tag);
+		CompoundTag resourcesTag = NbtHelper.getTag("resources", tag);
 		resources.forEach((resource, entry) -> {
 			if (entry.serialize()) resourcesTag.putInt(resource.key(), entry.get());
 		});
@@ -56,7 +59,7 @@ public class Country implements NbtSerializable, WorldListener {
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
-		CompoundTag resourcesTag = NbtAccess.getTag("resources", tag);
+		CompoundTag resourcesTag = NbtHelper.getTag("resources", tag);
 		resources.forEach((resource, entry) -> {
 			if (entry.serialize()) entry.set(resourcesTag.getInt(resource.key()));
 		});
@@ -70,6 +73,7 @@ public class Country implements NbtSerializable, WorldListener {
 		if (symbol == this.symbol && event == TurnEvent.TURN_START) {
 			colonizations = 0;
 			addMaterials(income);
+			controller.turnStart(this, world);
 		}
 	}
 
@@ -119,8 +123,8 @@ public class Country implements NbtSerializable, WorldListener {
 		}
 	}
 
-	public Building getCapitol() {
-		return buildings.stream().filter(building -> building instanceof CapitolBuilding).findAny().orElse(null);
+	public CapitolBuilding getCapitol() {
+		return (CapitolBuilding) buildings.stream().filter(building -> building instanceof CapitolBuilding).findAny().orElse(null);
 	}
 
 	public Storage getResource(Resource resource) {

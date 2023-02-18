@@ -3,6 +3,7 @@ package net.darktree.warzone.util.math;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.world.tile.TilePos;
 
+import java.util.List;
 import java.util.Random;
 
 public class MathHelper {
@@ -13,9 +14,13 @@ public class MathHelper {
 		return RANDOM.nextInt(1, 7);
 	}
 
-	public static <T extends Enum<T>> T getRandomEnum(Class<T> enumerable) {
+	public static <T extends Enum<T>> T randomEnumPick(Class<T> enumerable) {
 		T[] values = enumerable.getEnumConstants();
 		return values[RANDOM.nextInt(values.length)];
+	}
+
+	public static <T> T randomListPick(List<T> list) {
+		return list.get(RANDOM.nextInt(list.size()));
 	}
 
 	/**

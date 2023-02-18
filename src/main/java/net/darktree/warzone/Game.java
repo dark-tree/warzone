@@ -7,7 +7,7 @@ import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.screen.menu.LoginScreen;
 import net.darktree.warzone.screen.menu.MainMenuScreen;
 import net.darktree.warzone.util.Logger;
-import net.darktree.warzone.util.NbtAccess;
+import net.darktree.warzone.util.NbtHelper;
 import net.darktree.warzone.util.Resources;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldSave;
@@ -60,7 +60,7 @@ public class Game {
 	}
 
 	public void initialize() {
-		state = NbtAccess.readFile(location);
+		state = NbtHelper.readFile(location);
 
 		if (state == null) {
 			state = new CompoundTag();

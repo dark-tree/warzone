@@ -1,5 +1,7 @@
 package net.darktree.warzone.network.urp;
 
+import net.darktree.warzone.network.PacketBuffer;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -32,7 +34,7 @@ public class PacketReader {
 		body.order(ByteOrder.nativeOrder());
 
 		try {
-			Objects.requireNonNull(types.get(type)).call(body);
+			Objects.requireNonNull(types.get(type)).call(new PacketBuffer(body));
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			throw new RuntimeException("No callback for packet type '" + type + "' defined!");

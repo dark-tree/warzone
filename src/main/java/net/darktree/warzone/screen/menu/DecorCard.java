@@ -46,8 +46,8 @@ public class DecorCard {
 		this.AB = Vec2f.of(w1, w2);
 		this.BC = Vec2f.of(w2, w3);
 
-		this.dotABxAB = AB.dot();
-		this.dotBCxBC = BC.dot();
+		this.dotABxAB = AB.selfDot();
+		this.dotBCxBC = BC.selfDot();
 
 		this.sprite = source.get();
 	}

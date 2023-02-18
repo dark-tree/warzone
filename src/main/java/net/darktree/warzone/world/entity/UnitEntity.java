@@ -8,6 +8,9 @@ import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.UnitInteractor;
 import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.path.PathFinder;
+import net.darktree.warzone.world.path.PathFinderConfig;
+import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.pattern.ShapeHelper;
 import net.darktree.warzone.world.tile.TileState;
 import net.querz.nbt.tag.CompoundTag;
@@ -118,6 +121,10 @@ public class UnitEntity extends MovingEntity {
 	@Override
 	public boolean canPathfindThrough(Symbol symbol) {
 		return this.symbol == symbol;
+	}
+
+	public PathFinder getPathFinder(boolean extended) {
+		return new PathFinder(world, symbol, Patterns.IDENTITY.place(world, getX(), getY()), PathFinderConfig.getForUnitAt(this, world.getTileState(getX(), getY()).getOwner()), extended);
 	}
 
 }

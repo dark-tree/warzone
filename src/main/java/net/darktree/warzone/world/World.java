@@ -8,9 +8,7 @@ import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entity;
-import net.darktree.warzone.world.terrain.BonusFinder;
-import net.darktree.warzone.world.terrain.ControlFinder;
-import net.darktree.warzone.world.terrain.EnclaveFinder;
+import net.darktree.warzone.world.terrain.*;
 import net.darktree.warzone.world.tile.TilePos;
 import net.darktree.warzone.world.tile.TileState;
 import net.darktree.warzone.world.tile.variant.TileVariant;
@@ -34,7 +32,10 @@ public class World implements WorldEntityView, NbtSerializable {
 	private boolean ownershipDirty = true;
 	private int turn;
 	private WorldRenderer renderer;
+
 	private ControlFinder control;
+	private BorderFinder border;
+	private PrincipalityFinder principality;
 
 	public ActionManager manager = new ActionManager(this);
 
@@ -55,9 +56,15 @@ public class World implements WorldEntityView, NbtSerializable {
 
 		this.ownershipDirty = true;
 		this.renderer = new WorldRenderer(this);
-		this.control = new ControlFinder(this);
+		reloadFinders();
 
 		// FIXME: reload world buffers here, reopen the PlayScreen(?)
+	}
+
+	private void reloadFinders() {
+		this.control = new ControlFinder(this);
+		this.border = new BorderFinder(this);
+		this.principality = new PrincipalityFinder(border);
 	}
 
 	public void toNbt(@NotNull CompoundTag tag) {
@@ -203,7 +210,7 @@ public class World implements WorldEntityView, NbtSerializable {
 		if (ownershipDirty) {
 			ownershipDirty = false;
 
-			this.control = new ControlFinder(this);
+			reloadFinders();
 			EnclaveFinder finder = new EnclaveFinder(this, this.control);
 
 			finder.getEnclaves().forEach(enclave -> {
@@ -222,7 +229,7 @@ public class World implements WorldEntityView, NbtSerializable {
 	}
 
 	public Country defineCountry(Symbol symbol) {
-		Country country = new Country(symbol);
+		Country country = new Country(symbol, this);
 		countries.put(symbol, country);
 		return country;
 	}
@@ -278,6 +285,14 @@ public class World implements WorldEntityView, NbtSerializable {
 	 */
 	public boolean canControl(int x, int y, Symbol symbol) {
 		return canControl(x, y) && getTileState(x, y).getOwner() == symbol;
+	}
+
+	public Symbol getPrincipality(int x, int y) {
+		return principality.getPrincipality(x, y);
+	}
+
+	public BorderFinder getBorder() {
+		return border;
 	}
 
 	/**

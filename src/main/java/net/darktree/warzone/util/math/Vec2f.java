@@ -1,6 +1,7 @@
 package net.darktree.warzone.util.math;
 
 public class Vec2f {
+
 	public final float x;
 	public final float y;
 
@@ -9,7 +10,7 @@ public class Vec2f {
 		this.y = y;
 	}
 
-	public float dot() {
+	public float selfDot() {
 		return x * x + y * y;
 	}
 
@@ -24,4 +25,5 @@ public class Vec2f {
 	public static float dot(Vec2f a, Vec2f b) {
 		return a.x * b.x + a.y * b.y;
 	}
+
 }

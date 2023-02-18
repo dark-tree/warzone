@@ -7,8 +7,6 @@ import net.darktree.warzone.world.action.manager.Action;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.darktree.warzone.world.path.Path;
 import net.darktree.warzone.world.path.PathFinder;
-import net.darktree.warzone.world.path.PathFinderConfig;
-import net.darktree.warzone.world.pattern.Patterns;
 import net.querz.nbt.tag.CompoundTag;
 
 public final class MoveUnitAction extends Action {
@@ -25,9 +23,7 @@ public final class MoveUnitAction extends Action {
 		this.sx = x;
 		this.sy = y;
 		this.entity = world.getEntity(x, y, UnitEntity.class);
-
-		Symbol owner = world.getTileState(x, y).getOwner();
-		this.pathfinder = new PathFinder(world, world.getCurrentSymbol(), Patterns.IDENTITY.place(world, x, y), PathFinderConfig.getForUnitAt(this.entity, owner));
+		this.pathfinder = this.entity.getPathFinder(false);
 	}
 
 	public MoveUnitAction(World world, CompoundTag nbt) {

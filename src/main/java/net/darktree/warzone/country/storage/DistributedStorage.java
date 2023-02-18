@@ -1,7 +1,7 @@
 package net.darktree.warzone.country.storage;
 
 import net.darktree.warzone.country.Resource;
-import net.darktree.warzone.util.BiIterable;
+import net.darktree.warzone.util.iterable.BiIterable;
 
 import java.util.List;
 import java.util.function.Function;

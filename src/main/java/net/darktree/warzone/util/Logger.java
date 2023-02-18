@@ -13,9 +13,7 @@ public class Logger {
 
 	private static void print(Level level, Object... objects) {
 		StringBuilder builder = new StringBuilder(getTimestamp());
-		builder.append(" ");
-		builder.append(level);
-		builder.append(" ");
+		builder.append(" ").append(level).append(" ");
 
 		for (Object object : objects) {
 			builder.append(object);

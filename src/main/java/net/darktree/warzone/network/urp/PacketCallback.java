@@ -1,10 +1,10 @@
 package net.darktree.warzone.network.urp;
 
-import java.nio.ByteBuffer;
+import net.darktree.warzone.network.PacketBuffer;
 
 @FunctionalInterface
 public interface PacketCallback {
 
-	void call(ByteBuffer buffer);
+	void call(PacketBuffer buffer);
 
 }

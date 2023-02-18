@@ -10,8 +10,8 @@ import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.controller.LocalController;
+import net.darktree.warzone.country.controller.MachineController;
 import net.darktree.warzone.country.controller.NullController;
-import net.darktree.warzone.country.upgrade.Upgrade;
 import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
@@ -106,9 +106,9 @@ public class Main {
 		try {
 			loop();
 		}catch (Exception e) {
+			e.printStackTrace();
 			Window.alert("Main thread has thrown an exception and crashed!\nThe application will be terminated!", "Game has crashed!");
 			Logger.fatal("Main thread has thrown an exception and crashed!");
-			e.printStackTrace();
 		}
 
 		if (UserGroup.instance != null) {
@@ -193,26 +193,22 @@ public class Main {
 			});
 		}
 
-		if (world != null && line.startsWith("upgrade ")) {
-			String[] parts = line.split(" ");
-
-			Main.runSynced(() -> {
-				Upgrade<?> upgrade = Registries.UPGRADES.byKey(parts[1]).value();
-				world.getCountry(world.getCurrentSymbol()).upgrades.grant(upgrade);
-				Logger.info("Done!");
-			});
-		}
-
 		if (line.equals("rstop")) {
 			UserGroup.instance.close();
 		}
 
-		if (world != null && line.startsWith("self ")) {
+		if (world != null && line.startsWith("player ")) {
 			String[] parts = line.split(" ");
 			Symbol symbol = Symbol.fromIndex((byte) Integer.parseInt(parts[1]));
-			boolean self = Boolean.parseBoolean(parts[2]);
+			String type = parts[2];
 
-			world.getCountry(symbol).controller = self ? new LocalController() : new NullController();
+			world.getCountry(symbol).controller = switch (type) {
+				case "self" -> new LocalController();
+				case "null" -> new NullController();
+				case "ai" -> new MachineController();
+				default -> throw new RuntimeException("Invalid player type, expected 'self', 'null' or 'ai'!");
+			};
+
 			Logger.info("Identity set!");
 		}
 

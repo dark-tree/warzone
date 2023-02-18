@@ -8,6 +8,8 @@ import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.CityInteractor;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.Entities;
+import net.darktree.warzone.world.path.PathFinder;
+import net.darktree.warzone.world.path.PathFinderConfig;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,6 +61,14 @@ public class CapitolBuilding extends Building {
 	@Override
 	public boolean isDeconstructable() {
 		return false;
+	}
+
+	public PathFinder getPathFinder() {
+		return new PathFinder(world, world.getCurrentSymbol(), this::forEachTile, PathFinderConfig.UNIT_SUMMON, false);
+	}
+
+	public Symbol getSymbol() {
+		return symbol;
 	}
 
 }

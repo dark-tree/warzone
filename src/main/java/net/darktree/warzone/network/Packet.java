@@ -39,9 +39,9 @@ public abstract class Packet<T> {
 	 * to be later send with {@link Relay#sendMessage(int, ByteBuffer)}
 	 * or {@link Relay#broadcastMessage(int, ByteBuffer)}
 	 */
-	protected ByteBuffer getBuffer() {
-		ByteBuffer buffer = PacketByteBuffer.getMessageBuffer();
-		buffer.putInt(Registries.PACKETS.byValue(type).id());
+	protected PacketBuffer getBuffer() {
+		PacketBuffer buffer = PacketByteBuffer.getMessageBuffer();
+		buffer.putElement(type);
 		return buffer;
 	}
 
@@ -80,7 +80,7 @@ public abstract class Packet<T> {
 			this.constructor = constructor;
 		}
 
-		public Packet<?> create(ByteBuffer buffer, PacketContext context) {
+		public Packet<?> create(PacketBuffer buffer, PacketContext context) {
 			return constructor.create(buffer, context);
 		}
 
@@ -90,7 +90,7 @@ public abstract class Packet<T> {
 		}
 
 		public interface Constructor {
-			Packet<?> create(ByteBuffer buffer, PacketContext relay);
+			Packet<?> create(PacketBuffer buffer, PacketContext relay);
 		}
 	}
 

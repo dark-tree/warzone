@@ -1,7 +1,7 @@
 package net.darktree.warzone.country.upgrade;
 
 import net.darktree.warzone.Registries;
-import net.darktree.warzone.util.NbtAccess;
+import net.darktree.warzone.util.NbtHelper;
 import net.darktree.warzone.util.NbtSerializable;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ public class UpgradeManager implements NbtSerializable {
 
 	@Override
 	public void toNbt(@NotNull CompoundTag nbt) {
-		CompoundTag upgradesTag = NbtAccess.getTag("upgrades", nbt);
+		CompoundTag upgradesTag = NbtHelper.getTag("upgrades", nbt);
 
 		upgrades.forEach((upgrade, state) -> {
 			upgradesTag.putBoolean(upgrade.key(), state.value);
@@ -47,7 +47,7 @@ public class UpgradeManager implements NbtSerializable {
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag nbt) {
-		CompoundTag upgradesTag = NbtAccess.getTag("upgrades", nbt);
+		CompoundTag upgradesTag = NbtHelper.getTag("upgrades", nbt);
 
 		upgrades.forEach((upgrade, state) -> {
 			state.value = upgradesTag.getBoolean(upgrade.key());

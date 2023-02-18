@@ -11,7 +11,6 @@ import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.client.window.input.MouseButton;
-import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.math.Vec2i;
 import net.darktree.warzone.world.WorldView;
 
@@ -73,11 +72,6 @@ public class ScreenRenderer {
 	 * Prepare screen renderer for the next frame
 	 */
 	public static void prepare() {
-		if (identifier == 0 && !components.isEmpty()) {
-			Logger.info("Cleared ", components.size(), " GUI components, this should not happen too often!");
-			components.clear();
-		}
-
 		identifier = 0;
 	}
 

@@ -2,13 +2,11 @@ package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.network.*;
 
-import java.nio.ByteBuffer;
-
 public class GroupSyncPacket extends Packet<UserGroup> {
 
 	private final UserGroup group;
 
-	public GroupSyncPacket(ByteBuffer buffer, PacketContext context) {
+	public GroupSyncPacket(PacketBuffer buffer, PacketContext context) {
 		super(Packets.GROUP_SYNC);
 		context.expect(Side.CLIENT);
 
@@ -34,8 +32,8 @@ public class GroupSyncPacket extends Packet<UserGroup> {
 	}
 
 	@Override
-	public ByteBuffer getBuffer() {
-		ByteBuffer buffer = super.getBuffer();
+	public PacketBuffer getBuffer() {
+		PacketBuffer buffer = super.getBuffer();
 
 		buffer.putInt(group.host);
 		buffer.putInt(group.id);

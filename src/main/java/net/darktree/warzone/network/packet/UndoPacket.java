@@ -1,19 +1,18 @@
 package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.network.PacketBuffer;
 import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.SimplePacket;
-
-import java.nio.ByteBuffer;
 
 public class UndoPacket extends SimplePacket {
 
 	private final Symbol symbol;
 
-	public UndoPacket(ByteBuffer buffer, PacketContext context) {
+	public UndoPacket(PacketBuffer buffer, PacketContext context) {
 		super(Packets.UNDO);
-		this.symbol = Symbol.fromIndex(buffer.get());
+		this.symbol = buffer.getEnum(Symbol.class);
 	}
 
 	public UndoPacket(Symbol symbol) {
@@ -27,9 +26,9 @@ public class UndoPacket extends SimplePacket {
 	}
 
 	@Override
-	public ByteBuffer getBuffer() {
-		ByteBuffer buffer = super.getBuffer();
-		buffer.put((byte) symbol.ordinal());
+	public PacketBuffer getBuffer() {
+		PacketBuffer buffer = super.getBuffer();
+		buffer.putEnum(symbol);
 		return buffer;
 	}
 

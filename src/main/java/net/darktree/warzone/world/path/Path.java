@@ -14,27 +14,21 @@ import java.util.List;
 public class Path {
 
 	private int index;
-	private final List<TilePos> positions = new ArrayList<>();
+	private final List<TilePos> positions;
 
-	/**
-	 * Add a node to the path
-	 */
-	public void addTarget(int x, int y) {
-		positions.add(new TilePos(x, y));
+	private Path(List<TilePos> positions) {
+		this.positions = positions;
+	}
+
+	public static Recorder getRecorder() {
+		return new Recorder(new ArrayList<>());
 	}
 
 	/**
-	 * Add a node to the path
+	 * Return to the beginning of the path
 	 */
-	public void addTarget(TilePos pos) {
-		positions.add(pos);
-	}
-
-	/**
-	 * Reverse the order of all nodes in this path
-	 */
-	public void reverseAll() {
-		Collections.reverse(positions);
+	public void rewind() {
+		index = 0;
 	}
 
 	/**
@@ -54,7 +48,7 @@ public class Path {
 	/**
 	 * Get the next node in this path, calling it repeatedly
 	 * will return all the subsequent path nodes until
-	 * the end is reached, then null will be returned.
+	 * the end is reached, after that null will be returned.
 	 */
 	public TilePos getNext() {
 		if (index == positions.size()) {
@@ -65,10 +59,16 @@ public class Path {
 	}
 
 	/**
+	 * Get the number of nodes in this path
+	 */
+	public int getLength() {
+		return positions.size();
+	}
+
+	/**
 	 * Draw this path as a series of lines and boxes into the given buffer
 	 */
 	public void draw(VertexBuffer buffer) {
-
 		TilePos prev = positions.get(0);
 		Color c = Colors.PATH;
 
@@ -83,11 +83,62 @@ public class Path {
 
 			prev = pos;
 		}
+	}
 
+	/**
+	 * Get a path subsection from the beginning up to (and including) index
+	 */
+	public Path getSubPath(int index) {
+		Recorder recorder = new Recorder(new ArrayList<>(index + 1));
+
+		for (int i = 0; i <= index; i ++) {
+			recorder.addTarget(positions.get(i));
+		}
+
+		return recorder.build();
 	}
 
 	private void drawBox(VertexBuffer buffer, TilePos pos, Color c) {
 		Renderer.quad(buffer, pos.x + 0.4f, pos.y + 0.4f, 0.2f, 0.2f, Sprites.NONE, c.r, c.g, c.b, c.a);
+	}
+
+	public static class Recorder {
+
+		private final List<TilePos> positions;
+
+		private Recorder(List<TilePos> positions) {
+			this.positions = positions;
+		}
+
+		/**
+		 * Add a node to the path
+		 */
+		public void addTarget(int x, int y) {
+			positions.add(new TilePos(x, y));
+		}
+
+		/**
+		 * Add a node to the path
+		 */
+		public void addTarget(TilePos pos) {
+			positions.add(pos);
+		}
+
+		/**
+		 * Reverse the order of all nodes in this path
+		 */
+		public Recorder reverse() {
+			Collections.reverse(positions);
+			return this;
+		}
+
+		/**
+		 * Create a path instance
+		 */
+		public Path build() {
+			return new Path(positions);
+		}
+
 	}
 
 }

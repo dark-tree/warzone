@@ -107,7 +107,7 @@ public class UserGroup {
 		UserGroup group = UserGroup.instance;
 
 		if (group != null) {
-			group.relay.broadcastMessage(except, packet.getBuffer());
+			group.relay.broadcastMessage(except, packet.getBuffer().buffer());
 		} else {
 			packet.apply(PacketContext.LOCAL);
 		}
@@ -117,7 +117,7 @@ public class UserGroup {
 		UserGroup group = UserGroup.instance;
 
 		if (group != null) {
-			group.relay.sendMessage(uid, packet.getBuffer());
+			group.relay.sendMessage(uid, packet.getBuffer().buffer());
 		} else {
 			packet.apply(PacketContext.LOCAL);
 		}
@@ -127,7 +127,7 @@ public class UserGroup {
 		UserGroup group = UserGroup.instance;
 
 		if (group != null) {
-			group.relay.sendMessage(group.host, packet.getBuffer());
+			group.relay.sendMessage(group.host, packet.getBuffer().buffer());
 		} else {
 			packet.apply(PacketContext.LOCAL);
 		}

@@ -3,21 +3,20 @@ package net.darktree.warzone.network.packet;
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.upgrade.Upgrade;
+import net.darktree.warzone.network.PacketBuffer;
 import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.SimplePacket;
-
-import java.nio.ByteBuffer;
 
 public class UpgradePacket extends SimplePacket {
 
 	private final Symbol symbol;
 	private final Upgrade<?> upgrade;
 
-	public UpgradePacket(ByteBuffer buffer, PacketContext context) {
+	public UpgradePacket(PacketBuffer buffer, PacketContext context) {
 		super(Packets.UPGRADE);
-		this.symbol = Symbol.fromIndex(buffer.get());
-		this.upgrade = Registries.UPGRADES.byId(buffer.getInt()).value();
+		this.symbol = buffer.getEnum(Symbol.class);
+		this.upgrade = buffer.getElement(Registries.UPGRADES);
 	}
 
 	public UpgradePacket(Symbol symbol, Upgrade<?> upgrade) {
@@ -34,10 +33,12 @@ public class UpgradePacket extends SimplePacket {
 	}
 
 	@Override
-	public ByteBuffer getBuffer() {
-		ByteBuffer buffer = super.getBuffer();
-		buffer.put((byte) symbol.ordinal());
-		buffer.putInt(upgrade.id());
+	public PacketBuffer getBuffer() {
+		PacketBuffer buffer = super.getBuffer();
+
+		buffer.putEnum(symbol);
+		buffer.putElement(upgrade);
+
 		return buffer;
 	}
 

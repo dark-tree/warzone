@@ -1,23 +1,22 @@
 package net.darktree.warzone.network.packet;
 
+import net.darktree.warzone.network.PacketBuffer;
 import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.SimplePacket;
 import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.action.ColonizeAction;
 
-import java.nio.ByteBuffer;
-
 public class ColonizePacket  extends SimplePacket {
 
 	private final int x, y;
 	private final boolean war;
 
-	public ColonizePacket(ByteBuffer buffer, PacketContext context) {
+	public ColonizePacket(PacketBuffer buffer, PacketContext context) {
 		super(Packets.COLONIZE);
 		this.x = buffer.getInt();
 		this.y = buffer.getInt();
-		this.war = buffer.get() != 0;
+		this.war = buffer.getBool();
 	}
 
 	public ColonizePacket(int x, int y, boolean war) {
@@ -28,11 +27,11 @@ public class ColonizePacket  extends SimplePacket {
 	}
 
 	@Override
-	protected ByteBuffer getBuffer() {
-		ByteBuffer buffer = super.getBuffer();
+	protected PacketBuffer getBuffer() {
+		PacketBuffer buffer = super.getBuffer();
 		buffer.putInt(x);
 		buffer.putInt(y);
-		buffer.put((byte) (war ? 1 : 0));
+		buffer.putBool(war);
 
 		return buffer;
 	}
