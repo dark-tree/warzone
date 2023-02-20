@@ -1,6 +1,7 @@
 package net.darktree.warzone.country.ai.unit;
 
 import net.darktree.warzone.country.ai.unit.data.UnitMove;
+import net.darktree.warzone.country.ai.unit.data.UnitSolution;
 import net.darktree.warzone.country.ai.unit.data.UnitSource;
 import net.darktree.warzone.country.ai.unit.data.UnitTarget;
 import net.darktree.warzone.util.Logger;
@@ -13,9 +14,9 @@ public final class MovementSolver {
 	/**
 	 * Generate a solution for moving the available units into the requested positions
 	 */
-	public Solution solve(LinkedList<UnitTarget> targets, LinkedList<UnitSource> sources) {
-		if (targets.isEmpty() || sources.isEmpty()) {
-			return new Solution();
+	public UnitSolution solve(LinkedList<UnitTarget> targets, LinkedList<UnitSource> sources) {
+		if (targets.isEmpty()) {
+			return new UnitSolution();
 		}
 
 		return vennSolverPass(targets, sources);
@@ -66,17 +67,17 @@ public final class MovementSolver {
 	 * The main solver pass, uses Venn Diagrams to find the best solution available for the given
 	 * problem, in case it fails it will fall back onto fixupSolverPass to save computation time
 	 *
-	 * @param targets the targets to try to link with sources
+	 * @param targets the targets to try to link with sources (sorted)
 	 * @param sources the available sources list
 	 */
-	private Solution vennSolverPass(LinkedList<UnitTarget> targets, LinkedList<UnitSource> sources) {
+	private UnitSolution vennSolverPass(LinkedList<UnitTarget> targets, LinkedList<UnitSource> sources) {
 		final int total = targets.size();
-		Solution answer = new Solution();
+		UnitSolution answer = new UnitSolution();
 		LinkedList<UnitTarget> dropped = new LinkedList<>();
 		Iterator<UnitTarget> iterator = targets.iterator();
 
 		// keep the most important targets on top
-		Collections.sort(targets);
+		targets.sort(Collections.reverseOrder());
 
 		// check which targets are reachable by which source
 		for (UnitSource source : sources) {
@@ -127,7 +128,6 @@ public final class MovementSolver {
 
 				answer.moves.addAll(solution);
 				answer.unreachable.addAll(dropped);
-//				Logger.info("Answer available for ", answer.moves.size(), " targets (", answer.unreachable.size(), " unreachable).");
 
 				return answer;
 			}
@@ -190,39 +190,6 @@ public final class MovementSolver {
 		}
 
 		return selected;
-	}
-
-	public static class Solution {
-		public final LinkedList<UnitMove> moves = new LinkedList<>();
-		public final LinkedList<UnitTarget> unreachable = new LinkedList<>();
-
-//		private void reorder(World world) {
-//			Map<TilePos, Boolean> real = new HashMap<>(moves.size());
-//
-//			for (Move move : moves) {
-//				real.put(move.target, move.target.isOccupied(world));
-//			}
-//
-//			boolean sorted = false;
-//
-//			while (!sorted) {
-//				Map<TilePos, Boolean> states = new HashMap<>(real);
-//				sorted = true;
-//
-//				for (Move move : moves) {
-//					states.put(move.source, Boolean.FALSE);
-//
-//					if (states.get(move.target)) {
-//						moves.remove(move);
-//						moves.add(0, move);
-//						sorted = false;
-//						break;
-//					}
-//
-//					states.put(move.target, Boolean.TRUE);
-//				}
-//			}
-//		}
 	}
 
 }

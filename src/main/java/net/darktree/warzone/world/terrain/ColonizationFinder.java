@@ -1,6 +1,7 @@
 package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.country.ai.WeighedPos;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.darktree.warzone.world.path.Path;
@@ -11,16 +12,17 @@ import net.darktree.warzone.world.pattern.PlacedTileIterator;
 import net.darktree.warzone.world.tile.TilePos;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ColonizationFinder extends AbstractFinder {
 
-	private final List<TilePos> targets;
+	private final List<WeighedPos> targets;
 	private final Symbol self;
 	private final boolean allowRandom;
 	private PathFinder immediate, deferred;
 
-	public ColonizationFinder(Symbol self, World world, List<TilePos> targets, boolean allowRandom) {
+	public ColonizationFinder(Symbol self, World world, List<WeighedPos> targets, boolean allowRandom) {
 		super(Patterns.NEIGHBOURS, world);
 		this.targets = targets;
 		this.self = self;
@@ -42,14 +44,15 @@ public class ColonizationFinder extends AbstractFinder {
 	 * Get the colonization targets, colonization flag indicates that the returned values
 	 * will be colonization spots, setting it to false will make the returned values movement targets
 	 */
-	public List<TilePos> solve(boolean colonization) {
-		List<TilePos> actions = new ArrayList<>();
+	public List<WeighedPos> solve(boolean colonization) {
+		Collections.sort(targets);
+		List<WeighedPos> actions = new ArrayList<>();
 		boolean inactive = true;
 
-		for (TilePos target : targets) {
+		for (WeighedPos target : targets) {
 			int min = Integer.MAX_VALUE;
 			boolean colonized = false;
-			TilePos action = null;
+			WeighedPos action = null;
 
 			for (PathFinder finder : List.of(immediate, deferred)) {
 				int x = target.x;
@@ -63,7 +66,7 @@ public class ColonizationFinder extends AbstractFinder {
 
 					if (min >= length && steps > 1) {
 						min = length;
-						action = path.getStart();
+						action = target.childPos(path.getStart());
 						colonized = primary;
 					}
 				}
@@ -92,12 +95,12 @@ public class ColonizationFinder extends AbstractFinder {
 		try {
 			if (colonization && inactive && allowRandom) {
 				int max = 0;
-				TilePos selected = null;
+				WeighedPos selected = null;
 
 				for (TilePos unit : world.getBorder().getBorderTiles(self)) {
 					int gain = getGain(unit);
 					if (isGuardAt(unit) && gain > max) {
-						selected = unit;
+						selected = WeighedPos.wrap(unit, 1);
 						max = gain;
 					}
 				}
@@ -107,7 +110,7 @@ public class ColonizationFinder extends AbstractFinder {
 				}
 			}
 		}catch (NullPointerException e) {
-			// TODO
+			e.printStackTrace(); // TODO is this even needed?
 		}
 
 		return actions;

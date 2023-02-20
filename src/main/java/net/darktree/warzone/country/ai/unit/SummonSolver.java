@@ -25,7 +25,11 @@ public final class SummonSolver {
 		this.finder = capitol.getPathFinder();
 	}
 
-	public TilePos placeAtAnyOf(List<UnitTarget> targets, boolean fallback) {
+	/**
+	 * Place a new unit on the best tile in given list
+	 * If that can't be done and fallback is enabled places a new unit randomly
+	 */
+	public TilePos placeAtBestOf(List<UnitTarget> targets, boolean fallback) {
 		Iterator<UnitTarget> iterator = targets.iterator();
 
 		// try placing at one of the given positions

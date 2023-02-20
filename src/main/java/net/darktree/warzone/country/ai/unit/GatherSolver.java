@@ -1,9 +1,11 @@
 package net.darktree.warzone.country.ai.unit;
 
+import net.darktree.warzone.country.ai.unit.data.UnitAvoidField;
 import net.darktree.warzone.country.ai.unit.data.UnitMove;
 import net.darktree.warzone.country.ai.unit.data.UnitSource;
 import net.darktree.warzone.country.ai.unit.data.UnitTarget;
 import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.util.iterable.SpiralIterable;
 import net.darktree.warzone.world.path.Path;
 import net.darktree.warzone.world.path.PathFinder;
 import net.darktree.warzone.world.tile.TilePos;
@@ -14,7 +16,7 @@ import java.util.List;
 
 public final class GatherSolver {
 
-	public void solve(List<UnitMove> moves, LinkedList<UnitTarget> targets, UnitTarget gather, List<UnitSource> sources) {
+	public void solve(List<UnitMove> moves, UnitAvoidField avoid, LinkedList<UnitTarget> targets, UnitTarget gather, List<UnitSource> sources) {
 		Iterator<UnitSource> iterator = sources.iterator();
 
 		while (iterator.hasNext()) {
@@ -33,7 +35,7 @@ public final class GatherSolver {
 
 			// make the move
 			if (selected != null) {
-				if (attract(moves, selected, source)) {
+				if (attract(moves, avoid, selected, source)) {
 					targets.remove(selected);
 					iterator.remove();
 				}
@@ -47,14 +49,14 @@ public final class GatherSolver {
 			while (iterator.hasNext()) {
 				UnitSource source = iterator.next();
 
-				if (attract(moves, gather, source)) {
+				if (attract(moves, avoid, gather, source)) {
 					iterator.remove();
 				}
 			}
 		}
 	}
 
-	private boolean attract(List<UnitMove> moves, UnitTarget target, UnitSource source) {
+	private boolean attract(List<UnitMove> moves, UnitAvoidField avoid, UnitTarget target, UnitSource source) {
 		PathFinder finder = source.unit.getPathFinder(true);
 
 		if (!finder.canPossiblyReach(target.x, target.y)) {
@@ -69,6 +71,26 @@ public final class GatherSolver {
 		}
 
 		TilePos end = path.getEnd();
+		int avoidance = avoid.get(end.x, end.y);
+
+		// uh oh not great
+		if (avoidance != 0) {
+			boolean escaped = false;
+
+			for (SpiralIterable.SpiralPoint point : SpiralIterable.of(1, end.x, end.y)) {
+				if (finder.canReach(point.x, point.y) && avoid.get(point.x, point.y) == 0) {
+					end = point.asTilePos();
+					escaped = true;
+					break;
+				}
+			}
+
+			if (!escaped && avoidance > target.weight) {
+				Logger.warn("Failed to gather one unit, blocked by avoidance!");
+				return false;
+			}
+		}
+
 		UnitTarget partial = new UnitTarget(end.x, end.y, target.weight);
 		moves.add(new UnitMove(partial, source));
 		return true;

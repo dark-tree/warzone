@@ -6,6 +6,7 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.Util;
+import net.darktree.warzone.util.math.Vec2i;
 import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.terrain.*;
@@ -319,7 +320,7 @@ public class World implements WorldEntityView, NbtSerializable {
 		return manager;
 	}
 
-	public TileState getTileState(TilePos pos) {
+	public TileState getTileState(Vec2i pos) {
 		return getTileState(pos.x, pos.y);
 	}
 

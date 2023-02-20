@@ -1,10 +1,8 @@
 package net.darktree.warzone.country.ai.unit;
 
 import net.darktree.warzone.country.Country;
-import net.darktree.warzone.country.ai.unit.data.UnitMove;
-import net.darktree.warzone.country.ai.unit.data.UnitSource;
-import net.darktree.warzone.country.ai.unit.data.UnitTarget;
-import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.country.ai.WeighedPos;
+import net.darktree.warzone.country.ai.unit.data.*;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.SummonAction;
 import net.darktree.warzone.world.action.manager.DeferredActionQueue;
@@ -20,9 +18,11 @@ public final class UnitManager {
 	private final World world;
 	private final Country country;
 
+	private final UnitAvoidField avoid;
 	private final MovementSolver movementSolver;
 	private final SummonSolver summonSolver;
 	private final GatherSolver gatherSolver;
+	private final AvoidanceSolver avoidanceSolver;
 
 	private final LinkedList<UnitTarget> targets = new LinkedList<>();
 	private UnitTarget gather = null;
@@ -30,30 +30,36 @@ public final class UnitManager {
 	public UnitManager(World world, Country country) {
 		this.world = world;
 		this.country = country;
+		this.avoid = new UnitAvoidField(world.getWidth(), world.getHeight());
 		this.movementSolver = new MovementSolver();
 		this.summonSolver = new SummonSolver(world, country);
 		this.gatherSolver = new GatherSolver();
+		this.avoidanceSolver = new AvoidanceSolver();
 	}
 
 	/**
 	 * Add a target to place a unit on, the target should to be unique
 	 */
 	public void addTarget(int x, int y, int weight) {
-		for (UnitTarget target : targets) {
-			if (target.equals(x, y)) {
-				Logger.info("Non unique movement target was found and discarded!");
-				return;
-			}
+		WeighedPos prev = targets.stream().filter(target -> target.equals(x, y)).findAny().orElse(null);
+		UnitTarget target = new UnitTarget(x, y, weight);
+
+		if (prev == null) {
+			targets.add(target);
+			return;
 		}
 
-		targets.add(new UnitTarget(x, y, weight));
+		if (prev.weight < weight) {
+			targets.remove(prev);
+			targets.add(target);
+		}
 	}
 
 	/**
 	 * Add a tile that should be avoided by units
 	 */
 	public void addAvoid(int x, int y, int weight) {
-
+		avoid.set(x, y, weight);
 	}
 
 	/**
@@ -65,6 +71,18 @@ public final class UnitManager {
 		}
 	}
 
+	/**
+	 * Reset all submitted data
+	 */
+	public void reset() {
+		targets.clear();
+		avoid.clear();
+		gather = null;
+	}
+
+	/**
+	 * Get a solution for the submitted requirements
+	 */
 	public void solve(DeferredActionQueue.Recorder recorder, List<UnitEntity> units) {
 		LinkedList<UnitSource> sources = units.stream().map(UnitSource::new).collect(Collectors.toCollection(LinkedList::new));
 
@@ -74,13 +92,13 @@ public final class UnitManager {
 		});
 
 		// obtain basic solution
-		MovementSolver.Solution solution = movementSolver.solve(targets, sources);
+		UnitSolution solution = movementSolver.solve(targets, sources);
 
 		// add new unit at any unreachable spot or randomly
 		summonSolverPass(recorder, solution, true);
 
 		// move units towards unreachable spaces
-		gatherSolverPass(solution, sources);
+		finalSolverPass(solution, sources);
 
 		// skip pinned moves and submit
 		for (UnitMove move : solution.moves) {
@@ -90,8 +108,8 @@ public final class UnitManager {
 		}
 	}
 
-	private void summonSolverPass(DeferredActionQueue.Recorder recorder, MovementSolver.Solution solution, boolean fallback) {
-		TilePos pos = summonSolver.placeAtAnyOf(solution.unreachable, fallback);
+	private void summonSolverPass(DeferredActionQueue.Recorder recorder, UnitSolution solution, boolean fallback) {
+		TilePos pos = summonSolver.placeAtBestOf(solution.unreachable, fallback);
 
 		if (pos != null) {
 			for (UnitMove move : solution.moves) {
@@ -109,8 +127,9 @@ public final class UnitManager {
 		}
 	}
 
-	private void gatherSolverPass(MovementSolver.Solution solution, List<UnitSource> sources) {
-		gatherSolver.solve(solution.moves, solution.unreachable, gather, sources);
+	private void finalSolverPass(UnitSolution solution, List<UnitSource> sources) {
+		gatherSolver.solve(solution.moves, avoid, solution.unreachable, gather, sources);
+		avoidanceSolver.solve(world, avoid, solution.moves, sources);
 	}
 
 }

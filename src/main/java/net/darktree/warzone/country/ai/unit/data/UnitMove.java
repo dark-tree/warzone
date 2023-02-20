@@ -23,7 +23,6 @@ public final class UnitMove {
 		this.path = path;
 	}
 
-
 	public int getSteps() {
 		return path.getLength();
 	}

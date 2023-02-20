@@ -109,23 +109,4 @@ public class Util {
 		return file.delete();
 	}
 
-	/**
-	 * Find min (-1) or max (1) value of a list
-	 */
-	public static <T, C> T getExtremeValue(List<T> list, Function<T, C> indexer, Comparator<C> comparator, int direction) {
-		C index = null;
-		T extreme = null;
-
-		for (T entry : list) {
-			C current = indexer.apply(entry);
-
-			if (index == null || Integer.signum(comparator.compare(index, current)) == direction) {
-				extreme = entry;
-				index = current;
-			}
-		}
-
-		return extreme;
-	}
-
 }

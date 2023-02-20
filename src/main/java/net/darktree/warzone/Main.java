@@ -22,6 +22,7 @@ import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.screen.interactor.OwnEditInteractor;
 import net.darktree.warzone.screen.interactor.SetEditInteractor;
 import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.util.Profiler;
 import net.darktree.warzone.util.Resources;
 import net.darktree.warzone.util.Util;
 import net.darktree.warzone.world.World;
@@ -60,7 +61,7 @@ public class Main {
 		Logger.info("Using LWJGL ", Version.getVersion());
 		Logger.info("Using Java ", Runtime.version().feature(), " (", Runtime.version(), ")");
 
-		long start = System.currentTimeMillis();
+		Profiler profiler = Profiler.start();
 
 		window = Window.init(800, 500, "Warzone Open Rules | Java Edition");
 
@@ -88,7 +89,7 @@ public class Main {
 		BuildScreen.register(Entities.FACTORY);
 		BuildScreen.register(Entities.PARLIAMENT);
 
-		Logger.info("System ready, took ", System.currentTimeMillis() - start, "ms!");
+		profiler.print("System ready, took %sms!");
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		Util.runAsync(() -> {

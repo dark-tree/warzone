@@ -5,7 +5,6 @@ import net.darktree.warzone.country.ai.unit.UnitManager;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.manager.DeferredActionQueue;
 import net.darktree.warzone.world.entity.UnitEntity;
-import net.darktree.warzone.world.tile.TilePos;
 
 import java.util.List;
 
@@ -22,9 +21,9 @@ public class TicketSolver {
 		this.country = country;
 	}
 
-	public void submit(List<TilePos> tickets) {
+	public void submit(List<WeighedPos> tickets) {
 		tickets.forEach(pos -> {
-			manager.addTarget(pos.x, pos.y, 10);
+			manager.addTarget(pos.x, pos.y, pos.weight);
 		});
 	}
 
@@ -37,6 +36,7 @@ public class TicketSolver {
 				.toList();
 
 		manager.solve(recorder, units);
+		manager.reset();
 	}
 
 }

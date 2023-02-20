@@ -3,8 +3,11 @@ package net.darktree.warzone.country.controller;
 import net.darktree.warzone.country.Controller;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.ai.TicketSolver;
+import net.darktree.warzone.country.ai.WeighedPos;
 import net.darktree.warzone.network.packet.EndTurnPacket;
 import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.util.Profiler;
+import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.ColonizeAction;
 import net.darktree.warzone.world.action.manager.DeferredActionQueue;
@@ -25,17 +28,19 @@ public class MachineController extends Controller {
 	@Override
 	public void turnStart(Country country, World world) {
 		// TODO :jeff:
+		Profiler profiler = Profiler.start();
 
 		ColonizationFinder colonization = colonize(world, country);
 
 		DeferredActionQueue.Recorder recorder = DeferredActionQueue.record();
 		TicketSolver solver = new TicketSolver(country, world);
 
-		List<TilePos> tickets = colonization.solve(false);
+		List<WeighedPos> tickets = colonization.solve(false);
 		solver.submit(tickets);
 		solver.solve(recorder);
 
 		recorder.bake(country.symbol, 500, () -> new EndTurnPacket().broadcast()).replay(world.getManager());
+		profiler.print("Turn done, took %sms!");
 	}
 
 	private ColonizationFinder colonize(World world, Country country) {
@@ -43,15 +48,16 @@ public class MachineController extends Controller {
 		TargetFinder target = new TargetFinder(country.symbol, radius);
 		ColonizationFinder colonization = new ColonizationFinder(country.symbol, world, target.getTargets(), true);
 
-		List<TilePos> targets = colonization.solve(true);
+		List<WeighedPos> targets = colonization.solve(true);
 		if (!targets.isEmpty()) {
-			TilePos pos = targets.get(0);
-			world.getManager().apply(new ColonizeAction(world, 6, pos.x, pos.y, false));
+			TilePos pos = WeighedPos.highest(targets);
+			world.getManager().apply(new ColonizeAction(world, MathHelper.nextRandomDice(), pos.x, pos.y, false));
 			Logger.info("Colonized at: ", pos);
+
+			world.update();
+			colonization.update();
 		}
 
-		world.update();
-		colonization.update();
 		return colonization;
 	}
 
