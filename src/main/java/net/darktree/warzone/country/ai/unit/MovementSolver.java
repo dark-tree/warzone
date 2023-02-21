@@ -100,10 +100,7 @@ public final class MovementSolver {
 		}
 
 		// reformat the data
-		List<Set<UnitSource>> sets = new ArrayList<>();
-		for (UnitTarget target : targets) {
-			sets.add(target.candidates);
-		}
+		List<Set<UnitSource>> sets = createDataSet(targets);
 
 		// try until a solution is found or all targets are dropped (not good)
 		while (!targets.isEmpty()) {
@@ -115,6 +112,7 @@ public final class MovementSolver {
 			// no fully valid solution found
 			if (solutions.isEmpty()) {
 				dropped.add(targets.pollLast());
+				sets = createDataSet(targets);
 			} else {
 				List<UnitMove> solution = pickBestSolution(packSolutions(solutions, targets));
 
@@ -139,6 +137,19 @@ public final class MovementSolver {
 		answer.unreachable.addAll(dropped);
 
 		return answer;
+	}
+
+	/**
+	 * Convert target list into a list of sets
+	 */
+	private List<Set<UnitSource>> createDataSet(List<UnitTarget> targets) {
+		List<Set<UnitSource>> sets = new ArrayList<>();
+
+		for (UnitTarget target : targets) {
+			sets.add(target.candidates);
+		}
+
+		return sets;
 	}
 
 	/**

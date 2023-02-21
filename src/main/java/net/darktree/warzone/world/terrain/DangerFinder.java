@@ -17,6 +17,7 @@ public class DangerFinder extends AbstractFinder {
 	private final Country country;
 	private final Symbol self;
 	private final float[][] direct, derived;
+	private float max = 0;
 
 	public DangerFinder(Symbol self, World world) {
 		super(Patterns.NEIGHBOURS, world);
@@ -36,6 +37,10 @@ public class DangerFinder extends AbstractFinder {
 		return derived[x][y];
 	}
 
+	public float getNormalizedFear(int x, int y) {
+		return derived[x][y] / max;
+	}
+
 	protected void compute() {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -52,7 +57,12 @@ public class DangerFinder extends AbstractFinder {
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				this.derived[x][y] = computeDerivedFear(x, y);
+				float fear = computeDerivedFear(x, y);
+				this.derived[x][y] = fear;
+
+				if (fear > max) {
+					max = fear;
+				}
 			}
 		}
 	}

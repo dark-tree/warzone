@@ -38,7 +38,7 @@ public class ColonizePacket  extends SimplePacket {
 
 	@Override
 	public void apply(PacketContext context) {
-		context.getWorld().getManager().apply(new ColonizeAction(context.getWorld(), MathHelper.nextRandomDice(), x, y, war));
+		context.getWorld().getManager().apply(new ColonizeAction(context.getWorld(), MathHelper.nextRandomDice(false), x, y, war));
 	}
 
 }

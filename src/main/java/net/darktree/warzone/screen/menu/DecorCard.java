@@ -24,11 +24,11 @@ public class DecorCard {
 		this.y = y;
 		this.w = w;
 		this.h = h;
-		this.a = MathHelper.radians(MathHelper.random(365));
+		this.a = MathHelper.radians(MathHelper.RANDOM.nextInt(365));
 
-		float r = MathHelper.randomFloat() * 0.784f;
-		float g = MathHelper.randomFloat() * 0.392f;
-		float b = MathHelper.randomFloat() * 0.392f;
+		float r = MathHelper.RANDOM.nextFloat() * 0.784f;
+		float g = MathHelper.RANDOM.nextFloat() * 0.392f;
+		float b = MathHelper.RANDOM.nextFloat() * 0.392f;
 
 		float scale = 0.7f;
 		r = MathHelper.lerp(r, Colors.CARD_SEPIA.r, scale);

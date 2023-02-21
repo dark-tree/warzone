@@ -23,19 +23,31 @@ public final class UnitMove {
 		this.path = path;
 	}
 
+	/**
+	 * Get the total number of steps between source and target
+	 */
 	public int getSteps() {
 		return path.getLength();
 	}
 
+	/**
+	 * Remove stored source and target from given lists
+	 */
 	public void removeFromSearch(List<UnitSource> sources, List<UnitTarget> targets) {
 		sources.remove(source);
 		targets.remove(target);
 	}
 
+	/**
+	 * Check if this move is a no-op (source is on the target)
+	 */
 	public boolean isPinned() {
 		return target.x == source.x && target.y == source.y;
 	}
 
+	/**
+	 * Create an action that matches this move
+	 */
 	public Action asAction(World world) {
 		MoveUnitAction action = new MoveUnitAction(world, source.x, source.y);
 		action.setTarget(target.x, target.y);

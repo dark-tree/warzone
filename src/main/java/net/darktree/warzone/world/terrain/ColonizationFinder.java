@@ -98,7 +98,7 @@ public class ColonizationFinder extends AbstractFinder {
 				WeighedPos selected = null;
 
 				for (TilePos unit : world.getBorder().getBorderTiles(self)) {
-					int gain = getGain(unit);
+					int gain = getGain(unit.x, unit.y);
 					if (isGuardAt(unit) && gain > max) {
 						selected = WeighedPos.wrap(unit, 1);
 						max = gain;
@@ -115,23 +115,6 @@ public class ColonizationFinder extends AbstractFinder {
 
 		return actions;
 	}
-
-	private int getGain(TilePos pos) {
-		int gain = 0;
-		Symbol center = getOwner(pos.x, pos.y);
-
-		for (TilePos offset : offsets) {
-			int tx = offset.x + pos.x;
-			int ty = offset.y + pos.y;
-
-			if (isPosValid(tx, ty) && getOwner(tx, ty) == Symbol.NONE && getTile(tx, ty).canColonize(center)) {
-				gain ++;
-			}
-		}
-
-		return gain;
-	}
-
 
 	private boolean isGuardAt(TilePos pos) {
 		if (getEntity(pos.x, pos.y) instanceof UnitEntity unit) {

@@ -17,6 +17,9 @@ public final class UnitSource extends TilePos {
 		this.finder = unit.getPathFinder(false);
 	}
 
+	/**
+	 * Add itself as a candidate to every target that is in range from the given list
+	 */
 	public void checkTargets(List<UnitTarget> targets) {
 		for (UnitTarget target : targets) {
 			if (finder.canReach(target.x, target.y) || (target.x == this.x && target.y == this.y)) {

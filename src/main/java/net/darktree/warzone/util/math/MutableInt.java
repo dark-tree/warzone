@@ -8,14 +8,4 @@ public class MutableInt {
 		this.value = value;
 	}
 
-	public void addNonNegative(int value) {
-		final int sum = this.value + value;
-
-		if (sum < 0) {
-			throw new ArithmeticException("Value must not be negative!");
-		}
-
-		this.value = sum;
-	}
-
 }

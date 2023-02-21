@@ -18,15 +18,24 @@ public class Parallax {
 		this.speed = speed;
 	}
 
+	/**
+	 * Update the parallax values based on current mouse position
+	 */
 	public void update() {
 		px = MathHelper.lerp(px, getRawX(), speed);
 		py = MathHelper.lerp(py, getRawY(), speed);
 	}
 
+	/**
+	 * Get parallax x-axis offset, returns a value between 0 and 1
+	 */
 	public float getX() {
 		return 1 - px;
 	}
 
+	/**
+	 * Get parallax y-axis offset, returns a value between 0 and 1
+	 */
 	public float getY() {
 		return 1 - py;
 	}

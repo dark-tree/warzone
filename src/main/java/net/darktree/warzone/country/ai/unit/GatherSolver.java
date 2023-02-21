@@ -6,6 +6,7 @@ import net.darktree.warzone.country.ai.unit.data.UnitSource;
 import net.darktree.warzone.country.ai.unit.data.UnitTarget;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.iterable.SpiralIterable;
+import net.darktree.warzone.util.iterable.SpiralPoint;
 import net.darktree.warzone.world.path.Path;
 import net.darktree.warzone.world.path.PathFinder;
 import net.darktree.warzone.world.tile.TilePos;
@@ -77,7 +78,7 @@ public final class GatherSolver {
 		if (avoidance != 0) {
 			boolean escaped = false;
 
-			for (SpiralIterable.SpiralPoint point : SpiralIterable.of(1, end.x, end.y)) {
+			for (SpiralPoint point : SpiralIterable.of(1, end.x, end.y)) {
 				if (finder.canReach(point.x, point.y) && avoid.get(point.x, point.y) == 0) {
 					end = point.asTilePos();
 					escaped = true;

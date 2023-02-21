@@ -4,6 +4,8 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.pattern.Pattern;
+import net.darktree.warzone.world.pattern.Patterns;
+import net.darktree.warzone.world.tile.Surface;
 import net.darktree.warzone.world.tile.Tile;
 import net.darktree.warzone.world.tile.TilePos;
 import net.darktree.warzone.world.tile.TileState;
@@ -45,6 +47,22 @@ public abstract class AbstractFinder {
 
 	protected final Entity getEntity(int x, int y) {
 		return world.getEntity(x, y);
+	}
+
+	protected final int getGain(int x, int y) {
+		int gain = 0;
+		Symbol center = getOwner(x, y);
+
+		for (TilePos offset : Patterns.NEIGHBOURS.getOffsets()) {
+			int tx = offset.x + x;
+			int ty = offset.y + y;
+
+			if (isPosValid(tx, ty) && getOwner(tx, ty) == Symbol.NONE && getTile(tx, ty).canColonize(center) && getTile(tx, ty).getSurface() == Surface.LAND) {
+				gain ++;
+			}
+		}
+
+		return gain;
 	}
 
 }

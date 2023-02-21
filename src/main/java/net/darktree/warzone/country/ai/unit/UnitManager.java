@@ -38,6 +38,15 @@ public final class UnitManager {
 	}
 
 	/**
+	 * Add a list of targets to place a unit on, the targets should to be unique
+	 */
+	public void addAllTargets(List<WeighedPos> targets) {
+		for (WeighedPos target : targets) {
+			addTarget(target.x, target.y, target.weight);
+		}
+	}
+
+	/**
 	 * Add a target to place a unit on, the target should to be unique
 	 */
 	public void addTarget(int x, int y, int weight) {
@@ -85,11 +94,6 @@ public final class UnitManager {
 	 */
 	public void solve(DeferredActionQueue.Recorder recorder, List<UnitEntity> units) {
 		LinkedList<UnitSource> sources = units.stream().map(UnitSource::new).collect(Collectors.toCollection(LinkedList::new));
-
-		// TODO remove
-		world.getBorder().getBorderTiles(country.symbol).forEach(pos -> {
-			addTarget(pos.x, pos.y, 1);
-		});
 
 		// obtain basic solution
 		UnitSolution solution = movementSolver.solve(targets, sources);

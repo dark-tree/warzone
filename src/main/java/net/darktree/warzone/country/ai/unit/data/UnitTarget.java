@@ -13,6 +13,9 @@ public final class UnitTarget extends WeighedPos {
 		super(x, y, weight);
 	}
 
+	/**
+	 * Check if this target can possibly be reached by any unit, if not returns true
+	 */
 	public boolean isUnreachable() {
 		return candidates.isEmpty();
 	}

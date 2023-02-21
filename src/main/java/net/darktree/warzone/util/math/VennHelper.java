@@ -6,6 +6,26 @@ import java.util.Set;
 
 public class VennHelper {
 
+	/**
+	 * Returns a list of unique set selections so that no selection is used in more than one set,
+	 * if no solution exists an empty list will be returned. If any of the input sets is empty
+	 * no solution can ever exist, so an empty set will always be returned in that case.
+	 * <pre>{@code
+	 *     List<Set<Integer>> sets = new ArrayList<>();
+	 *     sets.add(new HashSet<>(Arrays.asList(1, 2, 3));
+	 *     sets.add(new HashSet<>(Arrays.asList(2)));
+	 *     sets.add(new HashSet<>(Arrays.asList(2, 3)));
+	 *
+	 *     List<List<Integer>> solutions = findAllUniquePicks(sets);
+	 *     // solutions will equal [[1, 2, 3]] (single solution)
+	 *     // 1 corresponds to the first set [1, 2, 3]
+	 *     // 2 to the second set [2]
+	 *     // and 3 to the third, [2, 3]
+	 * }</pre>
+	 *
+	 * @param sets a list of sets, each set contains X unique entries (where X is the number of sets in the input)
+	 * @return a list of solutions, or an empty list if not solution exists
+	 */
 	public static <T> List<List<T>> findAllUniquePicks(List<Set<T>> sets) {
 		List<List<T>> result = new ArrayList<>();
 		appendUniquePicks(sets, new ArrayList<>(), result);

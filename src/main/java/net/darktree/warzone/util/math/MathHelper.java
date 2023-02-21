@@ -10,15 +10,30 @@ public class MathHelper {
 
 	public static final Random RANDOM = new Random();
 
-	public static int nextRandomDice() {
-		return RANDOM.nextInt(1, 7);
+	/**
+	 * Roll a standard K6 dice
+	 */
+	public static int nextRandomDice(boolean weigh) {
+		int dice = RANDOM.nextInt(1, 7);
+
+		if (dice == 1 && weigh) {
+			return nextRandomDice(true);
+		}
+
+		return dice;
 	}
 
+	/**
+	 * Pick a random value from an enum
+	 */
 	public static <T extends Enum<T>> T randomEnumPick(Class<T> enumerable) {
 		T[] values = enumerable.getEnumConstants();
 		return values[RANDOM.nextInt(values.length)];
 	}
 
+	/**
+	 * Pick a random entry from a list
+	 */
 	public static <T> T randomListPick(List<T> list) {
 		return list.get(RANDOM.nextInt(list.size()));
 	}
@@ -96,16 +111,6 @@ public class MathHelper {
 	 */
 	public static float radians(float deg) {
 		return deg * 0.01745329f;
-	}
-
-	@Deprecated
-	public static int random(int max) {
-		return RANDOM.nextInt(max + 1);
-	}
-
-	@Deprecated
-	public static float randomFloat() {
-		return RANDOM.nextFloat();
 	}
 
 	/**

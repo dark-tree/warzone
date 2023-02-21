@@ -14,10 +14,16 @@ public class WeighedPos extends TilePos implements Comparable<WeighedPos> {
 		this.weight = weight;
 	}
 
+	/**
+	 * Create a new WeighedPos from the given position and weight
+	 */
 	public static WeighedPos wrap(TilePos pos, int weight) {
 		return new WeighedPos(pos.x, pos.y, weight);
 	}
 
+	/**
+	 * Picks the WeighedPos of the highest weight from the given list
+	 */
 	public static WeighedPos highest(List<WeighedPos> list) {
 		WeighedPos pos = null;
 
@@ -30,6 +36,9 @@ public class WeighedPos extends TilePos implements Comparable<WeighedPos> {
 		return pos;
 	}
 
+	/**
+	 * Create a new WeighedPos of the same weight but with a different position
+	 */
 	public WeighedPos childPos(TilePos pos) {
 		return new WeighedPos(pos.x, pos.y, weight);
 	}
@@ -39,4 +48,8 @@ public class WeighedPos extends TilePos implements Comparable<WeighedPos> {
 		return Integer.compare(weight, other.weight);
 	}
 
+	@Override
+	public String toString() {
+		return x + " " + y + " w=" + weight;
+	}
 }

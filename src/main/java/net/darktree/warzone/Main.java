@@ -15,6 +15,7 @@ import net.darktree.warzone.country.controller.NullController;
 import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
+import net.darktree.warzone.network.packet.EndTurnPacket;
 import net.darktree.warzone.screen.BuildScreen;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.PopupScreen;
@@ -211,6 +212,10 @@ public class Main {
 			};
 
 			Logger.info("Identity set!");
+		}
+
+		if (world != null && line.equals("next")) {
+			new EndTurnPacket().broadcast();
 		}
 
 		if (world != null && line.startsWith("rmake ")) {

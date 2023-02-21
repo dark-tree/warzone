@@ -1,11 +1,10 @@
 package net.darktree.warzone.util.iterable;
 
-import net.darktree.warzone.util.math.Vec2i;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 
-public class SpiralIterable implements Iterable<SpiralIterable.SpiralPoint> {
+public final class SpiralIterable implements Iterable<SpiralPoint> {
 
 	// based on https://stackoverflow.com/a/8979620
 	private static final class SpiralIterator implements Iterator<SpiralPoint> {
@@ -76,20 +75,6 @@ public class SpiralIterable implements Iterable<SpiralIterable.SpiralPoint> {
 			throw new UnsupportedOperationException();
 		}
 
-	}
-
-	public static class SpiralPoint extends Vec2i {
-		public final int r;
-
-		private SpiralPoint(int r, int x, int y) {
-			super(x, y);
-			this.r = r;
-		}
-
-		@Override
-		public String toString() {
-			return "SpiralPoint{x=" + x + ", y=" + y + ", r=" + r + "}";
-		}
 	}
 
 	private final int radius, x, y;

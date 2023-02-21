@@ -9,4 +9,9 @@ public class TilePos extends Vec2i {
 		super(x, y);
 	}
 
+	@Override
+	public TilePos asTilePos() {
+		return this;
+	}
+
 }

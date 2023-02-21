@@ -13,19 +13,31 @@ public class Vec2i {
 		this.y = y;
 	}
 
+	/**
+	 * Serialize to Nbt
+	 */
 	public void toNbt(CompoundTag nbt) {
 		nbt.putInt("x", x);
 		nbt.putInt("y", y);
 	}
 
+	/**
+	 * Convert to a TilePos instance
+	 */
 	public TilePos asTilePos() {
 		return new TilePos(x, y);
 	}
 
+	/**
+	 * Check if the position is equal
+	 */
 	public boolean equals(int x, int y) {
 		return this.x == x && this.y == y;
 	}
 
+	/**
+	 * Get the manhattan distance to another Vec2i
+	 */
 	public int manhattan(Vec2i other) {
 		return MathHelper.getManhattanDistance(x, y, other.x, other.y);
 	}
