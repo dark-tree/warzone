@@ -8,3 +8,4 @@ equip.ogg - mrickey13 - https://freesound.org/people/mrickey13/sounds/518850/ (r
 page_turn.ogg - flag2 - https://freesound.org/people/flag2/sounds/63318/
 pop.ogg - SunnySideSound - https://freesound.org/people/SunnySideSound/sounds/67095/
 select.ogg - coltures - https://freesound.org/people/coltures/sounds/391477/
+rotate.ogg - JuanFG - https://freesound.org/people/JuanFG/sounds/471749/

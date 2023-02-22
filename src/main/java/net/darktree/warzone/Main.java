@@ -89,6 +89,8 @@ public class Main {
 		BuildScreen.register(Entities.WAREHOUSE);
 		BuildScreen.register(Entities.FACTORY);
 		BuildScreen.register(Entities.PARLIAMENT);
+		BuildScreen.register(Entities.FENCE);
+		BuildScreen.register(Entities.WALL);
 
 		profiler.print("System ready, took %sms!");
 

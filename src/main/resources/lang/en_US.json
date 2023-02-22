@@ -99,6 +99,14 @@
 		"parliament": {
 			"name": "PARLIAMENT",
 			"description": "ALLOWS YOU TO PURCHASE\nAND USE UPGRADES."
+		},
+		"fence": {
+			"name": "FENCE",
+			"description": "USEFUL IN BORDER DEFENCE."
+		},
+		"wall": {
+			"name": "WALL",
+			"description": "A ONE-DIRECTIONAL FENCE, \nUSEFUL IN BORDER DEFENCE."
 		}
 	}
 }

@@ -173,6 +173,10 @@ public class PlayScreen extends WorldScreen {
 
 	@Override
 	public void onEscape() {
+		if (interactor != null) {
+			return;
+		}
+
 		ScreenStack.open(new PauseMenuScreen(save, world));
 	}
 

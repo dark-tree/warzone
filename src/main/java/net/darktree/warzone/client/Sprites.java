@@ -55,4 +55,8 @@ public class Sprites {
 	public static final Sprite BUILDING_WAREHOUSE_LONG = getSprite("building/warehouse_long.png");
 	public static final Sprite BUILDING_PARLIAMENT = getSprite("building/parliament.png");
 
+	public static final Sprite STRUCTURE_FENCE = getSprite("building/fence.png");
+	public static final Sprite STRUCTURE_WALL = getSprite("building/wall.png");
+
+
 }

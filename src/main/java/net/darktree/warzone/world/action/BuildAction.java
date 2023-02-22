@@ -3,6 +3,7 @@ package net.darktree.warzone.world.action;
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.manager.Action;
 import net.darktree.warzone.world.entity.building.Building;
@@ -16,18 +17,20 @@ public final class BuildAction extends Action {
 
 	private final Building.Type type;
 	private final int x, y;
+	private final Direction facing;
 
 	private Building building;
 
-	public BuildAction(World world, Building.Type type, int x, int y) {
+	public BuildAction(World world, Building.Type type, int x, int y, Direction facing) {
 		super(world, Actions.BUILD);
 		this.type = type;
 		this.x = x;
 		this.y = y;
+		this.facing = facing;
 	}
 
 	public BuildAction(World world, CompoundTag nbt) {
-		this(world, (Building.Type) Registries.ENTITIES.byId(nbt.getInt("type")).value(), nbt.getInt("x"), nbt.getInt("y"));
+		this(world, (Building.Type) Registries.ENTITIES.byId(nbt.getInt("type")).value(), nbt.getInt("x"), nbt.getInt("y"), Direction.values()[nbt.getInt("facing")]);
 	}
 
 	@Override
@@ -36,6 +39,7 @@ public final class BuildAction extends Action {
 		nbt.putInt("type", type.id());
 		nbt.putInt("x", x);
 		nbt.putInt("y", y);
+		nbt.putInt("facing", facing.ordinal());
 	}
 
 	@Override
@@ -59,6 +63,7 @@ public final class BuildAction extends Action {
 	@Override
 	protected void redo(Symbol symbol) {
 		building = (Building) world.addEntity(type, x, y);
+		building.setFacing(facing);
 		world.getCountry(symbol).addMaterials(-type.value);
 		Sounds.STAMP.play(x, y);
 	}

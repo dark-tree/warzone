@@ -7,6 +7,7 @@ import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.upgrade.Upgrades;
+import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.DeconstructBuildingAction;
 import net.darktree.warzone.world.entity.Entity;
@@ -43,8 +44,12 @@ public abstract class Building extends StructureEntity {
 		}
 	}
 
-	public final Sprite getSprite() {
+	public Sprite getSprite() {
 		return getType().sprite;
+	}
+
+	public Direction getRotation() {
+		return Direction.NORTH;
 	}
 
 	@Override
@@ -58,7 +63,7 @@ public abstract class Building extends StructureEntity {
 	}
 
 	protected void draw(VertexBuffer buffer) {
-		Renderer.quad(buffer, tx, ty, width, height, getSprite(), 0, 0, 0, 0);
+		Renderer.quad(buffer, getRotation(), tx, ty, width, height, getSprite(), 0, 0, 0, 0);
 	}
 
 	@Override
@@ -94,14 +99,19 @@ public abstract class Building extends StructureEntity {
 		return (int) Math.floor(materials * country.upgrades.get(Upgrades.RECYCLE));
 	}
 
+	public void setFacing(Direction facing) {
+		// if the building can be rotated set that rotation here
+	}
+
 	public static class Type extends Entity.Type {
 
 		public final int value;
 		public final int width, height;
 		public final Sprite icon, sprite;
 		public final Pattern pattern;
+		public final boolean rotatable;
 
-		public Type(Constructor constructor, int value, int width, int height, Sprite icon, Sprite sprite) {
+		public Type(Constructor constructor, int value, int width, int height, Sprite icon, Sprite sprite, boolean rotatable) {
 			super(constructor);
 
 			this.value = value;
@@ -110,10 +120,7 @@ public abstract class Building extends StructureEntity {
 			this.icon = icon;
 			this.sprite = sprite;
 			this.pattern = Pattern.build(width, height);
-		}
-
-		public Type(Constructor constructor, int value, int width, int height, Sprite sprite) {
-			this(constructor, value, width, height, sprite, sprite);
+			this.rotatable = rotatable;
 		}
 
 		public String getNameKey() {
@@ -122,6 +129,46 @@ public abstract class Building extends StructureEntity {
 
 		public String getDescriptionKey() {
 			return "building." + key() + ".description";
+		}
+
+		public static Builder create(Constructor constructor, int value, int width, int height, Sprite sprite) {
+			return new Builder(constructor, value, width, height, sprite);
+		}
+
+		public static class Builder {
+
+			private final Constructor constructor;
+			private final int value;
+			private final int width;
+			private final int height;
+			private final Sprite sprite;
+
+			private Sprite icon;
+			private boolean rotatable = false;
+
+			Builder(Constructor constructor, int value, int width, int height, Sprite sprite) {
+				this.constructor = constructor;
+				this.value = value;
+				this.width = width;
+				this.height = height;
+				this.sprite = sprite;
+				this.icon = sprite;
+			}
+
+			public Builder withIcon(Sprite icon) {
+				this.icon = icon;
+				return this;
+			}
+
+			public Builder rotatable() {
+				this.rotatable = true;
+				return this;
+			}
+
+			public Type build() {
+				return new Type(constructor, value, width, height, icon, sprite, rotatable);
+			}
+
 		}
 
 	}

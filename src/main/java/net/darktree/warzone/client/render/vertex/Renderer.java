@@ -6,6 +6,7 @@ import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.image.Sprite;
+import net.darktree.warzone.util.Direction;
 import org.lwjgl.opengl.GL32;
 
 import java.nio.charset.StandardCharsets;
@@ -21,8 +22,21 @@ public class Renderer {
 		quad(buffer, x, y, 1, 1, sprite, 0, 0, 0, 0);
 	}
 
+	public static void quad(VertexBuffer buffer, Direction direction, float x, float y, float w, float h, Sprite sprite, float r, float g, float b, float a) {
+		quad(buffer, direction, x, y, x + w, y, x + w, y + h, x, y + h, sprite, r, g, b, a);
+	}
+
 	public static void quad(VertexBuffer buffer, float x, float y, float w, float h, Sprite sprite, float r, float g, float b, float a) {
 		quad(buffer, x, y, x + w, y, x + w, y + h, x, y + h, sprite, r, g, b, a);
+	}
+
+	public static void quad(VertexBuffer buffer, Direction direction, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, Sprite sprite, float r, float g, float b, float a) {
+		switch (direction) {
+			case NORTH -> quad(buffer, x1, y1, x2, y2, x3, y3, x4, y4, sprite, r, g, b, a);
+			case EAST -> quad(buffer, x2, y2, x3, y3, x4, y4, x1, y1, sprite, r, g, b, a);
+			case SOUTH -> quad(buffer, x3, y3, x4, y4, x1, y1, x2, y2, sprite, r, g, b, a);
+			case WEST -> quad(buffer, x4, y4, x1, y1, x2, y2, x3, y3, sprite, r, g, b, a);
+		}
 	}
 
 	public static void quad(VertexBuffer buffer, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, Sprite sprite, float r, float g, float b, float a) {
