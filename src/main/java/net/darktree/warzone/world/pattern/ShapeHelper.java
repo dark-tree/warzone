@@ -2,10 +2,13 @@ package net.darktree.warzone.world.pattern;
 
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.util.math.MathHelper;
+import net.darktree.warzone.world.Warp;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.tile.TilePos;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class ShapeHelper {
@@ -30,6 +33,10 @@ public class ShapeHelper {
 		final Direction vector = MathHelper.getDirection(fx, fy, tx, ty);
 		final Entity tile = world.getEntity(middle);
 
+		if (tile instanceof Warp warp && warp.canWarpFrom(fx, fy)) {
+			return warp.getWarpedTiles().contains(new TilePos(tx, ty));
+		}
+
 		return midpoint.test(world, vector, tile, middle) && target.test(world, tx, ty);
 	}
 
@@ -42,13 +49,28 @@ public class ShapeHelper {
 	}
 
 	public static void iterateValid(World world, TargetPredicate target, MidpointPredicate midpoint, boolean large, int fx, int fy, Consumer<TilePos> consumer) {
+		Set<TilePos> linked = new HashSet<>();
+
 		for (TilePos offset : Patterns.CROSS.getOffsets()) {
-			consumeValidOffset(world, target, midpoint, large, fx, fy, fx + offset.x, fy + offset.y, consumer);
+			int tx = fx + offset.x;
+			int ty = fy + offset.y;
+			consumeValidOffset(world, target, midpoint, large, fx, fy, tx, ty, consumer);
+
+			if (world.getEntity(tx, ty) instanceof Warp warp && warp.isWarpDirect() && warp.canWarpFrom(fx, fy)) {
+				linked.addAll(warp.getWarpedTiles());
+			}
 		}
 
 		if (large) {
 			for (TilePos offset : Patterns.HALO.getOffsets()) {
 				consumeValidOffset(world, target, midpoint, true, fx, fy, fx + offset.x, fy + offset.y, consumer);
+			}
+		}
+
+		linked.remove(new TilePos(fx, fy));
+		for (TilePos pos : linked) {
+			if (target.test(world, pos.x, pos.y)) {
+				consumer.accept(pos);
 			}
 		}
 	}

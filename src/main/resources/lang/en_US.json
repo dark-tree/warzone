@@ -107,6 +107,10 @@
 		"wall": {
 			"name": "WALL",
 			"description": "A ONE-DIRECTIONAL FENCE, \nUSEFUL IN BORDER DEFENCE."
+		},
+		"bridge": {
+			"name": "BRIDGE",
+			"description": "ALLOWS YOU TO CROSS BODIES \nOF WATER."
 		}
 	}
 }

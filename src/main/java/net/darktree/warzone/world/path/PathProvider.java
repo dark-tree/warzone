@@ -29,7 +29,6 @@ public class PathProvider {
 
 			if (finder.canReach(pos.x, pos.y)) {
 				found = index;
-				break;
 			}
 
 			index ++;

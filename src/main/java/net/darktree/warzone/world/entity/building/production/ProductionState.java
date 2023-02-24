@@ -37,7 +37,7 @@ public class ProductionState implements NbtSerializable {
 	public void fromNbt(@NotNull CompoundTag tag) {
 		ListTag<IntTag> values = tag.getListTag("recipes").asTypedList(IntTag.class);
 		final int size = Math.min(recipes.size(), values.size());
-		final Country owner = parent.getOwner();
+		final Country owner = parent.getOwner().orElseThrow();
 
 		for (Recipe recipe : recipes) {
 			recipe.reset(owner);

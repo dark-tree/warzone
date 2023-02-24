@@ -2,12 +2,10 @@ package net.darktree.warzone.screen.interactor;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
-import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.client.window.input.ClickEvent;
-import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.world.World;
@@ -17,25 +15,18 @@ import net.darktree.warzone.world.tile.Surface;
 import net.darktree.warzone.world.tile.Tile;
 import net.darktree.warzone.world.tile.TilePos;
 import net.darktree.warzone.world.tile.TileState;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-public class BuildInteractor extends Interactor {
+public class BuildInteractor extends PlacementInteractor {
 
-	private final Building.Type type;
-	private final World world;
-
-	private int x, y;
-	private boolean valid;
-	private Direction rotation = Direction.NORTH;
+	protected Direction rotation = Direction.NORTH;
 
 	public BuildInteractor(Building.Type type, World world) {
-		this.type = type;
-		this.world = world;
+		super(type, world);
 	}
 
-	boolean verify(int x, int y) {
+	private boolean verify(int x, int y) {
 		Symbol symbol = world.getCurrentSymbol();
 
 		// try matching pattern first to ensure that we don't
@@ -66,11 +57,10 @@ public class BuildInteractor extends Interactor {
 		float wave = (float) (Math.sin(Main.window.profiler.getFrameCount() / 6f) + 1) / 6;
 
 		if (world.isPositionValid(x, y)) {
-			if (this.x != x || this.y != y) {
+			if (!pos.equals(x, y)) {
 				try{
 					valid = verify(x, y);
-					this.x = x;
-					this.y = y;
+					pos = new TilePos(x, y);
 				}catch (Exception ignore){
 					// pattern did not match
 				}
@@ -79,24 +69,15 @@ public class BuildInteractor extends Interactor {
 
 		Color c = valid ? Colors.SPOT_VALID : Colors.SPOT_INVALID;
 
-		Renderer.quad(texture, this.rotation, this.x, this.y, type.width, type.height, type.sprite, c.r, c.g, c.b, c.a * wave);
+		Renderer.quad(texture, this.rotation, pos.x, pos.y, type.width, type.height, type.sprite, c.r, c.g, c.b, c.a * wave);
 	}
 
 	@Override
 	public void onClick(ClickEvent event, int x, int y) {
-		if (valid && this.x == x && this.y == y) {
-			world.getManager().apply(new BuildAction(world, type, this.x, this.y, rotation));
+		if (valid && pos.equals(x, y)) {
+			world.getManager().apply(new BuildAction(world, type, pos.x, pos.y, rotation));
 			this.closed = true;
 		}
 	}
 
-	@Override
-	public void onKey(KeyEvent event) {
-		super.onKey(event);
-
-		if (type.rotatable && event.isPressed(GLFW.GLFW_KEY_R)) {
-			rotation = rotation.next();
-			Sounds.ROTATE.play();
-		}
-	}
 }

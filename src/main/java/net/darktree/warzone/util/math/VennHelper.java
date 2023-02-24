@@ -23,8 +23,8 @@ public class VennHelper {
 	 *     // and 3 to the third, [2, 3]
 	 * }</pre>
 	 *
-	 * @param sets a list of sets, each set contains X unique entries (where X is the number of sets in the input)
-	 * @return a list of solutions, or an empty list if not solution exists
+	 * @param sets a list of sets
+	 * @return a list of solutions, each solution contains X unique entries (where X is the number of sets in the input)
 	 */
 	public static <T> List<List<T>> findAllUniquePicks(List<Set<T>> sets) {
 		List<List<T>> result = new ArrayList<>();

@@ -15,7 +15,7 @@ public class ParliamentBuilding extends Building {
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
 		if (event.isPressed()) {
-			ScreenStack.open(new ParliamentScreen(world, getOwner().symbol));
+			getOwner().ifPresent(owner -> ScreenStack.open(new ParliamentScreen(world, owner.symbol)));
 		}
 	}
 

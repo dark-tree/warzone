@@ -12,4 +12,5 @@ public class Actions {
 	public static final Action.Type SUMMON_UNIT = Registries.ACTIONS.register("unit_summon", new Action.Type(SummonAction::new));
 	public static final Action.Type TOGGLE_ARMOR = Registries.ACTIONS.register("toggle_armor", new Action.Type(ToggleArmorAction::new));
 	public static final Action.Type BUILD_MINE = Registries.ACTIONS.register("build_mine", new Action.Type(BuildMineAction::new));
+	public static final Action.Type BUILD_BRIDGE = Registries.ACTIONS.register("build_bridge", new Action.Type(BuildBridgeAction::new));
 }

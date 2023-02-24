@@ -47,6 +47,7 @@ public class Sprites {
 	public static final Sprite UPGRADE_RECYCLE = getSprite("gui/icon/upgrade/recycle.png");
 	public static final Sprite UPGRADE_LOCAL = getSprite("gui/icon/upgrade/local.png");
 	public static final Sprite UPGRADE_MAPS = getSprite("gui/icon/upgrade/maps.png");
+	public static final Sprite UPGRADE_BRIDGE = getSprite("gui/icon/upgrade/bridge.png");
 
 	public static final Sprite BUILDING_CAPITOL = getSprite("building/capitol.png");
 	public static final Sprite BUILDING_FACTORY = getSprite("building/factory.png");
@@ -57,6 +58,6 @@ public class Sprites {
 
 	public static final Sprite STRUCTURE_FENCE = getSprite("building/fence.png");
 	public static final Sprite STRUCTURE_WALL = getSprite("building/wall.png");
-
+	public static final Sprite STRUCTURE_BRIDGE = getSprite("building/bridge.png");
 
 }

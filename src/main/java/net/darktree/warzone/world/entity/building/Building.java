@@ -7,6 +7,9 @@ import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.upgrade.Upgrades;
+import net.darktree.warzone.screen.PlayScreen;
+import net.darktree.warzone.screen.interactor.BuildInteractor;
+import net.darktree.warzone.screen.interactor.PlacementInteractor;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.DeconstructBuildingAction;
@@ -17,6 +20,7 @@ import net.darktree.warzone.world.tile.TilePos;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class Building extends StructureEntity {
@@ -28,7 +32,7 @@ public abstract class Building extends StructureEntity {
 	public static Building from(int x, int y, World world, @NotNull CompoundTag tag) {
 		Building building = (Building) Registries.ENTITIES.byKey(tag.getString("id")).value().create(world, x, y);
 		building.fromNbt(tag);
-		building.getOwner().addBuilding(building);
+		building.getOwner().ifPresent(owner -> owner.addBuilding(building));
 		return building;
 	}
 
@@ -79,20 +83,20 @@ public abstract class Building extends StructureEntity {
 	@Override
 	public void onAdded() {
 		removed = false;
-		getOwner().addBuilding(this);
+		getOwner().ifPresent(country -> country.addBuilding(this));
 		forEachTile(pos -> world.getTileState(pos).setEntity(this));
 		world.onBuildingChanged();
 	}
 
 	@Override
 	public void onRemoved() {
-		getOwner().removeBuilding(this);
+		getOwner().ifPresent(country -> country.removeBuilding(this));
 		forEachTile(pos -> world.getTileState(pos).removeEntity(this));
 		world.onBuildingChanged();
 	}
 
-	public Country getOwner() {
-		return world.getCountry(tx, ty);
+	public Optional<Country> getOwner() {
+		return Optional.ofNullable(world.getCountry(tx, ty));
 	}
 
 	public static int remainder(Country country, int materials) {
@@ -103,15 +107,19 @@ public abstract class Building extends StructureEntity {
 		// if the building can be rotated set that rotation here
 	}
 
+	public static Type.Builder define(Entity.Type.Constructor constructor, Sprite sprite) {
+		return new Type.Builder(constructor, sprite);
+	}
+
 	public static class Type extends Entity.Type {
 
 		public final int value;
 		public final int width, height;
 		public final Sprite icon, sprite;
 		public final Pattern pattern;
-		public final boolean rotatable;
+		public final PlacementInteractor.Provider interactor;
 
-		public Type(Constructor constructor, int value, int width, int height, Sprite icon, Sprite sprite, boolean rotatable) {
+		public Type(Constructor constructor, int value, int width, int height, Sprite icon, Sprite sprite, PlacementInteractor.Provider interactor) {
 			super(constructor);
 
 			this.value = value;
@@ -120,7 +128,7 @@ public abstract class Building extends StructureEntity {
 			this.icon = icon;
 			this.sprite = sprite;
 			this.pattern = Pattern.build(width, height);
-			this.rotatable = rotatable;
+			this.interactor = interactor;
 		}
 
 		public String getNameKey() {
@@ -131,42 +139,51 @@ public abstract class Building extends StructureEntity {
 			return "building." + key() + ".description";
 		}
 
-		public static Builder create(Constructor constructor, int value, int width, int height, Sprite sprite) {
-			return new Builder(constructor, value, width, height, sprite);
+		public void interact(World world) {
+			PlayScreen.setInteractor(interactor.create(this, world));
 		}
 
 		public static class Builder {
 
 			private final Constructor constructor;
-			private final int value;
-			private final int width;
-			private final int height;
 			private final Sprite sprite;
 
+			private int value = 0;
+			private int width = 1;
+			private int height = 1;
 			private Sprite icon;
-			private boolean rotatable = false;
+			private PlacementInteractor.Provider interactor;
 
-			Builder(Constructor constructor, int value, int width, int height, Sprite sprite) {
+			Builder(Constructor constructor, Sprite sprite) {
 				this.constructor = constructor;
-				this.value = value;
-				this.width = width;
-				this.height = height;
 				this.sprite = sprite;
 				this.icon = sprite;
+				this.interactor = BuildInteractor::new;
 			}
 
-			public Builder withIcon(Sprite icon) {
+			public Builder cost(int value) {
+				this.value = value;
+				return this;
+			}
+
+			public Builder size(int width, int height) {
+				this.width = width;
+				this.height = height;
+				return this;
+			}
+
+			public Builder icon(Sprite icon) {
 				this.icon = icon;
 				return this;
 			}
 
-			public Builder rotatable() {
-				this.rotatable = true;
+			public Builder interactor(PlacementInteractor.Provider interactor) {
+				this.interactor = interactor;
 				return this;
 			}
 
 			public Type build() {
-				return new Type(constructor, value, width, height, icon, sprite, rotatable);
+				return new Type(constructor, value, width, height, icon, sprite, interactor);
 			}
 
 		}

@@ -2,6 +2,7 @@ package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.world.Warp;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.pattern.Patterns;
@@ -32,13 +33,22 @@ public class ControlFinder extends AbstractFieldFinder {
 
 	private void propagate(int x, int y, int value, Symbol symbol) {
 		for (TilePos offset : offsets) {
-			set(x + offset.x, y + offset.y, value, symbol);
+			set(x, y, x + offset.x, y + offset.y, value, symbol);
 		}
 	}
 
-	private void set(int x, int y, int value, Symbol symbol) {
+	private void set(int fx, int fy, int x, int y, int value, Symbol symbol) {
 		if (!isPosValid(x, y)) {
 			return;
+		}
+
+		// handle warps
+		if (getEntity(x, y) instanceof Warp warp && warp.isWarpDirect() && warp.canWarpFrom(fx, fy)) {
+			for (TilePos pos : warp.getWarpedTiles()) {
+				if (!pos.equals(x, y)) {
+					set(fx, fy, pos.x, pos.y, value, symbol);
+				}
+			}
 		}
 
 		if (getOwner(x, y) == symbol && this.field[x][y] == 0) {

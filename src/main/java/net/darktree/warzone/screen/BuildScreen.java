@@ -4,7 +4,6 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.country.Purchasable;
-import net.darktree.warzone.screen.interactor.BuildInteractor;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.building.Building;
 
@@ -29,7 +28,7 @@ public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 
 	@Override
 	protected void onElementClicked(EntryConfig element) {
-		PlayScreen.setInteractor(new BuildInteractor(element.type, world));
+		element.type.interact(world);
 		this.close();
 	}
 

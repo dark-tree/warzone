@@ -13,7 +13,7 @@ import net.darktree.warzone.world.tile.TilePos;
 public abstract class MovingEntity extends Entity {
 
 	protected static final float SPEED = 0.05f;
-	protected static final float EPSILON = 0.0001f;
+	protected static final float EPSILON = 0.001f;
 
 	protected float x, y;
 	private float sx, sy;
@@ -34,6 +34,7 @@ public abstract class MovingEntity extends Entity {
 	public void follow(Path path) {
 		TilePos end = path.getEnd();
 		migrate(getX(), getY(), end.x, end.y);
+		path.getNext();
 
 		this.path = path;
 		this.moved = true;
@@ -45,7 +46,7 @@ public abstract class MovingEntity extends Entity {
 	 */
 	public void revert() {
 		migrate(tx, ty, px, py);
-		move(px, py);
+		move(px, py, false);
 		moved = false;
 		path = null;
 	}
@@ -72,7 +73,7 @@ public abstract class MovingEntity extends Entity {
 	}
 
 	/**
-	 * Called every time the entity reaches the point on the given path
+	 * Called every time the entity reaches the next point on the given path
 	 */
 	protected void onTargetReached() {
 		followNext();
@@ -89,12 +90,15 @@ public abstract class MovingEntity extends Entity {
 		world.markOverlayDirty();
 	}
 
-	protected void move(int x, int y) {
+	protected void move(int x, int y, boolean match) {
 		this.tx = x;
 		this.ty = y;
 
-		sx = (x - this.x) * SPEED;
-		sy = (y - this.y) * SPEED;
+		float a = (x - this.x), b = (y - this.y);
+		float d = match ? Math.max(1, (float) Math.floor(Math.sqrt(a * a + b * b))) : 1;
+
+		sx = a / d * SPEED;
+		sy = b / d * SPEED;
 	}
 
 	private void followNext() {
@@ -102,7 +106,7 @@ public abstract class MovingEntity extends Entity {
 			TilePos target = this.path.getNext();
 
 			if (target != null) {
-				move(target.x, target.y);
+				move(target.x, target.y, true);
 			}else{
 				this.path = null;
 			}

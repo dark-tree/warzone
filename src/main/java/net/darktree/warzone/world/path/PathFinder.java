@@ -1,6 +1,7 @@
 package net.darktree.warzone.world.path;
 
 import net.darktree.warzone.country.Symbol;
+import net.darktree.warzone.world.Warp;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.pattern.PlacedTileIterator;
@@ -47,7 +48,7 @@ public class PathFinder extends AbstractFieldFinder {
 	 * Check if the pathfinder found a path to the given tile
 	 */
 	public boolean canReach(int x, int y) {
-		return canPossiblyReach(x, y) && distance[x][y] < config.steps && getTile(x, y).canStayOn() && getEntity(x, y) == null;
+		return canPossiblyReach(x, y) && distance[x][y] <= config.steps && getTile(x, y).canStayOn() && getEntity(x, y) == null;
 	}
 
 	/**
@@ -85,36 +86,45 @@ public class PathFinder extends AbstractFieldFinder {
 		iterate(this::propagate);
 	}
 
-	private boolean shouldPropagate(int x, int y, Tile tile) {
+	private boolean shouldPropagate(Entity entity, Tile tile) {
 		if (tile.getSurface() != config.surface) {
 			return false;
 		}
 
-		final Entity entity = getEntity(x, y);
 		return entity == null || entity.canPathfindThrough(this.symbol);
 	}
 
 	private void propagate(int x, int y, int value) {
 		for (TilePos offset : offsets) {
-			set(x + offset.x, y + offset.y, value, this.distance[x][y]);
+			set(x, y, x + offset.x, y + offset.y, value, this.distance[x][y]);
 		}
 	}
 
-	private void set(int x, int y, int value, int distance) {
+	private void set(int ox, int oy, int x, int y, int value, int distance) {
 		if (!isPosValid(x, y)) {
 			return;
 		}
 
-		final Tile tile = getTile(x, y);
-		final Symbol owner = getOwner(x, y);
+		if (this.field[x][y] == 0) {
+			final Tile tile = getTile(x, y);
+			final Symbol owner = getOwner(x, y);
+			final Entity entity = getEntity(x, y);
 
-		if (config.boundary.isValid(owner, this.symbol)) {
-			distance += (this.symbol == owner ? 1 : 2);
+			if (entity instanceof Warp warp && warp.canWarpFrom(ox, oy)) {
+				for (TilePos pos : warp.getWarpedTiles()) {
+					set(ox, oy, pos.x, pos.y, value, distance);
+				}
+				return;
+			}
 
-			if (this.field[x][y] == 0 && shouldPropagate(x, y, tile)) {
-				if (extended || distance <= config.steps) {
-					this.field[x][y] = value;
-					this.distance[x][y] = distance;
+			if (config.boundary.isValid(owner, this.symbol)) {
+				distance += (this.symbol == owner ? 1 : 2);
+
+				if (shouldPropagate(entity, tile)) {
+					if (extended || distance <= config.steps) {
+						this.field[x][y] = value;
+						this.distance[x][y] = distance;
+					}
 				}
 			}
 		}
@@ -138,7 +148,24 @@ public class PathFinder extends AbstractFieldFinder {
 			if (field[ox][oy] == level && dist < distance) {
 				pos = new TilePos(ox, oy);
 				distance = dist;
+				continue;
 			}
+
+			if (getEntity(ox, oy) instanceof Warp warp && warp.canWarpFrom(x, y)) {
+				for (TilePos exit : warp.getWarpedTiles()) {
+					dist = this.distance[exit.x][exit.y];
+
+					if (field[exit.x][exit.y] == level && dist < distance) {
+						pos = exit;
+						distance = dist;
+					}
+				}
+			}
+		}
+
+		// should never happen
+		if (pos == null) {
+			throw new RuntimeException("Unable to back propagate from (" + x + " " + y + "), is there a faulty warp?");
 		}
 
 		return pos;
