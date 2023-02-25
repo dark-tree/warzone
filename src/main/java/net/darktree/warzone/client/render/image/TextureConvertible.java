@@ -5,6 +5,9 @@ package net.darktree.warzone.client.render.image;
  */
 public interface TextureConvertible {
 
+	/**
+	 * Get a texture representing the same data
+	 */
 	Texture getTexture();
 
 }

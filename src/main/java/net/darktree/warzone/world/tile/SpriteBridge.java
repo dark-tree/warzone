@@ -13,7 +13,7 @@ public class SpriteBridge {
 
 	public static void register(Tile tile, String name) {
 		try {
-			SPRITES.put(tile, Sprites.ATLAS.getSprite("tile/" + name + ".png"));
+			SPRITES.put(tile, Sprites.getSprite("tile/" + name + ".png"));
 		} catch (Exception e) {
 			Logger.warn("Failed to load texture for tile '", name, "' using missing texture!");
 			SPRITES.put(tile, Sprites.MISSINGNO);

@@ -12,10 +12,16 @@ public class PathProvider {
 		this.path = path;
 	}
 
+	/**
+	 * Get a full path represented by this provider
+	 */
 	public Path getFullPath() {
 		return path;
 	}
 
+	/**
+	 * Get the longest valid subsection of the underlying path
+	 */
 	public Path getValidPath() {
 		int found = -1;
 		int index = 0;

@@ -14,8 +14,8 @@ public enum Symbol {
 	private final Sprite sprite, armored;
 
 	Symbol(String path) {
-		sprite = path == null ? null : Sprites.ATLAS.getSprite("symbol/" + path + ".png");
-		armored	= path == null ? null : Sprites.ATLAS.getSprite("symbol/armored_" + path + ".png");
+		sprite = path == null ? null : Sprites.getSprite("symbol/" + path + ".png");
+		armored	= path == null ? null : Sprites.getSprite("symbol/armored_" + path + ".png");
 	}
 
 	public Sprite getSprite() {

@@ -154,19 +154,15 @@ public class PlayScreen extends WorldScreen {
 			return;
 		}
 
-		// TODO
-		// there is a bit of stupid here, most WCs check event.isPressed() even though it
-		// will ALWAYS return true, also every action can be performed with right click, is this intended?
+		// every action can be performed with right click, is this intended?
 
-		if(event.isLeftClick() || event.isRightClick()) {
-			if (world.isPositionValid(x, y)) {
-				Entity entity = world.getEntity(x, y);
+		if((event.isLeftClick() || event.isRightClick()) && world.isPositionValid(x, y)) {
+			Entity entity = world.getEntity(x, y);
 
-				if (entity != null) {
-					entity.onInteract(world, x, y, event);
-				} else {
-					world.getTileState(x, y).getTile().onInteract(world, x, y, event);
-				}
+			if (entity != null) {
+				entity.onInteract(world, x, y, event);
+			} else {
+				world.getTileState(x, y).getTile().onInteract(world, x, y, event);
 			}
 		}
 	}

@@ -5,6 +5,9 @@ import net.darktree.warzone.screen.hotbar.HotbarOverview;
 
 import java.util.Locale;
 
+/**
+ * Resources of this type will be rendered in the overview section of the hotbar
+ */
 public class LabeledResource extends Resource {
 
 	private final String label;

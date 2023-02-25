@@ -13,7 +13,7 @@ public class Logger {
 
 	private static void print(Level level, Object... objects) {
 		StringBuilder builder = new StringBuilder(getTimestamp());
-		builder.append(" ").append(level).append(" ");
+		builder.append(" ").append(level).append(": ");
 
 		for (Object object : objects) {
 			builder.append(object);
@@ -39,15 +39,7 @@ public class Logger {
 	}
 
 	private enum Level {
-		INFO,
-		WARN,
-		ERROR,
-		FATAL;
-
-		@Override
-		public String toString() {
-			return super.toString() + ":";
-		}
+		INFO, WARN, ERROR, FATAL
 	}
 
 }

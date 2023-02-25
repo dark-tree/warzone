@@ -92,25 +92,21 @@ public class ColonizationFinder extends AbstractFinder {
 		// all actions where postponed (or no immediate source was found)
 		// try to colonize anyway to now waste the move, (if enabled)
 
-		try {
-			if (colonization && inactive && allowRandom) {
-				int max = 0;
-				WeighedPos selected = null;
+		if (colonization && inactive && allowRandom) {
+			int max = 0;
+			WeighedPos selected = null;
 
-				for (TilePos unit : world.getBorder().getBorderTiles(self)) {
-					int gain = getGain(unit.x, unit.y);
-					if (isGuardAt(unit) && gain > max) {
-						selected = WeighedPos.wrap(unit, 1);
-						max = gain;
-					}
-				}
-
-				if (selected != null) {
-					actions.add(selected);
+			for (TilePos unit : world.getBorder().getBorderTiles(self)) {
+				int gain = getGain(unit.x, unit.y);
+				if (isGuardAt(unit) && gain > max) {
+					selected = WeighedPos.wrap(unit, 1);
+					max = gain;
 				}
 			}
-		}catch (NullPointerException e) {
-			e.printStackTrace(); // TODO is this even needed?
+
+			if (selected != null) {
+				actions.add(selected);
+			}
 		}
 
 		return actions;

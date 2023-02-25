@@ -64,6 +64,33 @@ public class BridgeStructure extends FacedStructure implements Warp, MultipartSt
 		nbt.putBoolean("edge", this.edge);
 	}
 
+	@Override
+	public void onAdded() {
+		super.onAdded();
+		world.onOwnershipChanged();
+	}
+
+	@Override
+	public void onRemoved() {
+		super.onAdded();
+		world.onOwnershipChanged();
+	}
+
+	@Override
+	public boolean isInControl(Symbol symbol) {
+		return getOwnerSymbol() == symbol;
+	}
+
+	@Override
+	public Optional<Country> getOwner() {
+		return Optional.ofNullable(world.getCountry(getOwnerSymbol()));
+	}
+
+	@Override
+	public List<TilePos> getStructureParts() {
+		return Objects.requireNonNull(BridgePlacer.create(world, getX(), getY(), facing, true)).getTiles();
+	}
+
 	private Symbol getOwnerSymbol() {
 		Symbol sa = world.getTileState(this.a).getOwner();
 		Symbol sb = world.getTileState(this.b).getOwner();
@@ -97,21 +124,6 @@ public class BridgeStructure extends FacedStructure implements Warp, MultipartSt
 		}
 
 		return Symbol.NONE;
-	}
-
-	@Override
-	public boolean isInControl(Symbol symbol) {
-		return getOwnerSymbol() == symbol;
-	}
-
-	@Override
-	public Optional<Country> getOwner() {
-		return Optional.ofNullable(world.getCountry(getOwnerSymbol()));
-	}
-
-	@Override
-	public List<TilePos> getStructureParts() {
-		return Objects.requireNonNull(BridgePlacer.create(world, getX(), getY(), facing, true)).getTiles();
 	}
 
 }

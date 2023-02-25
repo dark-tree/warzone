@@ -23,7 +23,7 @@ public class RotatableBuildInteractor extends BuildInteractor {
 	}
 
 	public void onRotated() {
-		Sounds.ROTATE.play();
+		Sounds.ROTATE.play(pos);
 	}
 
 }

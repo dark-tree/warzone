@@ -43,15 +43,13 @@ public class Program implements AutoCloseable {
 	}
 
 	public static Program from(String path) {
-		Logger.info("Loading shader program '", path, "'");
-
 		try {
 			ShaderJsonBlob blob = Resources.json("shader/" + path + ".json", ShaderJsonBlob.class);
 
 			return Program.create()
 					.add("shader/" + blob.vertex, GL32.GL_VERTEX_SHADER)
 					.add("shader/" + blob.fragment, GL32.GL_FRAGMENT_SHADER)
-					.link();
+					.link(path);
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -76,7 +74,7 @@ public class Program implements AutoCloseable {
 			return add(Shader.of(path, type));
 		}
 
-		public Program link() {
+		public Program link(String identifier) {
 			GL32.glLinkProgram(this.id);
 
 			if (GL32.glGetProgrami(this.id, GL32.GL_LINK_STATUS) == GL32.GL_FALSE) {
@@ -85,6 +83,7 @@ public class Program implements AutoCloseable {
 			}
 
 			shaders.forEach(Shader::close);
+			Logger.info("Loaded shader program: '", identifier, ".json'");
 
 			return new Program(this.id);
 		}

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Game {
+public final class Game {
 
 	private static final File location = Path.of(Resources.path() + "/state/game.dat").toFile();
 	private CompoundTag state;
@@ -54,9 +54,9 @@ public class Game {
 
 	public void draw() {
 		SoundSystem.tick();
+		Renderer.clear();
 		ScreenStack.draw();
 		Renderer.swap();
-		Renderer.clear();
 	}
 
 	public void initialize() {

@@ -14,7 +14,7 @@ public class Font implements AutoCloseable, TextureConvertible {
 	private final List<Sprite> sprites;
 	public final float spacing;
 
-	public Font(String bitmap, int w, int h, float spacing) {
+	protected Font(String bitmap, int w, int h, float spacing) {
 		Image image = Image.of(bitmap, Image.Format.RGBA);
 
 		this.atlas = Atlas.identityOf(image);
@@ -39,14 +39,15 @@ public class Font implements AutoCloseable, TextureConvertible {
 		}
 	}
 
+	/**
+	 * Load a font as described by font JSON definition
+	 */
 	public static Font load(String name) {
 		try {
 			FontJsonBlob object = Resources.json("font/" + name + ".json", FontJsonBlob.class);
 			Font font = new Font("font/" + object.bitmap, object.x, object.y, object.separation);
 
 			ScreenRenderer.registerFontPipeline(font);
-			ScreenRenderer.setFont(font);
-
 			Logger.info("Loaded font: '", object.name, "'");
 			return font;
 		}catch (Exception e) {
@@ -54,6 +55,9 @@ public class Font implements AutoCloseable, TextureConvertible {
 		}
 	}
 
+	/**
+	 * Get a sprite for the given character
+	 */
 	public Sprite sprite(byte chr) {
 		return this.sprites.get(chr);
 	}

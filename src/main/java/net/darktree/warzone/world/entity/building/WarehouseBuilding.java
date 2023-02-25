@@ -27,9 +27,7 @@ public class WarehouseBuilding extends Building implements StorageNodeSupplier {
 
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (event.isPressed()) {
-			ScreenStack.open(new WarehouseScreen(storage));
-		}
+		ScreenStack.open(new WarehouseScreen(storage));
 	}
 
 	@Override

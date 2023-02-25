@@ -127,14 +127,14 @@ public class VertexBuffer implements AutoCloseable {
 		 * Add simple float vertex attribute
 		 */
 		public Builder attribute(int length) {
-			return this.attribute(new VertexAttribute(length));
+			return attribute(new VertexAttribute(length));
 		}
 
 		/**
 		 * Add simple named float vertex attribute
 		 */
 		public Builder attribute(String name) {
-			return this.attribute(name.length());
+			return attribute(name.length());
 		}
 
 		/**

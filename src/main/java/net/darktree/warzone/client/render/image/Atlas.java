@@ -1,6 +1,7 @@
 package net.darktree.warzone.client.render.image;
 
 import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.util.Profiler;
 import net.darktree.warzone.util.Resources;
 
 import java.nio.file.Files;
@@ -37,13 +38,12 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 			throw new RuntimeException("Unable to load atlas!");
 		}
 
-		long start = System.currentTimeMillis();
+		Profiler profiler = Profiler.start();
 
 		atlas.loadAll(path, path, root);
 		atlas.freeze();
 
-		Logger.info("Texture atlas '", path, "' stitched! (took ", System.currentTimeMillis() - start, "ms)");
-
+		profiler.print("Texture atlas '" + path + "' stitched, took %sms!");
 		return atlas;
 	}
 
@@ -176,7 +176,7 @@ public class Atlas implements AutoCloseable, TextureConvertible {
 		public Sprite sprite() {
 			assertFrozen(true);
 
-			return new Sprite(
+			return new NativeSprite(
 					(this.minX + 0.5f) / (float) image.width,
 					(this.maxY + 0.5f) / (float) image.height,
 					(this.maxX + 0.5f) / (float) image.width,

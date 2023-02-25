@@ -2,6 +2,7 @@ package net.darktree.warzone;
 
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.render.GLManager;
+import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
@@ -66,10 +67,16 @@ public class Main {
 
 		window = Window.init(800, 500, "Warzone Open Rules | Java Edition");
 
+		// load and set font
+		ScreenRenderer.setFont(Font.load("scribble"));
+
 		// Set the clear color, evil blue from LT3D (patent pending)
 		GLManager.useColor(0.01f, 0.66f, 0.92f);
 		Renderer.clear();
+		ScreenRenderer.flush();
+		drawLoadingScreen();
 		Renderer.swap();
+		ScreenRenderer.initializeQuadPipeline();
 
 		Packets.load();
 		SoundSystem.enable();
@@ -82,9 +89,6 @@ public class Main {
 
 		game = new Game();
 		game.initialize();
-
-		// load and set font
-		Font scribble = Font.load("scribble");
 
 		BuildScreen.register(Entities.WAREHOUSE);
 		BuildScreen.register(Entities.FACTORY);
@@ -133,6 +137,13 @@ public class Main {
 				tasks.clear();
 			}
 		}
+	}
+
+	private static void drawLoadingScreen() {
+		ScreenRenderer.centerAt(-1, -1);
+		ScreenRenderer.offset(0, 4);
+		ScreenRenderer.text(30, "LOADING...");
+		ScreenRenderer.flush();
 	}
 
 	private static void console(BufferedReader reader) throws IOException {

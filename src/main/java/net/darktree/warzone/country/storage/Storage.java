@@ -8,10 +8,18 @@ public abstract class Storage {
 	public static final int LARGE = 100;
 	public static final int SMALL = 10;
 
+	/**
+	 * Creates a simple limited storage local to the player
+	 * @apiNote Use as a method reference given to the constructor of {@link Resource} and its subclasses
+	 */
 	public static Storage simple(Resource resource, Country country) {
 		return new LocalStorage(LARGE);
 	}
 
+	/**
+	 * Creates a storage distributed among the buildings owned by the player
+	 * @apiNote Use as a method reference given to the constructor of {@link Resource} and its subclasses
+	 */
 	public static Storage distributed(Resource resource, Country country) {
 		return new DistributedStorage(resource, country::getStorageNodes);
 	}

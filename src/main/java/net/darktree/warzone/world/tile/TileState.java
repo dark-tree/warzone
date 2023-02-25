@@ -51,7 +51,7 @@ final public class TileState implements NbtSerializable {
 	 */
 	public void setVariant(World world, TileVariant variant) {
 		this.variant = variant;
-		world.onTileChanged();
+		world.getView().markSurfaceDirty();
 	}
 
 	/**

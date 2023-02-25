@@ -85,14 +85,14 @@ public abstract class Building extends StructureEntity {
 		removed = false;
 		getOwner().ifPresent(country -> country.addBuilding(this));
 		forEachTile(pos -> world.getTileState(pos).setEntity(this));
-		world.onBuildingChanged();
+		world.getView().markBuildingsDirty();
 	}
 
 	@Override
 	public void onRemoved() {
 		getOwner().ifPresent(country -> country.removeBuilding(this));
 		forEachTile(pos -> world.getTileState(pos).removeEntity(this));
-		world.onBuildingChanged();
+		world.getView().markBuildingsDirty();
 	}
 
 	public Optional<Country> getOwner() {

@@ -1,27 +1,19 @@
 package net.darktree.warzone.client;
 
-import net.darktree.warzone.client.render.image.Atlas;
-import net.darktree.warzone.client.render.image.Sprite;
-import net.darktree.warzone.client.render.image.Texture;
-import net.darktree.warzone.client.render.image.UnsetTexture;
-import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.client.render.image.*;
 
 public class Sprites {
 
-	public final static Atlas ATLAS = Atlas.stitchedOf("sprites");
+	public static Atlas ATLAS = Atlas.stitchedOf("sprites");
 	public final static Texture UNSET = new UnsetTexture(); // handle with care!
-	public final static Sprite MISSINGNO = ATLAS.getSprite("missingno.png");
-	public final static Sprite NONE = ATLAS.getSprite("none.png");
+	public final static SpriteLoader LOADER = new SpriteLoader();
 
 	public static Sprite getSprite(String identifier) {
-		try {
-			return ATLAS.getSprite(identifier);
-		} catch (NullPointerException e) {
-			Logger.warn("Failed to load texture '", identifier, "', using missing texture!");
-			return MISSINGNO;
-		}
+		return LOADER.getSprite(identifier);
 	}
 
+	public final static Sprite MISSINGNO = getSprite("missingno.png");
+	public final static Sprite NONE = getSprite("none.png");
 	public final static Sprite TOP = getSprite("gui/top.png");
 	public final static Sprite BUILD = getSprite("gui/build_screen.png");
 	public final static Sprite POPUP = getSprite("gui/small_popup.png");
@@ -59,5 +51,9 @@ public class Sprites {
 	public static final Sprite STRUCTURE_FENCE = getSprite("building/fence.png");
 	public static final Sprite STRUCTURE_WALL = getSprite("building/wall.png");
 	public static final Sprite STRUCTURE_BRIDGE = getSprite("building/bridge.png");
+
+	static {
+		LOADER.load(ATLAS);
+	}
 
 }

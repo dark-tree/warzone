@@ -13,6 +13,9 @@ public class Registry<T extends ElementType<T>> {
 	private final Map<String, Entry<T>> registry = new HashMap<>();
 	private final Map<T, Entry<T>> lookup = new IdentityHashMap<>();
 
+	/**
+	 * Register a new entry in this registry
+	 */
 	public <E extends T> E register(String key, E value) {
 		Entry<T> entry = new Entry<>(list.size(), key, value);
 

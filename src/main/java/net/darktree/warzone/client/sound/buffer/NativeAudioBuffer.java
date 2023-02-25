@@ -43,7 +43,7 @@ public final class NativeAudioBuffer implements AudioBuffer {
 			ShortBuffer data = STBVorbis.stb_vorbis_decode_filename(Objects.requireNonNull(Resources.location(path)).toString(), channelCount, sampleRate);
 
 			if (data == null) {
-				Logger.error("Loading sound: '", path, "' failed, unable to decode data!");
+				Logger.error("Failed to load sound: '", path, "' failed, unable to decode data!");
 				return;
 			}
 
@@ -51,14 +51,12 @@ public final class NativeAudioBuffer implements AudioBuffer {
 				format = formatOf(channelCount.get());
 				AL10.alBufferData(buffer, format, data, sampleRate.get());
 			}catch (Exception e) {
-				Logger.error("Loading sound: '", path, "' failed, unable to upload data!");
+				Logger.error("Failed to load sound: '", path, "', unable to upload data!");
 				e.printStackTrace();
 			}
 
 			if (format == AL10.AL_FORMAT_STEREO16) {
-				Logger.warn("Loading sound: '", path, "' completed. Attenuation not supported!");
-			} else {
-				Logger.info("Loading sound: '", path, "' completed.");
+				Logger.warn("Attenuation not supported for stereo sound: '", path, "'!");
 			}
 		}
 	}

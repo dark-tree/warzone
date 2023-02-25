@@ -329,16 +329,6 @@ public class World implements WorldEntityView, NbtSerializable {
 		renderer.markSurfaceDirty();
 	}
 
-	@Deprecated
-	public void onTileChanged() {
-		renderer.markSurfaceDirty();
-	}
-
-	@Deprecated
-	public void onBuildingChanged() {
-		renderer.markBuildingsDirty();
-	}
-
 	public WorldRenderer getView() {
 		return renderer;
 	}

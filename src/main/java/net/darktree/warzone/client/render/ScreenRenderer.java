@@ -23,10 +23,10 @@ public class ScreenRenderer {
 
 	private static final Input INPUT = Window.INSTANCE.input();
 	private static final Map<TextureConvertible, Pipeline> pipelines = new IdentityHashMap<>();
-	private static final Pipeline quads = new Pipeline(Buffers.IMMEDIATE.build(), Shaders.GUI, Sprites.ATLAS);
 	private static final HashMap<Integer, ScreenComponent> components = new HashMap<>();
 	private static final Stack<Vec2i> offsets = new Stack<>();
 
+	private static Pipeline quads;
 	private static int identifier;
 	private static float scale, psx, psy;
 	private static float x, y;
@@ -45,6 +45,10 @@ public class ScreenRenderer {
 		return (y + view.offsetY) * view.scaleY;
 	}
 
+	public static void initializeQuadPipeline() {
+		quads = new Pipeline(Buffers.IMMEDIATE.build(), Shaders.GUI, Sprites.ATLAS);
+	}
+
 	public static void registerFontPipeline(TextureConvertible texture) {
 		pipelines.put(texture, new Pipeline(Buffers.IMMEDIATE.build(), Shaders.TEXT, texture));
 	}
@@ -61,7 +65,7 @@ public class ScreenRenderer {
 		psx = scale / Window.INSTANCE.width();
 		psy = scale / Window.INSTANCE.height();
 
-		quads.flush();
+		if (quads != null) quads.flush();
 
 		for (Pipeline pipeline : pipelines.values()) {
 			pipeline.flush();

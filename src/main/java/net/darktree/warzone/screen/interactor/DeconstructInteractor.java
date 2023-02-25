@@ -81,7 +81,7 @@ public class DeconstructInteractor extends Interactor {
 
 			if (entity != null && entity.isDeconstructable()) {
 				entity.deconstruct();
-				Sounds.DRAW_THING.play();
+				Sounds.DRAW_THING.play(x, y);
 			}
 		}
 		closed = true;

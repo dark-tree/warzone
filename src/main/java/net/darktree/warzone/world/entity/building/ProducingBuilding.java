@@ -20,12 +20,10 @@ public abstract class ProducingBuilding extends Building {
 
 	@Override
 	public void onInteract(World world, int x, int y, ClickEvent event) {
-		if (event.isPressed()) {
-			Symbol owner = world.getTileState(x, y).getOwner();
+		Symbol owner = world.getTileState(x, y).getOwner();
 
-			if (world.canControl(x, y)) {
-				ScreenStack.open(new ProduceScreen(production, world, owner));
-			}
+		if (world.canControl(x, y)) {
+			ScreenStack.open(new ProduceScreen(production, world, owner));
 		}
 	}
 
