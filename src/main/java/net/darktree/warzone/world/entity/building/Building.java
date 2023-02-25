@@ -99,12 +99,12 @@ public abstract class Building extends StructureEntity {
 		return Optional.ofNullable(world.getCountry(tx, ty));
 	}
 
-	public static int remainder(Country country, int materials) {
-		return (int) Math.floor(materials * country.upgrades.get(Upgrades.RECYCLE));
-	}
-
 	public void setFacing(Direction facing) {
 		// if the building can be rotated set that rotation here
+	}
+
+	public static int remainder(Country country, int materials) {
+		return (int) Math.floor(materials * country.upgrades.get(Upgrades.RECYCLE));
 	}
 
 	public static Type.Builder define(Entity.Type.Constructor constructor, Sprite sprite) {

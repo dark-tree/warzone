@@ -17,14 +17,12 @@ import java.util.List;
 public class BridgePlacer {
 
 	private final World world;
-	private final Symbol symbol;
 	private final Direction facing;
 	private final List<TilePos> tiles;
 	private TilePos a, b;
 
- 	private BridgePlacer(World world, Symbol symbol, Direction facing) {
+ 	private BridgePlacer(World world, Direction facing) {
 		this.world = world;
-		this.symbol = symbol;
 		this.facing = facing;
 		this.tiles = new ArrayList<>();
 	}
@@ -55,28 +53,28 @@ public class BridgePlacer {
 	/**
 	 * Check if the player can build this bridge
 	 */
-	public boolean isFullyValid() {
-		return isShoreValid() && isLengthValid() && isCostValid();
+	public boolean isFullyValid(Symbol symbol) {
+		return isShoreValid(symbol) && isLengthValid(symbol) && isCostValid(symbol);
 	}
 
 	/**
 	 * Check if the player can build a bridge on those shores
 	 */
-	public boolean isShoreValid() {
+	public boolean isShoreValid(Symbol symbol) {
 		return a != null && b != null && (world.canControl(a.x, a.y, symbol) || world.canControl(b.x, b.y, symbol));
 	}
 
 	/**
 	 * Check if the bridge length is valid for this player
 	 */
-	public boolean isLengthValid() {
+	public boolean isLengthValid(Symbol symbol) {
 		return getLength() <= world.getCountry(symbol).upgrades.get(Upgrades.BRIDGE);
 	}
 
 	/**
 	 * Check if the bridge is not too expensive for the player
 	 */
-	public boolean isCostValid() {
+	public boolean isCostValid(Symbol symbol) {
 		return getCost() <= world.getCountry(symbol).getTotalMaterials();
 	}
 
@@ -84,21 +82,21 @@ public class BridgePlacer {
 	 * Projects the bridge structure, returns object that can be used to validate, render
 	 * and build the requested bridge, or null if no bridge can possibly exist at the given position
 	 */
-	public static BridgePlacer create(World world, Symbol symbol, int x, int y, Direction facing) {
-		BridgePlacer placer = new BridgePlacer(world, symbol, facing);
+	public static BridgePlacer create(World world, int x, int y, Direction facing, boolean ignore) {
+		BridgePlacer placer = new BridgePlacer(world, facing);
 
-		if (world.isPositionValid(x, y) && isTileValid(world, x, y)) {
+		if (world.isPositionValid(x, y) && isTileValid(world, x, y, ignore)) {
 			placer.tiles.add(new TilePos(x, y));
 
-			placer.a = projectBridgeSide(world, x, y, facing.getOffset(), placer.tiles);
-			placer.b = projectBridgeSide(world, x, y, facing.opposite().getOffset(), placer.tiles);
+			placer.a = projectBridgeSide(world, x, y, facing.getOffset(), placer.tiles, ignore);
+			placer.b = projectBridgeSide(world, x, y, facing.opposite().getOffset(), placer.tiles, ignore);
 			return placer;
 		}
 
 		return null;
 	}
 
-	private static TilePos projectBridgeSide(World world, int x, int y, Vec2i offset, List<TilePos> tiles) {
+	private static TilePos projectBridgeSide(World world, int x, int y, Vec2i offset, List<TilePos> tiles, boolean ignore) {
 		int cx = x, cy = y;
 
 		while (true) {
@@ -109,7 +107,7 @@ public class BridgePlacer {
 				return null;
 			}
 
-			if (!isTileValid(world, cx, cy)) {
+			if (!isTileValid(world, cx, cy, ignore)) {
 				return new TilePos(cx, cy);
 			}
 
@@ -117,9 +115,9 @@ public class BridgePlacer {
 		}
 	}
 
-	private static boolean isTileValid(World world, int x, int y) {
+	private static boolean isTileValid(World world, int x, int y, boolean ignore) {
 		final TileState state = world.getTileState(x, y);
-		return state.getEntity() == null && state.getTile().getSurface() == Surface.WATER;
+		return (ignore || state.getEntity() == null) && state.getTile().getSurface() == Surface.WATER;
 	}
 
 }

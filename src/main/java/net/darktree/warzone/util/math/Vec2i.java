@@ -36,7 +36,7 @@ public class Vec2i {
 	}
 
 	/**
-	 * Get the manhattan distance to another Vec2i
+	 * Get the manhattan distance to another vector
 	 */
 	public int manhattan(Vec2i other) {
 		return MathHelper.getManhattanDistance(x, y, other.x, other.y);

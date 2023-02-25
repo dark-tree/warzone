@@ -42,8 +42,8 @@ public class BuildBridgeAction extends Action {
 
 	@Override
 	protected boolean verify(Symbol symbol) {
-		bridge = BridgePlacer.create(world, symbol, x, y, facing);
-		return bridge != null && bridge.isFullyValid();
+		bridge = BridgePlacer.create(world, x, y, facing, false);
+		return bridge != null && bridge.isFullyValid(symbol);
 	}
 
 	@Override
@@ -51,10 +51,15 @@ public class BuildBridgeAction extends Action {
 		parts.clear();
 
 		for (TilePos pos : bridge.getTiles()) {
-			parts.add((BridgeStructure) world.addEntity(Entities.BRIDGE, pos.x, pos.y));
+			parts.add((BridgeStructure) Entities.BRIDGE.create(world, pos.x, pos.y));
 		}
 
 		bridge.configure(parts);
+
+		for (BridgeStructure part : parts) {
+			world.addEntity(part);
+		}
+
 		world.getCountry(symbol).addMaterials(-bridge.getCost());
 		Sounds.STAMP.play(x, y);
 	}

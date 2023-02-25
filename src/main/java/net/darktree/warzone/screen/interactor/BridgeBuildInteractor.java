@@ -21,8 +21,8 @@ public class BridgeBuildInteractor extends RotatableBuildInteractor {
 	}
 
 	private boolean verify(int x, int y) {
-		bridge = BridgePlacer.create(world, world.getCurrentSymbol(), x, y, rotation);
-		return bridge != null && bridge.isFullyValid();
+		bridge = BridgePlacer.create(world, x, y, rotation, false);
+		return bridge != null && bridge.isFullyValid(world.getCurrentSymbol());
 	}
 
 	@Override

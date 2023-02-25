@@ -1,16 +1,21 @@
 package net.darktree.warzone.world.entity.building;
 
+import net.darktree.warzone.country.Country;
+import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.world.Warp;
 import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.action.BridgePlacer;
 import net.darktree.warzone.world.entity.Entities;
 import net.darktree.warzone.world.tile.TilePos;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
-public class BridgeStructure extends FacedStructure implements Warp {
+public class BridgeStructure extends FacedStructure implements Warp, MultipartStructure {
 
 	private TilePos a, b;
 	private boolean edge;
@@ -57,6 +62,56 @@ public class BridgeStructure extends FacedStructure implements Warp {
 		nbt.putInt("bx", this.b.x);
 		nbt.putInt("by", this.b.y);
 		nbt.putBoolean("edge", this.edge);
+	}
+
+	private Symbol getOwnerSymbol() {
+		Symbol sa = world.getTileState(this.a).getOwner();
+		Symbol sb = world.getTileState(this.b).getOwner();
+
+		boolean ca = world.canControl(a.x, a.y);
+		boolean cb = world.canControl(b.x, b.y);
+
+		// both shores are controlled by the same player
+		if (ca && cb && (sa == sb)) {
+			return sa;
+		}
+
+		// one shore (A) is owned and the other (B) is not
+		if (ca && sb == Symbol.NONE && sa != Symbol.NONE) {
+			return sa;
+		}
+
+		// one shore (B) is owned and the other (A) is not
+		if (cb && sa == Symbol.NONE && sb != Symbol.NONE) {
+			return sb;
+		}
+
+		// one shore (A) is controlled and the other (B) is not
+		if (ca && !cb) {
+			return sa;
+		}
+
+		// one shore (B) is controlled and the other (A) is not
+		if (cb && !ca) {
+			return sb;
+		}
+
+		return Symbol.NONE;
+	}
+
+	@Override
+	public boolean isInControl(Symbol symbol) {
+		return getOwnerSymbol() == symbol;
+	}
+
+	@Override
+	public Optional<Country> getOwner() {
+		return Optional.ofNullable(world.getCountry(getOwnerSymbol()));
+	}
+
+	@Override
+	public List<TilePos> getStructureParts() {
+		return Objects.requireNonNull(BridgePlacer.create(world, getX(), getY(), facing, true)).getTiles();
 	}
 
 }

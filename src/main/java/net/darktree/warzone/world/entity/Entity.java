@@ -2,6 +2,7 @@ package net.darktree.warzone.world.entity;
 
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.render.WorldBuffers;
+import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.Registry;
@@ -50,6 +51,13 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 	 */
 	public boolean isAt(int x, int y) {
 		return getX() == x && getY() == y;
+	}
+
+	/**
+	 * Check if this entity can be manipulated by player 'symbol'
+	 */
+	public boolean isInControl(Symbol symbol) {
+		return world.canControl(getX(), getY(), symbol);
 	}
 
 	public int getX() {
