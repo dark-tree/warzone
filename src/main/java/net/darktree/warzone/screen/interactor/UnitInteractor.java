@@ -38,8 +38,8 @@ public class UnitInteractor extends Interactor {
 
 		entity.drawSelection(color, Colors.ENTITY_SELECTION);
 
-		int x = Main.window.input().getMouseMapX(world.getView());
-		int y = Main.window.input().getMouseMapY(world.getView());
+		int x = Main.window.input().getMouseTileX(world.getView());
+		int y = Main.window.input().getMouseTileY(world.getView());
 
 		if (action != null && world.isPositionValid(x, y) && action.getPathfinder().canReach(x, y)) {
 			action.getPathfinder().getPathTo(x, y).draw(color);

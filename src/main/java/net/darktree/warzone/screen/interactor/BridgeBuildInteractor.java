@@ -16,8 +16,8 @@ public class BridgeBuildInteractor extends RotatableBuildInteractor {
 
 	private BridgePlacer bridge = null;
 
-	public BridgeBuildInteractor(Building.Type type, World world) {
-		super(type, world);
+	public BridgeBuildInteractor(Building.Type type, World world, boolean play) {
+		super(type, world, play);
 	}
 
 	private boolean verify(int x, int y) {
@@ -27,8 +27,8 @@ public class BridgeBuildInteractor extends RotatableBuildInteractor {
 
 	@Override
 	public void draw(VertexBuffer texture, VertexBuffer color) {
-		int x = Main.window.input().getMouseMapX(world.getView());
-		int y = Main.window.input().getMouseMapY(world.getView());
+		int x = Main.window.input().getMouseTileX(world.getView());
+		int y = Main.window.input().getMouseTileY(world.getView());
 
 		float wave = (float) (Math.sin(Main.window.profiler.getFrameCount() / 6f) + 1) / 6;
 

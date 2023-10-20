@@ -8,18 +8,20 @@ public abstract class PlacementInteractor extends Interactor {
 
 	protected final Building.Type type;
 	protected final World world;
+	protected final boolean play;
 
 	protected TilePos pos;
 	protected boolean valid;
 
-	protected PlacementInteractor(Building.Type type, World world) {
+	protected PlacementInteractor(Building.Type type, World world, boolean play) {
 		this.type = type;
 		this.world = world;
+		this.play = play;
 		this.pos = new TilePos(0, 0);
 	}
 
 	public interface Provider {
-		PlacementInteractor create(Building.Type type, World world);
+		PlacementInteractor create(Building.Type type, World world, boolean play);
 	}
 
 }

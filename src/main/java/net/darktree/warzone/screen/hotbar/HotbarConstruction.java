@@ -25,7 +25,7 @@ public class HotbarConstruction extends HotbarComponent {
 
 		ScreenRenderer.offset(417, 52);
 		if (ScreenRenderer.button(Sprites.BUTTON_BUILDING, 66, 66, true) && world.isActiveSymbol()) {
-			ScreenStack.open(new BuildScreen(world));
+			ScreenStack.open(new BuildScreen(world, true));
 			Sounds.PEN_CLICK.play();
 		}
 

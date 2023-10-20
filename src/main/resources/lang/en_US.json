@@ -112,5 +112,12 @@
 			"name": "BRIDGE",
 			"description": "ALLOWS YOU TO CROSS BODIES \nOF WATER."
 		}
+	},
+
+	"tile": {
+		"water": "WATER",
+		"material_ore": "MATERIALS",
+		"empty": "LAND"
 	}
+
 }

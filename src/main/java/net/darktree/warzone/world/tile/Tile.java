@@ -43,4 +43,8 @@ public abstract class Tile extends ElementType<Tile> implements WorldTile {
 
 	public abstract Surface getSurface();
 
+	public String getNameKey() {
+		return "tile." + key();
+	}
+
 }

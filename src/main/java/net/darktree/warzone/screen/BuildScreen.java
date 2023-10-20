@@ -13,12 +13,14 @@ import java.util.List;
 public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 
 	private final World world;
+	private final boolean play;
 	private static final List<EntryConfig> entries = new ArrayList<>();
 
 	private static final Text TEXT_TITLE = Text.translated("gui.build.title");
 
-	public BuildScreen(World world) {
+	public BuildScreen(World world, boolean play) {
 		this.world = world;
+		this.play = play;
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 
 	@Override
 	protected void onElementClicked(EntryConfig element) {
-		element.type.interact(world);
+		element.type.interact(world, play);
 		this.close();
 	}
 

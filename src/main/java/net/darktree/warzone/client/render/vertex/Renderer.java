@@ -54,7 +54,7 @@ public class Renderer {
 	}
 
 	public static void text(String text, Font font, VertexBuffer buffer, float x, float y, float width, float height, float r, float g, float b, float a, Alignment alignment) {
-		float offset = alignment.getOffset(text.length() * width * font.spacing);
+		float offset = alignment.getOffset((text.length() /* - 1*/) * width * font.spacing);
 
 		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
 			if (chr == '\n') {

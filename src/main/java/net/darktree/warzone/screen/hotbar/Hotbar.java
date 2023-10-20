@@ -1,9 +1,9 @@
 package net.darktree.warzone.screen.hotbar;
 
 import net.darktree.warzone.client.Colors;
-import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.World;
 
@@ -12,21 +12,34 @@ public class Hotbar {
 	private static final int EXTEND = 630;
 	private static final int HEIGHT = 170;
 
-	private static final HotbarComponent left = new HotbarOverview();
-	private static final HotbarComponent right = new HotbarConstruction();
+	private final Sprite sprite;
+	private HotbarComponent left = null;
+	private HotbarComponent right = null;
 
-	public static void draw(boolean focused, World world, Symbol symbol) {
+	public Hotbar(Sprite sprite) {
+		this.sprite = sprite;
+	}
 
-		ScreenRenderer.setSprite(Sprites.HOTBAR);
+	public Hotbar left(HotbarComponent left) {
+		this.left = left;
+		return this;
+	}
+
+	public Hotbar right(HotbarComponent right) {
+		this.right = right;
+		return this;
+	}
+
+	public void draw(boolean focused, World world, Symbol symbol) {
+		ScreenRenderer.setSprite(sprite);
 		ScreenRenderer.centerAt(0, -1);
 		ScreenRenderer.box(EXTEND, EXTEND, HEIGHT, 0);
 
-		draw(left, -EXTEND, focused, world, symbol);
-		draw(right, 0, focused, world, symbol);
-
+		if (left != null) draw(left, -EXTEND, focused, world, symbol);
+		if (right != null) draw(right, 0, focused, world, symbol);
 	}
 
-	private static void draw(HotbarComponent component, int x, boolean focused, World world, Symbol symbol) {
+	private void draw(HotbarComponent component, int x, boolean focused, World world, Symbol symbol) {
 		if (component != null) {
 			ScreenRenderer.setOffset(x, 0);
 			component.draw(focused, world, symbol);

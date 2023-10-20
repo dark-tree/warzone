@@ -77,6 +77,7 @@ public class WorldSave implements Comparable<WorldSave> {
 			World world = World.load(nbt);
 			ScreenStack.closeAll();
 			ScreenStack.open(new PlayScreen(this, world));
+//			ScreenStack.open(new EditScreen(world));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

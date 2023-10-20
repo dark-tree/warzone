@@ -30,8 +30,8 @@ public class UnitAttackInteractor extends Interactor {
 	public void draw(VertexBuffer texture, VertexBuffer color) {
 		entity.drawSelection(color, Colors.ENTITY_SELECTION);
 
-		int x = Main.window.input().getMouseMapX(world.getView());
-		int y = Main.window.input().getMouseMapY(world.getView());
+		int x = Main.window.input().getMouseTileX(world.getView());
+		int y = Main.window.input().getMouseTileY(world.getView());
 
 		if (isValid(world, x, y)) {
 			drawAttackVector(color, entity.getX(), entity.getY(), x, y, Colors.SPOT_INVALID);

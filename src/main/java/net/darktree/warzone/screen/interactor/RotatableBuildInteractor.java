@@ -8,8 +8,8 @@ import org.lwjgl.glfw.GLFW;
 
 public class RotatableBuildInteractor extends BuildInteractor {
 
-	public RotatableBuildInteractor(Building.Type type, World world) {
-		super(type, world);
+	public RotatableBuildInteractor(Building.Type type, World world, boolean play) {
+		super(type, world, play);
 	}
 
 	@Override

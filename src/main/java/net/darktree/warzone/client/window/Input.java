@@ -69,12 +69,20 @@ public class Input {
 		return (prevY / window.height() * -2 + 1);
 	}
 
-	public int getMouseMapX(WorldView view) {
-		return (int) Math.floor(getMouseScreenX() / view.scaleX - view.offsetX);
+	public float getMouseMapX(WorldView view) {
+		return getMouseScreenX() / view.scaleX - view.offsetX;
 	}
 
-	public int getMouseMapY(WorldView view) {
-		return (int) Math.floor(getMouseScreenY() / view.scaleY - view.offsetY);
+	public float getMouseMapY(WorldView view) {
+		return getMouseScreenY() / view.scaleY - view.offsetY;
+	}
+
+	public int getMouseTileX(WorldView view) {
+		return (int) Math.floor(getMouseMapX(view));
+	}
+
+	public int getMouseTileY(WorldView view) {
+		return (int) Math.floor(getMouseMapY(view));
 	}
 
 	public boolean isKeyPressed(int key) {

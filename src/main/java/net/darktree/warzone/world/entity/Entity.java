@@ -2,6 +2,7 @@ package net.darktree.warzone.world.entity;
 
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.render.WorldBuffers;
+import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.NbtSerializable;
@@ -110,9 +111,11 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 
 	public static class Type extends ElementType<Entity.Type> {
 		private final Constructor constructor;
+		public final Sprite icon;
 
-		public Type(Constructor constructor) {
+		public Type(Constructor constructor, Sprite icon) {
 			this.constructor = constructor;
+			this.icon = icon;
 		}
 
 		public Entity create(World world, int x, int y) {

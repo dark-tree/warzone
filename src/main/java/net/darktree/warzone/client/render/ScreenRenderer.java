@@ -120,7 +120,7 @@ public class ScreenRenderer {
 	 * Get the last used screen component
 	 */
 	public static ScreenComponent getLastComponent() {
-		return getComponent(identifier);
+		return getComponent(identifier - 1);
 	}
 
 	/**

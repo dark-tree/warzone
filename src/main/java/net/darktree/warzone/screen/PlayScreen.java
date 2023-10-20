@@ -6,38 +6,25 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.text.Text;
-import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.client.window.input.KeyEvent;
-import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.network.packet.EndTurnPacket;
 import net.darktree.warzone.screen.hotbar.Hotbar;
-import net.darktree.warzone.screen.interactor.Interactor;
+import net.darktree.warzone.screen.hotbar.HotbarConstruction;
+import net.darktree.warzone.screen.hotbar.HotbarOverview;
 import net.darktree.warzone.screen.menu.PauseMenuScreen;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldSave;
-import net.darktree.warzone.world.WorldView;
 import net.darktree.warzone.world.entity.Entity;
-import net.darktree.warzone.world.overlay.FearOverlay;
 import net.darktree.warzone.world.overlay.MapOverlay;
-import net.darktree.warzone.world.overlay.PrincipalityOverlay;
-import net.darktree.warzone.world.terrain.ChokepointFinder;
-import net.darktree.warzone.world.terrain.DangerFinder;
 import org.lwjgl.glfw.GLFW;
 
 public class PlayScreen extends WorldScreen {
 
-	private Interactor interactor = null;
-
+	private final Hotbar hotbar = new Hotbar(Sprites.HOTBAR_PLAY).left(new HotbarOverview()).right(new HotbarConstruction());
 	public static final Text TEXT_END = Text.translated("gui.end");
-
-	public static void setInteractor(Interactor interactor) {
-		ScreenStack.asInstance(PlayScreen.class, screen -> screen.interactor = interactor);
-	}
-
-	private boolean isMapFocused = true;
 	private final WorldSave save;
 
 	public PlayScreen(WorldSave save, World world) {
@@ -49,16 +36,6 @@ public class PlayScreen extends WorldScreen {
 	@Override
 	public void draw(boolean focused) {
 		super.draw(focused);
-		isMapFocused = focused;
-
-		if (interactor != null) {
-			interactor.draw(buffers.getEntity(), buffers.getOverlay());
-
-			if (interactor.isClosed()) {
-				interactor.close();
-				interactor = null;
-			}
-		}
 
 		buffers.draw();
 		Symbol symbol = world.getActiveSymbol();
@@ -83,7 +60,7 @@ public class PlayScreen extends WorldScreen {
 			ScreenRenderer.setOffset(-220, -98);
 			ScreenRenderer.box(80, 80);
 
-			Hotbar.draw(focused, world, symbol);
+			hotbar.draw(focused, world, symbol);
 		}
 
 		ScreenRenderer.centerAt(-1, 1);
@@ -106,28 +83,13 @@ public class PlayScreen extends WorldScreen {
 	}
 
 	@Override
-	public void onKey(KeyEvent event) {
-		super.onKey(event);
-
-		if (interactor != null) {
-			interactor.onKey(event);
-			return;
-		}
-
+	public void onWorldKey(KeyEvent event) {
 		if (event.isPressed(GLFW.GLFW_KEY_M)) {
 			world.getView().setOverlay(new MapOverlay());
 		}
 
-		if (event.isPressed(GLFW.GLFW_KEY_P)) {
-			world.getView().setOverlay(new PrincipalityOverlay(world));
-		}
-
-		if (event.isPressed(GLFW.GLFW_KEY_O)) {
-			world.getView().setOverlay(new FearOverlay(new DangerFinder(Symbol.CROSS, world), new ChokepointFinder(world)));
-		}
-
 		if (event.isPressed(GLFW.GLFW_KEY_B)) {
-			ScreenStack.open(new BuildScreen(world));
+			ScreenStack.open(new BuildScreen(world, true));
 		}
 
 		if (event.isPressed(GLFW.GLFW_KEY_TAB) && world.isActiveSymbol()) {
@@ -140,20 +102,7 @@ public class PlayScreen extends WorldScreen {
 	}
 
 	@Override
-	public void onClick(ClickEvent event) {
-		if (!isMapFocused || event.button == MouseButton.MIDDLE) {
-			return;
-		}
-
-		Input input = Main.window.input();
-		int x = input.getMouseMapX(world.getView());
-		int y = input.getMouseMapY(world.getView());
-
-		if (interactor != null) {
-			interactor.onClick(event, x, y);
-			return;
-		}
-
+	public void onWorldClick(ClickEvent event, int x, int y) {
 		// every action can be performed with right click, is this intended?
 
 		if((event.isLeftClick() || event.isRightClick()) && world.isPositionValid(x, y)) {
@@ -168,42 +117,8 @@ public class PlayScreen extends WorldScreen {
 	}
 
 	@Override
-	public void onEscape() {
-		if (interactor != null) {
-			return;
-		}
-
+	public void onWorldEscape() {
 		ScreenStack.open(new PauseMenuScreen(save, world));
-	}
-
-	@Override
-	public void onResize(int w, int h) {
-		WorldView view = world.getView();
-
-		view.setZoom(view.zoom);
-	}
-
-	@Override
-	public void onScroll(float value) {
-		WorldView view = world.getView();
-
-		float zoom = view.zoom * (1 + value * 0.15f);
-
-		if (zoom < Input.MAP_ZOOM_MIN) zoom = Input.MAP_ZOOM_MIN;
-		if (zoom > Input.MAP_ZOOM_MAX) zoom = Input.MAP_ZOOM_MAX;
-
-		view.setZoom(zoom);
-	}
-
-	public void onMove(float x, float y) {
-		Input input = Main.window.input();
-
-		if (input.isButtonPressed(MouseButton.MIDDLE)) {
-			float ox = (input.prevX - x) / Main.window.width() * -2;
-			float oy = (input.prevY - y) / Main.window.height() * 2;
-
-			world.getView().drag(ox, oy);
-		}
 	}
 
 }

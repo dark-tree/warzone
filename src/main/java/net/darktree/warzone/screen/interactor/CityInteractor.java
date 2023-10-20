@@ -26,8 +26,8 @@ public class CityInteractor extends Interactor {
 	@Override
 	public void draw(VertexBuffer texture, VertexBuffer color) {
 		final Input input = Main.window.input();
-		final int x = input.getMouseMapX(world.getView());
-		final int y = input.getMouseMapY(world.getView());
+		final int x = input.getMouseTileX(world.getView());
+		final int y = input.getMouseTileY(world.getView());
 
 		if (world.isPositionValid(x, y) && action.getPathfinder().canReach(x, y)) {
 			action.getPathfinder().getPathTo(x, y).draw(color);

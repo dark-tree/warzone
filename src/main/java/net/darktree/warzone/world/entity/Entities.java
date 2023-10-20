@@ -2,12 +2,13 @@ package net.darktree.warzone.world.entity;
 
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.screen.interactor.BridgeBuildInteractor;
 import net.darktree.warzone.screen.interactor.RotatableBuildInteractor;
 import net.darktree.warzone.world.entity.building.*;
 
 public class Entities {
-	public static final Entity.Type UNIT = Registries.ENTITIES.register("unit", new Entity.Type(UnitEntity::new));
+	public static final Entity.Type UNIT = Registries.ENTITIES.register("unit", new Entity.Type(UnitEntity::new, Symbol.CROSS.getSprite()));
 
 	// buildings
 	public static final Building.Type CAPITOL = Registries.ENTITIES.register("capitol", Building.define(CapitolBuilding::new, Sprites.BUILDING_CAPITOL).size(2, 2).build());

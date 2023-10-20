@@ -115,17 +115,16 @@ public abstract class Building extends StructureEntity {
 
 		public final int value;
 		public final int width, height;
-		public final Sprite icon, sprite;
+		public final Sprite sprite;
 		public final Pattern pattern;
 		public final PlacementInteractor.Provider interactor;
 
 		public Type(Constructor constructor, int value, int width, int height, Sprite icon, Sprite sprite, PlacementInteractor.Provider interactor) {
-			super(constructor);
+			super(constructor, icon);
 
 			this.value = value;
 			this.width = width;
 			this.height = height;
-			this.icon = icon;
 			this.sprite = sprite;
 			this.pattern = Pattern.build(width, height);
 			this.interactor = interactor;
@@ -139,8 +138,8 @@ public abstract class Building extends StructureEntity {
 			return "building." + key() + ".description";
 		}
 
-		public void interact(World world) {
-			PlayScreen.setInteractor(interactor.create(this, world));
+		public void interact(World world, boolean play) {
+			PlayScreen.setInteractor(interactor.create(this, world, play));
 		}
 
 		public static class Builder {

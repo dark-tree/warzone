@@ -21,8 +21,6 @@ import net.darktree.warzone.screen.BuildScreen;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.PopupScreen;
 import net.darktree.warzone.screen.ScreenStack;
-import net.darktree.warzone.screen.interactor.OwnEditInteractor;
-import net.darktree.warzone.screen.interactor.SetEditInteractor;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Profiler;
 import net.darktree.warzone.util.Resources;
@@ -149,23 +147,6 @@ public class Main {
 	private static void console(BufferedReader reader) throws IOException {
 		String line = reader.readLine();
 		World world = game.getWorld().orElse(null);
-
-		if (world != null && line.startsWith("town ")) {
-			String[] parts = line.split(" ");
-			int i = Integer.parseInt(parts[1]);
-
-			Main.runSynced(() -> {
-				PlayScreen.setInteractor(new OwnEditInteractor(Symbol.fromIndex((byte) i), world));
-			});
-		}
-
-		if (world != null && line.startsWith("tset ")) {
-			String[] parts = line.split(" ");
-
-			Main.runSynced(() -> {
-				PlayScreen.setInteractor(new SetEditInteractor(Registries.TILES.byKey(parts[1]).value().getDefaultVariant(), world));
-			});
-		}
 
 		if (world != null && line.startsWith("tput ")) {
 			String[] parts = line.split(" ");

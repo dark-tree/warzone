@@ -30,8 +30,8 @@ public class DeconstructInteractor extends Interactor {
 
 	@Override
 	public void draw(VertexBuffer texture, VertexBuffer color) {
-		int x = Main.window.input().getMouseMapX(world.getView());
-		int y = Main.window.input().getMouseMapY(world.getView());
+		int x = Main.window.input().getMouseTileX(world.getView());
+		int y = Main.window.input().getMouseTileY(world.getView());
 
 		if (world.isPositionValid(x, y)) {
 			Entity entity = world.getEntity(x, y);

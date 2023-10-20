@@ -18,7 +18,8 @@ public class Sprites {
 	public final static Sprite BUILD = getSprite("gui/build_screen.png");
 	public final static Sprite POPUP = getSprite("gui/small_popup.png");
 	public final static Sprite PAUSE = getSprite("gui/pause_screen.png");
-	public final static Sprite HOTBAR = getSprite("gui/hotbar.png");
+	public final static Sprite HOTBAR_PLAY = getSprite("gui/hotbar_play.png");
+	public final static Sprite HOTBAR_EDIT = getSprite("gui/hotbar_edit.png");
 	public final static Sprite BUTTON_PART_LEFT = getSprite("gui/button/left.png");
 	public final static Sprite BUTTON_PART_CENTER = getSprite("gui/button/center.png");
 	public final static Sprite BUTTON_PART_RIGHT = getSprite("gui/button/right.png");
@@ -28,9 +29,12 @@ public class Sprites {
 	public final static Sprite BUTTON_RIGHT = getSprite("gui/button/arrow_right.png");
 	public final static Sprite ICON_PLUS = getSprite("gui/button/plus.png");
 	public final static Sprite ICON_MINUS = getSprite("gui/button/minus.png");
+	public final static Sprite ICON_NEXT = getSprite("gui/button/next.png");
+	public final static Sprite ICON_PREV = getSprite("gui/button/prev.png");
 	public final static Sprite FRAME = getSprite("gui/button/frame.png");
 	public static final Sprite MENU_BAR = getSprite("gui/menu_bar.png");
 	public static final Sprite MENU_BAR_TOP = getSprite("gui/menu_bar_top.png");
+	public static final Sprite LEFT_TAB = getSprite("gui/left_tab.png");
 
 	public final static Sprite ICON_WALL_1 = getSprite("gui/wall.png");
 	public final static Sprite ICON_WALL_2 = getSprite("gui/wall2.png");
@@ -40,6 +44,10 @@ public class Sprites {
 	public static final Sprite UPGRADE_LOCAL = getSprite("gui/icon/upgrade/local.png");
 	public static final Sprite UPGRADE_MAPS = getSprite("gui/icon/upgrade/maps.png");
 	public static final Sprite UPGRADE_BRIDGE = getSprite("gui/icon/upgrade/bridge.png");
+
+	public static final Sprite TOOL_SURFACE = getSprite("gui/icon/tool_surface.png");
+	public static final Sprite TOOL_BORDER = getSprite("gui/icon/tool_border.png");
+	public static final Sprite TOOL_ERASE = getSprite("gui/icon/tool_entity_erase.png");
 
 	public static final Sprite BUILDING_CAPITOL = getSprite("building/capitol.png");
 	public static final Sprite BUILDING_FACTORY = getSprite("building/factory.png");
