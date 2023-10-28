@@ -8,6 +8,7 @@ public class Colors {
 	private static final ColorAtlas ATLAS = ColorAtlas.load("colors.json");
 
 	public static final Color NONE = ATLAS.getColor("none");
+	public static final Color TEXT = ATLAS.getColor("text");
 	public static final Color BORDER = ATLAS.getColor("border");
 	public static final Color PATH = ATLAS.getColor("path");
 	public static final Color OVERLAY_REACHABLE = ATLAS.getColor("overlay_reachable");
@@ -30,5 +31,8 @@ public class Colors {
 	public static final Color MAP_LIST_HOVER = ATLAS.getColor("map_list_hover");
 	public static final Color MAP_LIST_SELECTED = ATLAS.getColor("map_list_selected");
 	public static final Color TEXTBOX_SELECTED = ATLAS.getColor("textbox_selected");
+	public static final Color UI_LINE_CENTER = ATLAS.getColor("ui_line_center");
+	public static final Color UI_LINE_EDGE = ATLAS.getColor("ui_line_edge");
+	public static final Color UI_GRID = ATLAS.getColor("ui_grid");
 
 }

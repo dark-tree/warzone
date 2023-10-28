@@ -37,6 +37,7 @@ public class MainMenuScreen extends DecoratedScreen {
 			drawBarSlice(bw, i == 1);
 		}
 
+		ScreenRenderer.setColor(Colors.TEXT);
 		ScreenRenderer.centerAt(-1, 0);
 		ScreenRenderer.setOffset(wp + bw / 2 - 40 * 3 - 1, 100);
 		if (ScreenRenderer.button("START", 4, 38, 80, true)) {

@@ -56,6 +56,7 @@ public final class Game {
 		SoundSystem.tick();
 		Renderer.clear();
 		ScreenStack.draw();
+
 		Renderer.swap();
 	}
 

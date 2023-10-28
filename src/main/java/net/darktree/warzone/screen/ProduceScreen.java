@@ -86,10 +86,9 @@ public class ProduceScreen extends Screen {
 		ScreenRenderer.line(0.005f, 1300 - 200, 0);
 		ScreenRenderer.pop();
 
+		ScreenRenderer.setColor(Colors.TEXT);
 		ScreenRenderer.offset(100, 100);
 		ScreenRenderer.translatedText(30, "gui.produce.capacity", state.getCapacityString());
-
-		ScreenRenderer.setColor(Colors.NONE);
 
 	}
 

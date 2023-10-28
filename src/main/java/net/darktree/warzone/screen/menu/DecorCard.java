@@ -3,6 +3,7 @@ package net.darktree.warzone.screen.menu;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.render.color.Color;
+import net.darktree.warzone.client.render.color.MutableColor;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.util.math.Vec2f;
@@ -30,12 +31,7 @@ public class DecorCard {
 		float g = MathHelper.RANDOM.nextFloat() * 0.392f;
 		float b = MathHelper.RANDOM.nextFloat() * 0.392f;
 
-		float scale = 0.7f;
-		r = MathHelper.lerp(r, Colors.CARD_SEPIA.r, scale);
-		g = MathHelper.lerp(g, Colors.CARD_SEPIA.g, scale);
-		b = MathHelper.lerp(b, Colors.CARD_SEPIA.b, scale);
-
-		this.color = new Color(r, g, b, 0.3f);
+		this.color = Color.lerp(Colors.CARD_SEPIA, MutableColor.of(r, g, b), 0.3f).alpha(0.3f).immutable();
 
 		// corners
 		this.w1 = getVecPoint(-1, +1); // A

@@ -31,6 +31,8 @@ public class Hotbar {
 	}
 
 	public void draw(boolean focused, World world, Symbol symbol) {
+
+		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.setSprite(sprite);
 		ScreenRenderer.centerAt(0, -1);
 		ScreenRenderer.box(EXTEND, EXTEND, HEIGHT, 0);
@@ -45,7 +47,7 @@ public class Hotbar {
 			component.draw(focused, world, symbol);
 			String name = component.getNameKey();
 
-			ScreenRenderer.setColor(Colors.NONE);
+			ScreenRenderer.setColor(Colors.TEXT);
 
 			if (name != null) {
 				ScreenRenderer.setOffset(x + EXTEND / 2, HEIGHT - 40);

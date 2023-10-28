@@ -155,44 +155,47 @@ public class EditScreen extends WorldScreen {
 				value --;
 				onBrushUpdate();
 			}
-			ScreenRenderer.setColor(Colors.NONE);
 
+			ScreenRenderer.setColor(Colors.TEXT);
 			ScreenRenderer.offset(120, 0);
 			ScreenRenderer.setAlignment(Alignment.CENTER);
 			ScreenRenderer.translatedText(30, getValueKey());
 			ScreenRenderer.setAlignment(Alignment.LEFT);
 
+			ScreenRenderer.setColor(Colors.NONE);
 			ScreenRenderer.offset(120, 0);
 			if (ScreenRenderer.button(Sprites.ICON_NEXT, 30, 30, value < getValues().length - 1)) {
 				value ++;
 				onBrushUpdate();
 			}
-			ScreenRenderer.setColor(Colors.NONE);
 
 			ScreenRenderer.pop();
 
+			ScreenRenderer.setColor(Colors.TEXT);
 			ScreenRenderer.offset(0, 40);
 			ScreenRenderer.text(30, "SIZE:");
 
+			ScreenRenderer.setColor(Colors.NONE);
 			ScreenRenderer.push();
 			ScreenRenderer.offset(300, 0);
 			if (ScreenRenderer.button(Sprites.ICON_MINUS, 30, 30, size > 1)) {
 				size --;
 				onBrushUpdate();
 			}
-			ScreenRenderer.setColor(Colors.NONE);
 
+			ScreenRenderer.setColor(Colors.TEXT);
 			ScreenRenderer.offset(120, 0);
 			ScreenRenderer.setAlignment(Alignment.CENTER);
 			ScreenRenderer.text(30, "" + size);
 			ScreenRenderer.setAlignment(Alignment.LEFT);
 
+			ScreenRenderer.setColor(Colors.NONE);
 			ScreenRenderer.offset(120, 0);
 			if (ScreenRenderer.button(Sprites.ICON_PLUS, 30, 30, size < 10)) {
 				size ++;
 				onBrushUpdate();
 			}
-			ScreenRenderer.setColor(Colors.NONE);
+
 
 			ScreenRenderer.pop();
 		}

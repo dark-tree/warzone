@@ -2,7 +2,9 @@ package net.darktree.warzone.screen.menu;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.render.ColorMode;
 import net.darktree.warzone.client.render.Screen;
+import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.math.Parallax;
 
@@ -32,11 +34,14 @@ public abstract class DecoratedScreen extends Screen {
 		// if there are some empty spots
 		// this will make them stick out a little less
 		drawBackground(Colors.CARD_BACKGROUND);
+		ScreenRenderer.setColorMode(ColorMode.MIXED);
 
 		for (DecorCard card : cards) {
 			drawBackground(Colors.CARD_SEPARATOR);
 			card.draw(px, py);
 		}
+
+		ScreenRenderer.setColorMode(ColorMode.TINT);
 	}
 
 	public void onResize(int w, int h) {

@@ -42,7 +42,7 @@ public class BridgeBuildInteractor extends RotatableBuildInteractor {
 		if (bridge != null) {
 			for (TilePos tile : bridge.getTiles()) {
 				Color c = valid ? Colors.SPOT_VALID : Colors.SPOT_INVALID;
-				Renderer.quad(texture, this.rotation, tile.x, tile.y, type.width, type.height, type.sprite, c.r, c.g, c.b, c.a * wave);
+				Renderer.quad(texture, this.rotation, tile.x, tile.y, type.width, type.height, type.sprite, c.r(), c.g(), c.b(), c.a() * wave);
 			}
 		}
 	}

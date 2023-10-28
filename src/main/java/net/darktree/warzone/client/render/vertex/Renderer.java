@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 public class Renderer {
 
 	public static void overlay(VertexBuffer buffer, int x, int y, Color color) {
-		quad(buffer, x, y, 1, 1, Sprites.NONE, color.r, color.g, color.b, color.a);
+		quad(buffer, x, y, 1, 1, Sprites.NONE, color.r(), color.g(), color.b(), color.a());
 	}
 
 	public static void tile(VertexBuffer buffer, int x, int y, Sprite sprite) {
@@ -71,36 +71,27 @@ public class Renderer {
 	}
 
 	public static void line(VertexBuffer buffer, float x1, float y1, float x2, float y2, float w, Color color) {
-		line(buffer, x1, y1, x2, y2, w, color.r, color.g, color.b, color.a);
+		line(buffer, x1, y1, x2, y2, w, color.r(), color.g(), color.b(), color.a());
 	}
 
 	public static void line(VertexBuffer buffer, float x1, float y1, float x2, float y2, float w, float cr, float cg, float cb, float ca) {
-		float a = -1/((y1 - y2)/(x1 - x2));
-		float d = (float) Math.sqrt((4 * w * w) / (1 + a * a));
+		float vx = x2 - x1;
+		float vy = y2 - y1;
 
-		if (d == 0) {
-			float uy1 = y1 - w;
-			float uy2 = y2 + w;
+		float len = (float) Math.sqrt(vy * vy + vx * vx) * (2 / w);
+		float nx =   vy / len;
+		float ny = - vx / len;
 
-			quad(buffer, x1, uy1, x2, uy1, x2, uy2, x1, uy2, Sprites.NONE, cr, cg, cb, ca);
-			return;
-		}
+		float r1x = x1 + nx;
+		float r1y = y1 + ny;
+		float r2x = x1 - nx;
+		float r2y = y1 - ny;
+		float r3x = x2 + nx;
+		float r3y = y2 + ny;
+		float r4x = x2 - nx;
+		float r4y = y2 - ny;
 
-		// this doesn't respect the winding order for some directions
-		// (when the line is pointing to the left and/or downwards)
-		// it would be a good idea to fix this
-
-		float ax1 = ((2 * x1) + d) / 2;
-		float ax2 = ((2 * x1) - d) / 2;
-		float bx1 = ((2 * x2) + d) / 2;
-		float bx2 = ((2 * x2) - d) / 2;
-
-		float ay1 = a * (ax1 - x1) + y1;
-		float ay2 = a * (ax2 - x1) + y1;
-		float by1 = a * (bx1 - x2) + y2;
-		float by2 = a * (bx2 - x2) + y2;
-
-		quad(buffer, ax1, ay1, bx1, by1, bx2, by2, ax2, ay2, Sprites.NONE, cr, cg, cb, ca);
+		quad(buffer, r1x, r1y, r2x, r2y, r4x, r4y, r3x, r3y, Sprites.NONE, cr, cg, cb, ca);
 	}
 
 	/**

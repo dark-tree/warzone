@@ -59,7 +59,7 @@ public class ParliamentScreen extends ElementListScreen<Upgrade<?>> {
 		ScreenRenderer.offset(104, 6);
 		ScreenRenderer.text(30, bought ? TEXT_ENABLED : (self ? element.getCost() + "m" : TEXT_DISABLED));
 
-		ScreenRenderer.setColor(Colors.NONE);
+		ScreenRenderer.setColor(Colors.TEXT);
 		ScreenRenderer.offset(0, 54);
 		ScreenRenderer.translatedText(30, element.getNameKey());
 		ScreenRenderer.pop();

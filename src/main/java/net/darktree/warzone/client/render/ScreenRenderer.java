@@ -2,6 +2,7 @@ package net.darktree.warzone.client.render;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.*;
+import net.darktree.warzone.client.gui.DrawContext;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.image.Sprite;
@@ -26,7 +27,9 @@ public class ScreenRenderer {
 	private static final HashMap<Integer, ScreenComponent> components = new HashMap<>();
 	private static final Stack<Vec2i> offsets = new Stack<>();
 
-	private static Pipeline quads;
+	private static ColorMode mode = ColorMode.TINT;
+	private static Pipeline current = null;
+	private static Pipeline tinted, mixed;
 	private static int identifier;
 	private static float scale, psx, psy;
 	private static float x, y;
@@ -36,6 +39,7 @@ public class ScreenRenderer {
 	private static Sprite quadSprite;
 	private static Font currentFont;
 	private static Alignment currentAlignment = Alignment.LEFT;
+	private static DrawContext CONTEXT = new DrawContext();
 
 	private static float projectMapIntoScreenX(WorldView view, int x) {
 		return (x + view.offsetX) * view.scaleX;
@@ -46,7 +50,8 @@ public class ScreenRenderer {
 	}
 
 	public static void initializeQuadPipeline() {
-		quads = new Pipeline(Buffers.IMMEDIATE.build(), Shaders.GUI, Sprites.ATLAS);
+		tinted = new Pipeline(Buffers.IMMEDIATE.build(), Shaders.TINTED, Sprites.ATLAS);
+		mixed = new Pipeline(Buffers.IMMEDIATE.build(), Shaders.MIXED, Sprites.ATLAS);
 	}
 
 	public static void registerFontPipeline(TextureConvertible texture) {
@@ -57,6 +62,26 @@ public class ScreenRenderer {
 		builder.append("SC=").append(components.size());
 	}
 
+	private static void use(Pipeline pipeline) {
+		if (current != null && current != pipeline) {
+			current.flush();
+		}
+
+		current = pipeline;
+	}
+
+	public static void preparePipeline() {
+		use(mode == ColorMode.TINT ? tinted : mixed);
+	}
+
+	public static void setColorMode(ColorMode mode) {
+		ScreenRenderer.mode = mode;
+	}
+
+	public static DrawContext getDrawContext() {
+		return CONTEXT;
+	}
+
 	/**
 	 * Flush all geometry for rendering, and update screen size
 	 */
@@ -65,7 +90,7 @@ public class ScreenRenderer {
 		psx = scale / Window.INSTANCE.width();
 		psy = scale / Window.INSTANCE.height();
 
-		if (quads != null) quads.flush();
+		if (current != null) current.flush();
 
 		for (Pipeline pipeline : pipelines.values()) {
 			pipeline.flush();
@@ -167,10 +192,10 @@ public class ScreenRenderer {
 	 * Set output color, used for tinting textures and text coloring
 	 */
 	public static void setColor(Color color) {
-		cr = color.r;
-		cg = color.g;
-		cb = color.b;
-		ca = color.a;
+		cr = color.r();
+		cg = color.g();
+		cb = color.b();
+		ca = color.a();
 	}
 
 	/**
@@ -205,14 +230,16 @@ public class ScreenRenderer {
 		float tx = x + ox * psx;
 		float ty = y + oy * psy;
 
-		Renderer.quad(quads.buffer, tx + x1 * psx, ty + y1 * psy, tx + x2 * psx, ty + y2 * psy, tx + x3 * psx, ty + y3 * psy, tx + x4 * psx, ty + y4 * psy, quadSprite, cr, cg, cb, ca);
+		preparePipeline();
+		Renderer.quad(current.buffer, tx + x1 * psx, ty + y1 * psy, tx + x2 * psx, ty + y2 * psy, tx + x3 * psx, ty + y3 * psy, tx + x4 * psx, ty + y4 * psy, quadSprite, cr, cg, cb, ca);
 	}
 
 	/**
 	 * Render textured box
 	 */
 	public static boolean box(int right, int top) {
-		Renderer.quad(quads.buffer, x + ox * psx, y + oy * psy, right * psx, top * psy, quadSprite, cr, cg, cb, ca);
+		preparePipeline();
+		Renderer.quad(current.buffer, x + ox * psx, y + oy * psy, right * psx, top * psy, quadSprite, cr, cg, cb, ca);
 		return isMouseOver(right, top);
 	}
 
@@ -232,6 +259,10 @@ public class ScreenRenderer {
 		return box(right + left, top + bottom);
 	}
 
+	public static void vertex(float px, float py, float u, float v, float r, float g, float b, float a) {
+		Renderer.vertex(current.buffer, x + (ox + px) * psx, y + (oy + py) * psy, u, v, r, g, b, a);
+	}
+
 	/**
 	 * Render a line starting at current offset and pointing along the given vector
 	 */
@@ -239,7 +270,8 @@ public class ScreenRenderer {
 		float sx = x + ox * psx;
 		float sy = y + oy * psy;
 
-		Renderer.line(quads.buffer, sx, sy, sx + vx * psx, sy + vy * psy, width * scale, cr, cg, cb, ca);
+		preparePipeline();
+		Renderer.line(current.buffer, sx, sy, sx + vx * psx, sy + vy * psy, width * scale, cr, cg, cb, ca);
 	}
 
 	/**
@@ -307,6 +339,7 @@ public class ScreenRenderer {
 		int sx = ox;
 		Alignment alignment = currentAlignment;
 
+		setColorMode(ColorMode.MIXED);
 		setSprite(Sprites.BUTTON_PART_LEFT);
 		box(width, height);
 
@@ -323,8 +356,9 @@ public class ScreenRenderer {
 		ox = (int) (sx + ((2 + count) * width) / 2f) - 5;
 		oy += (height - size) / 2f;
 
+		setColorMode(ColorMode.TINT);
 		setAlignment(Alignment.CENTER);
-		setColor(Colors.NONE);
+		setColor(Colors.TEXT);
 		text(size, text);
 
 		setAlignment(alignment);

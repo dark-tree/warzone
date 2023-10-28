@@ -57,6 +57,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+
 		Logger.info("Current working directory: ", Resources.path());
 		Logger.info("Using LWJGL ", Version.getVersion());
 		Logger.info("Using Java ", Runtime.version().feature(), " (", Runtime.version(), ")");

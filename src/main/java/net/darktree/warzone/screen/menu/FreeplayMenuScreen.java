@@ -38,7 +38,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 	}
 
 	void drawEntry(WorldSave entry, boolean clicked) {
-		ScreenRenderer.setColor(Colors.NONE);
+		ScreenRenderer.setColor(Colors.TEXT);
 		ScreenRenderer.text(30, entry.getName());
 		ScreenRenderer.offset(0, -30);
 		ScreenRenderer.setColor(Colors.PRICE_TAG);

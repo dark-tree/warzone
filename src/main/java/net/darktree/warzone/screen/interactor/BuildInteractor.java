@@ -69,7 +69,7 @@ public class BuildInteractor extends PlacementInteractor {
 
 		Color c = valid ? Colors.SPOT_VALID : Colors.SPOT_INVALID;
 
-		Renderer.quad(texture, this.rotation, pos.x, pos.y, type.width, type.height, type.sprite, c.r, c.g, c.b, c.a * wave);
+		Renderer.quad(texture, this.rotation, pos.x, pos.y, type.width, type.height, type.sprite, c.r(), c.g(), c.b(), c.a() * wave);
 	}
 
 	@Override

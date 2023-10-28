@@ -1,4 +1,4 @@
 {
   "vertex": "vertex/transformed.glsl",
-  "fragment": "fragment/textured.glsl"
+  "fragment": "fragment/mixed.glsl"
 }

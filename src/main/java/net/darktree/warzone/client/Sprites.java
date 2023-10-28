@@ -12,6 +12,10 @@ public class Sprites {
 		return LOADER.getSprite(identifier);
 	}
 
+	public static NinePatch getNinePatch(String identifier) {
+		return LOADER.getNinePatch(identifier);
+	}
+
 	public final static Sprite MISSINGNO = getSprite("missingno.png");
 	public final static Sprite NONE = getSprite("none.png");
 	public final static Sprite TOP = getSprite("gui/top.png");
@@ -59,6 +63,13 @@ public class Sprites {
 	public static final Sprite STRUCTURE_FENCE = getSprite("building/fence.png");
 	public static final Sprite STRUCTURE_WALL = getSprite("building/wall.png");
 	public static final Sprite STRUCTURE_BRIDGE = getSprite("building/bridge.png");
+
+	public static final Sprite LINE_OVERLAY = getSprite("gui/grid/component/lines.png");
+	public static final Sprite BUTTON_HOVER = getSprite("gui/grid/component/hover.png");
+	public static final Sprite BUTTON_PRESSED = getSprite("gui/grid/component/pressed.png");
+	public static final Sprite BUTTON_DISABLED = getSprite("gui/grid/component/disabled.png");
+
+	public static final NinePatch GRID_NINE_PATCH = getNinePatch("gui/grid/background");
 
 	static {
 		LOADER.load(ATLAS);

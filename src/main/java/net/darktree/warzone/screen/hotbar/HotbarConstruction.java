@@ -39,6 +39,7 @@ public class HotbarConstruction extends HotbarComponent {
 	private void drawPicker() {
 		ScreenRenderer.push();
 
+		ScreenRenderer.setColor(Colors.TEXT);
 		ScreenRenderer.offset(68, 56);
 		ScreenRenderer.setAlignment(Alignment.RIGHT);
 		ScreenRenderer.text(50, "<");
@@ -60,6 +61,7 @@ public class HotbarConstruction extends HotbarComponent {
 		//ScreenRenderer.setSprite(Sprites.ICON_WALL_1);
 		//ScreenRenderer.box(58, 58);
 
+		ScreenRenderer.setColor(Colors.TEXT);
 		ScreenRenderer.setAlignment(Alignment.LEFT);
 		ScreenRenderer.offset(50, 0);
 		ScreenRenderer.text(50, ">");

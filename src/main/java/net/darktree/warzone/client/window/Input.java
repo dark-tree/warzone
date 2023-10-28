@@ -1,6 +1,5 @@
 package net.darktree.warzone.client.window;
 
-import net.darktree.warzone.client.window.input.ClickAction;
 import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.client.window.input.MouseButton;
@@ -19,7 +18,7 @@ public class Input {
 	private boolean clicked;
 	public float prevX;
 	public float prevY;
-	public float guiScale = 1;
+	public float guiScale = 1f;
 
 	public Input(Window window) {
 		this.window = window;
@@ -46,7 +45,7 @@ public class Input {
 		ScreenStack.asFocused(screen -> screen.onClick(event));
 
 		// if button was RELEASED the click is complete
-		clicked = event.button == MouseButton.LEFT && event.action == ClickAction.RELEASE;
+		clicked = event.hasClicked();
 	}
 
 	void scrollHandle(long handle, double x, double y) {
@@ -83,6 +82,14 @@ public class Input {
 
 	public int getMouseTileY(WorldView view) {
 		return (int) Math.floor(getMouseMapY(view));
+	}
+
+	public float getMouseUiX() {
+		return 2 * prevX - window.width();
+	}
+
+	public float getMouseUiY() {
+		return window.height() - 2 * prevY;
 	}
 
 	public boolean isKeyPressed(int key) {

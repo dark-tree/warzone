@@ -99,7 +99,7 @@ public class Path {
 	}
 
 	private void drawBox(VertexBuffer buffer, TilePos pos, Color c) {
-		Renderer.quad(buffer, pos.x + 0.4f, pos.y + 0.4f, 0.2f, 0.2f, Sprites.NONE, c.r, c.g, c.b, c.a);
+		Renderer.quad(buffer, pos.x + 0.4f, pos.y + 0.4f, 0.2f, 0.2f, Sprites.NONE, c.r(), c.g(), c.b(), c.a());
 	}
 
 	public static class Recorder {

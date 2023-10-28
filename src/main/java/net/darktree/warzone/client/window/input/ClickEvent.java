@@ -1,6 +1,6 @@
 package net.darktree.warzone.client.window.input;
 
-public class ClickEvent {
+public class ClickEvent extends Event {
 
 	public final int mods;
 	public final ClickAction action;
@@ -22,6 +22,15 @@ public class ClickEvent {
 
 	public boolean isPressed() {
 		return action == ClickAction.PRESS;
+	}
+
+	public boolean hasClicked() {
+		return button == MouseButton.LEFT && action == ClickAction.RELEASE;
+	}
+
+	@Override
+	public EventType getType() {
+		return EventType.MOUSE;
 	}
 
 }

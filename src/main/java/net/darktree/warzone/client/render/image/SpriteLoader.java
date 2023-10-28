@@ -1,6 +1,8 @@
 package net.darktree.warzone.client.render.image;
 
+import net.darktree.warzone.client.json.NinePatchJsonBlob;
 import net.darktree.warzone.util.Logger;
+import net.darktree.warzone.util.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,23 @@ public class SpriteLoader {
 		WrappedSprite sprite = new WrappedSprite(Sprite.NULL);
 		sprites.add(new NamedSprite(path, sprite));
 		return sprite;
+	}
+
+	public NinePatch getNinePatch(String identifier) {
+		Sprite[] sprites = new Sprite[9];
+
+		for (int y = 0; y <= 2; y ++) {
+			for (int x = 0; x <= 2; x ++) {
+				sprites[x + y * 3] = getSprite(identifier + "/" + x + y + ".png");
+			}
+		}
+
+		try {
+			NinePatchJsonBlob blob = Resources.json("sprites/" + identifier + "/index.json", NinePatchJsonBlob.class);
+			return new NinePatch(sprites, blob.width, blob.height, blob.edge);
+		} catch (Exception e) {
+			return new NinePatch(sprites, 20, 20, 20);
+		}
 	}
 
 	/**

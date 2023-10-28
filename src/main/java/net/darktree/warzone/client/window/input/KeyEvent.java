@@ -3,7 +3,7 @@ package net.darktree.warzone.client.window.input;
 import net.darktree.warzone.client.window.Input;
 import org.lwjgl.glfw.GLFW;
 
-public class KeyEvent {
+public class KeyEvent extends Event {
 
 	public final int key;
 	public final int scancode;
@@ -35,6 +35,11 @@ public class KeyEvent {
 
 	public char getAscii() {
 		return Input.glfwToAscii(key);
+	}
+
+	@Override
+	public EventType getType() {
+		return EventType.KEYBOARD;
 	}
 
 }

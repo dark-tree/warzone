@@ -10,7 +10,7 @@ public class WrappedSprite implements Sprite {
 		this.sprite = sprite;
 	}
 
-	public void setSprite(@NonNull Sprite sprite) {
+	void setSprite(@NonNull Sprite sprite) {
 		this.sprite = sprite;
 	}
 

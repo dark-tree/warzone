@@ -67,7 +67,7 @@ public abstract class ElementListScreen <T extends Purchasable> extends Screen {
 		ScreenRenderer.push();
 		ScreenRenderer.offset(104, 6);
 		ScreenRenderer.text(30, element.getCost() + "m");
-		ScreenRenderer.setColor(Colors.NONE);
+		ScreenRenderer.setColor(Colors.TEXT);
 		ScreenRenderer.offset(0, 54);
 		ScreenRenderer.translatedText(30, element.getNameKey());
 		ScreenRenderer.pop();

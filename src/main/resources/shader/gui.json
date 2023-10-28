@@ -1,4 +1,0 @@
-{
-  "vertex": "vertex/basic.glsl",
-  "fragment": "fragment/textured.glsl"
-}

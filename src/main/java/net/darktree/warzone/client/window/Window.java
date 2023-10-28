@@ -21,6 +21,7 @@ public class Window implements AutoCloseable {
 	private final Input input;
 	private int width, height;
 	private final int initialWidth, initialHeight;
+	private final Cursor arrow, hand;
 
 	public final FrameCounter profiler;
 	public final long handle;
@@ -32,7 +33,7 @@ public class Window implements AutoCloseable {
 	public static Window init(int width, int height, String title) {
 		if (INSTANCE != null) {
 			Logger.error("Unable to reinitialize the window!");
-		}else{
+		} else {
 			INSTANCE = new Window(width, height, title);
 		}
 
@@ -56,6 +57,7 @@ public class Window implements AutoCloseable {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_SAMPLES, 4);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		//create the window
@@ -97,6 +99,7 @@ public class Window implements AutoCloseable {
 		GLManager.useBlend(true);
 		GLManager.useDepth(true);
 		glActiveTexture(GL_TEXTURE0);
+		glEnable(GL_MULTISAMPLE);
 
 		glfwSetWindowSizeCallback(handle, (window, w, h) -> {
 			this.width = w;
@@ -108,6 +111,8 @@ public class Window implements AutoCloseable {
 
 		this.width = width;
 		this.height = height;
+		this.arrow = new Cursor(GLFW_ARROW_CURSOR);
+		this.hand = new Cursor(GLFW_HAND_CURSOR);
 
 		// needed to initialize scales
 		input.updateScale(width, height);
@@ -115,13 +120,23 @@ public class Window implements AutoCloseable {
 
 	@Override
 	public void close() {
-		glfwFreeCallbacks(this.handle);
-		glfwDestroyWindow(this.handle);
+		glfwFreeCallbacks(handle);
+		glfwDestroyWindow(handle);
 
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
 
+		arrow.close();
+		hand.close();
 		INSTANCE = null;
+	}
+
+	public static Window getInstance() {
+		return INSTANCE;
+	}
+
+	public void setCursor(boolean pointing) {
+		(pointing ? hand : arrow).set(this);
 	}
 
 	public int width() {

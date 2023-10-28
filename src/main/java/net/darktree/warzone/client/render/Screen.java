@@ -4,6 +4,9 @@ import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.gui.GridContext;
+import net.darktree.warzone.client.gui.ModelBuilder;
+import net.darktree.warzone.client.gui.component.UiComposed;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.text.Text;
@@ -23,8 +26,20 @@ public abstract class Screen {
 	public static final Text TEXT_NO = Text.translated("gui.no");
 	public static final Text TEXT_PAGE = Text.translated("gui.page");
 
+	private final GridContext context;
+	private boolean shouldRebuild = true;
+
 	public Screen() {
 		closed = false;
+		context = createGridContext();
+	}
+
+	protected GridContext createGridContext() {
+		return null;
+	}
+
+	protected void rebuildModel() {
+		shouldRebuild = true;
 	}
 
 	protected void text(int ox, int oy, CharSequence text, Alignment alignment) {
@@ -33,6 +48,24 @@ public abstract class Screen {
 		ScreenRenderer.setAlignment(alignment);
 		ScreenRenderer.text(30, text);
 		ScreenRenderer.pop();
+	}
+
+	protected void buildModel(ModelBuilder builder) {
+
+	}
+
+	protected void drawModel() {
+		if (context != null) {
+			if (shouldRebuild) {
+				shouldRebuild = false;
+
+				ModelBuilder builder = UiComposed.of();
+				buildModel(builder);
+				context.setModel(builder);
+			}
+
+			context.draw(ScreenRenderer.getDrawContext());
+		}
 	}
 
 	protected void drawBackground(Color color) {
@@ -53,6 +86,7 @@ public abstract class Screen {
 		final int y1 = half - 90;
 		final int y2 = y1 - 40;
 
+		ScreenRenderer.setColor(Colors.TEXT);
 		text(0, y1, title, Alignment.CENTER);
 		text(0, y2, subtitle, Alignment.CENTER);
 	}
@@ -62,14 +96,16 @@ public abstract class Screen {
 	@OverridingMethodsMustInvokeSuper
 	public void onKey(KeyEvent event) {
 		if (event.isEscape()) onEscape();
+		if (context != null) context.react(event);
+	}
+
+	@OverridingMethodsMustInvokeSuper
+	public void onClick(ClickEvent event) {
+		if (context != null) context.react(event);
 	}
 
 	public void onEscape() {
 		this.close();
-	}
-
-	public void onClick(ClickEvent event) {
-
 	}
 
 	public void onScroll(float value) {
