@@ -18,7 +18,7 @@ public class OwnershipEditInteractor extends BrushInteractor<Symbol> {
 
 	@Override
 	protected Sprite sprite(Symbol material) {
-		return Sprites.NONE;
+		return Sprites.BLANK;
 	}
 
 	private void place(int x, int y, Symbol symbol) {

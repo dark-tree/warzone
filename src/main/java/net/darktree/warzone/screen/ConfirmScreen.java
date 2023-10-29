@@ -23,8 +23,8 @@ public class ConfirmScreen extends AcceptScreen {
 
 	@Override
 	protected void buildButtonModel(ModelBuilder builder) {
-		builder.add(1, 1, UiButton.of(TEXT_YES.str()).box(6, 2).inset(0.2f).react(() -> runAction(true)));
-		builder.add(11, 1, UiButton.of(TEXT_NO.str()).box(6, 2).inset(0.2f).react(() -> runAction(false)));
+		builder.add(1, 1, UiButton.of(TEXT_YES.str()).box(6, 2).inset(0.1f, -0.2f).react(() -> runAction(true)));
+		builder.add(11, 1, UiButton.of(TEXT_NO.str()).box(6, 2).inset(0.1f, -0.2f).react(() -> runAction(false)));
 	}
 
 	@Override

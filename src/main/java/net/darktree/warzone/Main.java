@@ -17,9 +17,9 @@ import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.network.packet.EndTurnPacket;
+import net.darktree.warzone.screen.AcceptScreen;
 import net.darktree.warzone.screen.BuildScreen;
 import net.darktree.warzone.screen.PlayScreen;
-import net.darktree.warzone.screen.PopupScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Profiler;
@@ -219,7 +219,7 @@ public class Main {
 			UserGroup.make(parts[1], group -> {
 				world.manager = new ActionManager.Host(world);
 			}, reason -> {
-				ScreenStack.open(new PopupScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
+				ScreenStack.open(new AcceptScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
 				world.manager = new ActionManager(world);
 				UserGroup.instance.close();
 				UserGroup.instance = null;
@@ -231,7 +231,7 @@ public class Main {
 			UserGroup.join(parts[1], Integer.parseInt(parts[2]), group -> {
 				world.manager = new ActionManager.Client(world);
 			}, reason -> {
-				ScreenStack.open(new PopupScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
+				ScreenStack.open(new AcceptScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
 				world.manager = new ActionManager(world);
 				UserGroup.instance.close();
 				UserGroup.instance = null;

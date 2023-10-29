@@ -1,5 +1,6 @@
 package net.darktree.warzone.client.gui.component;
 
+import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.DrawContext;
 import net.darktree.warzone.client.gui.GridContext;
@@ -23,7 +24,7 @@ public class UiBox extends UiComponent {
 
 	@Override
 	public void draw(DrawContext context, GridContext grid) {
-		context.drawLineBox(box, thickness, Sprites.LINE_OVERLAY, 256, 0);
+		context.drawLineBox(box, thickness, Sprites.LINE_OVERLAY, 256, 0, Colors.UI_LINE);
 		drawDebugOverlay(context, COLOR);
 	}
 

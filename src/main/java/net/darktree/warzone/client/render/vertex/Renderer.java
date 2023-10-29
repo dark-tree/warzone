@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 public class Renderer {
 
 	public static void overlay(VertexBuffer buffer, int x, int y, Color color) {
-		quad(buffer, x, y, 1, 1, Sprites.NONE, color.r(), color.g(), color.b(), color.a());
+		quad(buffer, x, y, 1, 1, Sprites.BLANK, color.r(), color.g(), color.b(), color.a());
 	}
 
 	public static void tile(VertexBuffer buffer, int x, int y, Sprite sprite) {
@@ -54,7 +54,7 @@ public class Renderer {
 	}
 
 	public static void text(String text, Font font, VertexBuffer buffer, float x, float y, float width, float height, float r, float g, float b, float a, Alignment alignment) {
-		float offset = alignment.getOffset((text.length() /* - 1*/) * width * font.spacing);
+		float offset = alignment.getOffset((text.length() + 0.5f) * width * font.spacing);
 
 		for (byte chr : text.getBytes(StandardCharsets.UTF_8)) {
 			if (chr == '\n') {
@@ -91,7 +91,7 @@ public class Renderer {
 		float r4x = x2 - nx;
 		float r4y = y2 - ny;
 
-		quad(buffer, r1x, r1y, r2x, r2y, r4x, r4y, r3x, r3y, Sprites.NONE, cr, cg, cb, ca);
+		quad(buffer, r1x, r1y, r2x, r2y, r4x, r4y, r3x, r3y, Sprites.BLANK, cr, cg, cb, ca);
 	}
 
 	/**

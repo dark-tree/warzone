@@ -18,6 +18,8 @@ public class Sprites {
 
 	public final static Sprite MISSINGNO = getSprite("missingno.png");
 	public final static Sprite NONE = getSprite("none.png");
+	public final static Sprite BLANK = getSprite("blank.png");
+
 	public final static Sprite TOP = getSprite("gui/top.png");
 	public final static Sprite BUILD = getSprite("gui/build_screen.png");
 	public final static Sprite POPUP = getSprite("gui/small_popup.png");

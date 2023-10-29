@@ -77,7 +77,9 @@ public class UiButton extends UiComponent {
 		boolean key = event instanceof KeyEvent ke && ke.key == GLFW.GLFW_KEY_ENTER && ke.isTyped();
 
 		if (mouse || (key && grid.getState().get(Property.FOCUS, this))) {
-			listener.handle();
+			if (listener != null) {
+				listener.handle();
+			}
 
 			if (sound != null) {
 				sound.play();
@@ -91,23 +93,25 @@ public class UiButton extends UiComponent {
 		boolean hovered = state.get(Property.HOVER, this);
 		boolean focused = state.get(Property.FOCUS, this);
 
+		Color line = clickable ? Colors.UI_LINE : Colors.UI_LINE_GRAY;
+
 		if (sprite != null) {
-			context.drawRect(box.x1, box.y1, box.width(), box.height(), sprite, Colors.NONE);
+			context.drawRect(box.x1, box.y1, box.width(), box.height(), sprite, clickable ? Colors.NONE : Colors.UI_ICON_GRAY);
 		}
 
 		if (text != null) {
 			float mx = box.x1 + box.width() / 2;
 			float my = box.y1 + box.height() / 2;
 
-			context.drawText(mx, my, 30, Alignment.CENTER, text, Colors.TEXT);
+			context.drawText(mx, my, 30, Alignment.CENTER, text, line);
 		}
 
 		if (border > 0) {
-			context.drawLineBox(box, border, Sprites.LINE_OVERLAY, 256, 0);
+			context.drawLineBox(box, border, Sprites.LINE_OVERLAY, 256, 0, line);
 		}
 
 		if (focused) {
-			context.drawLineBox(box, 6, Sprites.LINE_OVERLAY, 256, 7f);
+			context.drawLineBox(box, 6, Sprites.LINE_OVERLAY, 256, 7f, line);
 		}
 
 		Sprite background = getBackground(hovered);

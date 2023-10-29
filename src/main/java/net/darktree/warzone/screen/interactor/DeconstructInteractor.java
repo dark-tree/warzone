@@ -60,7 +60,7 @@ public class DeconstructInteractor extends Interactor {
 					drawBuildingOverlay(color, building, c, wave);
 				}
 			} else {
-				Renderer.quad(color, entity.getX(), entity.getY(), 1, 1, Sprites.NONE, c.r(), c.g(), c.b(), c.a() * wave);
+				Renderer.quad(color, entity.getX(), entity.getY(), 1, 1, Sprites.BLANK, c.r(), c.g(), c.b(), c.a() * wave);
 			}
 
 			frame ++;
@@ -71,7 +71,7 @@ public class DeconstructInteractor extends Interactor {
 
 	private void drawBuildingOverlay(VertexBuffer color, Building building, Color c, float wave) {
 		Building.Type type = building.getType();
-		Renderer.quad(color, building.getX(), building.getY(), type.width, type.height, Sprites.NONE, c.r(), c.g(), c.b(), c.a() * wave);
+		Renderer.quad(color, building.getX(), building.getY(), type.width, type.height, Sprites.BLANK, c.r(), c.g(), c.b(), c.a() * wave);
 	}
 
 	@Override

@@ -55,7 +55,7 @@ public class UnitAttackInteractor extends Interactor {
 	}
 
 	private void drawAttackVector(VertexBuffer buffer, int fx, int fy, int tx, int ty, Color color) {
-		Renderer.quad(buffer, fx + 0.4f, fy + 0.4f, 0.2f, 0.2f, Sprites.NONE, color.r(), color.g(), color.b(), color.a());
+		Renderer.quad(buffer, fx + 0.4f, fy + 0.4f, 0.2f, 0.2f, Sprites.BLANK, color.r(), color.g(), color.b(), color.a());
 		Renderer.line(buffer, fx + 0.5f, fy + 0.5f, tx + 0.5f, ty + 0.5f, 0.05f, color);
 	}
 

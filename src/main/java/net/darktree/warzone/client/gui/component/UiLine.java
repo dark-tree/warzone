@@ -24,7 +24,7 @@ public class UiLine extends UiComponent {
 
 	@Override
 	public void draw(DrawContext context, GridContext grid) {
-		context.drawTiledLine(box.x1, box.y1, box.x2, box.y2, thickness, Sprites.LINE_OVERLAY, 256, Colors.UI_LINE_CENTER, Colors.UI_LINE_EDGE);
+		context.drawTiledLine(box.x1, box.y1, box.x2, box.y2, thickness, Sprites.LINE_OVERLAY, 256, Colors.UI_LINE);
 		drawDebugOverlay(context, COLOR);
 	}
 

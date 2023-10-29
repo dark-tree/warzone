@@ -28,7 +28,7 @@ public final class ComponentFactory<C extends UiComponent> {
 	}
 
 	public boolean nonNull() {
-		return builder != UiNull.of();
+		return !(builder instanceof UiNull.Builder);
 	}
 
 	public UiComponent build(GridContext context, int x, int y) {

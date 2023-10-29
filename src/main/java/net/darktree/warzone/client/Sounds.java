@@ -16,6 +16,7 @@ public class Sounds {
 	public static final AudioBuffer PAGE = AudioBuffer.of("sound/page_turn.ogg");
 	public static final AudioBuffer SELECT = AudioBuffer.of("sound/select.ogg");
 	public static final AudioBuffer ROTATE = AudioBuffer.of("sound/rotate.ogg");
+	public static final AudioBuffer HATCH = AudioBuffer.of("sound/hatch.ogg");
 
 	// music
 	public static final AudioBuffer MUSIC_HARMONY = AudioBuffer.of("sound/music/harmony.ogg");

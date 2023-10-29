@@ -24,9 +24,7 @@ public class UiComposed extends UiComponent {
 
 	@Override
 	public void react(Event event, GridContext grid) {
-		if (shouldAccept(event, grid)) {
-			components.forEach(component -> component.react(event, grid));
-		}
+		components.forEach(component -> component.react(event, grid));
 	}
 
 	@Override
@@ -72,7 +70,7 @@ public class UiComposed extends UiComponent {
 		public Builder add(int x, int y) {
 			this.x = x;
 			this.y = y;
-			append(ComponentFactory.wrap(UiNull.of(), x, y));
+			append(ComponentFactory.wrap(UiNull.of(0, 0), x, y));
 			return this;
 		}
 
@@ -87,8 +85,8 @@ public class UiComposed extends UiComponent {
 		@Override
 		public <C extends UiComponent> Builder then(Chain chain, ComponentBuilder<C> builder) {
 			ComponentFactory<?> component = getLast();
-			this.x = chain.nextX(x, component.getWidth());
-			this.y = chain.nextY(y, component.getHeight());
+			this.x = chain.nextX(x, component.getWidth(), builder.getWidth());
+			this.y = chain.nextY(y, component.getHeight(), builder.getHeight());
 			append(ComponentFactory.wrap(builder, x, y));
 			return this;
 		}

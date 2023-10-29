@@ -2,8 +2,14 @@ package net.darktree.warzone.screen.menu;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
-import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.gui.Chain;
+import net.darktree.warzone.client.gui.GridContext;
+import net.darktree.warzone.client.gui.ModelBuilder;
+import net.darktree.warzone.client.gui.component.UiButton;
+import net.darktree.warzone.client.gui.component.UiLine;
+import net.darktree.warzone.client.gui.component.UiNull;
+import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.text.Text;
@@ -37,6 +43,42 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		this.pages = (int) Math.ceil(saves.size() / 5.0f);
 	}
 
+	@Override
+	protected GridContext createGridContext() {
+		return new GridContext(39, 23, GridContext.SIZE);
+	}
+
+	@Override
+	protected void buildModel(ModelBuilder builder) {
+		// title
+		builder.add(0, 21, UiText.of(TEXT_TITLE.str()).box(39, 2).center());
+		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
+
+		// top & bottom line
+		builder.add(1, 19, UiLine.of(38, 19));
+		builder.add(1, 4, UiLine.of(38, 4));
+
+		// enter button
+		builder.add(1, 1, UiNull.of(1, 2));
+		builder.then(Chain.AFTER, UiButton.of(TEXT_ENTER.str()).enabled(selected != null).inset(0.1f, -0.2f).box(6, 2).react(() -> {
+			if (!selected.load()) ScreenStack.open(new AcceptScreen(TEXT_LOAD_ERROR, Text.EMPTY));
+		}));
+
+		// delete button
+		builder.then(Chain.AFTER, UiNull.of(1, 2));
+		builder.then(Chain.AFTER, UiButton.of(TEXT_DELETE.str()).enabled(selected != null).inset(0.1f, -0.2f).box(6, 2).react(() -> {
+			ScreenStack.open(new ConfirmScreen(TEXT_DELETE_CONFIRM, Text.EMPTY).onYes(selected::delete));
+		}));
+
+		// create button
+		builder.then(Chain.AFTER, UiNull.of(1, 2));
+		builder.then(Chain.AFTER, UiButton.of(TEXT_CREATE.str()).disable().inset(0.1f, -0.2f).box(6, 2));
+
+		// page buttons
+		builder.add(35, 1, UiButton.of(Sprites.ICON_NEXT).disable().border(0).box(2, 2));
+		builder.then(Chain.BEFORE, UiButton.of(Sprites.ICON_PREV).disable().border(0).box(2, 2));
+	}
+
 	void drawEntry(WorldSave entry, boolean clicked) {
 		ScreenRenderer.setColor(Colors.TEXT);
 		ScreenRenderer.text(30, entry.getName());
@@ -45,12 +87,15 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		ScreenRenderer.text(30, TEXT_MAP.str(entry.getCode(), entry.getTime(FORMAT)));
 
 		ScreenRenderer.setColor(Colors.MAP_LIST_DEFAULT);
-		ScreenRenderer.setSprite(Sprites.NONE);
+		ScreenRenderer.setSprite(Sprites.BLANK);
 		ScreenRenderer.offset(-10, -10);
 
 		if (ScreenRenderer.isMouseOver(540 * 2 + 20, 80)) {
 			ScreenRenderer.setColor(Colors.MAP_LIST_HOVER);
-			if (clicked) selected = entry;
+			if (clicked) {
+				selected = entry;
+				rebuildModel();
+			}
 		}
 
 		if (selected == entry) {
@@ -76,55 +121,12 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 	@Override
 	public void draw(boolean focused) {
 		drawDecorBackground();
-		drawTitledScreen(TEXT_TITLE, getPageString(), Sprites.BUILD, 1300, 800);
-
-		ScreenRenderer.setOffset(-540, 180);
-		ScreenRenderer.setAlignment(Alignment.LEFT);
-
-		ScreenRenderer.push();
-		ScreenRenderer.setColor(Colors.BORDER);
-		ScreenRenderer.offset(-40, 50);
-		ScreenRenderer.line(0.005f, 540 * 2 + 80, 0);
-		ScreenRenderer.pop();
+		drawModel();
 
 		// draw the map list
+		ScreenRenderer.setOffset(-540, 180);
+		ScreenRenderer.setAlignment(Alignment.LEFT);
 		drawEntryList(Main.window.input().hasClicked());
-
-		ScreenRenderer.offset(-40, 40 - 30 * 3 * 5);
-		ScreenRenderer.setColor(Colors.BORDER);
-		ScreenRenderer.line(0.005f, 540 * 2 + 80, 0);
-
-		ScreenRenderer.offset(0, -110);
-		ScreenRenderer.setColor(Colors.NONE);
-		ScreenRenderer.push();
-		if (ScreenRenderer.button(TEXT_ENTER, 4, 35, 70, selected != null)) {
-			if (!selected.load()) {
-				ScreenStack.open(new AcceptScreen(TEXT_LOAD_ERROR, Text.EMPTY));
-			}
-		}
-
-		ScreenRenderer.offset(250, 0);
-		if (ScreenRenderer.button(TEXT_DELETE, 4, 35, 70, selected != null)) {
-			ScreenStack.open(new ConfirmScreen(TEXT_DELETE_CONFIRM, Text.EMPTY).onYes(selected::delete));
-		}
-
-		ScreenRenderer.offset(250, 0);
-		ScreenRenderer.button(TEXT_CREATE, 4, 35, 70, false);
-		ScreenRenderer.pop();
-
-		ScreenRenderer.offset(1020, 0);
-		if (ScreenRenderer.button(Sprites.BUTTON_LEFT, 64, 64, page > 0)) {
-			Sounds.PAGE.play();
-			selected = null;
-			page --;
-		}
-
-		ScreenRenderer.offset(70, 0);
-		if (ScreenRenderer.button(Sprites.BUTTON_RIGHT, 64, 64, page < (pages - 1))) {
-			Sounds.PAGE.play();
-			selected = null;
-			page ++;
-		}
 	}
 
 	@Override

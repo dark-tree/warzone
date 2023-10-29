@@ -31,8 +31,9 @@ public class Colors {
 	public static final Color MAP_LIST_HOVER = ATLAS.getColor("map_list_hover");
 	public static final Color MAP_LIST_SELECTED = ATLAS.getColor("map_list_selected");
 	public static final Color TEXTBOX_SELECTED = ATLAS.getColor("textbox_selected");
-	public static final Color UI_LINE_CENTER = ATLAS.getColor("ui_line_center");
-	public static final Color UI_LINE_EDGE = ATLAS.getColor("ui_line_edge");
+	public static final Color UI_LINE = ATLAS.getColor("ui_line");
+	public static final Color UI_LINE_GRAY = ATLAS.getColor("ui_line_gray");
+	public static final Color UI_ICON_GRAY = ATLAS.getColor("ui_icon_gray");
 	public static final Color UI_GRID = ATLAS.getColor("ui_grid");
 
 }
