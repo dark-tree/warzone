@@ -49,6 +49,10 @@ public class UiButton extends UiComponent {
 		return new Builder().text(text);
 	}
 
+	public static Builder of() {
+		return new Builder();
+	}
+
 	private Sprite getBackground(boolean hovered) {
 		if (!clickable) return Sprites.BUTTON_DISABLED;
 
@@ -82,7 +86,7 @@ public class UiButton extends UiComponent {
 			}
 
 			if (sound != null) {
-				sound.play();
+				sound.play().setVolume(0.45f);
 			}
 		}
 	}

@@ -10,7 +10,7 @@ public interface ModelBuilder {
 
 	/**
 	 * This should never be called manually, instead pass the
-	 * instance of {@link ModelBuilder} into {@link GridContext#setModel}
+	 * instance of {@link ModelBuilder} into {@link GridContext#setModel}.
 	 */
 	UiComponent build(GridContext context, int x, int y);
 

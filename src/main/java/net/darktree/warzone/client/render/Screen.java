@@ -34,10 +34,20 @@ public abstract class Screen {
 		context = createGridContext();
 	}
 
+	/**
+	 * If the screen is to use the Grid UI, this method should return
+	 * a new instance of {@link GridContext}, and build its screen by
+	 * overriding {@link Screen#buildModel}
+	 */
 	protected GridContext createGridContext() {
 		return null;
 	}
 
+	/**
+	 * Marks the Grid UI model for rebuilding, this should be used
+	 * if some aspect of the UI needs updating, and will cause the
+	 * {@link Screen#buildModel} to be called again.
+	 */
 	protected void rebuildModel() {
 		shouldRebuild = true;
 	}
@@ -50,10 +60,58 @@ public abstract class Screen {
 		ScreenRenderer.pop();
 	}
 
+	/**
+	 * Used for creating the Grid UI model using {@link ModelBuilder},
+	 * if the model needs to update to some change in the UI,
+	 * call {@link Screen#rebuildModel()}
+	 * <p>
+	 * Grid UI operates on a grid of given dimensions, all UI
+	 * components occupy some rectangle on that grid, specified by the
+	 * grid coordinates counted from the bottom left corner of the grid (starting
+	 * at [0, 0])
+	 * <pre>{@code
+	 *     // adds a button in the bottom left corner
+	 *     // of width 6, height 2, and label "Press Me"
+	 *     builder.add(0, 0, UiButton.of("Press Me").box(6, 2).react(() -> {
+	 *         Logger.info("Pressed!");
+	 *     }));
+	 * }</pre>
+	 * </p>
+	 * <p>
+	 * Grid UI components can be chained and overlayed on top of each other,
+	 * this is the case so that the UI can be easily extended with limited
+	 * conflicts, as well as simplifying the UI code and decreasing the number of
+	 * direct grid references that can sometimes be hard to visualize when looking at
+	 * a piece of code.
+	 * <pre>{@code
+	 *     // Adds a button "1" and then chains the buttons "2" and "3"
+	 *     builder.add(0, 0, UiButton.of("1").box(6, 2).disable());
+	 *     builder.then(Chain.AFTER, UiButton.of("2").box(6, 2).disable());
+	 *
+	 *     // this button will appear bellow the previous one
+	 *     builder.then(Chain.BELOW, UiButton.of("3").box(6, 2).disable());
+	 * }</pre>
+	 * </p>
+	 * <p>
+	 * If spacing is necessary between two chained grid components, the
+	 * {@link net.darktree.warzone.client.gui.component.UiNull} can be used, it
+	 * behaves like a simple box of given size but is ignored during rendering.
+	 * <pre>{@code
+	 *     // Adds two spaced chained buttons
+	 *     builder.add(0, 0, UiButton.of("1").box(6, 2).disable());
+	 *     builder.then(Chain.AFTER, UiNull.of(1, 1));
+	 *     builder.then(Chain.AFTER, UiButton.of("2").box(6, 2).disable());
+	 * }</pre>
+	 * </p>
+	 */
 	protected void buildModel(ModelBuilder builder) {
 
 	}
 
+	/**
+	 * Used to render the Grid UI model of this screen,
+	 * call this method at the beginning of {@link Screen#draw}
+	 */
 	protected void drawModel() {
 		if (context != null) {
 			if (shouldRebuild) {

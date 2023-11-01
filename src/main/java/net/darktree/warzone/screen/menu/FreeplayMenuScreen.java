@@ -2,16 +2,15 @@ package net.darktree.warzone.screen.menu;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.Chain;
+import net.darktree.warzone.client.gui.ComponentBuilder;
 import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.ModelBuilder;
-import net.darktree.warzone.client.gui.component.UiButton;
-import net.darktree.warzone.client.gui.component.UiLine;
-import net.darktree.warzone.client.gui.component.UiNull;
-import net.darktree.warzone.client.gui.component.UiText;
-import net.darktree.warzone.client.render.Alignment;
-import net.darktree.warzone.client.render.ScreenRenderer;
+import net.darktree.warzone.client.gui.component.*;
+import net.darktree.warzone.client.render.image.Sprite;
+import net.darktree.warzone.client.sound.buffer.AudioBuffer;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.screen.AcceptScreen;
 import net.darktree.warzone.screen.ConfirmScreen;
@@ -77,56 +76,34 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		// page buttons
 		builder.add(35, 1, UiButton.of(Sprites.ICON_NEXT).disable().border(0).box(2, 2));
 		builder.then(Chain.BEFORE, UiButton.of(Sprites.ICON_PREV).disable().border(0).box(2, 2));
+
+		// draw map list
+		for (int i = 0; i < saves.size(); i ++) {
+			builder.add(3, 19 - 3 * (i + 1), buildEntryModel(saves.get(i)));
+		}
 	}
 
-	void drawEntry(WorldSave entry, boolean clicked) {
-		ScreenRenderer.setColor(Colors.TEXT);
-		ScreenRenderer.text(30, entry.getName());
-		ScreenRenderer.offset(0, -30);
-		ScreenRenderer.setColor(Colors.PRICE_TAG);
-		ScreenRenderer.text(30, TEXT_MAP.str(entry.getCode(), entry.getTime(FORMAT)));
+	ComponentBuilder<UiComposed> buildEntryModel(WorldSave save) {
+		var builder = UiComposed.of();
 
-		ScreenRenderer.setColor(Colors.MAP_LIST_DEFAULT);
-		ScreenRenderer.setSprite(Sprites.BLANK);
-		ScreenRenderer.offset(-10, -10);
+		Sprite background = selected == save ? Sprites.BUTTON_PRESSED : Sprites.BUTTON_HOVER;
+		AudioBuffer press = selected == save ? null : Sounds.HATCH;
 
-		if (ScreenRenderer.isMouseOver(540 * 2 + 20, 80)) {
-			ScreenRenderer.setColor(Colors.MAP_LIST_HOVER);
-			if (clicked) {
-				selected = entry;
-				rebuildModel();
-			}
-		}
+		builder.add(0, 0, UiBox.of(33, 2).inset(-0.3f).tile(background));
+		builder.add(0, 1, UiText.of(save.getName()).box(33, 1).left().tint(Colors.TEXT));
+		builder.add(0, 0, UiText.of(TEXT_MAP.str(save.getCode(), save.getTime(FORMAT))).box(33, 1).left().tint(Colors.PRICE_TAG));
+		builder.add(0, 0, UiButton.of().box(33, 2).sound(press).inset(-0.3f).react(() -> {
+			selected = save;
+			rebuildModel();
+		}));
 
-		if (selected == entry) {
-			ScreenRenderer.setColor(Colors.MAP_LIST_SELECTED);
-		}
-
-		ScreenRenderer.box(540 * 2 + 20, 80);
-		ScreenRenderer.offset(10, -20);
-	}
-
-	protected void drawEntryList(boolean clicked) {
-		final int start = this.page * 5;
-		final int end = Math.min(start + 5, saves.size());
-
-		ScreenRenderer.push();
-		for (int i = start; i < end; i ++) {
-			drawEntry(saves.get(i), clicked);
-			ScreenRenderer.offset(0, -30);
-		}
-		ScreenRenderer.pop();
+		return builder;
 	}
 
 	@Override
 	public void draw(boolean focused) {
 		drawDecorBackground();
 		drawModel();
-
-		// draw the map list
-		ScreenRenderer.setOffset(-540, 180);
-		ScreenRenderer.setAlignment(Alignment.LEFT);
-		drawEntryList(Main.window.input().hasClicked());
 	}
 
 	@Override

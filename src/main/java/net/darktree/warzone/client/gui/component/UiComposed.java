@@ -123,7 +123,7 @@ public class UiComposed extends UiComponent {
 
 		@Override
 		public UiComposed build(GridContext context, int x, int y) {
-			return new UiComposed(context, minX, minY, getWidth(), getHeight(), components.stream().filter(ComponentFactory::nonNull).map(factory -> factory.build(context, x, y)).toList());
+			return new UiComposed(context, minX + x, minY + y, getWidth(), getHeight(), components.stream().filter(ComponentFactory::nonNull).map(factory -> factory.build(context, x, y)).toList());
 		}
 
 	}

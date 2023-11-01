@@ -28,7 +28,8 @@ public class UiText extends UiComponent {
 
 	@Override
 	public void draw(DrawContext context, GridContext grid) {
-		float mx = box.x1 + box.width() / 2;
+		// subtract not add the offsets as getOffset returns negated values
+		float mx = box.x1 - alignment.getOffset(box.width());
 		float my = box.y1 + box.height() / 2;
 
 		context.drawText(mx, my, 30, alignment, text, color);
