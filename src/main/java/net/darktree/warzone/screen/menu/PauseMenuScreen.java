@@ -1,8 +1,12 @@
 package net.darktree.warzone.screen.menu;
 
-import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.gui.Chain;
+import net.darktree.warzone.client.gui.GridContext;
+import net.darktree.warzone.client.gui.ModelBuilder;
+import net.darktree.warzone.client.gui.component.UiButton;
+import net.darktree.warzone.client.gui.component.UiNull;
+import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.render.Screen;
-import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.screen.AcceptScreen;
 import net.darktree.warzone.screen.ScreenStack;
@@ -19,19 +23,24 @@ public class PauseMenuScreen extends Screen {
 	private final WorldSave save;
 	private final World world;
 
+	@Override
+	protected GridContext createGridContext() {
+		return new GridContext(22, 10, GridContext.SIZE);
+	}
+
 	public PauseMenuScreen(WorldSave save, World world) {
 		this.save = save;
 		this.world = world;
 	}
 
 	@Override
-	public void draw(boolean focused) {
-		drawTitledScreen(TEXT_TITLE, Text.EMPTY, Sprites.PAUSE, 800, 400);
-		final int width = 9;
+	protected void buildModel(ModelBuilder builder) {
+		builder.add(0, 7, UiText.of(TEXT_TITLE).box(22, 3).center());
 
-		ScreenRenderer.setOffset((int) (- 40 * (width / 2.0f + 1) - 1), -40);
-		if (ScreenRenderer.button(TEXT_EXIT, width, 38, 80, true)) {
-
+		// append buttons
+		builder.add(5, 1, UiButton.of(TEXT_SETTINGS).disable().box(12, 2).inset(0.1f, -0.2f));
+		builder.then(Chain.ABOVE, UiNull.of(12, 1));
+		builder.then(Chain.ABOVE, UiButton.of(TEXT_EXIT).box(12, 2).inset(0.1f, -0.2f).react(() -> {
 			if (save.save(world)) {
 				ScreenStack.closeAll();
 				ScreenStack.open(new FreeplayMenuScreen());
@@ -39,10 +48,12 @@ public class PauseMenuScreen extends Screen {
 			}
 
 			ScreenStack.open(new AcceptScreen(TEXT_SAVE_ERROR, Text.EMPTY));
-		}
+		}));
+	}
 
-		ScreenRenderer.offset(0, -100);
-		ScreenRenderer.button(TEXT_SETTINGS, width, 38, 80, false);
+	@Override
+	public void draw(boolean focused) {
+		drawModel();
 	}
 
 }

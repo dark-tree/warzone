@@ -7,6 +7,7 @@ import net.darktree.warzone.client.gui.Inset;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.color.ImmutableColor;
+import net.darktree.warzone.client.text.Text;
 
 public class UiText extends UiComponent {
 
@@ -24,6 +25,10 @@ public class UiText extends UiComponent {
 
 	public static Builder of(String text) {
 		return new Builder().text(text);
+	}
+
+	public static Builder of(Text text) {
+		return new Builder().text(text.str());
 	}
 
 	@Override

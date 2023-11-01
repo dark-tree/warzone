@@ -71,7 +71,7 @@ public class GridContext {
 	}
 
 	public void react(Event event) {
-		if (component != null && isMouseIn(box)) {
+		if (component != null && UiComponent.shouldAccept(box, event, this)) {
 			component.react(event, this);
 		}
 	}

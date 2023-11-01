@@ -6,56 +6,42 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.DrawContext;
 import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.Inset;
-import net.darktree.warzone.client.gui.event.ButtonClickListener;
+import net.darktree.warzone.client.gui.event.TextboxStateListener;
 import net.darktree.warzone.client.gui.state.GridState;
 import net.darktree.warzone.client.gui.state.Property;
 import net.darktree.warzone.client.render.Alignment;
+import net.darktree.warzone.client.render.Textbox;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.color.ImmutableColor;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.sound.Playable;
-import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.client.window.input.Event;
 import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.client.window.input.MouseButton;
-import org.lwjgl.glfw.GLFW;
 
-public class UiButton extends UiComponent {
+public class UiTextbox extends UiComponent {
 
-	private static final Color COLOR = ImmutableColor.of(1, 0.5f, 0.5f);
+	private static final Color COLOR = ImmutableColor.of(1, 0.1f, 1);
+
+	private final Textbox textbox;
 	private final boolean clickable;
 	private final float border;
-	private final Sprite sprite;
-	private final String text;
 	private final Playable sound;
-	private final ButtonClickListener listener;
+	private final TextboxStateListener listener;
 
-	protected UiButton(GridContext context, int x, int y, int width, int height, Inset inset, boolean clickable, float border, Sprite sprite, String text, Playable sound, ButtonClickListener listener) {
+	protected UiTextbox(GridContext context, int x, int y, int width, int height, Inset inset, boolean clickable, float border, Playable sound, Textbox textbox, TextboxStateListener listener) {
 		super(context, x, y, width, height, inset);
 		this.clickable = clickable;
 		this.border = border;
-		this.sprite = sprite;
-		this.text = text;
 		this.sound = sound;
+		this.textbox = textbox;
 		this.listener = listener;
 	}
 
-	public static Builder of(Sprite sprite) {
-		return new Builder().sprite(sprite);
-	}
-
-	public static Builder of(String text) {
-		return new Builder().text(text);
-	}
-
-	public static Builder of(Text text) {
-		return new Builder().text(text.str());
-	}
-
-	public static Builder of() {
-		return new Builder();
+	public static Builder of(Textbox textbox) {
+		return new Builder().textbox(textbox);
 	}
 
 	private Sprite getBackground(boolean hovered) {
@@ -82,17 +68,18 @@ public class UiButton extends UiComponent {
 			return;
 		}
 
-		boolean mouse = event instanceof ClickEvent ce && ce.hasClicked();
-		boolean key = event instanceof KeyEvent ke && ke.key == GLFW.GLFW_KEY_ENTER && ke.isTyped();
+		GridState state = grid.getState();
 
-		if (mouse || (key && grid.getState().get(Property.FOCUS, this))) {
-			if (listener != null) {
-				listener.handle();
-			}
+		if (event instanceof ClickEvent ce && ce.hasClicked()) {
+			state.set(Property.FOCUS, this, true);
 
 			if (sound != null) {
 				sound.play().setVolume(0.45f);
 			}
+		}
+
+		if (event instanceof KeyEvent ke && state.get(Property.FOCUS, this) && ke.isTyped()) {
+			textbox.onKey(listener, ke);
 		}
 	}
 
@@ -104,16 +91,10 @@ public class UiButton extends UiComponent {
 
 		Color line = clickable ? Colors.UI_LINE : Colors.UI_LINE_GRAY;
 
-		if (sprite != null) {
-			context.drawRect(box.x1, box.y1, box.width(), box.height(), sprite, clickable ? Colors.NONE : Colors.UI_ICON_GRAY);
-		}
+		float mx = box.x1 + box.width() / 2;
+		float my = box.y1 + box.height() / 2;
 
-		if (text != null) {
-			float mx = box.x1 + box.width() / 2;
-			float my = box.y1 + box.height() / 2;
-
-			context.drawText(mx, my, 30, Alignment.CENTER, text, line);
-		}
+		context.drawText(mx, my, 30, Alignment.CENTER, textbox.getValue(), line);
 
 		if (border > 0) {
 			context.drawLineBox(box, border, Sprites.LINE_OVERLAY, 256, 0, line);
@@ -130,16 +111,21 @@ public class UiButton extends UiComponent {
 
 		drawDebugOverlay(context, COLOR);
 		state.set(Property.HOVER, this, clickable && grid.isMouseIn(box));
+		state.set(Property.FOCUS, this, true); // TODO
 	}
 
-	static public class Builder extends UiComponent.Builder<UiButton, Builder> {
+	static public class Builder extends UiComponent.Builder<UiTextbox, Builder> {
 
 		private boolean clickable = true;
 		private float border = 8;
-		private Sprite sprite = null;
-		private String text = null;
 		private Playable sound = Sounds.SELECT;
-		private ButtonClickListener listener;
+		private TextboxStateListener listener = null;
+		private Textbox textbox = null;
+
+		public Builder textbox(Textbox textbox) {
+			this.textbox = textbox;
+			return self();
+		}
 
 		public Builder enabled(boolean clickable) {
 			this.clickable = clickable;
@@ -155,23 +141,13 @@ public class UiButton extends UiComponent {
 			return self();
 		}
 
-		public Builder sprite(Sprite sprite) {
-			this.sprite = sprite;
-			return self();
-		}
-
-		public Builder text(String text) {
-			this.text = text;
-			return self();
-		}
-
-		public Builder react(ButtonClickListener listener) {
-			this.listener = listener;
-			return self();
-		}
-
 		public Builder sound(Playable sound) {
 			this.sound = sound;
+			return self();
+		}
+
+		public Builder react(TextboxStateListener listener) {
+			this.listener = listener;
 			return self();
 		}
 
@@ -181,8 +157,8 @@ public class UiButton extends UiComponent {
 		}
 
 		@Override
-		public UiButton build(GridContext context, int x, int y) {
-			return new UiButton(context, x, y, width, height, inset, clickable, border, sprite, text, sound, listener);
+		public UiTextbox build(GridContext context, int x, int y) {
+			return new UiTextbox(context, x, y, width, height, inset, clickable, border, sound, textbox, listener);
 		}
 
 	}

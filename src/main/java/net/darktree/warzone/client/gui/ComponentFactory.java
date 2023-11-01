@@ -1,7 +1,6 @@
 package net.darktree.warzone.client.gui;
 
 import net.darktree.warzone.client.gui.component.UiComponent;
-import net.darktree.warzone.client.gui.component.UiNull;
 
 public final class ComponentFactory<C extends UiComponent> {
 
@@ -25,10 +24,6 @@ public final class ComponentFactory<C extends UiComponent> {
 
 	public int getHeight() {
 		return builder.getHeight();
-	}
-
-	public boolean nonNull() {
-		return !(builder instanceof UiNull.Builder);
 	}
 
 	public UiComponent build(GridContext context, int x, int y) {

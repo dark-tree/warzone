@@ -50,7 +50,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 	@Override
 	protected void buildModel(ModelBuilder builder) {
 		// title
-		builder.add(0, 21, UiText.of(TEXT_TITLE.str()).box(39, 2).center());
+		builder.add(0, 21, UiText.of(TEXT_TITLE).box(39, 2).center());
 		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
 
 		// top & bottom line
@@ -59,19 +59,19 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 
 		// enter button
 		builder.add(1, 1, UiNull.of(1, 2));
-		builder.then(Chain.AFTER, UiButton.of(TEXT_ENTER.str()).enabled(selected != null).inset(0.1f, -0.2f).box(6, 2).react(() -> {
+		builder.then(Chain.AFTER, UiButton.of(TEXT_ENTER).enabled(selected != null).inset(0.1f, -0.2f).box(6, 2).react(() -> {
 			if (!selected.load()) ScreenStack.open(new AcceptScreen(TEXT_LOAD_ERROR, Text.EMPTY));
 		}));
 
 		// delete button
 		builder.then(Chain.AFTER, UiNull.of(1, 2));
-		builder.then(Chain.AFTER, UiButton.of(TEXT_DELETE.str()).enabled(selected != null).inset(0.1f, -0.2f).box(6, 2).react(() -> {
+		builder.then(Chain.AFTER, UiButton.of(TEXT_DELETE).enabled(selected != null).inset(0.1f, -0.2f).box(6, 2).react(() -> {
 			ScreenStack.open(new ConfirmScreen(TEXT_DELETE_CONFIRM, Text.EMPTY).onYes(selected::delete));
 		}));
 
 		// create button
 		builder.then(Chain.AFTER, UiNull.of(1, 2));
-		builder.then(Chain.AFTER, UiButton.of(TEXT_CREATE.str()).disable().inset(0.1f, -0.2f).box(6, 2));
+		builder.then(Chain.AFTER, UiButton.of(TEXT_CREATE).disable().inset(0.1f, -0.2f).box(6, 2));
 
 		// page buttons
 		builder.add(35, 1, UiButton.of(Sprites.ICON_NEXT).disable().border(0).box(2, 2));

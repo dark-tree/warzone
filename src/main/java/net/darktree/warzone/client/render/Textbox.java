@@ -1,6 +1,6 @@
 package net.darktree.warzone.client.render;
 
-import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.gui.event.TextboxStateListener;
 import net.darktree.warzone.client.window.input.KeyEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 public class Textbox {
 
 	private String value = "";
-	private boolean selected;
 	private final Predicate<String> validator;
 
 	public Textbox(Predicate<String> validator) {
@@ -17,40 +16,31 @@ public class Textbox {
 	}
 
 	public void pop() {
-		if (value.length() > 0) {
+		if (!value.isEmpty()) {
 			value = value.substring(0, value.length() - 1);
 		}
 	}
 
-	public void onKey(KeyEvent event) {
-		if (selected && event.isTyped()) {
+	public void onKey(TextboxStateListener listener, KeyEvent event) {
+		boolean prev = isValid();
+
+		if (event.isTyped()) {
 			if (event.key == GLFW.GLFW_KEY_BACKSPACE) {
 				pop();
 				return;
 			}
 
 			if (event.isPrintable()) {
-				String prev = value;
+				String old = value;
 				value += event.getAscii();
+				boolean next = isValid();
 
-				if (!valid()) {
-					value = prev;
+				if (!next) {
+					value = old;
 				}
+
+				listener.handle(prev, next, value);
 			}
-		}
-	}
-
-	public void unselect() {
-		selected = false;
-	}
-
-	public void select() {
-		selected = true;
-	}
-
-	public void draw(int count, int size, int height) {
-		if (ScreenRenderer.button(value, count, size, height, true, selected ? Colors.TEXTBOX_SELECTED : null)) {
-			selected = true;
 		}
 	}
 
@@ -58,7 +48,8 @@ public class Textbox {
 		return value;
 	}
 
-	public boolean valid() {
+	public boolean isValid() {
 		return validator.test(value);
 	}
+
 }

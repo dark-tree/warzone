@@ -31,7 +31,7 @@ public class AcceptScreen extends Screen {
 	}
 
 	protected void buildButtonModel(ModelBuilder builder) {
-		builder.add(6, 1, UiButton.of(TEXT_OKAY.str()).inset(0.1f, -0.2f).box(6, 2).react(this::close));
+		builder.add(6, 1, UiButton.of(TEXT_OKAY).inset(0.1f, -0.2f).box(6, 2).react(this::close));
 	}
 
 	@Override

@@ -58,7 +58,7 @@ public abstract class UiComponent {
 		}
 	}
 
-	protected boolean shouldAccept(Event event, GridContext grid) {
+	public static boolean shouldAccept(BoundingBox box, Event event, GridContext grid) {
 		if (event.getType() == EventType.KEYBOARD) {
 			return true;
 		}
