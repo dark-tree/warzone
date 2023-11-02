@@ -23,8 +23,8 @@ public class UiComposed extends UiComponent {
 	}
 
 	@Override
-	public void react(Event event, GridContext grid) {
-		components.forEach(component -> component.react(event, grid));
+	public void onEvent(Event event, GridContext grid) {
+		components.forEach(component -> component.onEvent(event, grid));
 	}
 
 	@Override

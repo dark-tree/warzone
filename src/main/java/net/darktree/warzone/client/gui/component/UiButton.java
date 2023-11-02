@@ -70,14 +70,14 @@ public class UiButton extends UiComponent {
 	}
 
 	@Override
-	public void change(Property property, boolean enabled) {
+	public void onUpdate(Property property, boolean enabled) {
 		if (property == Property.HOVER) {
 			Window.getInstance().setCursor(enabled);
 		}
 	}
 
 	@Override
-	public void react(Event event, GridContext grid) {
+	public void onEvent(Event event, GridContext grid) {
 		if (!clickable || !shouldAccept(box, event, grid)) {
 			return;
 		}

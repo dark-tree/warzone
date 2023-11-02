@@ -44,7 +44,7 @@ public abstract class Screen {
 	/**
 	 * If the screen is to use the Grid UI, this method should be
 	 * overriden and return a {@link GridContextFactory}. Predefined factories are
-	 * available in {@link GridPrefabs}. By default the {@code NONE} factory is used.
+	 * available in {@link GridPrefabs}. By default, the {@code NONE} factory is used.
 	 */
 	protected GridContextFactory getGridFactory() {
 		return GridPrefabs.NONE;
@@ -59,6 +59,7 @@ public abstract class Screen {
 		shouldRebuild = true;
 	}
 
+	@Deprecated
 	protected void text(int ox, int oy, CharSequence text, Alignment alignment) {
 		ScreenRenderer.push();
 		ScreenRenderer.setOffset(ox, oy);
@@ -163,12 +164,12 @@ public abstract class Screen {
 	@OverridingMethodsMustInvokeSuper
 	public void onKey(KeyEvent event) {
 		if (event.isEscape()) onEscape();
-		if (context != null) context.react(event);
+		if (context != null) context.onEvent(event);
 	}
 
 	@OverridingMethodsMustInvokeSuper
 	public void onClick(ClickEvent event) {
-		if (context != null) context.react(event);
+		if (context != null) context.onEvent(event);
 	}
 
 	public void onEscape() {
@@ -187,17 +188,28 @@ public abstract class Screen {
 
 	}
 
+	/**
+	 * Called on a screen object after it is already removed from the screen stack
+	 * this is the last method that will ever be called on this screen object
+	 */
+	@OverridingMethodsMustInvokeSuper
+	public void onRemoved() {
+		if (context != null) {
+			context.getState().invalidate();
+		}
+	}
+
 	public void close() {
 		this.closed = true;
 		Sounds.PEN_CLOSE.play();
 	}
 
-	public void emplace(Screen screen) {
+	public final void emplace(Screen screen) {
 		this.close();
 		ScreenStack.open(screen);
 	}
 
-	public boolean isClosed() {
+	public final boolean isClosed() {
 		return this.closed;
 	}
 

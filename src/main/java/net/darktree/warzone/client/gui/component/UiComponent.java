@@ -5,6 +5,7 @@ import net.darktree.warzone.client.gui.DrawContext;
 import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.Inset;
 import net.darktree.warzone.client.gui.state.Property;
+import net.darktree.warzone.client.gui.state.UiIdentifier;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.window.input.Event;
 import net.darktree.warzone.client.window.input.EventType;
@@ -18,6 +19,7 @@ public abstract class UiComponent {
 	protected final int height;
 	protected final Inset inset;
 	protected final BoundingBox box;
+	protected final UiIdentifier identifier;
 
 	protected UiComponent(GridContext context, int x, int y, int width, int height, Inset inset) {
 		this.x = x;
@@ -26,6 +28,7 @@ public abstract class UiComponent {
 		this.height = height;
 		this.inset = inset;
 		this.box = context.box(x, y, width, height, inset);
+		this.identifier = new UiIdentifier(this, x, y);
 	}
 
 	public int getWidth() {
@@ -36,19 +39,25 @@ public abstract class UiComponent {
 		return height;
 	}
 
-	public Inset getInset() {
-		return inset;
-	}
-
 	public BoundingBox getBox() {
 		return box;
 	}
 
-	public void change(Property property, boolean enabled) {
+	public UiIdentifier getIdentifier() {
+		return identifier;
+	}
+
+	/**
+	 * Called when a UI State property associated with this component changes
+	 */
+	public void onUpdate(Property property, boolean enabled) {
 
 	}
 
-	public void react(Event event, GridContext grid) {
+	/**
+	 * Called when an input event relevant to this grid context and screen is triggered by the user
+	 */
+	public void onEvent(Event event, GridContext grid) {
 		// no-op
 	}
 

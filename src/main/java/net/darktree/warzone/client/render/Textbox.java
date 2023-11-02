@@ -27,6 +27,8 @@ public class Textbox {
 		if (event.isTyped()) {
 			if (event.key == GLFW.GLFW_KEY_BACKSPACE) {
 				pop();
+
+				listener.handle(prev, isValid(), value);
 				return;
 			}
 

@@ -70,9 +70,9 @@ public class GridContext {
 		return box.contains(mouseX(), mouseY());
 	}
 
-	public void react(Event event) {
+	public void onEvent(Event event) {
 		if (component != null && UiComponent.shouldAccept(box, event, this)) {
-			component.react(event, this);
+			component.onEvent(event, this);
 		}
 	}
 

@@ -6,6 +6,7 @@ import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.util.Logger;
 
+import java.util.Iterator;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -35,7 +36,16 @@ public class ScreenStack {
 			}
 		}
 
-		stack.removeIf(Screen::isClosed);
+		// removed closed screens, and call removal hooks
+		Iterator<Screen> iter = stack.iterator();
+		while (iter.hasNext()) {
+			Screen screen = iter.next();
+
+			if (screen.isClosed()) {
+				iter.remove();
+				screen.onRemoved();
+			}
+		}
 	}
 
 	public static void open(Screen screen) {
