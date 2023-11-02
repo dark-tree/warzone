@@ -19,7 +19,7 @@ public class UiBox extends UiComponent {
 	protected UiBox(GridContext context, int x, int y, int width, int height, Inset inset, float thickness, Color tint, Sprite tile) {
 		super(context, x, y, width, height, inset);
 		this.thickness = thickness;
-		this.tint = tint;
+		this.tint = tint.immutable();
 		this.tile = tile;
 	}
 

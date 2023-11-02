@@ -9,8 +9,9 @@ import net.darktree.warzone.client.gui.ComponentBuilder;
 import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.*;
+import net.darktree.warzone.client.gui.prefab.GridContextFactory;
 import net.darktree.warzone.client.render.image.Sprite;
-import net.darktree.warzone.client.sound.buffer.AudioBuffer;
+import net.darktree.warzone.client.sound.Playable;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.screen.AcceptScreen;
 import net.darktree.warzone.screen.ConfirmScreen;
@@ -43,18 +44,18 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 	}
 
 	@Override
-	protected GridContext createGridContext() {
-		return new GridContext(39, 23, GridContext.SIZE);
+	protected GridContextFactory getGridFactory() {
+		return () -> new GridContext(39, 24);
 	}
 
 	@Override
 	protected void buildModel(ModelBuilder builder) {
 		// title
-		builder.add(0, 21, UiText.of(TEXT_TITLE).box(39, 2).center());
+		builder.add(0, 22, UiText.of(TEXT_TITLE).box(39, 2).center());
 		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
 
 		// top & bottom line
-		builder.add(1, 19, UiLine.of(38, 19));
+		builder.add(1, 20, UiLine.of(38, 20));
 		builder.add(1, 4, UiLine.of(38, 4));
 
 		// enter button
@@ -79,7 +80,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 
 		// draw map list
 		for (int i = 0; i < saves.size(); i ++) {
-			builder.add(3, 19 - 3 * (i + 1), buildEntryModel(saves.get(i)));
+			builder.add(3, 20 - 3 * (i + 1), buildEntryModel(saves.get(i)));
 		}
 	}
 
@@ -87,7 +88,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		var builder = UiComposed.of();
 
 		Sprite background = selected == save ? Sprites.BUTTON_PRESSED : Sprites.BUTTON_HOVER;
-		AudioBuffer press = selected == save ? null : Sounds.HATCH;
+		Playable press = selected == save ? null : Sounds.HATCH;
 
 		builder.add(0, 0, UiBox.of(33, 2).inset(-0.3f).tile(background));
 		builder.add(0, 1, UiText.of(save.getName()).box(33, 1).left().tint(Colors.TEXT));

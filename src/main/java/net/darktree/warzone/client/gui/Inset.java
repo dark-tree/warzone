@@ -24,9 +24,4 @@ public class Inset {
 		return Math.abs(top - bottom);
 	}
 
-	@Override
-	public String toString() {
-		return "Inset{top=" + top + ", bottom=" + bottom + ", right=" + right + ", left=" + left + "}";
-	}
-
 }

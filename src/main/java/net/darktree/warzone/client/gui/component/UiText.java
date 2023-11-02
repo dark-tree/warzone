@@ -14,13 +14,13 @@ public class UiText extends UiComponent {
 	private static final Color COLOR = ImmutableColor.of(1, 0, 0);
 	private final String text;
 	private final Alignment alignment;
-	private final Color color;
+	private final Color tint;
 
-	protected UiText(GridContext context, int x, int y, int width, int height, Inset inset, String text, Alignment alignment, Color color) {
+	protected UiText(GridContext context, int x, int y, int width, int height, Inset inset, String text, Alignment alignment, Color tint) {
 		super(context, x, y, width, height, inset);
 		this.text = text;
 		this.alignment = alignment;
-		this.color = color;
+		this.tint = tint.immutable();
 	}
 
 	public static Builder of(String text) {
@@ -37,7 +37,7 @@ public class UiText extends UiComponent {
 		float mx = box.x1 - alignment.getOffset(box.width());
 		float my = box.y1 + box.height() / 2;
 
-		context.drawText(mx, my, 30, alignment, text, color);
+		context.drawText(mx, my, 30, alignment, text, tint);
 		drawDebugOverlay(context, COLOR);
 	}
 
@@ -45,15 +45,15 @@ public class UiText extends UiComponent {
 
 		private String text = "";
 		private Alignment alignment = Alignment.LEFT;
-		private Color color = Colors.TEXT;
+		private Color tint = Colors.TEXT;
 
 		public Builder text(String text) {
 			this.text = text;
 			return self();
 		}
 
-		public Builder tint(Color color) {
-			this.color = color;
+		public Builder tint(Color tint) {
+			this.tint = tint;
 			return self();
 		}
 
@@ -81,7 +81,7 @@ public class UiText extends UiComponent {
 
 		@Override
 		public UiText build(GridContext context, int x, int y) {
-			return new UiText(context, x, y, width, height, inset, text, alignment, color);
+			return new UiText(context, x, y, width, height, inset, text, alignment, tint);
 		}
 
 	}

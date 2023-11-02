@@ -30,8 +30,8 @@ public class GridContext {
 
 	private UiComponent component;
 
-	public GridContext(int width, int height, int size) {
-		this(width, height, size, -width * size / 2, -height * size / 2, 0, 0);
+	public GridContext(int width, int height) {
+		this(width, height, SIZE, -width * SIZE / 2, -height * SIZE / 2, 0, 0);
 	}
 
 	public GridContext(int width, int height, int size, int ox, int oy, float ax, float ay) {
@@ -84,6 +84,9 @@ public class GridContext {
 			ScreenRenderer.push();
 			ScreenRenderer.centerAt(ax, ay);
 			ScreenRenderer.setOffset(ox, oy);
+
+			// render WIP shadow
+			context.drawRect(box.x1 - SIZE * 2, box.y1 - SIZE * 2, box.width() + SIZE * 4, box.height() + SIZE * 4, Sprites.BLUR, Colors.NONE);
 
 			// render background in mixed mode
 			ScreenRenderer.setColorMode(ColorMode.MIXED);

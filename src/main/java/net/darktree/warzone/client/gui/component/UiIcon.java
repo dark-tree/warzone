@@ -12,12 +12,12 @@ public class UiIcon extends UiComponent {
 
 	private static final Color COLOR = ImmutableColor.of(0.7f, 0.0f, 0.35f);
 	private final Sprite sprite;
-	private final Color color;
+	private final Color tint;
 
-	protected UiIcon(GridContext context, int x, int y, int width, int height, Inset inset, Sprite sprite, Color color) {
+	protected UiIcon(GridContext context, int x, int y, int width, int height, Inset inset, Sprite sprite, Color tint) {
 		super(context, x, y, width, height, inset);
 		this.sprite = sprite;
-		this.color = color;
+		this.tint = tint.immutable();
 	}
 
 	public static Builder of(Sprite sprite) {
@@ -26,22 +26,22 @@ public class UiIcon extends UiComponent {
 
 	@Override
 	public void draw(DrawContext context, GridContext grid) {
-		context.drawRect(box.x1, box.y1, box.width(), box.height(), sprite, color);
+		context.drawRect(box.x1, box.y1, box.width(), box.height(), sprite, tint);
 		drawDebugOverlay(context, COLOR);
 	}
 
 	static public class Builder extends UiComponent.Builder<UiIcon, Builder> {
 
 		private Sprite sprite;
-		private Color color = Colors.NONE;
+		private Color tint = Colors.NONE;
 
 		public Builder sprite(Sprite sprite) {
 			this.sprite = sprite;
 			return self();
 		}
 
-		public Builder tint(Color color) {
-			this.color = color;
+		public Builder tint(Color tint) {
+			this.tint = tint;
 			return self();
 		}
 
@@ -52,7 +52,7 @@ public class UiIcon extends UiComponent {
 
 		@Override
 		public UiIcon build(GridContext context, int x, int y) {
-			return new UiIcon(context, x, y, width, height, inset, sprite, color);
+			return new UiIcon(context, x, y, width, height, inset, sprite, tint);
 		}
 
 	}

@@ -1,10 +1,12 @@
 package net.darktree.warzone.screen;
 
+import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.gui.Chain;
-import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiButton;
 import net.darktree.warzone.client.gui.component.UiText;
+import net.darktree.warzone.client.gui.prefab.GridContextFactory;
+import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.render.Screen;
 
 public class AcceptScreen extends Screen {
@@ -18,8 +20,8 @@ public class AcceptScreen extends Screen {
 	}
 
 	@Override
-	protected GridContext createGridContext() {
-		return new GridContext(18, 10, GridContext.SIZE);
+	protected GridContextFactory getGridFactory() {
+		return GridPrefabs.POPUP;
 	}
 
 	@Override
@@ -36,6 +38,7 @@ public class AcceptScreen extends Screen {
 
 	@Override
 	public void draw(boolean focused) {
+		drawBackground(Colors.SCREEN_SEPARATOR);
 		drawModel();
 	}
 

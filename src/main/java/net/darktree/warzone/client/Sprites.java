@@ -71,6 +71,7 @@ public class Sprites {
 	public static final Sprite BUTTON_PRESSED = getSprite("gui/grid/component/pressed.png");
 	public static final Sprite BUTTON_DISABLED = getSprite("gui/grid/component/disabled.png");
 
+	public static final Sprite BLUR = getSprite("gui/blur.png");
 	public static final NinePatch GRID_NINE_PATCH = getNinePatch("gui/grid/background");
 
 	static {

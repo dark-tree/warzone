@@ -24,7 +24,6 @@ import net.darktree.warzone.client.window.input.MouseButton;
 public class UiTextbox extends UiComponent {
 
 	private static final Color COLOR = ImmutableColor.of(1, 0.1f, 1);
-
 	private final Textbox textbox;
 	private final boolean clickable;
 	private final float border;

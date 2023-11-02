@@ -7,6 +7,8 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiComposed;
+import net.darktree.warzone.client.gui.prefab.GridContextFactory;
+import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.text.Text;
@@ -29,18 +31,23 @@ public abstract class Screen {
 	private final GridContext context;
 	private boolean shouldRebuild = true;
 
+	/**
+	 * Predefined {@link GridContextFactory} factories are
+	 * available in {@link net.darktree.warzone.client.gui.prefab.GridPrefabs}, using
+	 * {@code NONE} makes the screen not use Grid UI
+	 */
 	public Screen() {
 		closed = false;
-		context = createGridContext();
+		context = getGridFactory().construct();
 	}
 
 	/**
-	 * If the screen is to use the Grid UI, this method should return
-	 * a new instance of {@link GridContext}, and build its screen by
-	 * overriding {@link Screen#buildModel}
+	 * If the screen is to use the Grid UI, this method should be
+	 * overriden and return a {@link GridContextFactory}. Predefined factories are
+	 * available in {@link GridPrefabs}. By default the {@code NONE} factory is used.
 	 */
-	protected GridContext createGridContext() {
-		return null;
+	protected GridContextFactory getGridFactory() {
+		return GridPrefabs.NONE;
 	}
 
 	/**
@@ -127,12 +134,14 @@ public abstract class Screen {
 	}
 
 	protected void drawBackground(Color color) {
+		ScreenRenderer.setColorMode(ColorMode.MIXED);
 		ScreenRenderer.centerAt(-1, -1);
 		ScreenRenderer.setSprite(Sprites.NONE);
 		ScreenRenderer.setColor(color);
 		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
 	}
 
+	@Deprecated
 	protected void drawTitledScreen(CharSequence title, CharSequence subtitle, Sprite sprite, int width, int height) {
 		drawBackground(Colors.SCREEN_SEPARATOR);
 		ScreenRenderer.centerAt(0, 0);

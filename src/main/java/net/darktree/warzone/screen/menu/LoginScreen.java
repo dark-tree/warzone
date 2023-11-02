@@ -2,12 +2,13 @@ package net.darktree.warzone.screen.menu;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.gui.Chain;
-import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiButton;
 import net.darktree.warzone.client.gui.component.UiNull;
 import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.gui.component.UiTextbox;
+import net.darktree.warzone.client.gui.prefab.GridContextFactory;
+import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.render.Textbox;
 import net.darktree.warzone.client.text.Text;
 
@@ -18,9 +19,10 @@ public class LoginScreen extends DecoratedScreen {
 
 	private final Textbox username = new Textbox(str -> str.length() <= 15 && !str.trim().isEmpty());
 
+
 	@Override
-	protected GridContext createGridContext() {
-		return new GridContext(18, 10, GridContext.SIZE);
+	protected GridContextFactory getGridFactory() {
+		return GridPrefabs.POPUP;
 	}
 
 	@Override

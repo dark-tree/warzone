@@ -1,11 +1,13 @@
 package net.darktree.warzone.screen.menu;
 
+import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.gui.Chain;
-import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiButton;
 import net.darktree.warzone.client.gui.component.UiNull;
 import net.darktree.warzone.client.gui.component.UiText;
+import net.darktree.warzone.client.gui.prefab.GridContextFactory;
+import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.screen.AcceptScreen;
@@ -24,8 +26,8 @@ public class PauseMenuScreen extends Screen {
 	private final World world;
 
 	@Override
-	protected GridContext createGridContext() {
-		return new GridContext(22, 10, GridContext.SIZE);
+	protected GridContextFactory getGridFactory() {
+		return GridPrefabs.POPUP;
 	}
 
 	public PauseMenuScreen(WorldSave save, World world) {
@@ -35,12 +37,12 @@ public class PauseMenuScreen extends Screen {
 
 	@Override
 	protected void buildModel(ModelBuilder builder) {
-		builder.add(0, 7, UiText.of(TEXT_TITLE).box(22, 3).center());
+		builder.add(0, 7, UiText.of(TEXT_TITLE).box(18, 3).center());
 
 		// append buttons
-		builder.add(5, 1, UiButton.of(TEXT_SETTINGS).disable().box(12, 2).inset(0.1f, -0.2f));
-		builder.then(Chain.ABOVE, UiNull.of(12, 1));
-		builder.then(Chain.ABOVE, UiButton.of(TEXT_EXIT).box(12, 2).inset(0.1f, -0.2f).react(() -> {
+		builder.add(4, 1, UiButton.of(TEXT_SETTINGS).disable().box(10, 2).inset(0.1f, -0.2f));
+		builder.then(Chain.ABOVE, UiNull.of(10, 1));
+		builder.then(Chain.ABOVE, UiButton.of(TEXT_EXIT).box(10, 2).inset(0.1f, -0.2f).react(() -> {
 			if (save.save(world)) {
 				ScreenStack.closeAll();
 				ScreenStack.open(new FreeplayMenuScreen());
@@ -53,6 +55,7 @@ public class PauseMenuScreen extends Screen {
 
 	@Override
 	public void draw(boolean focused) {
+		drawBackground(Colors.SCREEN_SEPARATOR);
 		drawModel();
 	}
 
