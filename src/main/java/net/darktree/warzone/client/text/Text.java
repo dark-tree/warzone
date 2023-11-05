@@ -13,7 +13,7 @@ public abstract class Text implements CharSequence {
 	public abstract String str();
 
 	public String str(Object... args) {
-		return Language.format(str(), args);
+		return args.length == 0 ? str() : Language.format(str(), args);
 	}
 
 	public static Text literal(String value) {

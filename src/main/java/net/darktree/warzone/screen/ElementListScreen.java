@@ -4,6 +4,13 @@ import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.gui.Chain;
+import net.darktree.warzone.client.gui.GridContext;
+import net.darktree.warzone.client.gui.ModelBuilder;
+import net.darktree.warzone.client.gui.component.UiButton;
+import net.darktree.warzone.client.gui.component.UiLine;
+import net.darktree.warzone.client.gui.component.UiText;
+import net.darktree.warzone.client.gui.prefab.GridContextFactory;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
@@ -11,6 +18,7 @@ import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.country.Purchasable;
+import net.darktree.warzone.util.math.MathHelper;
 
 import java.util.List;
 
@@ -21,14 +29,46 @@ public abstract class ElementListScreen <T extends Purchasable> extends Screen {
 	protected int page;
 	protected final int pages;
 
-	private static final Text TEXT_COST = Text.translated("gui.cost");
-	private static final Text TEXT_MATERIALS = Text.translated("gui.materials");
+	protected static final Text TEXT_COST = Text.translated("gui.cost");
+	protected static final Text TEXT_MATERIALS = Text.translated("gui.materials");
 
 	public ElementListScreen() {
 		final List<T> elements = getElementList();
 		this.page = 0;
 		this.pages = (int) Math.ceil(elements.size() / 3.0f);
 		this.elements = elements;
+	}
+
+	@Override
+	protected GridContextFactory getGridFactory() {
+		return () -> new GridContext(39, 23);
+	}
+
+	protected void buildModel(ModelBuilder builder, Text title, int materials) {
+		// title
+		builder.add(0, 21, UiText.of(title).box(39, 2).center());
+		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
+
+		// next page button
+		builder.add(35, 1, UiButton.of(Sprites.ICON_NEXT).disable().border(0).box(2, 2).enabled(page < (pages - 1)).react(() -> {
+			page ++;
+			Sounds.PAGE.play().setPitch(0.9f + MathHelper.RANDOM.nextFloat() * 0.2f);
+			rebuildModel();
+		}));
+
+		// prev page button
+		builder.then(Chain.BEFORE, UiButton.of(Sprites.ICON_PREV).disable().border(0).box(2, 2).enabled(page > 0).react(() -> {
+			page --;
+			Sounds.PAGE.play().setPitch(0.9f + MathHelper.RANDOM.nextFloat() * 0.2f);
+			rebuildModel();
+		}));
+
+		// top & bottom line
+		builder.add(1, 19, UiLine.of(38, 19));
+		builder.add(1, 4, UiLine.of(38, 4));
+
+		// materials
+		builder.add(2, 1, UiText.of(TEXT_MATERIALS, materials).box(10, 2));
 	}
 
 	protected abstract List<T> getElementList();
@@ -79,25 +119,13 @@ public abstract class ElementListScreen <T extends Purchasable> extends Screen {
 
 		ScreenRenderer.offset(100, 100);
 		ScreenRenderer.setAlignment(Alignment.LEFT);
-		ScreenRenderer.text(30, TEXT_MATERIALS.str(materials));
+//		ScreenRenderer.text(30, TEXT_MATERIALS.str(materials));
 		ScreenRenderer.setOffset(-540, 70);
 
 		for (int i = start; i < end; i ++) {
 			drawElement(elements.get(i), materials);
 			ScreenRenderer.offset(0, -120);
 			ScreenRenderer.setColor(Colors.NONE);
-		}
-
-		ScreenRenderer.setOffset(650 - 250, -400 + 100);
-		if (ScreenRenderer.button(Sprites.BUTTON_LEFT, 64, 64, page > 0)) {
-			this.page --;
-			Sounds.PAGE.play();
-		}
-
-		ScreenRenderer.offset(70, 0);
-		if (ScreenRenderer.button(Sprites.BUTTON_RIGHT, 64, 64, page < (pages - 1))) {
-			this.page ++;
-			Sounds.PAGE.play();
 		}
 	}
 

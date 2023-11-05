@@ -2,7 +2,7 @@ package net.darktree.warzone.screen;
 
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.Colors;
-import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.text.Text;
@@ -28,6 +28,11 @@ public class ParliamentScreen extends ElementListScreen<Upgrade<?>> {
 	public ParliamentScreen(World world, Symbol symbol) {
 		this.world = world;
 		this.symbol = symbol;
+	}
+
+	@Override
+	protected void buildModel(ModelBuilder builder) {
+		buildModel(builder, TEXT_TITLE, world.getCountry(symbol).getTotalMaterials());
 	}
 
 	@Override
@@ -67,9 +72,9 @@ public class ParliamentScreen extends ElementListScreen<Upgrade<?>> {
 
 	@Override
 	public void draw(boolean focused) {
-		drawTitledScreen(TEXT_TITLE, getPageString(), Sprites.BUILD, 1300, 800);
-		final int materials = world.getCountry(symbol).getTotalMaterials();
-		drawElementList(materials);
+		drawBackground(Colors.SCREEN_SEPARATOR);
+		drawModel();
+		drawElementList(world.getCountry(symbol).getTotalMaterials());
 	}
 
 }

@@ -145,6 +145,8 @@ public abstract class Screen {
 	@Deprecated
 	protected void drawTitledScreen(CharSequence title, CharSequence subtitle, Sprite sprite, int width, int height) {
 		drawBackground(Colors.SCREEN_SEPARATOR);
+
+		ScreenRenderer.setColorMode(ColorMode.TINT);
 		ScreenRenderer.centerAt(0, 0);
 		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.setSprite(sprite);

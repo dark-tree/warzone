@@ -58,7 +58,7 @@ public abstract class UiComponent {
 	 * Called when an input event relevant to this grid context and screen is triggered by the user
 	 */
 	public void onEvent(Event event, GridContext grid) {
-		// no-op
+
 	}
 
 	protected void drawDebugOverlay(DrawContext context, Color color) {

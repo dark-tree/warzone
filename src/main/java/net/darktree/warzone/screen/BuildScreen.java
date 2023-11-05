@@ -1,6 +1,7 @@
 package net.darktree.warzone.screen;
 
-import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.country.Purchasable;
@@ -29,6 +30,11 @@ public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 	}
 
 	@Override
+	protected void buildModel(ModelBuilder builder) {
+		buildModel(builder, TEXT_TITLE, world.getCountry(world.getCurrentSymbol()).getTotalMaterials());
+	}
+
+	@Override
 	protected void onElementClicked(EntryConfig element) {
 		element.type.interact(world, play);
 		this.close();
@@ -36,9 +42,9 @@ public class BuildScreen extends ElementListScreen<BuildScreen.EntryConfig> {
 
 	@Override
 	public void draw(boolean focused) {
-		drawTitledScreen(TEXT_TITLE, getPageString(), Sprites.BUILD, 1300, 800);
-		final int materials = world.getCountry(world.getCurrentSymbol()).getTotalMaterials();
-		drawElementList(materials);
+		drawBackground(Colors.SCREEN_SEPARATOR);
+		drawModel();
+		drawElementList(world.getCountry(world.getCurrentSymbol()).getTotalMaterials());
 	}
 
 	public static void register(Building.Type type) {

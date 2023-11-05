@@ -9,14 +9,16 @@ import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.color.ImmutableColor;
 import net.darktree.warzone.client.text.Text;
 
+import java.util.function.Supplier;
+
 public class UiText extends UiComponent {
 
 	private static final Color COLOR = ImmutableColor.of(1, 0, 0);
-	private final String text;
+	private final Supplier<String> text;
 	private final Alignment alignment;
 	private final Color tint;
 
-	protected UiText(GridContext context, int x, int y, int width, int height, Inset inset, String text, Alignment alignment, Color tint) {
+	protected UiText(GridContext context, int x, int y, int width, int height, Inset inset, Supplier<String> text, Alignment alignment, Color tint) {
 		super(context, x, y, width, height, inset);
 		this.text = text;
 		this.alignment = alignment;
@@ -24,11 +26,15 @@ public class UiText extends UiComponent {
 	}
 
 	public static Builder of(String text) {
-		return new Builder().text(text);
+		return new Builder().text(() -> text);
 	}
 
-	public static Builder of(Text text) {
-		return new Builder().text(text.str());
+	public static Builder of(Text text, Object... args) {
+		return new Builder().text(() -> text.str(args));
+	}
+
+	public static Builder of(Supplier<String> text) {
+		return new Builder().text(text);
 	}
 
 	@Override
@@ -37,17 +43,17 @@ public class UiText extends UiComponent {
 		float mx = box.x1 - alignment.getOffset(box.width());
 		float my = box.y1 + box.height() / 2;
 
-		context.drawText(mx, my, 30, alignment, text, tint);
+		context.drawText(mx, my, 30, alignment, text.get(), tint);
 		drawDebugOverlay(context, COLOR);
 	}
 
 	static public class Builder extends UiComponent.Builder<UiText, Builder> {
 
-		private String text = "";
+		private Supplier<String> text = () -> "";
 		private Alignment alignment = Alignment.LEFT;
 		private Color tint = Colors.TEXT;
 
-		public Builder text(String text) {
+		public Builder text(Supplier<String> text) {
 			this.text = text;
 			return self();
 		}
