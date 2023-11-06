@@ -6,10 +6,10 @@ import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.Chain;
 import net.darktree.warzone.client.gui.ComponentBuilder;
-import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.*;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
+import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.sound.Playable;
 import net.darktree.warzone.client.text.Text;
@@ -45,7 +45,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 
 	@Override
 	protected GridContextFactory getGridFactory() {
-		return () -> new GridContext(39, 24);
+		return GridPrefabs.FREEPLAY;
 	}
 
 	@Override

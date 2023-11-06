@@ -5,12 +5,12 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.Chain;
-import net.darktree.warzone.client.gui.GridContext;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiButton;
 import net.darktree.warzone.client.gui.component.UiLine;
 import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
+import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
@@ -41,7 +41,7 @@ public abstract class ElementListScreen <T extends Purchasable> extends Screen {
 
 	@Override
 	protected GridContextFactory getGridFactory() {
-		return () -> new GridContext(39, 23);
+		return GridPrefabs.STANDARD;
 	}
 
 	protected void buildModel(ModelBuilder builder, Text title, int materials) {
@@ -50,14 +50,14 @@ public abstract class ElementListScreen <T extends Purchasable> extends Screen {
 		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
 
 		// next page button
-		builder.add(35, 1, UiButton.of(Sprites.ICON_NEXT).disable().border(0).box(2, 2).enabled(page < (pages - 1)).react(() -> {
+		builder.add(35, 1, UiButton.of(Sprites.ICON_NEXT).border(0).box(2, 2).enabled(page < (pages - 1)).react(() -> {
 			page ++;
 			Sounds.PAGE.play().setPitch(0.9f + MathHelper.RANDOM.nextFloat() * 0.2f);
 			rebuildModel();
 		}));
 
 		// prev page button
-		builder.then(Chain.BEFORE, UiButton.of(Sprites.ICON_PREV).disable().border(0).box(2, 2).enabled(page > 0).react(() -> {
+		builder.then(Chain.BEFORE, UiButton.of(Sprites.ICON_PREV).border(0).box(2, 2).enabled(page > 0).react(() -> {
 			page --;
 			Sounds.PAGE.play().setPitch(0.9f + MathHelper.RANDOM.nextFloat() * 0.2f);
 			rebuildModel();
