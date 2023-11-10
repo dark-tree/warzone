@@ -62,8 +62,8 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
 
 		// top & bottom line
-		builder.add(1, 20, UiLine.of(38, 20));
-		builder.add(1, 4, UiLine.of(38, 4));
+		builder.add(1, 20, UiLine.ofRelative(37, 0));
+		builder.add(1, 4, UiLine.ofRelative(37, 0));
 
 		// enter button
 		builder.add(1, 1, UiNull.of(1, 2));
@@ -116,7 +116,7 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 
 	@Override
 	public void onEscape() {
-		this.emplace(new MainMenuScreen());
+		emplace(new MainMenuScreen());
 	}
 
 	protected String getPageString() {

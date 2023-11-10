@@ -3,9 +3,15 @@ package net.darktree.warzone.screen;
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sprites;
-import net.darktree.warzone.client.render.Alignment;
+import net.darktree.warzone.client.gui.Chain;
+import net.darktree.warzone.client.gui.ModelBuilder;
+import net.darktree.warzone.client.gui.component.UiComposed;
+import net.darktree.warzone.client.gui.component.UiIcon;
+import net.darktree.warzone.client.gui.component.UiLine;
+import net.darktree.warzone.client.gui.component.UiText;
+import net.darktree.warzone.client.gui.prefab.GridContextFactory;
+import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.render.Screen;
-import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.country.storage.LimitedStorageStack;
 import net.darktree.warzone.country.storage.StorageNode;
@@ -23,29 +29,33 @@ public class WarehouseScreen extends Screen {
 		this.storage = storage;
 	}
 
-	private void drawTableRow(CharSequence a, CharSequence b, CharSequence c) {
-		ScreenRenderer.text(30, a);
-		ScreenRenderer.offset(400, 0);
-		ScreenRenderer.text(30, b);
-		ScreenRenderer.offset(400, 0);
-		ScreenRenderer.text(30, c);
+	@Override
+	protected GridContextFactory getGridFactory() {
+		return GridPrefabs.STANDARD;
 	}
 
 	@Override
-	public void draw(boolean focused) {
-		drawTitledScreen(TEXT_TITLE, TEXT_PAGE.str(1, 1), Sprites.BUILD, 1300, 800);
+	protected void buildModel(ModelBuilder builder) {
 
-		ScreenRenderer.setAlignment(Alignment.LEFT);
-		ScreenRenderer.setColor(Colors.BORDER);
-		ScreenRenderer.offset(100, 600);
+		// decals
+		builder.add(30, -1, UiIcon.of(Sprites.DECAL_BLOB).box(10, 10)); // a bit off-screen
+		builder.add(1, 12, UiIcon.of(Sprites.DECAL_MUG).box(10, 10));
+		builder.add(0, 4, UiIcon.of(Sprites.DECAL_SPLAT).box(10, 10));
 
-		// table heading
-		ScreenRenderer.push();
-		drawTableRow(TEXT_RESOURCE, TEXT_QUANTITY, TEXT_CAPACITY);
-		ScreenRenderer.pop();
+		// title
+		builder.add(0, 21, UiText.of(TEXT_TITLE).box(39, 2).center());
+		builder.then(Chain.BELOW, UiText.of(TEXT_PAGE, 1, 1).box(39, 1).center());
 
-		ScreenRenderer.offset(0, -6);
+		// table header
+		UiComposed.Builder header = UiComposed.of();
+		header.add(0, 0, UiLine.ofRelative(35, 0));
+		header.then(Chain.OVER, UiText.of(TEXT_RESOURCE).box(13, 1).left());
+		header.then(Chain.AFTER, UiText.of(TEXT_QUANTITY).box(12, 1).left());
+		header.then(Chain.AFTER, UiText.of(TEXT_CAPACITY).box(10, 1).left());
 
+		builder.add(2, 17, header);
+
+		// append rows
 		Registries.RESOURCES.iterate(resource -> {
 			StorageNode node = storage.getResource(resource);
 
@@ -53,17 +63,22 @@ public class WarehouseScreen extends Screen {
 				return;
 			}
 
-			ScreenRenderer.line(0.005f, 1300 - 200, 0);
+			UiComposed.Builder entry = UiComposed.of();
+			entry.add(0, 0, UiLine.ofRelative(35, 0));
+			entry.then(Chain.OVER, UiText.of(Text.translated(resource.getNameKey())).box(13, 2).tint(Colors.BORDER).left());
+			entry.then(Chain.AFTER, UiText.of(Integer.toString(node.amount())).box(12, 2).tint(Colors.BORDER).left());
+			entry.then(Chain.AFTER, UiText.of(Integer.toString(node.limit())).box(10, 2).tint(Colors.BORDER).left());
 
-			ScreenRenderer.offset(0, -40);
-			ScreenRenderer.push();
-			drawTableRow(Text.translated(resource.getNameKey()), node.amount() + "", node.limit() + "");
-			ScreenRenderer.pop();
-			ScreenRenderer.offset(0, -6);
+			builder.then(Chain.BELOW, entry);
+
 		});
 
-		ScreenRenderer.line(0.005f, 1300 - 200, 0);
+	}
 
+	@Override
+	public void draw(boolean focused) {
+		drawBackground(Colors.SCREEN_SEPARATOR);
+		drawModel();
 	}
 
 }

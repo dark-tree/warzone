@@ -1,9 +1,11 @@
 package net.darktree.warzone.screen.menu;
 
 import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.Chain;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiButton;
+import net.darktree.warzone.client.gui.component.UiIcon;
 import net.darktree.warzone.client.gui.component.UiNull;
 import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
@@ -37,6 +39,11 @@ public class PauseMenuScreen extends Screen {
 
 	@Override
 	protected void buildModel(ModelBuilder builder) {
+
+		// decal
+		builder.add(-1, 1, UiIcon.of(Sprites.DECAL_SPLAT).box(10, 10));
+
+		// title
 		builder.add(0, 7, UiText.of(TEXT_TITLE).box(18, 3).center());
 
 		// append buttons

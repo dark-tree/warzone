@@ -7,6 +7,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.Chain;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiButton;
+import net.darktree.warzone.client.gui.component.UiIcon;
 import net.darktree.warzone.client.gui.component.UiLine;
 import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
@@ -45,6 +46,13 @@ public abstract class ElementListScreen <T extends Purchasable> extends Screen {
 	}
 
 	protected void buildModel(ModelBuilder builder, Text title, int materials) {
+
+		// decals
+		builder.add(30, -1, UiIcon.of(Sprites.DECAL_MUG).box(10, 10)); // a bit off-screen
+		builder.add(1, 9, UiIcon.of(Sprites.DECAL_MUG).box(10, 10));
+		builder.add(-1, 4, UiIcon.of(Sprites.DECAL_MUG).box(10, 10));
+		builder.add(25, 14, UiIcon.of(Sprites.DECAL_SPLAT).box(10, 10));
+
 		// title
 		builder.add(0, 21, UiText.of(title).box(39, 2).center());
 		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
@@ -64,8 +72,8 @@ public abstract class ElementListScreen <T extends Purchasable> extends Screen {
 		}));
 
 		// top & bottom line
-		builder.add(1, 19, UiLine.of(38, 19));
-		builder.add(1, 4, UiLine.of(38, 4));
+		builder.add(1, 19, UiLine.ofRelative(37, 0));
+		builder.add(1, 4, UiLine.ofRelative(37, 0));
 
 		// materials
 		builder.add(2, 1, UiText.of(TEXT_MATERIALS, materials).box(10, 2));

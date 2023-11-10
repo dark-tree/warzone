@@ -10,7 +10,6 @@ import net.darktree.warzone.client.gui.component.UiComposed;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
 import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.render.color.Color;
-import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.client.window.input.KeyEvent;
@@ -118,7 +117,7 @@ public abstract class Screen {
 
 	/**
 	 * Used to render the Grid UI model of this screen,
-	 * call this method at the beginning of {@link Screen#draw}
+	 * call this method near the beginning of {@link Screen#draw}
 	 */
 	protected void drawModel() {
 		if (context != null) {
@@ -134,6 +133,10 @@ public abstract class Screen {
 		}
 	}
 
+	/**
+	 * Draws a solid rectangle of the given color that fills the whole window,
+	 * usually used in {@link Screen#draw} with the {@link Colors#SCREEN_SEPARATOR} color.
+	 */
 	protected void drawBackground(Color color) {
 		ScreenRenderer.setColorMode(ColorMode.MIXED);
 		ScreenRenderer.centerAt(-1, -1);
@@ -142,25 +145,10 @@ public abstract class Screen {
 		ScreenRenderer.box(Main.window.width() * 2, Main.window.height() * 2);
 	}
 
-	@Deprecated
-	protected void drawTitledScreen(CharSequence title, CharSequence subtitle, Sprite sprite, int width, int height) {
-		drawBackground(Colors.SCREEN_SEPARATOR);
-
-		ScreenRenderer.setColorMode(ColorMode.TINT);
-		ScreenRenderer.centerAt(0, 0);
-		ScreenRenderer.setColor(Colors.NONE);
-		ScreenRenderer.setSprite(sprite);
-		ScreenRenderer.centeredBox(width, height);
-
-		final int half = height / 2;
-		final int y1 = half - 90;
-		final int y2 = y1 - 40;
-
-		ScreenRenderer.setColor(Colors.TEXT);
-		text(0, y1, title, Alignment.CENTER);
-		text(0, y2, subtitle, Alignment.CENTER);
-	}
-
+	/**
+	 * Called in a back-to-front order on all open screens every frame,
+	 * override to render this screen.
+	 */
 	public abstract void draw(boolean focused);
 
 	@OverridingMethodsMustInvokeSuper
@@ -174,6 +162,10 @@ public abstract class Screen {
 		if (context != null) context.onEvent(event);
 	}
 
+	/**
+	 * Override to change the ESC keypress behaviour,
+	 * by default closes the current window.
+	 */
 	public void onEscape() {
 		this.close();
 	}
@@ -201,16 +193,25 @@ public abstract class Screen {
 		}
 	}
 
-	public void close() {
+	/**
+	 * Closes this screen and plays the "screen close" sound effect
+	 */
+	public final void close() {
 		this.closed = true;
 		Sounds.PEN_CLOSE.play();
 	}
 
+	/**
+	 * Closes this screen and opens the one given instead
+	 */
 	public final void emplace(Screen screen) {
 		this.close();
 		ScreenStack.open(screen);
 	}
 
+	/**
+	 * Checks if this screen is closed and therefore should be removed from the screen stack
+	 */
 	public final boolean isClosed() {
 		return this.closed;
 	}

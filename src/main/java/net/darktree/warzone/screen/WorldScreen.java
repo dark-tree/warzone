@@ -118,10 +118,9 @@ public abstract class WorldScreen extends Screen {
 		}
 	}
 
-
 	@Override
-	public void close() {
-		super.close();
+	public void onRemoved() {
+		super.onRemoved();
 		this.buffers.close();
 	}
 
