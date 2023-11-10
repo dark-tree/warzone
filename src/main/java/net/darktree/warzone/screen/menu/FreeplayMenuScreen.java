@@ -10,6 +10,7 @@ import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.*;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
 import net.darktree.warzone.client.gui.prefab.GridPrefabs;
+import net.darktree.warzone.client.render.color.ImmutableColor;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.sound.Playable;
 import net.darktree.warzone.client.text.Text;
@@ -50,6 +51,12 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 
 	@Override
 	protected void buildModel(ModelBuilder builder) {
+
+		// decals
+		builder.add(25, 1, UiIcon.of(Sprites.DECAL_SPLAT).box(10, 10));
+		builder.add(22, 12, UiIcon.of(Sprites.DECAL_MUG).box(10, 10));
+		builder.add(0, 0, UiIcon.of(Sprites.DECAL_BLOB).tint(ImmutableColor.of(1, 1, 1, 0.5f)).box(23, 4));
+
 		// title
 		builder.add(0, 22, UiText.of(TEXT_TITLE).box(39, 2).center());
 		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());

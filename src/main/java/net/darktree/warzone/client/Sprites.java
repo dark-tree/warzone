@@ -71,6 +71,11 @@ public class Sprites {
 	public static final Sprite BUTTON_PRESSED = getSprite("gui/grid/component/pressed.png");
 	public static final Sprite BUTTON_DISABLED = getSprite("gui/grid/component/disabled.png");
 
+	public static final Sprite DECAL_MUG = getSprite("gui/grid/decal/mug.png");
+	public static final Sprite DECAL_SPLAT = getSprite("gui/grid/decal/splat.png");
+	public static final Sprite DECAL_SMUDGE = getSprite("gui/grid/decal/smudge.png");
+	public static final Sprite DECAL_BLOB = getSprite("gui/grid/decal/blob.png");
+
 	public static final Sprite BLUR = getSprite("gui/blur.png");
 	public static final NinePatch GRID_NINE_PATCH = getNinePatch("gui/grid/background");
 

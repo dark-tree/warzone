@@ -2,10 +2,8 @@ package net.darktree.warzone.screen.menu;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
-import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.render.ScreenRenderer;
-import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.screen.ConfirmScreen;
@@ -17,7 +15,7 @@ public class MainMenuScreen extends DecoratedScreen {
 	private final static Text TEXT_CONFIRM = Text.translated("gui.menu.main.quit.title");
 
 	public MainMenuScreen() {
-		SoundSystem.startMusic(Sounds.MUSIC_HARMONY);
+		//SoundSystem.startMusic(Sounds.MUSIC_HARMONY);
 	}
 
 	@Override

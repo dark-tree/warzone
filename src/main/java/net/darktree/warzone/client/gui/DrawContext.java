@@ -6,7 +6,9 @@ import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.image.NinePatch;
 import net.darktree.warzone.client.render.image.Sprite;
+import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.util.BoundingBox;
+import org.lwjgl.glfw.GLFW;
 
 public class DrawContext {
 
@@ -224,7 +226,7 @@ public class DrawContext {
 	}
 
 	public boolean isDebugMode() {
-		return false;
+		return Window.getInstance().input().isKeyPressed(GLFW.GLFW_KEY_TAB);
 	}
 
 }

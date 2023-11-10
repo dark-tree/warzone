@@ -1,9 +1,11 @@
 package net.darktree.warzone.screen;
 
 import net.darktree.warzone.client.Colors;
+import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.Chain;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiButton;
+import net.darktree.warzone.client.gui.component.UiIcon;
 import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
 import net.darktree.warzone.client.gui.prefab.GridPrefabs;
@@ -26,6 +28,12 @@ public class AcceptScreen extends Screen {
 
 	@Override
 	protected void buildModel(ModelBuilder builder) {
+
+		// decals
+		builder.add(0, 0, UiIcon.of(Sprites.DECAL_SMUDGE).box(10, 10));
+		builder.add(8, 0, UiIcon.of(Sprites.DECAL_SPLAT).box(10, 10));
+
+		// title
 		builder.add(0, 7, UiText.of(title).box(18, 3).center());
 		builder.then(Chain.BELOW, UiText.of(message).box(18, 1).center());
 

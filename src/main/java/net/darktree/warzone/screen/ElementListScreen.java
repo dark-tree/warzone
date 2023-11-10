@@ -117,9 +117,7 @@ public abstract class ElementListScreen <T extends Purchasable> extends Screen {
 		final int start = this.page * 3;
 		final int end = Math.min(start + 3, elements.size());
 
-		ScreenRenderer.offset(100, 100);
 		ScreenRenderer.setAlignment(Alignment.LEFT);
-//		ScreenRenderer.text(30, TEXT_MATERIALS.str(materials));
 		ScreenRenderer.setOffset(-540, 70);
 
 		for (int i = start; i < end; i ++) {
