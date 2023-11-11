@@ -26,6 +26,10 @@ public abstract class StorageNode implements NbtSerializable {
 		amount = MathHelper.clamp(tag.getInt(resource.key()), 0, limit());
 	}
 
+	public Resource getResource() {
+		return resource;
+	}
+
 	public int amount() {
 		return amount;
 	}

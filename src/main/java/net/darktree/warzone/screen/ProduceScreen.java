@@ -8,7 +8,6 @@ import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.*;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
 import net.darktree.warzone.client.gui.prefab.GridPrefabs;
-import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
@@ -16,7 +15,7 @@ import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.entity.building.production.ProductionState;
 import net.darktree.warzone.world.entity.building.production.Recipe;
 
-public class ProduceScreen extends Screen {
+public class ProduceScreen extends PaginatedScreen {
 
 	private final ProductionState state;
 	private final Country country;
@@ -32,6 +31,7 @@ public class ProduceScreen extends Screen {
 		this.state = state;
 		this.country = world.getCountry(symbol);
 		this.world = world;
+		setPagination(state.getRecipes().size(), 6);
 	}
 
 	@Override
@@ -47,9 +47,8 @@ public class ProduceScreen extends Screen {
 		builder.add(21, 0, UiIcon.of(Sprites.DECAL_MUG).box(10, 10));
 		builder.add(0, 13, UiIcon.of(Sprites.DECAL_SMUDGE).box(10, 10));
 
-		// title
-		builder.add(0, 21, UiText.of(TEXT_TITLE).box(39, 2).center());
-		builder.then(Chain.BELOW, UiText.of(TEXT_PAGE, 1, 1).box(39, 1).center());
+		// append title and page buttons
+		buildPaginatedModel(builder, TEXT_TITLE);
 
 		// table header
 		UiComposed.Builder header = UiComposed.of();
@@ -60,7 +59,7 @@ public class ProduceScreen extends Screen {
 		builder.add(2, 17, header);
 
 		// append recipes
-		for (Recipe recipe : state.getRecipes()) {
+		for (Recipe recipe : getPaged(state.getRecipes())) {
 
 			Recipe.Type type = recipe.getType();
 
@@ -89,7 +88,6 @@ public class ProduceScreen extends Screen {
 
 			builder.then(Chain.BELOW, entry);
 		}
-
 
 		// capacity
 		builder.add(2, 1, UiText.of(TEXT_CAPACITY, state.getCapacityString()).box(10, 2));

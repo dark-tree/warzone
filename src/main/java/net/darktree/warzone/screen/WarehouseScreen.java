@@ -11,14 +11,16 @@ import net.darktree.warzone.client.gui.component.UiLine;
 import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
 import net.darktree.warzone.client.gui.prefab.GridPrefabs;
-import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.country.storage.LimitedStorageStack;
 import net.darktree.warzone.country.storage.StorageNode;
 
-public class WarehouseScreen extends Screen {
+import java.util.ArrayList;
+import java.util.List;
 
-	private final LimitedStorageStack storage;
+public class WarehouseScreen extends PaginatedScreen {
+
+	private final List<StorageNode> nodes = new ArrayList<>();
 
 	private static final Text TEXT_TITLE = Text.translated("gui.warehouse.title");
 	private static final Text TEXT_RESOURCE = Text.translated("gui.warehouse.resource");
@@ -26,7 +28,15 @@ public class WarehouseScreen extends Screen {
 	private static final Text TEXT_CAPACITY = Text.translated("gui.warehouse.capacity");
 
 	public WarehouseScreen(LimitedStorageStack storage) {
-		this.storage = storage;
+		Registries.RESOURCES.iterate(resource -> {
+			StorageNode node = storage.getResource(resource);
+
+			if (node != null) {
+				nodes.add(node);
+			}
+		});
+
+		setPagination(nodes.size(), 6);
 	}
 
 	@Override
@@ -38,13 +48,12 @@ public class WarehouseScreen extends Screen {
 	protected void buildModel(ModelBuilder builder) {
 
 		// decals
-		builder.add(30, -1, UiIcon.of(Sprites.DECAL_BLOB).box(10, 10)); // a bit off-screen
+		builder.add(30, -1, UiIcon.of(Sprites.DECAL_BLOB).box(10, 10));
 		builder.add(1, 12, UiIcon.of(Sprites.DECAL_MUG).box(10, 10));
 		builder.add(0, 4, UiIcon.of(Sprites.DECAL_SPLAT).box(10, 10));
 
-		// title
-		builder.add(0, 21, UiText.of(TEXT_TITLE).box(39, 2).center());
-		builder.then(Chain.BELOW, UiText.of(TEXT_PAGE, 1, 1).box(39, 1).center());
+		// append title and page buttons
+		buildPaginatedModel(builder, TEXT_TITLE);
 
 		// table header
 		UiComposed.Builder header = UiComposed.of();
@@ -56,22 +65,17 @@ public class WarehouseScreen extends Screen {
 		builder.add(2, 17, header);
 
 		// append rows
-		Registries.RESOURCES.iterate(resource -> {
-			StorageNode node = storage.getResource(resource);
-
-			if (node == null) {
-				return;
-			}
+		for (StorageNode node : getPaged(nodes)) {
 
 			UiComposed.Builder entry = UiComposed.of();
 			entry.add(0, 0, UiLine.ofRelative(35, 0));
-			entry.then(Chain.OVER, UiText.of(Text.translated(resource.getNameKey())).box(13, 2).tint(Colors.BORDER).left());
+			entry.then(Chain.OVER, UiText.of(Text.translated(node.getResource().getNameKey())).box(13, 2).tint(Colors.BORDER).left());
 			entry.then(Chain.AFTER, UiText.of(Integer.toString(node.amount())).box(12, 2).tint(Colors.BORDER).left());
 			entry.then(Chain.AFTER, UiText.of(Integer.toString(node.limit())).box(10, 2).tint(Colors.BORDER).left());
 
 			builder.then(Chain.BELOW, entry);
 
-		});
+		};
 
 	}
 

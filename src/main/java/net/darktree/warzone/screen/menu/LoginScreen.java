@@ -19,7 +19,6 @@ public class LoginScreen extends DecoratedScreen {
 
 	private final Textbox username = new Textbox(str -> str.length() <= 15 && !str.trim().isEmpty());
 
-
 	@Override
 	protected GridContextFactory getGridFactory() {
 		return GridPrefabs.POPUP;
