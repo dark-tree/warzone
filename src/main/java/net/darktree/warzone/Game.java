@@ -3,7 +3,9 @@ package net.darktree.warzone;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
 import net.darktree.warzone.client.text.Language;
+import net.darktree.warzone.screen.ComposedScreen;
 import net.darktree.warzone.screen.ScreenStack;
+import net.darktree.warzone.screen.menu.DecoratedScreen;
 import net.darktree.warzone.screen.menu.LoginScreen;
 import net.darktree.warzone.screen.menu.MainMenuScreen;
 import net.darktree.warzone.util.Logger;
@@ -65,11 +67,11 @@ public final class Game {
 
 		if (state == null) {
 			state = new CompoundTag();
-			ScreenStack.open(new LoginScreen());
+			ScreenStack.open(new ComposedScreen(new DecoratedScreen(), new LoginScreen()));
 			return;
 		}
 
-		ScreenStack.open(new MainMenuScreen());
+		ScreenStack.open(new ComposedScreen(new DecoratedScreen(), new MainMenuScreen()));
 		Logger.info("Player name set to: '", getUsername(), "'");
 	}
 

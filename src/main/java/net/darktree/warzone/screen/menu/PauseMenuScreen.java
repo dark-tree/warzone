@@ -13,6 +13,7 @@ import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.screen.AcceptScreen;
+import net.darktree.warzone.screen.ComposedScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldSave;
@@ -52,7 +53,7 @@ public class PauseMenuScreen extends Screen {
 		builder.then(Chain.ABOVE, UiButton.of(TEXT_EXIT).box(10, 2).inset(0.1f, -0.2f).react(() -> {
 			if (save.save(world)) {
 				ScreenStack.closeAll();
-				ScreenStack.open(new FreeplayMenuScreen());
+				ScreenStack.open(new ComposedScreen(new DecoratedScreen(), new FreeplayMenuScreen()));
 				return;
 			}
 

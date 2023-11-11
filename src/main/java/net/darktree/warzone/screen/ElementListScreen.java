@@ -3,6 +3,7 @@ package net.darktree.warzone.screen;
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.gui.Chain;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiIcon;
 import net.darktree.warzone.client.gui.component.UiLine;
@@ -44,12 +45,16 @@ public abstract class ElementListScreen <T extends Purchasable> extends Paginate
 		builder.add(-1, 4, UiIcon.of(Sprites.DECAL_MUG).box(10, 10));
 		builder.add(25, 14, UiIcon.of(Sprites.DECAL_SPLAT).box(10, 10));
 
-		// append title and page buttons
-		buildPaginatedModel(builder, title);
+		// title
+		builder.add(0, 21, UiText.of(title).box(39, 2).center());
+		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
+
+		// append page buttons
+		buildPaginatedModel(builder);
 
 		// top & bottom line
-		builder.add(1, 19, UiLine.ofRelative(37, 0));
-		builder.add(1, 4, UiLine.ofRelative(37, 0));
+		builder.add(1, 19, UiLine.of(37, 0));
+		builder.add(1, 4, UiLine.of(37, 0));
 
 		// materials
 		builder.add(2, 1, UiText.of(TEXT_MATERIALS, materials).box(10, 2));

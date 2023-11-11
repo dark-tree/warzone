@@ -52,12 +52,16 @@ public class WarehouseScreen extends PaginatedScreen {
 		builder.add(1, 12, UiIcon.of(Sprites.DECAL_MUG).box(10, 10));
 		builder.add(0, 4, UiIcon.of(Sprites.DECAL_SPLAT).box(10, 10));
 
-		// append title and page buttons
-		buildPaginatedModel(builder, TEXT_TITLE);
+		// title
+		builder.add(0, 21, UiText.of(TEXT_TITLE).box(39, 2).center());
+		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
+
+		// append page buttons
+		buildPaginatedModel(builder);
 
 		// table header
 		UiComposed.Builder header = UiComposed.of();
-		header.add(0, 0, UiLine.ofRelative(35, 0));
+		header.add(0, 0, UiLine.of(35, 0));
 		header.then(Chain.OVER, UiText.of(TEXT_RESOURCE).box(13, 1).left());
 		header.then(Chain.AFTER, UiText.of(TEXT_QUANTITY).box(12, 1).left());
 		header.then(Chain.AFTER, UiText.of(TEXT_CAPACITY).box(10, 1).left());
@@ -68,7 +72,7 @@ public class WarehouseScreen extends PaginatedScreen {
 		for (StorageNode node : getPaged(nodes)) {
 
 			UiComposed.Builder entry = UiComposed.of();
-			entry.add(0, 0, UiLine.ofRelative(35, 0));
+			entry.add(0, 0, UiLine.of(35, 0));
 			entry.then(Chain.OVER, UiText.of(Text.translated(node.getResource().getNameKey())).box(13, 2).tint(Colors.BORDER).left());
 			entry.then(Chain.AFTER, UiText.of(Integer.toString(node.amount())).box(12, 2).tint(Colors.BORDER).left());
 			entry.then(Chain.AFTER, UiText.of(Integer.toString(node.limit())).box(10, 2).tint(Colors.BORDER).left());

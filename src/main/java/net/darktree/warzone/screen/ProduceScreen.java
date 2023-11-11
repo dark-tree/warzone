@@ -47,12 +47,16 @@ public class ProduceScreen extends PaginatedScreen {
 		builder.add(21, 0, UiIcon.of(Sprites.DECAL_MUG).box(10, 10));
 		builder.add(0, 13, UiIcon.of(Sprites.DECAL_SMUDGE).box(10, 10));
 
-		// append title and page buttons
-		buildPaginatedModel(builder, TEXT_TITLE);
+		// title
+		builder.add(0, 21, UiText.of(TEXT_TITLE).box(39, 2).center());
+		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
+
+		// append page buttons
+		buildPaginatedModel(builder);
 
 		// table header
 		UiComposed.Builder header = UiComposed.of();
-		header.add(0, 0, UiLine.ofRelative(35, 0));
+		header.add(0, 0, UiLine.of(35, 0));
 		header.then(Chain.OVER, UiText.of(TEXT_RESOURCE).box(13, 1).left());
 		header.then(Chain.AFTER, UiText.of(TEXT_COST).box(6, 1).left());
 		header.then(Chain.AFTER, UiText.of(TEXT_QUANTITY).box(16, 1).left());
@@ -65,7 +69,7 @@ public class ProduceScreen extends PaginatedScreen {
 
 			// main row body
 			UiComposed.Builder entry = UiComposed.of();
-			entry.add(0, 0, UiLine.ofRelative(35, 0));
+			entry.add(0, 0, UiLine.of(35, 0));
 			entry.then(Chain.OVER, UiText.of(Text.translated(type.getNameKey())).box(13, 2).tint(Colors.BORDER).left());
 			entry.then(Chain.AFTER, UiText.of(type.getCostString()).box(6, 2).tint(Colors.BORDER).left());
 			entry.then(Chain.AFTER, UiText.of(Integer.toString(recipe.getQuantity())).box(2, 2).tint(Colors.BORDER).left());

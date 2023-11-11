@@ -5,9 +5,7 @@ import net.darktree.warzone.client.Sprites;
 import net.darktree.warzone.client.gui.Chain;
 import net.darktree.warzone.client.gui.ModelBuilder;
 import net.darktree.warzone.client.gui.component.UiButton;
-import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.render.Screen;
-import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.util.iterable.PagedIterable;
 import net.darktree.warzone.util.math.MathHelper;
 
@@ -28,6 +26,7 @@ public abstract class PaginatedScreen extends Screen {
 	protected final void setPagination(int elements, int size) {
 		this.pages = (int) Math.ceil(elements / (float) size);
 		this.size = size;
+		this.page = MathHelper.clamp(page, 0, pages);
 	}
 
 	/**
@@ -41,14 +40,7 @@ public abstract class PaginatedScreen extends Screen {
 	/**
 	 * Appends the page controls and title to the given {@link ModelBuilder}
 	 */
-	protected final void buildPaginatedModel(ModelBuilder builder, Text title) {
-
-		// make sure nothing breaks
-		page = MathHelper.clamp(page, 0, pages);
-
-		// title
-		builder.add(0, 21, UiText.of(title).box(39, 2).center());
-		builder.then(Chain.BELOW, UiText.of(TEXT_PAGE, page + 1, pages).box(39, 1).center());
+	protected final void buildPaginatedModel(ModelBuilder builder) {
 
 		// next page button
 		builder.add(35, 1, UiButton.of(Sprites.ICON_NEXT).border(0).box(2, 2).enabled(page < (pages - 1)).react(() -> {
@@ -64,6 +56,10 @@ public abstract class PaginatedScreen extends Screen {
 			rebuildModel();
 		}));
 
+	}
+
+	protected String getPageString() {
+		return TEXT_PAGE.str(page + 1, pages);
 	}
 
 }

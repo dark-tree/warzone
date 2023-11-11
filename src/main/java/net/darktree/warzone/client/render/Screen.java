@@ -212,7 +212,7 @@ public abstract class Screen {
 	/**
 	 * Checks if this screen is closed and therefore should be removed from the screen stack
 	 */
-	public final boolean isClosed() {
+	public boolean isClosed() {
 		return this.closed;
 	}
 

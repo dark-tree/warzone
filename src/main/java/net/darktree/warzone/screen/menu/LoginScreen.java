@@ -9,10 +9,12 @@ import net.darktree.warzone.client.gui.component.UiText;
 import net.darktree.warzone.client.gui.component.UiTextbox;
 import net.darktree.warzone.client.gui.prefab.GridContextFactory;
 import net.darktree.warzone.client.gui.prefab.GridPrefabs;
+import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.Textbox;
 import net.darktree.warzone.client.text.Text;
+import net.darktree.warzone.screen.ComposedScreen;
 
-public class LoginScreen extends DecoratedScreen {
+public class LoginScreen extends Screen {
 
 	private static final Text TITLE = Text.translated("gui.menu.login.title");
 	private static final Text SUBTITLE = Text.translated("gui.menu.login.subtitle");
@@ -38,14 +40,13 @@ public class LoginScreen extends DecoratedScreen {
 			// check again just to be sure nothing passes during the transition
 			if (username.isValid()) {
 				Main.game.setUsername(username.getValue());
-				emplace(new MainMenuScreen());
+				emplace(new ComposedScreen(new DecoratedScreen(), new MainMenuScreen()));
 			}
 		}));
 	}
 
 	@Override
 	public void draw(boolean focused) {
-		drawDecorBackground();
 		drawModel();
 	}
 

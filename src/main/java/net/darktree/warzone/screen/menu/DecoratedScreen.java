@@ -11,7 +11,7 @@ import net.darktree.warzone.util.math.Parallax;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DecoratedScreen extends Screen {
+public class DecoratedScreen extends Screen {
 
 	private static final Parallax parallax = new Parallax(Main.window, 0.1f);
 	private static final List<DecorCard> cards = new ArrayList<>();
@@ -26,7 +26,8 @@ public abstract class DecoratedScreen extends Screen {
 		}
 	}
 
-	public void drawDecorBackground() {
+	@Override
+	public void draw(boolean focused) {
 		parallax.update();
 		int px = (int) (parallax.getX() * margin);
 		int py = (int) (parallax.getY() * margin);
@@ -44,11 +45,12 @@ public abstract class DecoratedScreen extends Screen {
 		ScreenRenderer.setColorMode(ColorMode.TINT);
 	}
 
+	@Override
 	public void onResize(int w, int h) {
 		reloadBackground();
 	}
 
-	protected void reloadBackground() {
+	public static void reloadBackground() {
 		float scale = Main.window.scale();
 		long start = System.currentTimeMillis();
 		cards.clear();
@@ -56,7 +58,7 @@ public abstract class DecoratedScreen extends Screen {
 		Logger.info("Background took ", System.currentTimeMillis() - start, "ms to prepare!");
 	}
 
-	private void fillVisible(int w, int h, float scale, int spacing, int margin) {
+	private static void fillVisible(int w, int h, float scale, int spacing, int margin) {
 		int wm = w + margin;
 		int hm = h + margin;
 
@@ -76,6 +78,11 @@ public abstract class DecoratedScreen extends Screen {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void onEscape() {
+		// don't close
 	}
 
 }

@@ -18,13 +18,8 @@ public class UiLine extends UiComponent {
 		this.thickness = thickness;
 	}
 
-	@Deprecated
 	public static Builder of(int x, int y) {
-		return new Builder().to(x, y, false);
-	}
-
-	public static Builder ofRelative(int x, int y) {
-		return new Builder().to(x, y, true);
+		return new Builder().to(x, y);
 	}
 
 	@Override
@@ -35,15 +30,13 @@ public class UiLine extends UiComponent {
 
 	static public class Builder extends UiComponent.Builder<UiLine, Builder> {
 
-		private boolean relative;
 		private int tx = 0;
 		private int ty = 0;
 		private float thickness = 6;
 
-		public Builder to(int x, int y, boolean relative) {
+		public Builder to(int x, int y) {
 			this.tx = x;
 			this.ty = y;
-			this.relative = relative;
 			return self();
 		}
 
@@ -79,10 +72,7 @@ public class UiLine extends UiComponent {
 
 		@Override
 		public UiLine build(GridContext context, int x, int y) {
-			int ox = relative ? tx : tx - x;
-			int oy = relative ? ty : ty - y;
-
-			return new UiLine(context, x, y, ox, oy, thickness);
+			return new UiLine(context, x, y, tx, ty, thickness);
 		}
 
 	}

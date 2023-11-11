@@ -14,15 +14,13 @@ import net.darktree.warzone.client.render.color.ImmutableColor;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.client.sound.Playable;
 import net.darktree.warzone.client.text.Text;
-import net.darktree.warzone.screen.AcceptScreen;
-import net.darktree.warzone.screen.ConfirmScreen;
-import net.darktree.warzone.screen.ScreenStack;
+import net.darktree.warzone.screen.*;
 import net.darktree.warzone.world.WorldSave;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class FreeplayMenuScreen extends DecoratedScreen {
+public class FreeplayMenuScreen extends PaginatedScreen {
 
 	public static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -36,12 +34,10 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 
 	private final List<WorldSave> saves;
 	private WorldSave selected;
-	private final int pages;
-	private int page;
 
 	public FreeplayMenuScreen() {
 		this.saves = Main.game.getSaves();
-		this.pages = (int) Math.ceil(saves.size() / 5.0f);
+		setPagination(saves.size(), 5);
 	}
 
 	@Override
@@ -61,9 +57,12 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		builder.add(0, 22, UiText.of(TEXT_TITLE).box(39, 2).center());
 		builder.then(Chain.BELOW, UiText.of(getPageString()).box(39, 1).center());
 
+		// page buttons
+		buildPaginatedModel(builder);
+
 		// top & bottom line
-		builder.add(1, 20, UiLine.ofRelative(37, 0));
-		builder.add(1, 4, UiLine.ofRelative(37, 0));
+		builder.add(1, 20, UiLine.of(37, 0));
+		builder.add(1, 4, UiLine.of(37, 0));
 
 		// enter button
 		builder.add(1, 1, UiNull.of(1, 2));
@@ -81,13 +80,11 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 		builder.then(Chain.AFTER, UiNull.of(1, 2));
 		builder.then(Chain.AFTER, UiButton.of(TEXT_CREATE).disable().inset(0.1f, -0.2f).box(6, 2));
 
-		// page buttons
-		builder.add(35, 1, UiButton.of(Sprites.ICON_NEXT).disable().border(0).box(2, 2));
-		builder.then(Chain.BEFORE, UiButton.of(Sprites.ICON_PREV).disable().border(0).box(2, 2));
-
 		// draw map list
-		for (int i = 0; i < saves.size(); i ++) {
-			builder.add(3, 20 - 3 * (i + 1), buildEntryModel(saves.get(i)));
+		builder.add(3, 19);
+		for (WorldSave save : getPaged(saves)) {
+			builder.then(Chain.BELOW, buildEntryModel(save));
+			builder.then(Chain.BELOW, UiNull.of(33, 1));
 		}
 	}
 
@@ -110,17 +107,12 @@ public class FreeplayMenuScreen extends DecoratedScreen {
 
 	@Override
 	public void draw(boolean focused) {
-		drawDecorBackground();
 		drawModel();
 	}
 
 	@Override
 	public void onEscape() {
-		emplace(new MainMenuScreen());
-	}
-
-	protected String getPageString() {
-		return TEXT_PAGE.str(page + 1, pages);
+		emplace(new ComposedScreen(new DecoratedScreen(), new MainMenuScreen()));
 	}
 
 }

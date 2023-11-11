@@ -3,14 +3,16 @@ package net.darktree.warzone.screen.menu;
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.Sprites;
+import net.darktree.warzone.client.render.Screen;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.input.KeyEvent;
+import net.darktree.warzone.screen.ComposedScreen;
 import net.darktree.warzone.screen.ConfirmScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import org.lwjgl.glfw.GLFW;
 
-public class MainMenuScreen extends DecoratedScreen {
+public class MainMenuScreen extends Screen {
 
 	private final static Text TEXT_CONFIRM = Text.translated("gui.menu.main.quit.title");
 
@@ -26,7 +28,6 @@ public class MainMenuScreen extends DecoratedScreen {
 		int wp = sw / 7;
 		int bw = Math.min((int) (wp * 1.45f), 600);
 
-		drawDecorBackground();
 		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.centerAt(-1, 1);
 		ScreenRenderer.setOffset(wp, 0);
@@ -39,7 +40,7 @@ public class MainMenuScreen extends DecoratedScreen {
 		ScreenRenderer.centerAt(-1, 0);
 		ScreenRenderer.setOffset(wp + bw / 2 - 40 * 3 - 1, 100);
 		if (ScreenRenderer.button("START", 4, 38, 80, true)) {
-			this.emplace(new FreeplayMenuScreen());
+			this.emplace(new ComposedScreen(new DecoratedScreen(), new FreeplayMenuScreen()));
 		}
 
 		ScreenRenderer.offset(0, -100);
@@ -63,7 +64,7 @@ public class MainMenuScreen extends DecoratedScreen {
 		super.onKey(event);
 
 		if (event.isPressed(GLFW.GLFW_KEY_R)) {
-			reloadBackground();
+			DecoratedScreen.reloadBackground();
 		}
 	}
 
