@@ -16,7 +16,7 @@ public class DecoratedScreen extends Screen {
 	private static final Parallax parallax = new Parallax(Main.window, 0.1f);
 	private static final List<DecorCard> cards = new ArrayList<>();
 	private static final CardSource source = new CardSource(8);
-	private static final int margin = 20;
+	private static int margin = 0;
 	private static boolean ready = false;
 
 	public DecoratedScreen() {
@@ -54,8 +54,13 @@ public class DecoratedScreen extends Screen {
 		float scale = Main.window.scale();
 		long start = System.currentTimeMillis();
 		cards.clear();
-		fillVisible(2 * Main.window.width(), 2 * Main.window.height(), scale, 1, margin);
-		Logger.info("Background took ", System.currentTimeMillis() - start, "ms to prepare!");
+
+		int w = Main.window.width();
+		int h = Main.window.height();
+
+		margin = Math.max(20, Math.min(w, h) / 20);
+		fillVisible(2 * w, 2 * h, scale, 1, margin);
+		Logger.info("Background took ", System.currentTimeMillis() - start, "ms to prepare a surface of size ", w, "x", h, " with ", margin, "px of margin.");
 	}
 
 	private static void fillVisible(int w, int h, float scale, int spacing, int margin) {
