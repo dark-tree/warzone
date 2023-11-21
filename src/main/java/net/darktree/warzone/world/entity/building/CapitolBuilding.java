@@ -6,8 +6,10 @@ import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.CityInteractor;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.Entities;
+import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.path.PathFinder;
 import net.darktree.warzone.world.path.PathFinderConfig;
 import net.querz.nbt.tag.CompoundTag;
@@ -18,21 +20,29 @@ public class CapitolBuilding extends Building {
 	private Symbol symbol;
 	public boolean summoned;
 
-	public CapitolBuilding(World world, int x, int y) {
+	public CapitolBuilding(WorldSnapshot world, int x, int y) {
 		super(world, x, y, Entities.CAPITOL);
 		this.symbol = world.getTileState(x, y).getOwner();
 	}
 
+	public Entity copyFrom(Entity entity) {
+		CapitolBuilding moving = (CapitolBuilding) entity;
+
+		this.symbol = moving.symbol;
+		this.summoned = moving.summoned;
+		return super.copyFrom(entity);
+	}
+
 	@Override
-	public void toNbt(@NotNull CompoundTag tag) {
-		super.toNbt(tag);
-		tag.putByte("symbol", (byte) this.symbol.ordinal());
+	public void toNbt(@NotNull CompoundTag nbt) {
+		super.toNbt(nbt);
+		nbt.putByte("symbol", (byte) symbol.ordinal());
 	}
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag tag) {
 		super.fromNbt(tag);
-		this.symbol = Symbol.fromNbt(tag);
+		this.symbol = Symbol.fromNbt("symbol", tag);
 	}
 
 	@Override
@@ -46,7 +56,7 @@ public class CapitolBuilding extends Building {
 	}
 
 	@Override
-	public void onInteract(World world, int x, int y, ClickEvent event) {
+	public void onInteract(WorldAccess world, int x, int y, ClickEvent event) {
 		if (!summoned && world.getActiveSymbol() == this.symbol) {
 			PlayScreen.setInteractor(new CityInteractor(world.getCurrentSymbol(), world));
 		}

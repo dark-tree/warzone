@@ -11,7 +11,8 @@ import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.BuildInteractor;
 import net.darktree.warzone.screen.interactor.PlacementInteractor;
 import net.darktree.warzone.util.Direction;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.DeconstructBuildingAction;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.entity.StructureEntity;
@@ -25,11 +26,11 @@ import java.util.function.Consumer;
 
 public abstract class Building extends StructureEntity {
 
-	public Building(World world, int x, int y, Building.Type type) {
+	public Building(WorldSnapshot world, int x, int y, Building.Type type) {
 		super(world, x, y, type.width, type.height, type);
 	}
 
-	public static Building from(int x, int y, World world, @NotNull CompoundTag tag) {
+	public static Building from(int x, int y, WorldSnapshot world, @NotNull CompoundTag tag) {
 		Building building = (Building) Registries.ENTITIES.byKey(tag.getString("id")).value().create(world, x, y);
 		building.fromNbt(tag);
 		building.getOwner().ifPresent(owner -> owner.addBuilding(building));
@@ -63,7 +64,7 @@ public abstract class Building extends StructureEntity {
 
 	@Override
 	public void deconstruct() {
-		this.world.getManager().apply(new DeconstructBuildingAction(world, getX(), getY()));
+		this.world.getLedger().push(new DeconstructBuildingAction(getX(), getY()));
 	}
 
 	protected void draw(VertexBuffer buffer) {
@@ -73,7 +74,7 @@ public abstract class Building extends StructureEntity {
 	@Override
 	public void onOwnerUpdate(Symbol previous, Symbol current) {
 		forEachTile(pos -> {
-			world.getTileState(pos).setOwner(world, current, false);
+			world.getTileState(pos).setOwner(current, false);
 		});
 
 		world.getCountry(previous).removeBuilding(this);
@@ -85,18 +86,18 @@ public abstract class Building extends StructureEntity {
 		removed = false;
 		getOwner().ifPresent(country -> country.addBuilding(this));
 		forEachTile(pos -> world.getTileState(pos).setEntity(this));
-		world.getView().markBuildingsDirty();
+		//world.getLedger().getView().getView().markBuildingsDirty(); // FIXME
 	}
 
 	@Override
 	public void onRemoved() {
 		getOwner().ifPresent(country -> country.removeBuilding(this));
 		forEachTile(pos -> world.getTileState(pos).removeEntity(this));
-		world.getView().markBuildingsDirty();
+		//world.getLedger().getView().getView().markBuildingsDirty(); // FIXME
 	}
 
 	public Optional<Country> getOwner() {
-		return Optional.ofNullable(world.getCountry(tx, ty));
+		return Optional.ofNullable(world.getCountry(world.getTileState(tx, ty).getOwner()));
 	}
 
 	public void setFacing(Direction facing) {
@@ -138,7 +139,7 @@ public abstract class Building extends StructureEntity {
 			return "building." + key() + ".description";
 		}
 
-		public void interact(World world, boolean play) {
+		public void interact(WorldAccess world, boolean play) {
 			PlayScreen.setInteractor(interactor.create(this, world, play));
 		}
 

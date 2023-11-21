@@ -1,8 +1,8 @@
-package net.darktree.warzone.world.action.manager;
+package net.darktree.warzone.world.action.ledger;
 
 import net.darktree.warzone.Main;
-import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Util;
+import net.darktree.warzone.world.WorldLedger;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -21,20 +21,18 @@ public class DeferredActionQueue {
 			this.actions.add(action);
 		}
 
-		public DeferredActionQueue bake(Symbol symbol, int delay, Runnable terminator) {
-			return new DeferredActionQueue(delay, symbol, actions, terminator);
+		public DeferredActionQueue bake(int delay, Runnable terminator) {
+			return new DeferredActionQueue(delay, actions, terminator);
 		}
 
 	}
 
 	private final int delay;
-	private final Symbol symbol;
 	private final Queue<Action> actions;
 	private final Runnable terminator;
 
-	private DeferredActionQueue(int delay, Symbol symbol, Queue<Action> actions, Runnable terminator) {
+	private DeferredActionQueue(int delay, Queue<Action> actions, Runnable terminator) {
 		this.delay = delay;
-		this.symbol = symbol;
 		this.actions = actions;
 		this.terminator = terminator;
 	}
@@ -43,15 +41,15 @@ public class DeferredActionQueue {
 		return new Recorder();
 	}
 
-	public void replay(ActionManager manager) {
+	public void replay(WorldLedger ledger) {
 		if (actions.isEmpty()) {
 			terminator.run();
 			return;
 		}
 
 		Util.runAsyncAfter(() -> Main.runSynced(() -> {
-			manager.apply(symbol, actions.poll(), false);
-			replay(manager);
+			ledger.push(actions.poll());
+			replay(ledger);
 		}), delay);
 	}
 

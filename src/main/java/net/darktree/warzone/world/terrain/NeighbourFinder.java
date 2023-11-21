@@ -2,7 +2,7 @@ package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Util;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 
@@ -14,7 +14,7 @@ public class NeighbourFinder extends AbstractFinder {
 
 	private final Map<Symbol, Set<Symbol>> neighbours = Util.enumMapOf(Symbol.class, symbol -> new HashSet<>());
 
-	public NeighbourFinder(World world) {
+	public NeighbourFinder(WorldSnapshot world) {
 		super(Patterns.NEIGHBOURS, world);
 
 		compute();

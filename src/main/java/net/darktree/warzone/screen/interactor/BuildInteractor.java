@@ -8,7 +8,8 @@ import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Direction;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.BuildAction;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.tile.Surface;
@@ -22,27 +23,28 @@ public class BuildInteractor extends PlacementInteractor {
 
 	protected Direction rotation = Direction.NORTH;
 
-	public BuildInteractor(Building.Type type, World world, boolean play) {
+	public BuildInteractor(Building.Type type, WorldAccess world, boolean play) {
 		super(type, world, play);
 	}
 
 	private boolean verify(int x, int y) {
 		Symbol symbol = world.getCurrentSymbol();
+		WorldSnapshot snapshot = world.getTrackingWorld();
 
 		// try matching pattern first to ensure that we don't
 		// render the building outside the map
-		List<TilePos> tiles = type.pattern.list(world, x, y, true);
+		List<TilePos> tiles = type.pattern.list(snapshot, x, y, true);
 
-		if (type.value > world.getCountry(symbol).getTotalMaterials()) {
+		if (type.value > snapshot.getCountry(symbol).getTotalMaterials()) {
 			return false;
 		}
 
 		for (TilePos pos : tiles) {
-			TileState state = world.getTileState(pos);
+			TileState state = snapshot.getTileState(pos);
 			Tile tile = state.getTile();
 
 			if (state.getEntity() != null) return false;
-			if (state.getOwner() != symbol || !world.canControl(pos.x, pos.y)) return false;
+			if (state.getOwner() != symbol || !snapshot.canControl(pos.x, pos.y)) return false;
 			if (tile.getSurface() != Surface.LAND || !tile.canStayOn()) return false;
 		}
 
@@ -75,7 +77,7 @@ public class BuildInteractor extends PlacementInteractor {
 	@Override
 	public void onClick(ClickEvent event, int x, int y) {
 		if (valid && pos.equals(x, y)) {
-			world.getManager().apply(new BuildAction(world, type, pos.x, pos.y, rotation));
+			world.getLedger().push(new BuildAction(type, pos.x, pos.y, rotation));
 			this.closed = true;
 		}
 	}

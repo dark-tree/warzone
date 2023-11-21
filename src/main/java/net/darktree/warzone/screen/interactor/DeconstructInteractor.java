@@ -9,7 +9,8 @@ import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.entity.building.MultipartStructure;
@@ -17,13 +18,13 @@ import net.darktree.warzone.world.tile.TilePos;
 
 public class DeconstructInteractor extends Interactor {
 
-	private final World world;
+	private final WorldAccess world;
 	private final Symbol symbol;
 
 	private int x, y;
 	private int frame = 0;
 
-	public DeconstructInteractor(Symbol symbol, World world) {
+	public DeconstructInteractor(Symbol symbol, WorldAccess world) {
 		this.world = world;
 		this.symbol = symbol;
 	}
@@ -32,9 +33,10 @@ public class DeconstructInteractor extends Interactor {
 	public void draw(VertexBuffer texture, VertexBuffer color) {
 		int x = Main.window.input().getMouseTileX(world.getView());
 		int y = Main.window.input().getMouseTileY(world.getView());
+		WorldSnapshot snapshot = world.getTrackingWorld();
 
-		if (world.isPositionValid(x, y)) {
-			Entity entity = world.getEntity(x, y);
+		if (snapshot.isPositionValid(x, y)) {
+			Entity entity = snapshot.getEntity(x, y);
 
 			if (entity == null || !entity.isInControl(symbol) || !entity.isDeconstructable()) {
 				frame = 0;
@@ -50,7 +52,7 @@ public class DeconstructInteractor extends Interactor {
 			if (entity instanceof Building building) {
 				if (entity instanceof MultipartStructure multipart) {
 					for (TilePos pos : multipart.getStructureParts()) {
-						Building part = world.getEntity(pos.x, pos.y, Building.class);
+						Building part = snapshot.getEntity(pos.x, pos.y, Building.class);
 
 						if (part != null) {
 							drawBuildingOverlay(color, part, c, wave);
@@ -77,7 +79,7 @@ public class DeconstructInteractor extends Interactor {
 	@Override
 	public void onClick(ClickEvent event, int x, int y) {
 		if (this.x == x && this.y == y) {
-			Entity entity = world.getEntity(this.x, this.y);
+			Entity entity = world.getTrackingWorld().getEntity(this.x, this.y);
 
 			if (entity != null && entity.isDeconstructable()) {
 				entity.deconstruct();

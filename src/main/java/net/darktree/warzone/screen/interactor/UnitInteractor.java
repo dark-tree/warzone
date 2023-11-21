@@ -7,7 +7,7 @@ import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.network.packet.ColonizePacket;
 import net.darktree.warzone.screen.PlayScreen;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.action.MoveUnitAction;
 import net.darktree.warzone.world.action.ToggleArmorAction;
 import net.darktree.warzone.world.entity.UnitEntity;
@@ -18,14 +18,14 @@ public class UnitInteractor extends Interactor {
 
 	private final MoveUnitAction action;
 	private final UnitEntity entity;
-	private final World world;
+	private final WorldAccess world;
 
-	public UnitInteractor(UnitEntity entity, World world) {
+	public UnitInteractor(UnitEntity entity, WorldAccess world) {
 		this.entity = entity;
 		this.world = world;
 
 		if (!entity.hasActed()) {
-			this.action = new MoveUnitAction(world, entity.getX(), entity.getY());
+			this.action = new MoveUnitAction(entity.getX(), entity.getY());
 			world.getView().setOverlay(new PathFinderOverlay(action.getPathfinder()));
 		} else {
 			this.action = null;
@@ -51,7 +51,7 @@ public class UnitInteractor extends Interactor {
 		if (event.isPressed()) {
 			if (this.action != null && world.isPositionValid(x, y)) {
 				if (this.action.setTarget(x, y)) {
-					world.getManager().apply(this.action);
+					world.getLedger().push(this.action);
 				}
 			}
 
@@ -72,7 +72,7 @@ public class UnitInteractor extends Interactor {
 		}
 
 		if (event.isPressed(GLFW.GLFW_KEY_Z)) {
-			world.getManager().apply(new ToggleArmorAction(world, entity.getX(), entity.getY()));
+			world.getLedger().push(new ToggleArmorAction(entity.getX(), entity.getY()));
 		}
 
 		if (event.isPressed(GLFW.GLFW_KEY_A) && !entity.hasActed()) {

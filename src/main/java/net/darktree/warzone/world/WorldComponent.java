@@ -4,6 +4,7 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.world.tile.WorldTile;
 
+@Deprecated
 public interface WorldComponent extends WorldListener, WorldTile {
 
 	/**

@@ -5,7 +5,7 @@ import net.darktree.warzone.network.PacketBuffer;
 import net.darktree.warzone.network.PacketContext;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.SimplePacket;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.action.ledger.Action;
 import net.querz.nbt.tag.CompoundTag;
 
 public class ActionPacket extends SimplePacket {
@@ -17,7 +17,7 @@ public class ActionPacket extends SimplePacket {
 		super(Packets.ACTION);
 
 		this.symbol = buffer.getEnum(Symbol.class);
-		this.action = Action.fromNbt(buffer.getNbt(), context.getWorld());
+		this.action = Action.load(buffer.getNbt());
 	}
 
 	public ActionPacket(Symbol symbol, Action action) {
@@ -29,7 +29,7 @@ public class ActionPacket extends SimplePacket {
 
 	@Override
 	public void apply(PacketContext context) {
-		context.getWorld().getManager().apply(symbol, action, true);
+		context.getWorld().getLedger().push(action, true);
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package net.darktree.warzone.world.terrain;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.math.MathHelper;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.pattern.Patterns;
@@ -19,7 +19,7 @@ public class DangerFinder extends AbstractFinder {
 	private final float[][] direct, derived;
 	private float max = 0;
 
-	public DangerFinder(Symbol self, World world) {
+	public DangerFinder(Symbol self, WorldSnapshot world) {
 		super(Patterns.NEIGHBOURS, world);
 		this.direct = new float[this.width][this.height];
 		this.derived = new float[this.width][this.height];

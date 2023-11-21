@@ -15,7 +15,7 @@ import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.screen.AcceptScreen;
 import net.darktree.warzone.screen.ComposedScreen;
 import net.darktree.warzone.screen.ScreenStack;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.WorldSave;
 
 public class PauseMenuScreen extends Screen {
@@ -26,14 +26,14 @@ public class PauseMenuScreen extends Screen {
 	private static final Text TEXT_SAVE_ERROR = Text.translated("gui.menu.pause.save.error");
 
 	private final WorldSave save;
-	private final World world;
+	private final WorldAccess world;
 
 	@Override
 	protected GridContextFactory getGridFactory() {
 		return GridPrefabs.POPUP;
 	}
 
-	public PauseMenuScreen(WorldSave save, World world) {
+	public PauseMenuScreen(WorldSave save, WorldAccess world) {
 		this.save = save;
 		this.world = world;
 	}

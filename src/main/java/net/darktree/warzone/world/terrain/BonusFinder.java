@@ -1,7 +1,7 @@
 package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 
@@ -13,7 +13,7 @@ public class BonusFinder extends AbstractFinder {
 	private final List<Bonus> bonuses = new ArrayList<>();
 	private final Symbol symbol;
 
-	public BonusFinder(World world, Symbol symbol) {
+	public BonusFinder(WorldSnapshot world, Symbol symbol) {
 		super(Patterns.NEIGHBOURS, world);
 		this.symbol = symbol;
 

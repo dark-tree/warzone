@@ -2,7 +2,7 @@ package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.ai.WeighedPos;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 
@@ -17,7 +17,7 @@ public class PlacementFinder extends AbstractFinder {
 	private final Symbol symbol;
 	private final DangerFinder danger;
 
-	public PlacementFinder(World world, Symbol symbol, DangerFinder danger) {
+	public PlacementFinder(WorldSnapshot world, Symbol symbol, DangerFinder danger) {
 		super(Patterns.NEIGHBOURS, world);
 		this.symbol = symbol;
 		this.danger = danger;

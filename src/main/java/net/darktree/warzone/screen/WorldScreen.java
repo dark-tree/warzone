@@ -8,17 +8,17 @@ import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.client.window.input.MouseButton;
 import net.darktree.warzone.screen.interactor.Interactor;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.WorldView;
 
 public abstract class WorldScreen extends Screen {
 
-	protected final World world;
+	protected final WorldAccess world;
 	protected final WorldBuffers buffers;
 	protected boolean isMapFocused = true;
 	protected Interactor interactor = null;
 
-	protected WorldScreen(World world) {
+	protected WorldScreen(WorldAccess world) {
 		this.world = world;
 		this.buffers = new WorldBuffers(world.getView());
 	}

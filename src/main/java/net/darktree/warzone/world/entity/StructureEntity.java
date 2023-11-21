@@ -2,13 +2,13 @@ package net.darktree.warzone.world.entity;
 
 import net.darktree.warzone.client.render.WorldBuffers;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 
 public abstract class StructureEntity extends Entity {
 
 	protected final int width, height;
 
-	public StructureEntity(World world, int x, int y, int w, int h, Entity.Type type) {
+	public StructureEntity(WorldSnapshot world, int x, int y, int w, int h, Entity.Type type) {
 		super(world, x, y, type);
 
 		width = w;

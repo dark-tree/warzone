@@ -15,8 +15,9 @@ import net.darktree.warzone.screen.hotbar.Hotbar;
 import net.darktree.warzone.screen.hotbar.HotbarConstruction;
 import net.darktree.warzone.screen.hotbar.HotbarOverview;
 import net.darktree.warzone.screen.menu.PauseMenuScreen;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.WorldSave;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.overlay.MapOverlay;
 import org.lwjgl.glfw.GLFW;
@@ -27,7 +28,7 @@ public class PlayScreen extends WorldScreen {
 	public static final Text TEXT_END = Text.translated("gui.end");
 	private final WorldSave save;
 
-	public PlayScreen(WorldSave save, World world) {
+	public PlayScreen(WorldSave save, WorldAccess world) {
 		super(world);
 		this.save = save;
 		SoundSystem.stopMusic();
@@ -97,21 +98,22 @@ public class PlayScreen extends WorldScreen {
 		}
 
 		if (event.isPressed(GLFW.GLFW_KEY_BACKSPACE)) {
-			world.getManager().undo();
+			world.getLedger().undo();
 		}
 	}
 
 	@Override
 	public void onWorldClick(ClickEvent event, int x, int y) {
 		// every action can be performed with right click, is this intended?
+		WorldSnapshot snapshot = world.getLedger().getTrackingWorld();
 
-		if((event.isLeftClick() || event.isRightClick()) && world.isPositionValid(x, y)) {
-			Entity entity = world.getEntity(x, y);
+		if((event.isLeftClick() || event.isRightClick()) && snapshot.isPositionValid(x, y)) {
+			Entity entity = snapshot.getEntity(x, y);
 
 			if (entity != null) {
 				entity.onInteract(world, x, y, event);
 			} else {
-				world.getTileState(x, y).getTile().onInteract(world, x, y, event);
+				snapshot.getTileState(x, y).getTile().onInteract(world, x, y, event);
 			}
 		}
 	}

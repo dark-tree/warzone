@@ -11,14 +11,13 @@ import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.util.NbtHelper;
 import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.world.TurnEvent;
-import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.WorldListener;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.building.*;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ public class Country implements NbtSerializable, WorldListener {
 
 	public final Symbol symbol;
 	public final UpgradeManager upgrades = new UpgradeManager(this::hasParliament);
-	private final World world;
+	private final WorldSnapshot world;
 	private final List<Building> buildings = new ArrayList<>();
 	private final List<StorageNodeSupplier> storages = new ArrayList<>();
 	private final Map<Resource, Storage> resources;
@@ -37,11 +36,17 @@ public class Country implements NbtSerializable, WorldListener {
 	private int parliaments = 0;
 	private int income = 0;
 
-	public Country(Symbol symbol, World world) {
+	public Country(Symbol symbol, WorldSnapshot world) {
 		this.symbol = symbol;
 		this.world = world;
-		this.resources = Registries.RESOURCES.map(new IdentityHashMap<>(), resource -> resource.createStorage(this));
+		this.resources = Registries.RESOURCES.map(resource -> resource.createStorage(this));
 		this.local = new LocalStorageNode(Resources.MATERIALS, this);
+	}
+
+	public Country copy(WorldSnapshot copy) {
+		//Country country = new Country(symbol, copy);
+
+		return this;
 	}
 
 	@Override

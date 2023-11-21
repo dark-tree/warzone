@@ -1,7 +1,7 @@
 package net.darktree.warzone.screen.hotbar;
 
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 
 public abstract class HotbarComponent {
 
@@ -9,6 +9,6 @@ public abstract class HotbarComponent {
 		return null;
 	}
 
-	protected abstract void draw(boolean focused, World world, Symbol symbol);
+	protected abstract void draw(boolean focused, WorldAccess world, Symbol symbol);
 
 }

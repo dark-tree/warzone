@@ -3,8 +3,8 @@ package net.darktree.warzone.world.action;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Direction;
-import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.WorldSnapshot;
+import net.darktree.warzone.world.action.ledger.Action;
 import net.darktree.warzone.world.entity.Entities;
 import net.darktree.warzone.world.entity.building.BridgeStructure;
 import net.darktree.warzone.world.tile.TilePos;
@@ -17,19 +17,16 @@ public class BuildBridgeAction extends Action {
 
 	private final int x, y;
 	private final Direction facing;
-	private final List<BridgeStructure> parts = new ArrayList<>();
 
-	private BridgePlacer bridge = null;
-
-	public BuildBridgeAction(World world, int x, int y, Direction facing) {
-		super(world, Actions.BUILD_BRIDGE);
+	public BuildBridgeAction(int x, int y, Direction facing) {
+		super(Actions.BUILD_BRIDGE);
 		this.x = x;
 		this.y = y;
 		this.facing = facing;
 	}
 
-	public BuildBridgeAction(World world, CompoundTag nbt) {
-		this(world, nbt.getInt("x"), nbt.getInt("y"), Direction.values()[nbt.getInt("facing")]);
+	public BuildBridgeAction(CompoundTag nbt) {
+		this(nbt.getInt("x"), nbt.getInt("y"), Direction.values()[nbt.getInt("facing")]);
 	}
 
 	@Override
@@ -41,14 +38,15 @@ public class BuildBridgeAction extends Action {
 	}
 
 	@Override
-	protected boolean verify(Symbol symbol) {
-		bridge = BridgePlacer.create(world, x, y, facing, false);
-		return bridge != null && bridge.isFullyValid(symbol);
-	}
+	public boolean apply(WorldSnapshot world, boolean animated) {
+		Symbol symbol = world.getCurrentSymbol();
+		BridgePlacer bridge = BridgePlacer.create(world, x, y, facing, false);
 
-	@Override
-	protected void redo(Symbol symbol) {
-		parts.clear();
+		if (bridge == null || !bridge.isFullyValid(symbol)) {
+			return false;
+		}
+
+		List<BridgeStructure> parts = new ArrayList<>();
 
 		for (TilePos pos : bridge.getTiles()) {
 			parts.add((BridgeStructure) Entities.BRIDGE.create(world, pos.x, pos.y));
@@ -62,14 +60,7 @@ public class BuildBridgeAction extends Action {
 
 		world.getCountry(symbol).addMaterials(-bridge.getCost());
 		Sounds.STAMP.play(x, y);
+		return false;
 	}
 
-	@Override
-	protected void undo(Symbol symbol) {
-		for (BridgeStructure part : parts) {
-			part.remove();
-		}
-
-		world.getCountry(symbol).addMaterials(bridge.getCost());
-	}
 }

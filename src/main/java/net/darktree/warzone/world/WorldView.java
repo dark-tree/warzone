@@ -11,12 +11,9 @@ public class WorldView {
 	public float scaleY;
 	public float zoom;
 
-	protected final World world;
-
-	public WorldView(World world) {
-		this.offsetX = world.getWidth() / -2f;
-		this.offsetY = world.getHeight() / -2f;
-		this.world = world;
+	public WorldView(WorldInfo info) {
+		this.offsetX = info.width / -2f;
+		this.offsetY = info.height / -2f;
 
 		setZoom(Input.MAP_ZOOM_MIN * 1.8f);
 	}

@@ -6,7 +6,6 @@ import net.darktree.warzone.util.NbtSerializable;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -16,7 +15,7 @@ public class UpgradeManager implements NbtSerializable {
 	private final Supplier<Boolean> activator;
 
 	public UpgradeManager(Supplier<Boolean> activator) {
-		this.upgrades = Registries.UPGRADES.map(new IdentityHashMap<>(), upgrade -> new UpgradeState(false));
+		this.upgrades = Registries.UPGRADES.map(upgrade -> new UpgradeState(false));
 		this.activator = activator;
 	}
 

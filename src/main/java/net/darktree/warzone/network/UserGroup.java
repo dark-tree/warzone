@@ -65,7 +65,7 @@ public class UserGroup {
 			self.onGroupJoined(uid -> {
 				group.join(uid);
 				group.sync();
-				new WorldSyncPacket(Main.game.getWorld().orElseThrow()).sendToUser(uid);
+				new WorldSyncPacket(Main.game.getWorld().orElseThrow().getTrackingWorld()).sendToUser(uid);
 			});
 
 			self.onGroupLeft(uid -> {

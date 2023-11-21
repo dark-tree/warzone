@@ -27,7 +27,7 @@ public class UpgradePacket extends SimplePacket {
 
 	@Override
 	public void apply(PacketContext context) {
-		if (upgrade.buy(context.getWorld().getCountry(symbol)) && context.isHost()) {
+		if (upgrade.buy(context.getWorld().getTrackingWorld().getCountry(symbol)) && context.isHost()) {
 			broadcastExceptHost();
 		}
 	}

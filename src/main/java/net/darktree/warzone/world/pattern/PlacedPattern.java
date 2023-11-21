@@ -1,6 +1,6 @@
 package net.darktree.warzone.world.pattern;
 
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.tile.TilePos;
 
 import java.util.List;
@@ -8,12 +8,12 @@ import java.util.function.Consumer;
 
 public class PlacedPattern implements PlacedTileIterator {
 
-	private final World world;
+	private final WorldSnapshot world;
 	private final int x;
 	private final int y;
 	private final Pattern pattern;
 
-	public PlacedPattern(World world, int x, int y, Pattern pattern) {
+	public PlacedPattern(WorldSnapshot world, int x, int y, Pattern pattern) {
 		this.world = world;
 		this.x = x;
 		this.y = y;

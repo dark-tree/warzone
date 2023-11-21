@@ -2,7 +2,7 @@ package net.darktree.warzone.network;
 
 import net.darktree.warzone.Game;
 import net.darktree.warzone.Main;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 
 import javax.annotation.Nullable;
 
@@ -36,7 +36,7 @@ public class PacketContext {
 		return Main.game;
 	}
 
-	public World getWorld() {
+	public WorldAccess getWorld() {
 		return getGame().getWorld().orElseThrow();
 	}
 

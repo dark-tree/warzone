@@ -5,7 +5,7 @@ import net.darktree.warzone.client.render.Alignment;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.render.image.Sprite;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 
 public class Hotbar {
 
@@ -30,7 +30,7 @@ public class Hotbar {
 		return this;
 	}
 
-	public void draw(boolean focused, World world, Symbol symbol) {
+	public void draw(boolean focused, WorldAccess world, Symbol symbol) {
 
 		ScreenRenderer.setColor(Colors.NONE);
 		ScreenRenderer.setSprite(sprite);
@@ -41,7 +41,7 @@ public class Hotbar {
 		if (right != null) draw(right, 0, focused, world, symbol);
 	}
 
-	private void draw(HotbarComponent component, int x, boolean focused, World world, Symbol symbol) {
+	private void draw(HotbarComponent component, int x, boolean focused, WorldAccess world, Symbol symbol) {
 		if (component != null) {
 			ScreenRenderer.setOffset(x, 0);
 			component.draw(focused, world, symbol);

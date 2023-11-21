@@ -1,8 +1,7 @@
 package net.darktree.warzone.country.ai.unit.data;
 
-import net.darktree.warzone.world.World;
 import net.darktree.warzone.world.action.MoveUnitAction;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.action.ledger.Action;
 import net.darktree.warzone.world.path.Path;
 
 import java.util.List;
@@ -48,8 +47,8 @@ public final class UnitMove {
 	/**
 	 * Create an action that matches this move
 	 */
-	public Action asAction(World world) {
-		MoveUnitAction action = new MoveUnitAction(world, source.x, source.y);
+	public Action asAction() {
+		MoveUnitAction action = new MoveUnitAction(source.x, source.y);
 		action.setTarget(target.x, target.y);
 		return action;
 	}

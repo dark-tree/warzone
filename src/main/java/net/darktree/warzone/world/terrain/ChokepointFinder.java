@@ -1,7 +1,7 @@
 package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.Surface;
 
@@ -9,7 +9,7 @@ public class ChokepointFinder extends AbstractFieldFinder {
 
 	int[][] vertical, horizontal;
 
-	public ChokepointFinder(World world) {
+	public ChokepointFinder(WorldSnapshot world) {
 		super(Patterns.EMPTY, world);
 		this.vertical = new int[width][height];
 		this.horizontal = new int[width][height];

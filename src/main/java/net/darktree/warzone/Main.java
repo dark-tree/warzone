@@ -1,12 +1,12 @@
 package net.darktree.warzone;
 
+import com.google.common.collect.ImmutableList;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.render.GLManager;
 import net.darktree.warzone.client.render.ScreenRenderer;
 import net.darktree.warzone.client.render.image.Font;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.sound.SoundSystem;
-import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.client.window.Window;
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Symbol;
@@ -17,7 +17,6 @@ import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.network.Packets;
 import net.darktree.warzone.network.UserGroup;
 import net.darktree.warzone.network.packet.EndTurnPacket;
-import net.darktree.warzone.screen.AcceptScreen;
 import net.darktree.warzone.screen.BuildScreen;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.ScreenStack;
@@ -25,9 +24,10 @@ import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.Profiler;
 import net.darktree.warzone.util.Resources;
 import net.darktree.warzone.util.Util;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
+import net.darktree.warzone.world.WorldInfo;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.Actions;
-import net.darktree.warzone.world.action.manager.ActionManager;
 import net.darktree.warzone.world.entity.Entities;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import org.lwjgl.Version;
@@ -38,7 +38,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class Main {
 
@@ -84,6 +83,7 @@ public class Main {
 		Util.load(Sounds.class);
 		Util.load(Actions.class);
 		Util.load(Upgrades.class);
+		Util.load(Tiles.class);
 		Util.load(net.darktree.warzone.country.Resources.class);
 
 		game = new Game();
@@ -147,7 +147,7 @@ public class Main {
 
 	private static void console(BufferedReader reader) throws IOException {
 		String line = reader.readLine();
-		World world = game.getWorld().orElse(null);
+		WorldAccess world = game.getWorld().orElse(null);
 
 		if (world != null && line.startsWith("tput ")) {
 			String[] parts = line.split(" ");
@@ -155,7 +155,8 @@ public class Main {
 			int y = Integer.parseInt(parts[2]);
 
 			Main.runSynced(() -> {
-				world.addEntity(Registries.ENTITIES.byKey(parts[3]).value().create(world, x, y));
+				WorldSnapshot snapshot = world.getTrackingWorld();
+				snapshot.addEntity(Registries.ENTITIES.byKey(parts[3]).value().create(snapshot, x, y));
 			});
 		}
 
@@ -163,7 +164,7 @@ public class Main {
 			String[] parts = line.split(" ");
 			int s = Integer.parseInt(parts[1]);
 
-			world.defineCountry(Symbol.fromIndex((byte) s));
+			world.getTrackingWorld().defineCountry(Symbol.fromIndex((byte) s));
 			Logger.warn("The world needs to be re-loaded for this change to fully apply!");
 		}
 
@@ -173,20 +174,22 @@ public class Main {
 			int h = Integer.parseInt(parts[2]);
 
 			Main.runSynced(() -> {
-				game.setWorld(new World(w, h));
-				game.getWorld().orElseThrow().loadTiles(pos -> Tiles.EMPTY.getDefaultVariant());
+				WorldInfo info = new WorldInfo(w, h, "NEW0", "Untitled Map", ImmutableList.of(Symbol.CROSS));
+
+				game.setWorld(new WorldAccess(info, new WorldSnapshot(info, null)));
 				ScreenStack.closeAll();
 				ScreenStack.open(new PlayScreen(null, game.getWorld().orElseThrow()));
 			});
 		}
 
+		// TODO this is broken now lol
 		if (world != null && line.startsWith("give ")) {
 			String[] parts = line.split(" ");
 			int count = Integer.parseInt(parts[2]);
 
 			Main.runSynced(() -> {
 				Resource.Quantified resource = Registries.RESOURCES.byKey(parts[1]).value().quantify(count);
-				world.getCountry(world.getCurrentSymbol()).addResource(resource);
+				world.getTrackingWorld().getCountry(world.getCurrentSymbol()).addResource(resource);
 				Logger.info("Done!");
 			});
 		}
@@ -200,7 +203,7 @@ public class Main {
 			Symbol symbol = Symbol.fromIndex((byte) Integer.parseInt(parts[1]));
 			String type = parts[2];
 
-			world.getCountry(symbol).controller = switch (type) {
+			world.getTrackingWorld().getCountry(symbol).controller = switch (type) {
 				case "self" -> new LocalController();
 				case "null" -> new NullController();
 				case "ai" -> new MachineController();
@@ -214,29 +217,29 @@ public class Main {
 			new EndTurnPacket().broadcast();
 		}
 
-		if (world != null && line.startsWith("rmake ")) {
-			String[] parts = line.split(" ");
-			UserGroup.make(parts[1], group -> {
-				world.manager = new ActionManager.Host(world);
-			}, reason -> {
-				ScreenStack.open(new AcceptScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
-				world.manager = new ActionManager(world);
-				UserGroup.instance.close();
-				UserGroup.instance = null;
-			});
-		}
-
-		if (world != null && line.startsWith("rjoin ")) {
-			String[] parts = line.split(" ");
-			UserGroup.join(parts[1], Integer.parseInt(parts[2]), group -> {
-				world.manager = new ActionManager.Client(world);
-			}, reason -> {
-				ScreenStack.open(new AcceptScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
-				world.manager = new ActionManager(world);
-				UserGroup.instance.close();
-				UserGroup.instance = null;
-			});
-		}
+//		if (world != null && line.startsWith("rmake ")) {
+//			String[] parts = line.split(" ");
+//			UserGroup.make(parts[1], group -> {
+//				world.manager = new ActionManager.Host(world);
+//			}, reason -> {
+//				ScreenStack.open(new AcceptScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
+//				world.manager = new ActionManager(world);
+//				UserGroup.instance.close();
+//				UserGroup.instance = null;
+//			});
+//		}
+//
+//		if (world != null && line.startsWith("rjoin ")) {
+//			String[] parts = line.split(" ");
+//			UserGroup.join(parts[1], Integer.parseInt(parts[2]), group -> {
+//				world.manager = new ActionManager.Client(world);
+//			}, reason -> {
+//				ScreenStack.open(new AcceptScreen(Text.translated("network.error.closed"), reason.toUpperCase(Locale.ROOT)));
+//				world.manager = new ActionManager(world);
+//				UserGroup.instance.close();
+//				UserGroup.instance = null;
+//			});
+//		}
 	}
 }
 

@@ -6,7 +6,7 @@ import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.screen.ResourceRenderer;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,8 @@ public class HotbarOverview extends HotbarComponent {
 	}
 
 	@Override
-	public void draw(boolean focused, World world, Symbol symbol) {
-		Country country = world.getCountry(symbol);
+	public void draw(boolean focused, WorldAccess world, Symbol symbol) {
+		Country country = world.getTrackingWorld().getCountry(symbol);
 
 		ScreenRenderer.push();
 

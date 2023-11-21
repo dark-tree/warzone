@@ -4,7 +4,7 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.color.MutableColor;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.terrain.ColonizationFinder;
 import net.darktree.warzone.world.terrain.PrincipalityRangeFinder;
 import net.darktree.warzone.world.terrain.TargetFinder;
@@ -19,7 +19,7 @@ public class PrincipalityOverlay extends Overlay {
 	private final TargetFinder target;
 	private final ColonizationFinder colonization;
 
-	public PrincipalityOverlay(World world) {
+	public PrincipalityOverlay(WorldSnapshot world) {
 		this.radius = new PrincipalityRangeFinder(world);
 		this.target = new TargetFinder(Symbol.CROSS, radius);
 		this.colonization = new ColonizationFinder(Symbol.CROSS, world, target.getTargets(), true);
@@ -30,7 +30,7 @@ public class PrincipalityOverlay extends Overlay {
 	}
 
 	@Override
-	public Color getColor(World world, int x, int y, TileState state) {
+	public Color getColor(WorldSnapshot world, int x, int y, TileState state) {
 		int i = getTargetIndex(x, y);
 
 		if (i != -1) {

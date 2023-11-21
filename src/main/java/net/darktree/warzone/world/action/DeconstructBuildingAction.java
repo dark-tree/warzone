@@ -2,12 +2,10 @@ package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.WorldSnapshot;
+import net.darktree.warzone.world.action.ledger.Action;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.entity.building.Building;
-import net.darktree.warzone.world.entity.building.MultipartStructure;
-import net.darktree.warzone.world.tile.TilePos;
 import net.querz.nbt.tag.CompoundTag;
 
 import java.util.ArrayList;
@@ -21,31 +19,32 @@ public final class DeconstructBuildingAction extends Action {
 	private final int value;
 	private final Optional<Country> owner;
 
-	public DeconstructBuildingAction(World world, int x, int y) {
-		super(world, Actions.DECONSTRUCT);
+	public DeconstructBuildingAction(int x, int y) {
+		super(Actions.DECONSTRUCT);
 		this.x = x;
 		this.y = y;
 
-		Building building = world.getEntity(x, y, Building.class);
-		int cost = 0;
+		// FIXME
+//		Building building =  world.getEntity(x, y, Building.class);
+//		int cost = 0;
+//
+//		if (building instanceof MultipartStructure multipart) {
+//			for (TilePos pos : multipart.getStructureParts()) {
+//				Building part = world.getEntity(pos.x, pos.y, Building.class);
+//				this.parts.add(part);
+//				cost += part.getType().value;
+//			}
+//		} else {
+//			cost = building.getType().value;
+//			this.parts.add(building);
+//		}
 
-		if (building instanceof MultipartStructure multipart) {
-			for (TilePos pos : multipart.getStructureParts()) {
-				Building part = world.getEntity(pos.x, pos.y, Building.class);
-				this.parts.add(part);
-				cost += part.getType().value;
-			}
-		} else {
-			cost = building.getType().value;
-			this.parts.add(building);
-		}
-
-		this.value = cost;
-		this.owner = building.getOwner();
+		this.value = 0; // cost;
+		this.owner = null; // building.getOwner();
 	}
 
-	public DeconstructBuildingAction(World world, CompoundTag nbt) {
-		this(world, nbt.getInt("x"), nbt.getInt("y"));
+	public DeconstructBuildingAction(CompoundTag nbt) {
+		this(nbt.getInt("x"), nbt.getInt("y"));
 	}
 
 	@Override
@@ -55,25 +54,21 @@ public final class DeconstructBuildingAction extends Action {
 		nbt.putInt("y", y);
 	}
 
-	private int getReminder() {
-		return Building.remainder(owner.orElseThrow(), value);
-	}
-
 	@Override
-	protected boolean verify(Symbol symbol) {
-		return parts.stream().allMatch(Building::isDeconstructable) && owner.isPresent() && owner.get().symbol == symbol;
-	}
+	public boolean apply(WorldSnapshot world, boolean animated) {
+		Symbol symbol = world.getCurrentSymbol();
 
-	@Override
-	protected void redo(Symbol symbol) {
+		if (!(parts.stream().allMatch(Building::isDeconstructable) && owner.isPresent() && owner.get().symbol == symbol)) {
+			return false;
+		}
+
 		parts.forEach(Entity::remove);
 		world.getCountry(symbol).addMaterials(getReminder());
+		return true;
 	}
 
-	@Override
-	protected void undo(Symbol symbol) {
-		parts.forEach(world::addEntity);
-		world.getCountry(symbol).addMaterials(-getReminder());
+	private int getReminder() {
+		return Building.remainder(owner.orElseThrow(), value);
 	}
 
 }

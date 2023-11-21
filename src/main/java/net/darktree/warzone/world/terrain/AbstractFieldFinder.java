@@ -1,13 +1,13 @@
 package net.darktree.warzone.world.terrain;
 
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.pattern.Pattern;
 
 public class AbstractFieldFinder extends AbstractFinder {
 
 	protected final int[][] field;
 
-	protected AbstractFieldFinder(Pattern pattern, World world) {
+	protected AbstractFieldFinder(Pattern pattern, WorldSnapshot world) {
 		super(pattern, world);
 
 		this.field = new int[this.width][this.height];

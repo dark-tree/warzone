@@ -10,7 +10,7 @@ import net.darktree.warzone.screen.BuildScreen;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.ScreenStack;
 import net.darktree.warzone.screen.interactor.DeconstructInteractor;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 
 public class HotbarConstruction extends HotbarComponent {
 
@@ -20,7 +20,7 @@ public class HotbarConstruction extends HotbarComponent {
 	}
 
 	@Override
-	public void draw(boolean focused, World world, Symbol symbol) {
+	public void draw(boolean focused, WorldAccess world, Symbol symbol) {
 		drawPicker();
 
 		ScreenRenderer.offset(417, 52);

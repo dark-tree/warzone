@@ -5,7 +5,8 @@ import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.SummonAction;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.overlay.PathFinderOverlay;
@@ -13,11 +14,12 @@ import net.darktree.warzone.world.overlay.PathFinderOverlay;
 public class CityInteractor extends Interactor {
 
 	private final SummonAction action;
-	private final World world;
+	private final WorldAccess world;
 
-	public CityInteractor(Symbol symbol, World world) {
-		Building building = world.getCountry(symbol).getCapitol();
-		this.action = new SummonAction(world, building.getX(), building.getY());
+	public CityInteractor(Symbol symbol, WorldAccess world) {
+		WorldSnapshot snapshot = world.getTrackingWorld();
+		Building building = snapshot.getCountry(symbol).getCapitol();
+		this.action = new SummonAction(building.getX(), building.getY());
 		this.world = world;
 
 		world.getView().setOverlay(new PathFinderOverlay(action.getPathfinder()));
@@ -38,7 +40,7 @@ public class CityInteractor extends Interactor {
 	public void onClick(ClickEvent event, int x, int y) {
 		if (world.isPositionValid(x, y)) {
 			if (this.action.setTarget(x, y)) {
-				world.getManager().apply(this.action);
+				world.getLedger().push(this.action);
 				closed = true;
 			}
 		}

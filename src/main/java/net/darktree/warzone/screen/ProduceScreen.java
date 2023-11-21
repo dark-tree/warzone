@@ -11,7 +11,7 @@ import net.darktree.warzone.client.gui.prefab.GridPrefabs;
 import net.darktree.warzone.client.text.Text;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.entity.building.production.ProductionState;
 import net.darktree.warzone.world.entity.building.production.Recipe;
 
@@ -19,7 +19,7 @@ public class ProduceScreen extends PaginatedScreen {
 
 	private final ProductionState state;
 	private final Country country;
-	private final World world;
+	private final WorldAccess world;
 
 	private static final Text TEXT_RESOURCE = Text.translated("gui.produce.resource");
 	private static final Text TEXT_COST = Text.translated("gui.produce.cost");
@@ -27,9 +27,9 @@ public class ProduceScreen extends PaginatedScreen {
 	private static final Text TEXT_TITLE = Text.translated("gui.produce.title");
 	private static final Text TEXT_CAPACITY = Text.translated("gui.produce.capacity");
 
-	public ProduceScreen(ProductionState state, World world, Symbol symbol) {
+	public ProduceScreen(ProductionState state, WorldAccess world, Symbol symbol) {
 		this.state = state;
-		this.country = world.getCountry(symbol);
+		this.country = world.getTrackingWorld().getCountry(symbol);
 		this.world = world;
 		setPagination(state.getRecipes().size(), 6);
 	}

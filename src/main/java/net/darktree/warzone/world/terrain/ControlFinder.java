@@ -3,14 +3,14 @@ package net.darktree.warzone.world.terrain;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.Warp;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 
 public class ControlFinder extends AbstractFieldFinder {
 
-	public ControlFinder(World world) {
+	public ControlFinder(WorldSnapshot world) {
 		super(Patterns.NEIGHBOURS, world);
 
 		for (Symbol s : Symbol.values()) {

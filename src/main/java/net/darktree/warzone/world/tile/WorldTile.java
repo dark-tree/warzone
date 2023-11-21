@@ -2,14 +2,14 @@ package net.darktree.warzone.world.tile;
 
 import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 
 public interface WorldTile {
 
 	/**
 	 * Called when a component is clicked
 	 */
-	default void onInteract(World world, int x, int y, ClickEvent event) {
+	default void onInteract(WorldAccess view, int x, int y, ClickEvent event) {
 
 	}
 

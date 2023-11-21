@@ -7,20 +7,21 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.NbtSerializable;
 import net.darktree.warzone.util.Registry;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.Update;
 import net.darktree.warzone.world.WorldComponent;
 import net.darktree.warzone.world.WorldListener;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class Entity implements NbtSerializable, WorldListener, WorldComponent {
 
-	protected final World world;
+	protected final WorldSnapshot world;
 	protected int tx, ty;
 	protected final Type type;
 	protected boolean removed = false;
 
-	public Entity(World world, int x, int y, Type type) {
+	public Entity(WorldSnapshot world, int x, int y, Type type) {
 		this.world = world;
 		this.type = type;
 
@@ -78,13 +79,13 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 	public void onAdded() {
 		removed = false;
 		world.getTileState(tx, ty).setEntity(this);
-		world.markOverlayDirty();
+		world.pushUpdateBits(Update.OVERLAY);
 	}
 
 	@Override
 	public void onRemoved() {
 		world.getTileState(tx, ty).removeEntity(this);
-		world.markOverlayDirty();
+		world.pushUpdateBits(Update.OVERLAY);
 	}
 
 	@Override
@@ -103,10 +104,19 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 	 * Used for deserializing an entity from NBT data, called during world loading
 	 * @return the deserialized entity
 	 */
-	public static Entity load(World world, @NotNull CompoundTag tag) {
+	public static Entity load(WorldSnapshot world, @NotNull CompoundTag tag) {
 		Entity entity = Registries.ENTITIES.byKey(tag.getString("id")).value().create(world, tag.getInt("x"), tag.getInt("y"));
 		entity.fromNbt(tag);
 		return entity;
+	}
+
+	public Entity copy(WorldSnapshot copy) {
+		return type.create(copy, tx, ty).copyFrom(this);
+	}
+
+	public Entity copyFrom(Entity entity) {
+		this.removed = entity.removed;
+		return this;
 	}
 
 	public static class Type extends ElementType<Entity.Type> {
@@ -118,7 +128,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 			this.icon = icon;
 		}
 
-		public Entity create(World world, int x, int y) {
+		public Entity create(WorldSnapshot world, int x, int y) {
 			return constructor.create(world, x, y);
 		}
 
@@ -128,7 +138,7 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		}
 
 		public interface Constructor {
-			Entity create(World world, int x, int y);
+			Entity create(WorldSnapshot world, int x, int y);
 		}
 	}
 

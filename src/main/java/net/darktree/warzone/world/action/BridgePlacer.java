@@ -4,7 +4,7 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.util.math.Vec2i;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.Entities;
 import net.darktree.warzone.world.entity.building.BridgeStructure;
 import net.darktree.warzone.world.tile.Surface;
@@ -16,12 +16,12 @@ import java.util.List;
 
 public class BridgePlacer {
 
-	private final World world;
+	private final WorldSnapshot world;
 	private final Direction facing;
 	private final List<TilePos> tiles;
 	private TilePos a, b;
 
- 	private BridgePlacer(World world, Direction facing) {
+ 	private BridgePlacer(WorldSnapshot world, Direction facing) {
 		this.world = world;
 		this.facing = facing;
 		this.tiles = new ArrayList<>();
@@ -82,7 +82,7 @@ public class BridgePlacer {
 	 * Projects the bridge structure, returns object that can be used to validate, render
 	 * and build the requested bridge, or null if no bridge can possibly exist at the given position
 	 */
-	public static BridgePlacer create(World world, int x, int y, Direction facing, boolean ignore) {
+	public static BridgePlacer create(WorldSnapshot world, int x, int y, Direction facing, boolean ignore) {
 		BridgePlacer placer = new BridgePlacer(world, facing);
 
 		if (world.isPositionValid(x, y) && isTileValid(world, x, y, ignore)) {
@@ -96,7 +96,7 @@ public class BridgePlacer {
 		return null;
 	}
 
-	private static TilePos projectBridgeSide(World world, int x, int y, Vec2i offset, List<TilePos> tiles, boolean ignore) {
+	private static TilePos projectBridgeSide(WorldSnapshot world, int x, int y, Vec2i offset, List<TilePos> tiles, boolean ignore) {
 		int cx = x, cy = y;
 
 		while (true) {
@@ -115,7 +115,7 @@ public class BridgePlacer {
 		}
 	}
 
-	private static boolean isTileValid(World world, int x, int y, boolean ignore) {
+	private static boolean isTileValid(WorldSnapshot world, int x, int y, boolean ignore) {
 		final TileState state = world.getTileState(x, y);
 		return (ignore || state.getEntity() == null) && state.getTile().getSurface() == Surface.WATER;
 	}

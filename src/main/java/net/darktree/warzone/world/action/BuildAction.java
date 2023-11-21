@@ -4,8 +4,8 @@ import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Direction;
-import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.WorldSnapshot;
+import net.darktree.warzone.world.action.ledger.Action;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.tile.Surface;
 import net.darktree.warzone.world.tile.Tile;
@@ -19,18 +19,16 @@ public final class BuildAction extends Action {
 	private final int x, y;
 	private final Direction facing;
 
-	private Building building;
-
-	public BuildAction(World world, Building.Type type, int x, int y, Direction facing) {
-		super(world, Actions.BUILD);
+	public BuildAction(Building.Type type, int x, int y, Direction facing) {
+		super(Actions.BUILD);
 		this.type = type;
 		this.x = x;
 		this.y = y;
 		this.facing = facing;
 	}
 
-	public BuildAction(World world, CompoundTag nbt) {
-		this(world, (Building.Type) Registries.ENTITIES.byId(nbt.getInt("type")).value(), nbt.getInt("x"), nbt.getInt("y"), Direction.values()[nbt.getInt("facing")]);
+	public BuildAction(CompoundTag nbt) {
+		this((Building.Type) Registries.ENTITIES.byId(nbt.getInt("type")).value(), nbt.getInt("x"), nbt.getInt("y"), Direction.values()[nbt.getInt("facing")]);
 	}
 
 	@Override
@@ -43,7 +41,9 @@ public final class BuildAction extends Action {
 	}
 
 	@Override
-	protected boolean verify(Symbol symbol) {
+	public boolean apply(WorldSnapshot world, boolean animated) {
+		Symbol symbol = world.getCurrentSymbol();
+
 		if (type.value > world.getCountry(symbol).getTotalMaterials()) {
 			return false;
 		}
@@ -57,21 +57,10 @@ public final class BuildAction extends Action {
 			}
 		}
 
-		return true;
-	}
-
-	@Override
-	protected void redo(Symbol symbol) {
-		building = (Building) world.addEntity(type, x, y);
-		building.setFacing(facing);
+		((Building) world.addEntity(type, x, y)).setFacing(facing);
 		world.getCountry(symbol).addMaterials(-type.value);
 		Sounds.STAMP.play(x, y);
-	}
-
-	@Override
-	protected void undo(Symbol symbol) {
-		building.remove();
-		world.getCountry(symbol).addMaterials(type.value);
+		return false;
 	}
 
 }

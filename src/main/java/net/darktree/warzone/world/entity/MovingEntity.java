@@ -6,7 +6,8 @@ import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.Update;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.path.Path;
 import net.darktree.warzone.world.tile.TilePos;
 
@@ -21,11 +22,26 @@ public abstract class MovingEntity extends Entity {
 	private int px, py;
 	protected boolean moved, attacked;
 
-	public MovingEntity(World world, int x, int y, Type type) {
+	public MovingEntity(WorldSnapshot world, int x, int y, Type type) {
 		super(world, x, y, type);
 
 		this.px = x;
 		this.py = y;
+	}
+
+	public Entity copyFrom(Entity entity) {
+		MovingEntity moving = (MovingEntity) entity;
+
+		this.x = moving.x;
+		this.y = moving.y;
+		this.sx = moving.sx;
+		this.sy = moving.sy;
+		this.px = moving.px;
+		this.py = moving.py;
+		this.moved = moving.moved;
+		this.attacked = moving.attacked;
+		this.path = null; // TODO is this right?
+		return super.copyFrom(entity);
 	}
 
 	/**
@@ -87,7 +103,7 @@ public abstract class MovingEntity extends Entity {
 	protected void migrate(int x1, int y1, int x2, int y2) {
 		world.getTileState(x1, y1).removeEntity(this);
 		world.getTileState(x2, y2).setEntity(this);
-		world.markOverlayDirty();
+		world.pushUpdateBits(Update.OVERLAY);
 	}
 
 	protected void move(int x, int y, boolean match) {

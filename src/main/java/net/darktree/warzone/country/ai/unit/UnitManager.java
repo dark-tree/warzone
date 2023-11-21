@@ -3,9 +3,9 @@ package net.darktree.warzone.country.ai.unit;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.ai.WeighedPos;
 import net.darktree.warzone.country.ai.unit.data.*;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.SummonAction;
-import net.darktree.warzone.world.action.manager.DeferredActionQueue;
+import net.darktree.warzone.world.action.ledger.DeferredActionQueue;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.darktree.warzone.world.tile.TilePos;
 
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public final class UnitManager {
 
-	private final World world;
+	private final WorldSnapshot world;
 	private final Country country;
 
 	private final UnitAvoidField avoid;
@@ -27,10 +27,10 @@ public final class UnitManager {
 	private final LinkedList<UnitTarget> targets = new LinkedList<>();
 	private UnitTarget gather = null;
 
-	public UnitManager(World world, Country country) {
+	public UnitManager(WorldSnapshot world, Country country) {
 		this.world = world;
 		this.country = country;
-		this.avoid = new UnitAvoidField(world.getWidth(), world.getHeight());
+		this.avoid = new UnitAvoidField(world.getInfo());
 		this.movementSolver = new MovementSolver();
 		this.summonSolver = new SummonSolver(world, country);
 		this.gatherSolver = new GatherSolver();
@@ -107,7 +107,7 @@ public final class UnitManager {
 		// skip pinned moves and submit
 		for (UnitMove move : solution.moves) {
 			if (!move.isPinned()) {
-				recorder.push(move.asAction(world));
+				recorder.push(move.asAction());
 			}
 		}
 	}
@@ -125,7 +125,7 @@ public final class UnitManager {
 		}
 
 		if (pos != null) {
-			SummonAction action = new SummonAction(world, country.getCapitol().getX(), country.getCapitol().getY());
+			SummonAction action = new SummonAction(country.getCapitol().getX(), country.getCapitol().getY());
 			action.setTarget(pos.x, pos.y);
 			recorder.push(action);
 		}

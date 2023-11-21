@@ -2,7 +2,7 @@ package net.darktree.warzone.network.packet;
 
 import net.darktree.warzone.network.*;
 import net.darktree.warzone.util.Logger;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.querz.nbt.tag.CompoundTag;
 
 public class WorldSyncPacket extends SimplePacket {
@@ -15,7 +15,7 @@ public class WorldSyncPacket extends SimplePacket {
 		this.nbt = buffer.getNbt();
 	}
 
-	public WorldSyncPacket(World world) {
+	public WorldSyncPacket(WorldSnapshot world) {
 		super(Packets.WORLD);
 		this.nbt = new CompoundTag();
 		world.toNbt(this.nbt);

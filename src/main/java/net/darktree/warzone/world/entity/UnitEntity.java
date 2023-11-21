@@ -7,11 +7,13 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.upgrade.Upgrades;
 import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.UnitInteractor;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.path.PathFinder;
 import net.darktree.warzone.world.path.PathFinderConfig;
 import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.pattern.ShapeHelper;
+import net.darktree.warzone.world.terrain.BonusFinder;
 import net.darktree.warzone.world.tile.TileState;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +23,16 @@ public class UnitEntity extends MovingEntity {
 	private Symbol symbol = Symbol.CROSS;
 	public boolean armored = false;
 
-	public UnitEntity(World world, int x, int y) {
+	public UnitEntity(WorldSnapshot world, int x, int y) {
 		super(world, x, y, Entities.UNIT);
+	}
+
+	public Entity copyFrom(Entity entity) {
+		UnitEntity moving = (UnitEntity) entity;
+
+		this.symbol = moving.symbol;
+		this.armored = moving.armored;
+		return super.copyFrom(entity);
 	}
 
 	/**
@@ -55,11 +65,12 @@ public class UnitEntity extends MovingEntity {
 		ShapeHelper.MidpointPredicate midpoint = (world, direction, tile, pos) -> colonizationCheck(pos.x, pos.y, war, true);
 
 		ShapeHelper.iterateValid(world, target, midpoint, dice == 2, getX(), getY(), pos -> {
-			world.setTileOwner(pos.x, pos.y, getSymbol());
+			world.getTileState(pos).setOwner(getSymbol(), true);
 		});
 
 		// check for and grant any bonus tiles
-		world.grantBonusTiles(symbol);
+		BonusFinder finder = new BonusFinder(world, symbol);
+		finder.grant();
 
 		if (dice % 2 != 0) {
 			if (armored) {
@@ -93,7 +104,7 @@ public class UnitEntity extends MovingEntity {
 	}
 
 	@Override
-	public void onInteract(World world, int x, int y, ClickEvent event) {
+	public void onInteract(WorldAccess world, int x, int y, ClickEvent event) {
 		if (symbol == world.getActiveSymbol()) {
 			PlayScreen.setInteractor(new UnitInteractor(this, world));
 		}

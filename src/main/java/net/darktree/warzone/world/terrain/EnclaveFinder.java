@@ -1,7 +1,7 @@
 package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 
@@ -16,7 +16,7 @@ public class EnclaveFinder extends AbstractFieldFinder {
 	private final List<Enclave> enclaves = new ArrayList<>();
 	private final ControlFinder control;
 
-	public EnclaveFinder(World world, ControlFinder control) {
+	public EnclaveFinder(WorldSnapshot world, ControlFinder control) {
 		super(Patterns.RING, world);
 
 		this.control = control;

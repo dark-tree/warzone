@@ -2,7 +2,7 @@ package net.darktree.warzone.world.path;
 
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.Warp;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.pattern.PlacedTileIterator;
 import net.darktree.warzone.world.terrain.AbstractFieldFinder;
@@ -18,7 +18,7 @@ public class PathFinder extends AbstractFieldFinder {
 	private final PlacedTileIterator pattern;
 	private final boolean extended;
 
-	public PathFinder(World world, Symbol symbol, PlacedTileIterator pattern, PathFinderConfig config, boolean extended) {
+	public PathFinder(WorldSnapshot world, Symbol symbol, PlacedTileIterator pattern, PathFinderConfig config, boolean extended) {
 		super(config.pattern, world);
 
 		this.distance = new int[this.width][this.height];

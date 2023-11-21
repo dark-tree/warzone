@@ -1,7 +1,7 @@
 package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.pattern.Pattern;
 import net.darktree.warzone.world.pattern.Patterns;
@@ -16,13 +16,13 @@ public abstract class AbstractFinder {
 
 	protected final TilePos[] offsets;
 	protected final int width, height;
-	protected final World world;
+	protected final WorldSnapshot world;
 
-	protected AbstractFinder(Pattern pattern, World world) {
+	protected AbstractFinder(Pattern pattern, WorldSnapshot world) {
 		this.offsets = pattern.getOffsets();
 		this.world = world;
-		this.width = world.getWidth();
-		this.height = world.getHeight();
+		this.width = world.getInfo().width;
+		this.height = world.getInfo().height;
 	}
 
 	protected final void clearField(int[][] array2d) {

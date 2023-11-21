@@ -8,7 +8,7 @@ import net.darktree.warzone.country.ai.unit.data.UnitTarget;
 import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.iterable.SpiralIterable;
 import net.darktree.warzone.util.iterable.SpiralPoint;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public final class AvoidanceSolver {
 	 * Use to move any units that didn't yet move in this turn
 	 * to a safer position (escape avoidance zones)
 	 */
-	public void solve(World world, UnitAvoidField field, List<UnitMove> moves, List<UnitSource> sources) {
+	public void solve(WorldSnapshot world, UnitAvoidField field, List<UnitMove> moves, List<UnitSource> sources) {
 		for (UnitSource source : sources) {
 			checkPlacement(world, field, moves, source);
 		}
@@ -28,7 +28,7 @@ public final class AvoidanceSolver {
 	 * Check if the given unit can ble placed at its current postion, if not
 	 * try moving it
 	 */
-	private void checkPlacement(World world, UnitAvoidField field, List<UnitMove> moves, UnitSource source) {
+	private void checkPlacement(WorldSnapshot world, UnitAvoidField field, List<UnitMove> moves, UnitSource source) {
 		final int value = field.get(source.x, source.y);
 
 		if (value != 0) {
@@ -40,7 +40,7 @@ public final class AvoidanceSolver {
 	 * Escape with a given unit into a safer place
 	 * TODO: allow escaping into lower-avoidance
 	 */
-	private void escape(World world, UnitAvoidField field, List<UnitMove> moves, UnitSource source, int weight) {
+	private void escape(WorldSnapshot world, UnitAvoidField field, List<UnitMove> moves, UnitSource source, int weight) {
 		Symbol from = world.getTileState(source).getOwner();
 
 		for (SpiralPoint point : SpiralIterable.of(5, source.x, source.y)) {

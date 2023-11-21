@@ -26,8 +26,8 @@ public enum Symbol {
 		return armored;
 	}
 
-	public static Symbol fromNbt(CompoundTag nbt) {
-		return fromIndex(nbt.getByte("symbol"));
+	public static Symbol fromNbt(String key, CompoundTag nbt) {
+		return fromIndex(nbt.getByte(key));
 	}
 
 	public static Symbol fromIndex(byte index) {

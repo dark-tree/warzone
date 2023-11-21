@@ -4,7 +4,7 @@ import net.darktree.warzone.country.Resource;
 import net.darktree.warzone.country.upgrade.Upgrade;
 import net.darktree.warzone.network.Packet;
 import net.darktree.warzone.util.Registry;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.action.ledger.Action;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.entity.building.production.Recipe;
 import net.darktree.warzone.world.tile.Tile;

@@ -1,7 +1,7 @@
 package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 
 public class Bonus {
 
@@ -18,8 +18,8 @@ public class Bonus {
 	/**
 	 * Transfers this bonus tile to the new owner
 	 */
-	public void transfer(World world) {
-		world.setTileOwner(x, y, owner);
+	public void transfer(WorldSnapshot world) {
+		world.getTileState(x, y).setOwner(owner, true);
 	}
 
 }

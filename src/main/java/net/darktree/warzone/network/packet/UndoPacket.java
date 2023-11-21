@@ -22,7 +22,7 @@ public class UndoPacket extends SimplePacket {
 
 	@Override
 	public void apply(PacketContext context) {
-		context.getWorld().getManager().undo(symbol, true);
+		context.getWorld().getLedger().undo();
 	}
 
 	@Override

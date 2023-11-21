@@ -2,7 +2,7 @@ package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.country.ai.WeighedPos;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.darktree.warzone.world.path.Path;
 import net.darktree.warzone.world.path.PathFinder;
@@ -22,7 +22,7 @@ public class ColonizationFinder extends AbstractFinder {
 	private final boolean allowRandom;
 	private PathFinder immediate, deferred;
 
-	public ColonizationFinder(Symbol self, World world, List<WeighedPos> targets, boolean allowRandom) {
+	public ColonizationFinder(Symbol self, WorldSnapshot world, List<WeighedPos> targets, boolean allowRandom) {
 		super(Patterns.NEIGHBOURS, world);
 		this.targets = targets;
 		this.self = self;

@@ -1,13 +1,15 @@
 package net.darktree.warzone.country.ai.unit.data;
 
+import net.darktree.warzone.world.WorldInfo;
+
 public final class UnitAvoidField {
 
 	private final int width, height;
 	private final int[][] field;
 
-	public UnitAvoidField(int width, int height) {
-		this.width = width;
-		this.height = height;
+	public UnitAvoidField(WorldInfo info) {
+		this.width = info.width;
+		this.height = info.height;
 		this.field = new int[width][height];
 	}
 

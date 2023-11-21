@@ -4,8 +4,8 @@ import net.darktree.warzone.Registries;
 import net.darktree.warzone.network.urp.PacketByteBuffer;
 import net.darktree.warzone.util.ElementType;
 import net.darktree.warzone.util.Registry;
-import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.manager.ActionManager;
+import net.darktree.warzone.world.WorldAccess;
+import net.darktree.warzone.world.WorldLedger;
 
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
@@ -61,11 +61,12 @@ public abstract class Packet<T> {
 		UserGroup.sendToUser(this, uid);
 	}
 
-	public final void send(World world) {
-		ActionManager manager = world.getManager();
+	public final void send(WorldAccess world) {
+		// FIXME, this used to query the world manager
+		WorldLedger ledger = world.getLedger();
 
-		if (!manager.isLocal()) {
-			if (manager.getSide() == Side.CLIENT) {
+		if (!ledger.isLocal()) {
+			if (ledger.getSide() == Side.CLIENT) {
 				sendToHost();
 			} else {
 				broadcastExceptHost();

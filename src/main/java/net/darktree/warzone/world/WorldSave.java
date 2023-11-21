@@ -10,28 +10,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 public class WorldSave implements Comparable<WorldSave> {
 
 	private final Path path;
 	private final File meta, map;
-	private final String name;
-	private final String code;
-	private final long time;
-	private final CompoundTag nbt;
+	private final WorldInfo info;
 
-	protected WorldSave(Path path, File map, File meta, CompoundTag nbt) {
+	protected WorldSave(Path path, File map, File meta, WorldInfo info) {
 		this.path = path;
 		this.meta = meta;
 		this.map = map;
-		this.name = nbt.getString("name");
-		this.code = nbt.getString("code");
-		this.time = nbt.getLong("time");
-		this.nbt = nbt;
+		this.info = info;
 	}
 
 	public static WorldSave read(Path path) {
@@ -50,19 +41,25 @@ public class WorldSave implements Comparable<WorldSave> {
 			return null;
 		}
 
-		return new WorldSave(path, map, meta, nbt);
+		try {
+			WorldInfo info = WorldInfo.load(nbt);
+			return new WorldSave(path, map, meta, info);
+		} catch (Exception e) {
+			Logger.error("Failed to load save metadata for: " + path, ", ", e.getMessage());
+			return null;
+		}
 	}
 
 	public String getTime(DateTimeFormatter formatter) {
-		return LocalDateTime.ofEpochSecond(time, 0, ZoneOffset.UTC).format(formatter);
+		return info.getModifyTime(formatter);
 	}
 
 	public String getName() {
-		return name;
+		return info.getMapName();
 	}
 
 	public String getCode() {
-		return code;
+		return info.getCodeName();
 	}
 
 	public boolean load() {
@@ -74,7 +71,7 @@ public class WorldSave implements Comparable<WorldSave> {
 		}
 
 		try {
-			World world = World.load(nbt);
+			WorldAccess world = WorldAccess.load(info, nbt);
 			ScreenStack.closeAll();
 			ScreenStack.open(new PlayScreen(this, world));
 //			ScreenStack.open(new EditScreen(world));
@@ -90,17 +87,18 @@ public class WorldSave implements Comparable<WorldSave> {
 		Util.deleteDirectory(path.toFile(), true);
 	}
 
-	public boolean save(World world) {
-		nbt.putLong("time", Instant.now().getEpochSecond());
+	public boolean save(WorldAccess world) {
 		CompoundTag worldNbt = new CompoundTag();
 		world.toNbt(worldNbt);
-		return NbtHelper.writeFile(meta, nbt) && NbtHelper.writeFile(map, worldNbt);
+
+		CompoundTag metaNbt = new CompoundTag();
+		info.toNbt(metaNbt);
+		return NbtHelper.writeFile(meta, metaNbt) && NbtHelper.writeFile(map, worldNbt);
 	}
 
 	@Override
-	public int compareTo(@NotNull WorldSave other) {
-		if (other.time == this.time) return 0;
-		return (other.time > this.time) ? 1 : -1;
+	public int compareTo(@NotNull WorldSave save) {
+		return Long.compare(save.info.modified, info.modified);
 	}
 
 }

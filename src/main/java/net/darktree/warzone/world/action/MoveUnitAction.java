@@ -1,9 +1,8 @@
 package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.client.Sounds;
-import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.WorldSnapshot;
+import net.darktree.warzone.world.action.ledger.Action;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.darktree.warzone.world.path.Path;
 import net.darktree.warzone.world.path.PathFinder;
@@ -18,16 +17,16 @@ public final class MoveUnitAction extends Action {
 	private int tx, ty;
 	private Path path;
 
-	public MoveUnitAction(World world, int x, int y) {
-		super(world, Actions.ENTITY_MOVE);
+	public MoveUnitAction(int x, int y) {
+		super(Actions.ENTITY_MOVE);
 		this.sx = x;
 		this.sy = y;
-		this.entity = world.getEntity(x, y, UnitEntity.class);
+		this.entity = null; // world.getEntity(x, y, UnitEntity.class); FIXME
 		this.pathfinder = this.entity.getPathFinder(false);
 	}
 
-	public MoveUnitAction(World world, CompoundTag nbt) {
-		this(world, nbt.getInt("sx"), nbt.getInt("sy"));
+	public MoveUnitAction(CompoundTag nbt) {
+		this(nbt.getInt("sx"), nbt.getInt("sy"));
 		setTarget(nbt.getInt("tx"), nbt.getInt("ty"));
 	}
 
@@ -38,6 +37,17 @@ public final class MoveUnitAction extends Action {
 		nbt.putInt("sy", sy);
 		nbt.putInt("tx", tx);
 		nbt.putInt("ty", ty);
+	}
+
+	@Override
+	public boolean apply(WorldSnapshot world, boolean animated) {
+		if (!(entity != null && !entity.hasActed() && path != null)) {
+			return false;
+		}
+
+		entity.follow(path);
+		Sounds.DRAW_PATH.play(entity);
+		return true;
 	}
 
 	public PathFinder getPathfinder() {
@@ -55,23 +65,4 @@ public final class MoveUnitAction extends Action {
 		return false;
 	}
 
-	@Override
-	protected boolean verify(Symbol symbol) {
-		return entity != null && !entity.hasActed() && path != null;
-	}
-
-	@Override
-	protected void redo(Symbol symbol) {
-		entity.follow(path);
-	}
-
-	@Override
-	protected void undo(Symbol symbol) {
-		entity.revert();
-	}
-
-	@Override
-	protected void common(Symbol symbol) {
-		Sounds.DRAW_PATH.play(entity);
-	}
 }

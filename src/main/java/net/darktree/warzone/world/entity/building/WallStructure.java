@@ -1,12 +1,12 @@
 package net.darktree.warzone.world.entity.building;
 
 import net.darktree.warzone.util.Direction;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.Entities;
 
 public class WallStructure extends FacedStructure {
 
-	public WallStructure(World world, int x, int y) {
+	public WallStructure(WorldSnapshot world, int x, int y) {
 		super(world, x, y, Entities.WALL);
 	}
 

@@ -10,30 +10,37 @@ import net.darktree.warzone.world.overlay.Overlay;
 
 public class WorldRenderer extends WorldView {
 
+	private WorldAccess access;
 	private Overlay overlay = null;
 	private boolean redrawSurface = true;
 	private boolean redrawBuildings = true;
 
-	public WorldRenderer(World world) {
-		super(world);
+	public WorldRenderer(WorldAccess access) {
+		super(access.getInfo());
+		this.access = access;
 	}
 
 	public void draw(WorldBuffers buffers) {
-		world.update();
+		// access.update(); // TODO
 
-		if (redrawSurface || redrawBuildings) {
+		int flags = access.pullRenderBits();
+
+		redrawSurface = 0 != (flags & Update.SURFACE);
+		redrawBuildings = true;
+
+		if (0 != (flags & Update.OVERLAY)) {
 			markOverlayDirty();
 		}
 
-		final int width = world.getWidth();
-		final int height = world.getHeight();
+		WorldInfo info = access.getInfo();
+		WorldSnapshot snapshot = access.getTrackingWorld();
 
 		if (redrawSurface) {
 			buffers.getSurface().clear();
 
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					world.getTileState(x, y).getTile().draw(x, y, buffers.getSurface());
+			for (int x = 0; x < info.width; x++) {
+				for (int y = 0; y < info.height; y++) {
+					snapshot.getTileState(x, y).getTile().draw(x, y, buffers.getSurface());
 					drawBorders(buffers.getSurface(), x, y);
 				}
 			}
@@ -45,14 +52,14 @@ public class WorldRenderer extends WorldView {
 			buffers.getBuilding().clear();
 		}
 
-		world.getEntities().forEach(entity -> entity.draw(buffers, redrawBuildings));
+		snapshot.getEntities().forEach(entity -> entity.draw(buffers, redrawBuildings));
 
 		if (overlay != null) {
 			VertexBuffer buffer = buffers.getOverlay();
 
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					Renderer.overlay(buffer, x, y, overlay.getColor(world, x, y, world.getTileState(x, y)));
+			for (int x = 0; x < info.width; x++) {
+				for (int y = 0; y < info.height; y++) {
+					Renderer.overlay(buffer, x, y, overlay.getColor(snapshot, x, y, snapshot.getTileState(x, y)));
 				}
 			}
 		}
@@ -63,6 +70,8 @@ public class WorldRenderer extends WorldView {
 
 
 	private void drawBorders(VertexBuffer buffer, int x, int y) {
+		WorldSnapshot world = access.getTrackingWorld();
+
 		Symbol self = world.getTileState(x, y).getOwner();
 		float w = 0.03f;
 

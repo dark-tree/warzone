@@ -1,13 +1,13 @@
 package net.darktree.warzone.world.terrain;
 
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 
 public class PrincipalityRangeFinder extends AbstractFieldFinder {
 
-	public PrincipalityRangeFinder(World world) {
+	public PrincipalityRangeFinder(WorldSnapshot world) {
 		super(Patterns.NEIGHBOURS, world);
 
 		compute();

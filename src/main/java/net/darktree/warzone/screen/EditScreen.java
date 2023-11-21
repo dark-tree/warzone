@@ -12,11 +12,11 @@ import net.darktree.warzone.client.window.input.KeyEvent;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.screen.hotbar.Hotbar;
 import net.darktree.warzone.screen.hotbar.HotbarComponent;
-import net.darktree.warzone.screen.interactor.EntityEditInteractor;
-import net.darktree.warzone.screen.interactor.OwnershipEditInteractor;
-import net.darktree.warzone.screen.interactor.SurfaceEditInteractor;
+import net.darktree.warzone.screen.interactor.edit.EntityEditInteractor;
+import net.darktree.warzone.screen.interactor.edit.OwnershipEditInteractor;
+import net.darktree.warzone.screen.interactor.edit.SurfaceEditInteractor;
 import net.darktree.warzone.util.Util;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.tile.Tile;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class EditScreen extends WorldScreen {
 	int selectedToolTab;
 	int time;
 
-	public EditScreen(World world) {
+	public EditScreen(WorldAccess world) {
 		super(world);
 		SoundSystem.stopMusic();
 
@@ -145,7 +145,7 @@ public class EditScreen extends WorldScreen {
 		}
 
 		@Override
-		protected void draw(boolean focused, World world, Symbol symbol) {
+		protected void draw(boolean focused, WorldAccess world, Symbol symbol) {
 			ScreenRenderer.offset(5, 15);
 			ScreenRenderer.text(30, "MATERIAL:");
 
@@ -260,7 +260,7 @@ public class EditScreen extends WorldScreen {
 		}
 
 		@Override
-		protected void draw(boolean focused, World world, Symbol symbol) {
+		protected void draw(boolean focused, WorldAccess world, Symbol symbol) {
 
 		}
 

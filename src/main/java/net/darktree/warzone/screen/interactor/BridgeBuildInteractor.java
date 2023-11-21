@@ -6,7 +6,8 @@ import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.vertex.Renderer;
 import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.client.window.input.ClickEvent;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.BridgePlacer;
 import net.darktree.warzone.world.action.BuildBridgeAction;
 import net.darktree.warzone.world.entity.building.Building;
@@ -16,13 +17,15 @@ public class BridgeBuildInteractor extends RotatableBuildInteractor {
 
 	private BridgePlacer bridge = null;
 
-	public BridgeBuildInteractor(Building.Type type, World world, boolean play) {
+	public BridgeBuildInteractor(Building.Type type, WorldAccess world, boolean play) {
 		super(type, world, play);
 	}
 
 	private boolean verify(int x, int y) {
-		bridge = BridgePlacer.create(world, x, y, rotation, false);
-		return bridge != null && bridge.isFullyValid(world.getCurrentSymbol());
+		WorldSnapshot snapshot = world.getTrackingWorld();
+
+		bridge = BridgePlacer.create(snapshot, x, y, rotation, false);
+		return bridge != null && bridge.isFullyValid(snapshot.getCurrentSymbol());
 	}
 
 	@Override
@@ -50,7 +53,7 @@ public class BridgeBuildInteractor extends RotatableBuildInteractor {
 	@Override
 	public void onClick(ClickEvent event, int x, int y) {
 		if (valid && pos.equals(x, y)) {
-			world.getManager().apply(new BuildBridgeAction(world, pos.x, pos.y, rotation));
+			world.getLedger().push(new BuildBridgeAction(pos.x, pos.y, rotation));
 			this.closed = true;
 		}
 	}

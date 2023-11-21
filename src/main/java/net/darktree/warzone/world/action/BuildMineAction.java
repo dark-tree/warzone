@@ -1,8 +1,8 @@
 package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.WorldSnapshot;
+import net.darktree.warzone.world.action.ledger.Action;
 import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.entity.building.MineBuilding;
 import net.darktree.warzone.world.tile.tiles.Tiles;
@@ -12,14 +12,14 @@ public final class BuildMineAction extends Action {
 
 	private final int x, y;
 
-	public BuildMineAction(World world, int x, int y) {
-		super(world, Actions.BUILD_MINE);
+	public BuildMineAction(int x, int y) {
+		super(Actions.BUILD_MINE);
 		this.x = x;
 		this.y = y;
 	}
 
-	public BuildMineAction(World world, CompoundTag nbt) {
-		this(world, nbt.getInt("x"), nbt.getInt("y"));
+	public BuildMineAction(CompoundTag nbt) {
+		this(nbt.getInt("x"), nbt.getInt("y"));
 	}
 
 	@Override
@@ -30,21 +30,13 @@ public final class BuildMineAction extends Action {
 	}
 
 	@Override
-	protected boolean verify(Symbol symbol) {
-		return (world.getTileState(x, y).getTile() == Tiles.MATERIAL_ORE) && world.canControl(x, y, symbol);
-	}
+	public boolean apply(WorldSnapshot world, boolean animated) {
+		Symbol symbol = world.getCurrentSymbol();
 
-	@Override
-	protected void redo(Symbol symbol) {
-		toggle();
-	}
+		if ((world.getTileState(x, y).getTile() != Tiles.MATERIAL_ORE) || !world.canControl(x, y, symbol)) {
+			return false;
+		}
 
-	@Override
-	protected void undo(Symbol symbol) {
-		toggle();
-	}
-
-	private void toggle() {
 		Building building = world.getEntity(x, y, Building.class);
 
 		if (building == null) {
@@ -54,6 +46,8 @@ public final class BuildMineAction extends Action {
 				building.remove();
 			}
 		}
+
+		return true;
 	}
 
 }

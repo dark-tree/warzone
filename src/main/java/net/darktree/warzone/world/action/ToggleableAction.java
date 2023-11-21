@@ -1,7 +1,6 @@
 package net.darktree.warzone.world.action;
 
-import net.darktree.warzone.world.World;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.action.ledger.Action;
 
 /**
  * Extend this class when defining an actions that should fold on itself
@@ -9,11 +8,16 @@ import net.darktree.warzone.world.action.manager.Action;
  */
 public abstract class ToggleableAction extends Action {
 
-	public ToggleableAction(World world, Type type) {
-		super(world, type);
+	public ToggleableAction(Type type) {
+		super(type);
 	}
 
-	public boolean supersedes(ToggleableAction peek) {
+	@Override
+	public boolean isToggleable(Action previous) {
+		return supersedes(previous);
+	}
+
+	public boolean supersedes(Action peek) {
 		return this.getClass() == peek.getClass();
 	}
 

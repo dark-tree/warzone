@@ -34,7 +34,8 @@ public class Registry<T extends ElementType<T>> {
 	/**
 	 * Create a map from the registry where keys are the registry values
 	 */
-	public <R> Map<T, R> map(Map<T, R> map, Function<T, R> mapper) {
+	public <R> Map<T, R> map(Function<T, R> mapper) {
+		Map<T, R> map = new IdentityHashMap<>();
 		iterate(entry -> map.put(entry, mapper.apply(entry)));
 		return map;
 	}

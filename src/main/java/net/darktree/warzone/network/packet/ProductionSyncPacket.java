@@ -35,7 +35,7 @@ public class ProductionSyncPacket extends SimplePacket {
 
 	public void apply(PacketContext context) {
 		Logger.info("Production state received and synced!");
-		context.getWorld().getEntity(x, y, ProducingBuilding.class).update(nbt);
+		context.getWorld().getTrackingWorld().getEntity(x, y, ProducingBuilding.class).update(nbt);
 
 		if (context.isHost()) {
 			broadcastExceptHost();

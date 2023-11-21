@@ -4,7 +4,7 @@ import net.darktree.warzone.client.Colors;
 import net.darktree.warzone.client.render.color.Color;
 import net.darktree.warzone.client.render.color.MutableColor;
 import net.darktree.warzone.util.math.MathHelper;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.terrain.ChokepointFinder;
 import net.darktree.warzone.world.terrain.DangerFinder;
 import net.darktree.warzone.world.tile.TileState;
@@ -25,7 +25,7 @@ public class FearOverlay extends Overlay {
 	}
 
 	@Override
-	public Color getColor(World world, int x, int y, TileState state) {
+	public Color getColor(WorldSnapshot world, int x, int y, TileState state) {
 		//return getColor(dangerFinder.getDerivedFear(x, y));
 		int t = tightness.getTightness(x, y);
 		return (t > 0) ? Colors.TEXTBOX_SELECTED : Colors.NONE;

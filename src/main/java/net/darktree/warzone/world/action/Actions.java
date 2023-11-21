@@ -1,7 +1,7 @@
 package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.Registries;
-import net.darktree.warzone.world.action.manager.Action;
+import net.darktree.warzone.world.action.ledger.Action;
 
 public class Actions {
 	public static final Action.Type BUILD = Registries.ACTIONS.register("build", new Action.Type(BuildAction::new));

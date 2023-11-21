@@ -1,6 +1,6 @@
 package net.darktree.warzone.country;
 
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 
 public abstract class Controller {
 
@@ -12,6 +12,6 @@ public abstract class Controller {
 	/**
 	 * Called when a turn starts for this player
 	 */
-	public abstract void turnStart(Country country, World world);
+	public abstract void turnStart(Country country, WorldSnapshot world);
 
 }

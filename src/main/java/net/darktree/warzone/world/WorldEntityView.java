@@ -37,7 +37,7 @@ public interface WorldEntityView {
 	 * @return the added entity
 	 */
 	default Entity addEntity(Entity.Type type, int x, int y) {
-		return addEntity(type.create((World) this, x, y));
+		return addEntity(type.create((WorldSnapshot) this, x, y));
 	}
 
 	/**

@@ -2,22 +2,23 @@ package net.darktree.warzone.world.tile;
 
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.country.Symbol;
-import net.darktree.warzone.util.Logger;
 import net.darktree.warzone.util.NbtSerializable;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.Update;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.Entity;
-import net.darktree.warzone.world.tile.tiles.Tiles;
 import net.darktree.warzone.world.tile.variant.TileVariant;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 final public class TileState implements NbtSerializable {
 
+	private final WorldSnapshot parent;
 	private TileVariant variant;
 	private Symbol owner;
 	private Entity entity;
 
-	public TileState(TileVariant variant, Symbol owner) {
+	public TileState(WorldSnapshot parent, TileVariant variant, Symbol owner) {
+		this.parent = parent;
 		this.variant = variant;
 		this.owner = owner;
 	}
@@ -35,35 +36,24 @@ final public class TileState implements NbtSerializable {
 		owner = Symbol.values()[tag.getByte("owner")];
 	}
 
-	public void load(World world, int x, int y, CompoundTag tag) {
-		try {
-			CompoundTag tile = tag.getCompoundTag(x + " " + y);
-			fromNbt(tile);
-		}catch (Exception e) {
-			Logger.warn("Loading of tile at: (", x, ", ", y, ") failed! Reverting to default...");
-			world.setTileVariant(x, y, Tiles.EMPTY.getDefaultVariant());
-			owner = Symbol.NONE;
-		}
-	}
-
 	/**
 	 * Set the tile variant for this tile state
 	 */
-	public void setVariant(World world, TileVariant variant) {
+	public void setVariant(TileVariant variant) {
 		this.variant = variant;
-		world.getView().markSurfaceDirty();
+		this.parent.pushUpdateBits(Update.SURFACE | Update.OVERLAY);
 	}
 
 	/**
 	 * Set the tile owner for this tile state
 	 */
-	public void setOwner(World world, Symbol owner, boolean notify) {
+	public void setOwner(Symbol owner, boolean notify) {
 		if (notify && this.owner != owner && entity != null) {
 			entity.onOwnerUpdate(this.owner, owner);
 		}
 
 		this.owner = owner;
-		world.onOwnershipChanged();
+		this.parent.pushUpdateBits(Update.OWNER | Update.OVERLAY);
 	}
 
 	/**
@@ -110,4 +100,7 @@ final public class TileState implements NbtSerializable {
 		if (this.entity == entity) this.entity = null;
 	}
 
+	public TileState copy(WorldSnapshot copy) {
+		return new TileState(copy, variant, owner);
+	}
 }

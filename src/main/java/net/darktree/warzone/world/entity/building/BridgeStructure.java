@@ -3,10 +3,12 @@ package net.darktree.warzone.world.entity.building;
 import net.darktree.warzone.country.Country;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Direction;
+import net.darktree.warzone.world.Update;
 import net.darktree.warzone.world.Warp;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.BridgePlacer;
 import net.darktree.warzone.world.entity.Entities;
+import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.tile.TilePos;
 import net.querz.nbt.tag.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +22,7 @@ public class BridgeStructure extends FacedStructure implements Warp, MultipartSt
 	private TilePos a, b;
 	private boolean edge;
 
-	public BridgeStructure(World world, int x, int y) {
+	public BridgeStructure(WorldSnapshot world, int x, int y) {
 		super(world, x, y, Entities.BRIDGE);
 	}
 
@@ -29,6 +31,15 @@ public class BridgeStructure extends FacedStructure implements Warp, MultipartSt
 		this.b = b;
 		this.edge = edge;
 		setFacing(facing);
+	}
+
+	public Entity copyFrom(Entity entity) {
+		BridgeStructure moving = (BridgeStructure) entity;
+
+		this.a = moving.a;
+		this.b = moving.b;
+		this.edge = moving.edge;
+		return super.copyFrom(entity);
 	}
 
 	@Override
@@ -67,13 +78,13 @@ public class BridgeStructure extends FacedStructure implements Warp, MultipartSt
 	@Override
 	public void onAdded() {
 		super.onAdded();
-		world.onOwnershipChanged();
+		world.pushUpdateBits(Update.CONTROL | Update.OVERLAY);
 	}
 
 	@Override
 	public void onRemoved() {
 		super.onAdded();
-		world.onOwnershipChanged();
+		world.pushUpdateBits(Update.CONTROL | Update.OVERLAY);
 	}
 
 	@Override

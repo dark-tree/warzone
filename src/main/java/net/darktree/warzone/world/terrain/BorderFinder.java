@@ -3,7 +3,7 @@ package net.darktree.warzone.world.terrain;
 import com.google.common.collect.ImmutableMap;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Util;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.pattern.Patterns;
 import net.darktree.warzone.world.tile.TilePos;
 
@@ -15,7 +15,7 @@ public class BorderFinder extends AbstractFieldFinder {
 
 	private final ImmutableMap<Symbol, List<TilePos>> tiles = Util.enumMapOf(Symbol.class, symbol -> new ArrayList<>());
 
-	public BorderFinder(World world) {
+	public BorderFinder(WorldSnapshot world) {
 		super(Patterns.NEIGHBOURS, world);
 
 		compute();

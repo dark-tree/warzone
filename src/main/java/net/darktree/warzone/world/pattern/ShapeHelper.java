@@ -3,7 +3,7 @@ package net.darktree.warzone.world.pattern;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.util.math.MathHelper;
 import net.darktree.warzone.world.Warp;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.entity.Entity;
 import net.darktree.warzone.world.tile.TilePos;
 
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public class ShapeHelper {
 
-	public static boolean isValid(World world, TargetPredicate target, MidpointPredicate midpoint, boolean large, int fx, int fy, int tx, int ty) {
+	public static boolean isValid(WorldSnapshot world, TargetPredicate target, MidpointPredicate midpoint, boolean large, int fx, int fy, int tx, int ty) {
 		if (!world.isPositionValid(fx, fy) || !world.isPositionValid(tx, ty)) {
 			return false;
 		}
@@ -41,14 +41,14 @@ public class ShapeHelper {
 	}
 
 	public interface TargetPredicate {
-		boolean test(World world, int x, int y);
+		boolean test(WorldSnapshot world, int x, int y);
 	}
 
 	public interface MidpointPredicate {
-		boolean test(World world, Direction direction, Entity tile, TilePos pos);
+		boolean test(WorldSnapshot world, Direction direction, Entity tile, TilePos pos);
 	}
 
-	public static void iterateValid(World world, TargetPredicate target, MidpointPredicate midpoint, boolean large, int fx, int fy, Consumer<TilePos> consumer) {
+	public static void iterateValid(WorldSnapshot world, TargetPredicate target, MidpointPredicate midpoint, boolean large, int fx, int fy, Consumer<TilePos> consumer) {
 		Set<TilePos> linked = new HashSet<>();
 
 		for (TilePos offset : Patterns.CROSS.getOffsets()) {
@@ -75,7 +75,7 @@ public class ShapeHelper {
 		}
 	}
 
-	private static void consumeValidOffset(World world, TargetPredicate target, MidpointPredicate midpoint, boolean large, int fx, int fy, int tx, int ty, Consumer<TilePos> consumer) {
+	private static void consumeValidOffset(WorldSnapshot world, TargetPredicate target, MidpointPredicate midpoint, boolean large, int fx, int fy, int tx, int ty, Consumer<TilePos> consumer) {
 		if (isValid(world, target, midpoint, large, fx, fy, tx, ty)) {
 			consumer.accept(new TilePos(tx, ty));
 		}

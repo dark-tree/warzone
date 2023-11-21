@@ -2,13 +2,13 @@ package net.darktree.warzone.screen.interactor;
 
 import net.darktree.warzone.client.Sounds;
 import net.darktree.warzone.client.window.input.KeyEvent;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.entity.building.Building;
 import org.lwjgl.glfw.GLFW;
 
 public class RotatableBuildInteractor extends BuildInteractor {
 
-	public RotatableBuildInteractor(Building.Type type, World world, boolean play) {
+	public RotatableBuildInteractor(Building.Type type, WorldAccess world, boolean play) {
 		super(type, world, play);
 	}
 

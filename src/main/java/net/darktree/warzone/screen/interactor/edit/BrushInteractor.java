@@ -1,4 +1,4 @@
-package net.darktree.warzone.screen.interactor;
+package net.darktree.warzone.screen.interactor.edit;
 
 import net.darktree.warzone.Main;
 import net.darktree.warzone.client.render.image.Sprite;
@@ -7,21 +7,22 @@ import net.darktree.warzone.client.render.vertex.VertexBuffer;
 import net.darktree.warzone.client.window.Input;
 import net.darktree.warzone.client.window.input.ClickEvent;
 import net.darktree.warzone.client.window.input.MouseButton;
+import net.darktree.warzone.screen.interactor.Interactor;
 import net.darktree.warzone.util.math.MathHelper;
-import net.darktree.warzone.world.World;
+import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.tile.TilePos;
 
 import java.util.function.Consumer;
 
 public abstract class BrushInteractor<T> extends Interactor {
 
-	protected final World world;
+	protected final WorldAccess world;
 	protected final T target;
 	protected final int radius;
 	private int frame;
 	private int x, y;
 
-	public BrushInteractor(T target, World world, int radius) {
+	public BrushInteractor(T target, WorldAccess world, int radius) {
 		this.target = target;
 		this.world = world;
 		this.radius = radius - 1;
@@ -79,7 +80,7 @@ public abstract class BrushInteractor<T> extends Interactor {
 	}
 
 	protected boolean verify(int x, int y) {
-		return world.isPositionValid(x, y) && world.getEntity(x, y) == null;
+		return world.isPositionValid(x, y) && world.getTrackingWorld().getEntity(x, y) == null;
 	}
 
 }
