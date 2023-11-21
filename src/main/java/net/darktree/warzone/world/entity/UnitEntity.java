@@ -27,12 +27,18 @@ public class UnitEntity extends MovingEntity {
 		super(world, x, y, Entities.UNIT);
 	}
 
+	@Override
 	public Entity copyFrom(Entity entity) {
 		UnitEntity moving = (UnitEntity) entity;
 
 		this.symbol = moving.symbol;
 		this.armored = moving.armored;
 		return super.copyFrom(entity);
+	}
+
+	@Override
+	public boolean isOf(Symbol symbol) {
+		return this.symbol == symbol;
 	}
 
 	/**

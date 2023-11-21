@@ -36,6 +36,10 @@ public abstract class StorageNode implements NbtSerializable {
 
 	public abstract int limit();
 
+	public void set(int amount) {
+		this.amount = MathHelper.clamp(amount, 0, limit());
+	}
+
 	public int insert(int amount) {
 		this.amount += amount;
 		int current = this.amount;

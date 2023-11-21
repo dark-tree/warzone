@@ -62,6 +62,13 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 		return world.canControl(getX(), getY(), symbol);
 	}
 
+	/**
+	 * Check if this entity belongs to the player of the given symbol
+	 */
+	public boolean isOf(Symbol symbol) {
+		return world.getTileState(getX(), getY()).getOwner() == symbol;
+	}
+
 	public int getX() {
 		return tx;
 	}

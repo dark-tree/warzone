@@ -53,4 +53,10 @@ public class UpgradeManager implements NbtSerializable {
 		});
 	}
 
+	public void copyOf(UpgradeManager other) {
+		other.upgrades.forEach((upgrade, state) -> {
+			upgrades.get(upgrade).value = state.value;
+		});
+	}
+
 }

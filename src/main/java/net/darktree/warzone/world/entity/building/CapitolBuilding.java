@@ -46,6 +46,11 @@ public class CapitolBuilding extends Building {
 	}
 
 	@Override
+	public boolean isOf(Symbol symbol) {
+		return this.symbol == symbol;
+	}
+
+	@Override
 	public void onPlayerTurnStart(Symbol symbol) {
 		if (symbol == this.symbol) summoned = false;
 	}

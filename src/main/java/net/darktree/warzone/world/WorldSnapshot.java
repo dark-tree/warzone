@@ -48,7 +48,7 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 			}
 		}
 
-		pushUpdateBits(Update.ALL);
+//		pushUpdateBits(Update.ALL); TODO this fails as the frame is null, find a better way to do this
 	}
 
 	/**

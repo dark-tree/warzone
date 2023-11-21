@@ -102,6 +102,11 @@ public class BridgeStructure extends FacedStructure implements Warp, MultipartSt
 		return Objects.requireNonNull(BridgePlacer.create(world, getX(), getY(), facing, true)).getTiles();
 	}
 
+	@Override
+	public boolean isOf(Symbol symbol) {
+		return getOwnerSymbol() == symbol;
+	}
+
 	private Symbol getOwnerSymbol() {
 		Symbol sa = world.getTileState(this.a).getOwner();
 		Symbol sb = world.getTileState(this.b).getOwner();
