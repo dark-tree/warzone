@@ -176,7 +176,7 @@ public class Main {
 			Main.runSynced(() -> {
 				WorldInfo info = new WorldInfo(w, h, "NEW0", "Untitled Map", ImmutableList.of(Symbol.CROSS));
 
-				game.setWorld(new WorldAccess(info, new WorldSnapshot(info, null)));
+				game.setWorld(WorldAccess.createOf(info));
 				ScreenStack.closeAll();
 				ScreenStack.open(new PlayScreen(null, game.getWorld().orElseThrow()));
 			});
@@ -203,12 +203,12 @@ public class Main {
 			Symbol symbol = Symbol.fromIndex((byte) Integer.parseInt(parts[1]));
 			String type = parts[2];
 
-			world.getTrackingWorld().getCountry(symbol).controller = switch (type) {
+			world.setPlayerController(symbol, switch (type) {
 				case "self" -> new LocalController();
 				case "null" -> new NullController();
 				case "ai" -> new MachineController();
 				default -> throw new RuntimeException("Invalid player type, expected 'self', 'null' or 'ai'!");
-			};
+			});
 
 			Logger.info("Identity set!");
 		}

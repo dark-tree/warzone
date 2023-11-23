@@ -16,30 +16,21 @@ import java.util.Stack;
 
 public class WorldLedger implements NbtSerializable {
 
-	private final WorldAccess view;
-	private final WorldSnapshot root;
+	private final WorldAccess access;
 	private final Stack<Frame> frames;
 
 	private WorldSnapshot tracking;
 	private int cycle = 1;
 	private int turn = 0;
 
-	public WorldLedger(WorldAccess view, WorldSnapshot root) {
-		this.view = view;
-		this.root = root;
+	public WorldLedger(WorldAccess access) {
+		this.access = access;
 		this.frames = new Stack<>();
 	}
 
-	// TODO should this be renamed?
-	public WorldAccess getView() {
-		return view;
-	}
-
-	/**
-	 * Returns a snapshot of the world as it was when the game started
-	 */
-	public WorldSnapshot getRootWorld() {
-		return root;
+	@Deprecated
+	public WorldAccess getAccess() {
+		return access;
 	}
 
 	/**
@@ -113,7 +104,7 @@ public class WorldLedger implements NbtSerializable {
 		// there is no cached world snapshot
 		// we need to recreate tracking from root
 		if (snapshot == null) {
-			snapshot = getRootWorld().copy(getFrame());
+			snapshot = access.getRootWorld().copy(getFrame());
 		}
 
 		// apply all actions between the last

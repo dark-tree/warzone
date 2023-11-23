@@ -1,7 +1,6 @@
 package net.darktree.warzone.country;
 
 import net.darktree.warzone.Registries;
-import net.darktree.warzone.country.controller.NullController;
 import net.darktree.warzone.country.storage.LocalStorageNode;
 import net.darktree.warzone.country.storage.Storage;
 import net.darktree.warzone.country.storage.StorageNode;
@@ -35,7 +34,6 @@ public class Country implements NbtSerializable, WorldListener {
 	private final Map<Resource, Storage> resources;
 	private final StorageNode local;
 
-	public Controller controller = new NullController();
 	private int colonizations = 0;
 
 	public Country(Symbol symbol, WorldSnapshot world) {
@@ -50,7 +48,6 @@ public class Country implements NbtSerializable, WorldListener {
 		country.colonizations = this.colonizations;
 		country.upgrades.copyOf(this.upgrades);
 		country.local.set(this.local.amount());
-		country.controller = this.controller; // FIXME idk why this doesn't really work :thonk:
 
 		country.resources.forEach((resource, storage) -> {
 			storage.set(this.resources.get(resource).get());
@@ -100,7 +97,7 @@ public class Country implements NbtSerializable, WorldListener {
 		if (symbol == this.symbol && event == TurnEvent.TURN_START) {
 			colonizations = 0;
 			addMaterials(getIncome());
-			controller.turnStart(this, world);
+			getController().turnStart(this, world);
 		}
 	}
 
@@ -188,8 +185,9 @@ public class Country implements NbtSerializable, WorldListener {
 		colonizations ++;
 	}
 
+	@Deprecated
 	public Controller getController() {
-		return controller;
+		return world.getAccess().getPlayerController(symbol);
 	}
 
 }

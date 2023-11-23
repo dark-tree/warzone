@@ -6,6 +6,7 @@ import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.ledger.Action;
+import net.darktree.warzone.world.action.ledger.UndoBehaviour;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.querz.nbt.tag.CompoundTag;
 
@@ -62,7 +63,7 @@ public final class ColonizeAction extends Action {
 	}
 
 	@Override
-	public boolean isRevertible() {
-		return false;
+	public UndoBehaviour getUndoBehaviour() {
+		return UndoBehaviour.BLOCKED;
 	}
 }

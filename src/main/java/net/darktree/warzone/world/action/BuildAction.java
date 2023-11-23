@@ -60,7 +60,7 @@ public final class BuildAction extends Action {
 		((Building) world.addEntity(type, x, y)).setFacing(facing);
 		world.getCountry(symbol).addMaterials(-type.value);
 		Sounds.STAMP.play(x, y);
-		return false;
+		return true;
 	}
 
 }

@@ -12,8 +12,6 @@ public class WorldRenderer extends WorldView {
 
 	private WorldAccess access;
 	private Overlay overlay = null;
-	private boolean redrawSurface = true;
-	private boolean redrawBuildings = true;
 
 	public WorldRenderer(WorldAccess access) {
 		super(access.getInfo());
@@ -21,21 +19,17 @@ public class WorldRenderer extends WorldView {
 	}
 
 	public void draw(WorldBuffers buffers) {
-		// access.update(); // TODO
-
 		int flags = access.pullRenderBits();
+		boolean buildings = (flags & Update.BUILDING) != 0;
 
-		redrawSurface = 0 != (flags & Update.SURFACE);
-		redrawBuildings = true;
-
-		if (0 != (flags & Update.OVERLAY)) {
-			markOverlayDirty();
+		if (0 != (flags & Update.OVERLAY) && overlay != null) {
+			overlay.markDirty();
 		}
 
 		WorldInfo info = access.getInfo();
 		WorldSnapshot snapshot = access.getTrackingWorld();
 
-		if (redrawSurface) {
+		if ((flags & Update.SURFACE) != 0) {
 			buffers.getSurface().clear();
 
 			for (int x = 0; x < info.width; x++) {
@@ -48,11 +42,11 @@ public class WorldRenderer extends WorldView {
 			Logger.info("Surface redrawn, using " + buffers.getSurface().count() + " vertices");
 		}
 
-		if (redrawBuildings) {
+		if (buildings) {
 			buffers.getBuilding().clear();
 		}
 
-		snapshot.getEntities().forEach(entity -> entity.draw(buffers, redrawBuildings));
+		snapshot.getEntities().forEach(entity -> entity.draw(buffers, buildings));
 
 		if (overlay != null) {
 			VertexBuffer buffer = buffers.getOverlay();
@@ -63,9 +57,6 @@ public class WorldRenderer extends WorldView {
 				}
 			}
 		}
-
-		redrawSurface = false;
-		redrawBuildings = false;
 	}
 
 
@@ -96,29 +87,6 @@ public class WorldRenderer extends WorldView {
 	 */
 	public void hideOverlay() {
 		this.overlay = null;
-	}
-
-	/**
-	 * Marks the overlay as outdated
-	 */
-	public void markOverlayDirty() {
-		if (overlay != null) overlay.markDirty();
-	}
-
-	/**
-	 * Marks the world surface as outdated,
-	 * called after a tile or border update
-	 */
-	public void markSurfaceDirty() {
-		redrawSurface = true;
-	}
-
-	/**
-	 * Marks the world building layer as outdated,
-	 * called placing or destroying a building or structure
-	 */
-	public void markBuildingsDirty() {
-		redrawBuildings = true;
 	}
 
 }

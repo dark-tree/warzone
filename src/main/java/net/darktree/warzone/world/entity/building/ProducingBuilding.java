@@ -42,7 +42,7 @@ public abstract class ProducingBuilding extends Building {
 	}
 
 	public void sync() {
-		new ProductionSyncPacket(tx, ty, production).send(world.getLedger().getView());
+		new ProductionSyncPacket(tx, ty, production).send(world.getLedger().getAccess());
 	}
 
 	public void update(CompoundTag nbt) {

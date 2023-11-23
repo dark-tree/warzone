@@ -60,7 +60,7 @@ public class BuildBridgeAction extends Action {
 
 		world.getCountry(symbol).addMaterials(-bridge.getCost());
 		Sounds.STAMP.play(x, y);
-		return false;
+		return true;
 	}
 
 }

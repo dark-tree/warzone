@@ -25,6 +25,7 @@ import java.util.List;
 public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 
 	private final WorldInfo info;
+	private final WorldAccess access;
 	private final Frame frame;
 
 	private final List<Entity> entities = new ArrayList<>();
@@ -35,8 +36,9 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 	private ControlFinder control;
 	private PrincipalityFinder principality;
 
-	public WorldSnapshot(WorldInfo info, Frame frame) {
-		this.info = info;
+	public WorldSnapshot(WorldAccess access, Frame frame) {
+		this.info = access.getInfo();
+		this.access = access;
 		this.frame = frame;
 		this.tiles = new TileState[info.width][info.height];
 
@@ -55,7 +57,7 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 	 * Creates a copy of this world snapshot
 	 */
 	public WorldSnapshot copy(Frame parent) {
-		WorldSnapshot copy = new WorldSnapshot(info, parent);
+		WorldSnapshot copy = new WorldSnapshot(access, parent);
 
 		for (int x = 0; x < info.width; x++) {
 			for (int y = 0; y < info.height; y++) {
@@ -84,10 +86,17 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 	}
 
 	/**
+	 * Returns the instance of world access this world belongs to, see {@link WorldAccess}.
+	 */
+	public WorldAccess getAccess() {
+		return access;
+	}
+
+	/**
 	 * Returns the ledger that this world belongs to, see {@link WorldLedger}.
 	 */
 	public WorldLedger getLedger() {
-		return frame.getLedger();
+		return getAccess().getLedger();
 	}
 
 	/**
@@ -111,7 +120,7 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 	 * setOwner/setVariant from {@link TileState} - those method do it for you.
 	 */
 	public void pushUpdateBits(@Update.Flags int flags) {
-		frame.getLedger().getView().pushRenderBits(flags);
+		access.pushRenderBits(flags);
 	}
 
 	// FIXME

@@ -17,8 +17,8 @@ public abstract class Action {
 		this.type = type;
 	}
 
-	public boolean isRevertible() {
-		return true;
+	public UndoBehaviour getUndoBehaviour() {
+		return UndoBehaviour.REPLAY;
 	}
 
 	public boolean isToggleable(Action previous) {

@@ -11,6 +11,7 @@ import net.darktree.warzone.screen.PlayScreen;
 import net.darktree.warzone.screen.interactor.BuildInteractor;
 import net.darktree.warzone.screen.interactor.PlacementInteractor;
 import net.darktree.warzone.util.Direction;
+import net.darktree.warzone.world.Update;
 import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.DeconstructBuildingAction;
@@ -33,7 +34,6 @@ public abstract class Building extends StructureEntity {
 	public static Building from(int x, int y, WorldSnapshot world, @NotNull CompoundTag tag) {
 		Building building = (Building) Registries.ENTITIES.byKey(tag.getString("id")).value().create(world, x, y);
 		building.fromNbt(tag);
-		building.getOwner().ifPresent(owner -> owner.addBuilding(building));
 		return building;
 	}
 
@@ -76,24 +76,19 @@ public abstract class Building extends StructureEntity {
 		forEachTile(pos -> {
 			world.getTileState(pos).setOwner(current, false);
 		});
-
-		world.getCountry(previous).removeBuilding(this);
-		world.getCountry(current).addBuilding(this);
 	}
 
 	@Override
 	public void onAdded() {
 		removed = false;
-		getOwner().ifPresent(country -> country.addBuilding(this));
 		forEachTile(pos -> world.getTileState(pos).setEntity(this));
-		//world.getLedger().getView().getView().markBuildingsDirty(); // FIXME
+		world.pushUpdateBits(Update.BUILDING | Update.OVERLAY);
 	}
 
 	@Override
 	public void onRemoved() {
-		getOwner().ifPresent(country -> country.removeBuilding(this));
 		forEachTile(pos -> world.getTileState(pos).removeEntity(this));
-		//world.getLedger().getView().getView().markBuildingsDirty(); // FIXME
+		world.pushUpdateBits(Update.BUILDING | Update.OVERLAY);
 	}
 
 	public Optional<Country> getOwner() {

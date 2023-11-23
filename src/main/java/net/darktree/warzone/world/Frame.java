@@ -74,7 +74,7 @@ public class Frame implements NbtSerializable {
 	}
 
 	boolean canUndo() {
-		return !redo.empty() && redo.peek().isRevertible();
+		return !redo.empty() && redo.peek().getUndoBehaviour().isRevertible();
 	}
 
 	public Stream<Action> actions() {
