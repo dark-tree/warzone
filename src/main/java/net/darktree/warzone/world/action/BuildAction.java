@@ -2,6 +2,7 @@ package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.Registries;
 import net.darktree.warzone.client.Sounds;
+import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.world.WorldSnapshot;
@@ -41,10 +42,10 @@ public final class BuildAction extends Action {
 	}
 
 	@Override
-	public boolean apply(WorldSnapshot world, boolean animated) {
+	public boolean redo(WorldSnapshot world, boolean animate) {
 		Symbol symbol = world.getCurrentSymbol();
 
-		if (type.value > world.getCountry(symbol).getTotalMaterials()) {
+		if (!world.getCountry(symbol).getResource(Resources.MATERIALS).has(type.value)) {
 			return false;
 		}
 

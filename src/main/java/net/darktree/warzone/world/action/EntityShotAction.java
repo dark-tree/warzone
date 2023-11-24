@@ -33,7 +33,7 @@ public final class EntityShotAction extends Action {
 	}
 
 	@Override
-	public boolean apply(WorldSnapshot world, boolean animated) {
+	public boolean redo(WorldSnapshot world, boolean animate) {
 		Symbol symbol = world.getCurrentSymbol();
 		UnitEntity source = world.getEntity(sx, sy, UnitEntity.class);
 		UnitEntity target = world.getEntity(tx, ty, UnitEntity.class);

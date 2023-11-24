@@ -26,7 +26,6 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 
 	private final WorldInfo info;
 	private final WorldAccess access;
-	private final Frame frame;
 
 	private final List<Entity> entities = new ArrayList<>();
 	private final HashMap<Symbol, Country> countries = new HashMap<>();
@@ -35,11 +34,11 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 	private BorderFinder border;
 	private ControlFinder control;
 	private PrincipalityFinder principality;
+	private int turn, cycle;
 
-	public WorldSnapshot(WorldAccess access, Frame frame) {
+	public WorldSnapshot(WorldAccess access) {
 		this.info = access.getInfo();
 		this.access = access;
-		this.frame = frame;
 		this.tiles = new TileState[info.width][info.height];
 
 		TileVariant variant = Tiles.EMPTY.getDefaultVariant();
@@ -56,8 +55,8 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 	/**
 	 * Creates a copy of this world snapshot
 	 */
-	public WorldSnapshot copy(Frame parent) {
-		WorldSnapshot copy = new WorldSnapshot(access, parent);
+	public WorldSnapshot copy() {
+		WorldSnapshot copy = new WorldSnapshot(access);
 
 		for (int x = 0; x < info.width; x++) {
 			for (int y = 0; y < info.height; y++) {
@@ -106,6 +105,14 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 		return info;
 	}
 
+	public int getTurn() {
+		return turn;
+	}
+
+	public int getCycle() {
+		return cycle;
+	}
+
 	/**
 	 * Returns a up-to-date border finder for this world.
 	 * TODO: reevaluate this, maybe have a isBorderTile/getBorderTiles method?
@@ -124,7 +131,7 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 	}
 
 	// FIXME
-	private void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {
+	public void sendPlayerTurnEvent(TurnEvent event, Symbol symbol) {
 		getEntities().forEach(entity -> entity.onPlayerTurnEvent(event, symbol));
 		this.countries.forEach((key, value) -> value.onPlayerTurnEvent(event, symbol));
 	}
@@ -196,7 +203,7 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 	 * returns null if there was an issue.
 	 */
 	public Symbol getCurrentSymbol() {
-		return frame.getSymbol();
+		return info.getSymbol(turn);
 	}
 
 	public Symbol getPrincipality(int x, int y) {
@@ -285,6 +292,26 @@ public class WorldSnapshot implements NbtSerializable, WorldEntityView {
 
 			addEntity(entity);
 		}
+	}
+
+	/**
+	 * Called at the end of a turn
+	 */
+	void endFrame() {
+		sendPlayerTurnEvent(TurnEvent.TURN_END, getCurrentSymbol());
+		turn = (turn + 1) % info.getPlayerCount();
+
+		if (turn == 0) {
+			cycle ++;
+			sendPlayerTurnEvent(TurnEvent.TURN_CYCLE_END, getCurrentSymbol());
+		}
+	}
+
+	/**
+	 * Called at the beginning of a turn
+	 */
+	void beginFrame() {
+		sendPlayerTurnEvent(TurnEvent.TURN_START, getCurrentSymbol());
 	}
 
 }

@@ -1,8 +1,9 @@
 package net.darktree.warzone.world;
 
-import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.NbtSerializable;
+import net.darktree.warzone.util.TriState;
 import net.darktree.warzone.world.action.ledger.Action;
+import net.darktree.warzone.world.action.ledger.UndoBehaviour;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import net.querz.nbt.tag.Tag;
@@ -14,37 +15,29 @@ import java.util.stream.Stream;
 public class Frame implements NbtSerializable {
 
 	private final WorldLedger ledger;
-	private final Symbol symbol;
-	private WorldSnapshot world;
-
+	private final WorldSnapshot world;
 	private final Stack<Action> redo = new Stack<>();
 	private final Stack<Action> undo = new Stack<>();
 
-	Frame(WorldLedger ledger, Symbol symbol, WorldSnapshot world) {
+	Frame(WorldLedger ledger, WorldSnapshot snapshot) {
 		this.ledger = ledger;
-		this.symbol = symbol;
-		this.world = world;
+		this.world = snapshot;
 	}
 
-	public WorldSnapshot getWorld() {
-		return world != null ? world.copy(this) : null;
+	WorldSnapshot getWorld() {
+		return world != null ? world.copy() : null;
 	}
 
-	public Symbol getSymbol() {
-		return symbol;
-	}
-
-	public WorldLedger getLedger() {
+	WorldLedger getLedger() {
 		return ledger;
 	}
 
 	boolean push(Action action, WorldSnapshot world) {
-		if (action.isToggleable(redo.peek())) {
-			undo();
-			return true;
+		if (!redo.empty() && action.isToggleable(redo.peek())) {
+			return undo(world).orDefaultTo(true);
 		}
 
-		if (action.apply(world, true)) {
+		if (action.redo(world, true)) {
 			undo.clear();
 			redo.push(action);
 			return true;
@@ -53,20 +46,26 @@ public class Frame implements NbtSerializable {
 		return false;
 	}
 
-	boolean undo() {
+	TriState undo(WorldSnapshot world) {
 		if (!redo.empty()) {
-			undo.push(redo.pop());
-			return true;
+
+			Action action = redo.peek();
+			if (action.undo(world)) {
+				undo.push(action);
+				redo.pop();
+
+				return action.getUndoBehaviour() == UndoBehaviour.REPLAY_ACTIONS ? TriState.TRUE : TriState.DEFAULT;
+			}
 		}
 
-		return false;
+		return TriState.FALSE;
 	}
 
 	boolean redo(WorldSnapshot world) {
 		if (!undo.empty()) {
 			Action action = undo.pop();
 			redo.push(action);
-			action.apply(world, true);
+			action.redo(world, true);
 			return true;
 		}
 
@@ -77,17 +76,18 @@ public class Frame implements NbtSerializable {
 		return !redo.empty() && redo.peek().getUndoBehaviour().isRevertible();
 	}
 
-	public Stream<Action> actions() {
+	Stream<Action> actions() {
 		return redo.stream();
 	}
 
-	public void shrink() {
+	void shrink() {
 		undo.clear();
+		undo.trimToSize();
+		redo.trimToSize();
 	}
 
 	@Override
 	public void toNbt(@NotNull CompoundTag nbt) {
-		nbt.putByte("symbol", (byte) symbol.ordinal());
 		nbt.putBoolean("chained", false);
 
 		ListTag<CompoundTag> actionsTag = new ListTag<>(CompoundTag.class);
@@ -111,11 +111,7 @@ public class Frame implements NbtSerializable {
 	}
 
 	public static Frame load(WorldSnapshot snapshot, WorldLedger ledger, CompoundTag nbt) {
-		Symbol symbol = Symbol.values()[nbt.getByte("symbol")];
-		Frame frame = new Frame(ledger, symbol, null);
-		frame.world = snapshot == null ? null : snapshot.copy(frame);
-
-		return frame;
+		return new Frame(ledger, snapshot == null ? null : snapshot.copy());
 	}
 
 }

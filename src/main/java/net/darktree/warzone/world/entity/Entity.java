@@ -24,8 +24,8 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 	public Entity(WorldSnapshot world, int x, int y, Type type) {
 		this.world = world;
 		this.type = type;
-
-		setPos(x, y);
+		this.tx = x;
+		this.ty = y;
 	}
 
 	/**
@@ -75,11 +75,6 @@ public abstract class Entity implements NbtSerializable, WorldListener, WorldCom
 
 	public int getY() {
 		return ty;
-	}
-
-	protected void setPos(int x, int y) {
-		this.tx = x;
-		this.ty = y;
 	}
 
 	@Override

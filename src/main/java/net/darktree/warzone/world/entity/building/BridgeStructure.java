@@ -98,7 +98,7 @@ public class BridgeStructure extends FacedStructure implements Warp, MultipartSt
 	}
 
 	@Override
-	public List<TilePos> getStructureParts() {
+	public List<TilePos> getStructureTiles() {
 		return Objects.requireNonNull(BridgePlacer.create(world, getX(), getY(), facing, true)).getTiles();
 	}
 

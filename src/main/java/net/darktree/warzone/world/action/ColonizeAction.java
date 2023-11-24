@@ -13,10 +13,10 @@ import net.querz.nbt.tag.CompoundTag;
 public final class ColonizeAction extends Action {
 
 	private final int x, y;
-	private final int dice;
+	private final byte dice;
 	private final boolean war;
 
-	public ColonizeAction(int dice, int x, int y, boolean war) {
+	public ColonizeAction(byte dice, int x, int y, boolean war) {
 		super(Actions.COLONIZE);
 		this.x = x;
 		this.y = y;
@@ -25,20 +25,20 @@ public final class ColonizeAction extends Action {
 	}
 
 	public ColonizeAction(CompoundTag nbt) {
-		this(nbt.getInt("dice"), nbt.getInt("x"), nbt.getInt("y"), nbt.getBoolean("war"));
+		this(nbt.getByte("dice"), nbt.getInt("x"), nbt.getInt("y"), nbt.getBoolean("war"));
 	}
 
 	@Override
 	public void toNbt(CompoundTag nbt) {
 		super.toNbt(nbt);
-		nbt.putInt("dice", dice);
+		nbt.putByte("dice", dice);
 		nbt.putInt("x", x);
 		nbt.putInt("y", y);
 		nbt.putBoolean("war", war);
 	}
 
 	@Override
-	public boolean apply(WorldSnapshot world, boolean animated) {
+	public boolean redo(WorldSnapshot world, boolean animate) {
 		Symbol symbol = world.getCurrentSymbol();
 		Country country = world.getCountry(symbol);
 		UnitEntity entity = world.getEntity(x, y, UnitEntity.class);

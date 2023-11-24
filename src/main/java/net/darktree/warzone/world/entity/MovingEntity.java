@@ -16,10 +16,10 @@ public abstract class MovingEntity extends Entity {
 	protected static final float SPEED = 0.05f;
 	protected static final float EPSILON = 0.001f;
 
-	protected float x, y;
-	private float sx, sy;
+	protected float fx, fy; // current frame position
+	private float sx, sy; // movement vector
+	private int px, py; // previous tile position
 	private Path path = null;
-	private int px, py;
 	protected boolean moved, attacked;
 
 	public MovingEntity(WorldSnapshot world, int x, int y, Type type) {
@@ -27,13 +27,15 @@ public abstract class MovingEntity extends Entity {
 
 		this.px = x;
 		this.py = y;
+		this.fx = x;
+		this.fy = y;
 	}
 
 	public Entity copyFrom(Entity entity) {
 		MovingEntity moving = (MovingEntity) entity;
 
-		this.x = moving.x;
-		this.y = moving.y;
+		this.fx = moving.fx;
+		this.fy = moving.fy;
 		this.sx = moving.sx;
 		this.sy = moving.sy;
 		this.px = moving.px;
@@ -55,6 +57,23 @@ public abstract class MovingEntity extends Entity {
 		this.path = path;
 		this.moved = true;
 		followNext();
+	}
+
+	/**
+	 * Makes this entity teleport to the given target
+	 */
+	public void setPos(int x, int y) {
+		migrate(getX(), getY(), x, y);
+
+		this.px = tx;
+		this.py = ty;
+		this.tx = x;
+		this.ty = y;
+		this.fx = x;
+		this.fy = y;
+		this.sx = 0;
+		this.sy = 0;
+		this.moved = true;
 	}
 
 	/**
@@ -110,7 +129,7 @@ public abstract class MovingEntity extends Entity {
 		this.tx = x;
 		this.ty = y;
 
-		float a = (x - this.x), b = (y - this.y);
+		float a = (x - this.fx), b = (y - this.fy);
 		float d = match ? Math.max(1, (float) Math.floor(Math.sqrt(a * a + b * b))) : 1;
 
 		sx = a / d * SPEED;
@@ -130,27 +149,19 @@ public abstract class MovingEntity extends Entity {
 	}
 
 	@Override
-	protected void setPos(int x, int y) {
-		super.setPos(x, y);
-
-		this.x = x;
-		this.y = y;
-	}
-
-	@Override
 	public void draw(WorldBuffers buffers, boolean updateStaticElements) {
 		draw(buffers.getEntity());
 	}
 
 	protected void draw(VertexBuffer buffer) {
-		this.x += sx;
-		this.y += sy;
+		this.fx += sx;
+		this.fy += sy;
 
-		if (Math.abs(this.x - this.tx) < EPSILON && Math.abs(this.y - this.ty) < EPSILON) {
+		if (Math.abs(this.fx - this.tx) < EPSILON && Math.abs(this.fy - this.ty) < EPSILON) {
 			this.sx = 0;
 			this.sy = 0;
-			this.x = this.tx;
-			this.y = this.ty;
+			this.fx = this.tx;
+			this.fy = this.ty;
 			onTargetReached();
 		}
 	}

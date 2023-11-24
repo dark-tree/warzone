@@ -125,8 +125,7 @@ public final class UnitManager {
 		}
 
 		if (pos != null) {
-			SummonAction action = new SummonAction(country.getCapitol().getX(), country.getCapitol().getY());
-			action.setTarget(pos.x, pos.y);
+			SummonAction action = new SummonAction(country.getCapitol().getX(), country.getCapitol().getY(), pos.x, pos.y);
 			recorder.push(action);
 		}
 	}

@@ -51,7 +51,7 @@ public class DeconstructInteractor extends Interactor {
 
 			if (entity instanceof Building building) {
 				if (entity instanceof MultipartStructure multipart) {
-					for (TilePos pos : multipart.getStructureParts()) {
+					for (TilePos pos : multipart.getStructureTiles()) {
 						Building part = snapshot.getEntity(pos.x, pos.y, Building.class);
 
 						if (part != null) {

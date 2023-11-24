@@ -61,8 +61,12 @@ public class WorldInfo {
 		return LocalDateTime.ofEpochSecond(modified, 0, ZoneOffset.UTC).format(formatter);
 	}
 
-	public List<Symbol> getSymbols() {
-		return symbols;
+	public Symbol getSymbol(int index) {
+		return symbols.get(index);
+	}
+
+	public int getPlayerCount() {
+		return symbols.size();
 	}
 
 	public void toNbt(CompoundTag nbt) {

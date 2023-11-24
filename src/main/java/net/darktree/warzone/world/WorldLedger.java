@@ -1,8 +1,8 @@
 package net.darktree.warzone.world;
 
-import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.network.Side;
 import net.darktree.warzone.util.NbtSerializable;
+import net.darktree.warzone.util.TriState;
 import net.darktree.warzone.util.iterable.BiIterable;
 import net.darktree.warzone.world.action.ledger.Action;
 import net.querz.nbt.tag.CompoundTag;
@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Stack;
 
 public class WorldLedger implements NbtSerializable {
@@ -20,8 +21,6 @@ public class WorldLedger implements NbtSerializable {
 	private final Stack<Frame> frames;
 
 	private WorldSnapshot tracking;
-	private int cycle = 1;
-	private int turn = 0;
 
 	public WorldLedger(WorldAccess access) {
 		this.access = access;
@@ -43,32 +42,20 @@ public class WorldLedger implements NbtSerializable {
 	/**
 	 * Marks the beginning of a turn
 	 */
-	public void beginNextFrame(WorldInfo info) {
+	public void beginNextFrame() {
 		if (!frames.empty()) {
 			getFrame().shrink();
 		}
 
-		int players = info.getSymbols().size();
-		this.turn = (turn + 1) % players;
+		tracking.endFrame();
+		tracking.beginFrame();
 
-		if (turn == 0) {
-			cycle ++;
-		}
-
-		Symbol symbol = info.symbols.get(this.turn);
-		frames.add(new Frame(this, symbol, tracking));
+		Frame frame = new Frame(this, tracking.copy());
+		frames.add(frame);
 	}
 
 	public Frame getFrame() {
 		return frames.peek();
-	}
-
-	public int getTurn() {
-		return turn;
-	}
-
-	public int getCycle() {
-		return cycle;
 	}
 
 	// FIXME unimplemented
@@ -104,17 +91,24 @@ public class WorldLedger implements NbtSerializable {
 		// there is no cached world snapshot
 		// we need to recreate tracking from root
 		if (snapshot == null) {
-			snapshot = access.getRootWorld().copy(getFrame());
+			snapshot = access.getRootWorld().copy();
 		}
 
 		// apply all actions between the last
 		// cached copy and now
-		for (Frame frame : skipped) {
-			final WorldSnapshot view = snapshot;
+		for (ListIterator<Frame> it = skipped.listIterator(); it.hasNext();) {
+			WorldSnapshot view = snapshot;
+			Frame frame = it.next();
+
+			view.beginFrame();
 
 			frame.actions().forEach(action -> {
-				action.apply(view, false);
+				action.redo(view, false);
 			});
+
+			if (it.hasNext()) {
+				view.endFrame();
+			}
 		}
 
 		this.tracking = snapshot;
@@ -130,12 +124,13 @@ public class WorldLedger implements NbtSerializable {
 	}
 
 	public boolean undo() {
-		if (getFrame().undo()) {
+		TriState state = getFrame().undo(tracking);
+
+		if (state.orDefaultTo(false)) {
 			updateTrackingWorld();
-			return true;
 		}
 
-		return false;
+		return state.orDefaultTo(true);
 	}
 
 	public boolean redo() {
@@ -157,15 +152,11 @@ public class WorldLedger implements NbtSerializable {
 		}
 
 		nbt.put("frames", framesTagList);
-		nbt.putInt("cycle", cycle);
-		nbt.putInt("turn", turn);
 	}
 
 	@Override
 	public void fromNbt(@NotNull CompoundTag nbt) {
 		ListTag<?> framesTagList = nbt.getListTag("frames");
-		this.cycle = nbt.getInt("cycle");
-		this.turn = nbt.getInt("turn");
 
 		for (Tag<?> tag : framesTagList) {
 			Frame frame = Frame.load(null, this, (CompoundTag) tag);

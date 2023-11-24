@@ -1,6 +1,7 @@
 package net.darktree.warzone.world.action;
 
 import net.darktree.warzone.client.Sounds;
+import net.darktree.warzone.country.Resources;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.util.Direction;
 import net.darktree.warzone.world.WorldSnapshot;
@@ -13,7 +14,7 @@ import net.querz.nbt.tag.CompoundTag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuildBridgeAction extends Action {
+public final class BuildBridgeAction extends Action {
 
 	private final int x, y;
 	private final Direction facing;
@@ -26,7 +27,7 @@ public class BuildBridgeAction extends Action {
 	}
 
 	public BuildBridgeAction(CompoundTag nbt) {
-		this(nbt.getInt("x"), nbt.getInt("y"), Direction.values()[nbt.getInt("facing")]);
+		this(nbt.getInt("x"), nbt.getInt("y"), Direction.values()[nbt.getByte("facing")]);
 	}
 
 	@Override
@@ -34,11 +35,11 @@ public class BuildBridgeAction extends Action {
 		super.toNbt(nbt);
 		nbt.putInt("x", x);
 		nbt.putInt("y", y);
-		nbt.putInt("facing", facing.ordinal());
+		nbt.putByte("facing", (byte) facing.ordinal());
 	}
 
 	@Override
-	public boolean apply(WorldSnapshot world, boolean animated) {
+	public boolean redo(WorldSnapshot world, boolean animate) {
 		Symbol symbol = world.getCurrentSymbol();
 		BridgePlacer bridge = BridgePlacer.create(world, x, y, facing, false);
 
@@ -58,7 +59,7 @@ public class BuildBridgeAction extends Action {
 			world.addEntity(part);
 		}
 
-		world.getCountry(symbol).addMaterials(-bridge.getCost());
+		world.getCountry(symbol).getResource(Resources.MATERIALS).add(-bridge.getCost());
 		Sounds.STAMP.play(x, y);
 		return true;
 	}

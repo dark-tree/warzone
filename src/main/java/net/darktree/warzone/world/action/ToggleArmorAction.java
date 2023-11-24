@@ -32,7 +32,7 @@ public final class ToggleArmorAction extends ToggleableAction {
 	}
 
 	@Override
-	public boolean apply(WorldSnapshot world, boolean animated) {
+	public boolean redo(WorldSnapshot world, boolean animate) {
 		Symbol symbol = world.getCurrentSymbol();
 		UnitEntity entity = world.getEntity(x, y, UnitEntity.class);
 

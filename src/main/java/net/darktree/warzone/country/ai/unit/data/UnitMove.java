@@ -48,9 +48,7 @@ public final class UnitMove {
 	 * Create an action that matches this move
 	 */
 	public Action asAction() {
-		MoveUnitAction action = new MoveUnitAction(source.x, source.y);
-		action.setTarget(target.x, target.y);
-		return action;
+		return new MoveUnitAction(source.x, source.y, target.x, target.y);
 	}
 
 }

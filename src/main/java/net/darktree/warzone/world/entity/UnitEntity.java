@@ -106,7 +106,7 @@ public class UnitEntity extends MovingEntity {
 	@Override
 	protected void draw(VertexBuffer buffer) {
 		super.draw(buffer);
-		Renderer.quad(buffer, x, y, 1, 1, armored ? symbol.getArmoredSprite() : symbol.getSprite(), 1, 1, 1, 0);
+		Renderer.quad(buffer, fx, fy, 1, 1, armored ? symbol.getArmoredSprite() : symbol.getSprite(), 1, 1, 1, 0);
 	}
 
 	@Override

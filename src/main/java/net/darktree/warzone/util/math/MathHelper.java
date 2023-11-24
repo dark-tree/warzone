@@ -13,8 +13,8 @@ public class MathHelper {
 	/**
 	 * Roll a standard K6 dice
 	 */
-	public static int nextRandomDice(boolean weigh) {
-		int dice = RANDOM.nextInt(1, 7);
+	public static byte nextRandomDice(boolean weigh) {
+		byte dice = (byte) RANDOM.nextInt(1, 7);
 
 		if (dice == 1 && weigh) {
 			return nextRandomDice(true);

@@ -3,7 +3,6 @@ package net.darktree.warzone.world.action;
 import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.ledger.Action;
-import net.darktree.warzone.world.entity.building.Building;
 import net.darktree.warzone.world.entity.building.MineBuilding;
 import net.darktree.warzone.world.tile.tiles.Tiles;
 import net.querz.nbt.tag.CompoundTag;
@@ -30,21 +29,19 @@ public final class BuildMineAction extends Action {
 	}
 
 	@Override
-	public boolean apply(WorldSnapshot world, boolean animated) {
+	public boolean redo(WorldSnapshot world, boolean animate) {
 		Symbol symbol = world.getCurrentSymbol();
 
-		if ((world.getTileState(x, y).getTile() != Tiles.MATERIAL_ORE) || !world.canControl(x, y, symbol)) {
+		if (world.getTileState(x, y).getTile() != Tiles.MATERIAL_ORE || !world.canControl(x, y, symbol)) {
 			return false;
 		}
 
-		Building building = world.getEntity(x, y, Building.class);
+		MineBuilding mine = world.getEntity(x, y, MineBuilding.class);
 
-		if (building == null) {
+		if (mine == null) {
 			world.addEntity(new MineBuilding(world, x, y));
 		} else {
-			if (building instanceof MineBuilding) {
-				building.remove();
-			}
+			mine.remove();
 		}
 
 		return true;

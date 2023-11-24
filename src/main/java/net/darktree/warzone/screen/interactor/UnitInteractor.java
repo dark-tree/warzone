@@ -12,23 +12,24 @@ import net.darktree.warzone.world.action.MoveUnitAction;
 import net.darktree.warzone.world.action.ToggleArmorAction;
 import net.darktree.warzone.world.entity.UnitEntity;
 import net.darktree.warzone.world.overlay.PathFinderOverlay;
+import net.darktree.warzone.world.path.PathFinder;
 import org.lwjgl.glfw.GLFW;
 
 public class UnitInteractor extends Interactor {
 
-	private final MoveUnitAction action;
+	private final PathFinder pathfinder;
 	private final UnitEntity entity;
 	private final WorldAccess world;
 
 	public UnitInteractor(UnitEntity entity, WorldAccess world) {
 		this.entity = entity;
+		this.pathfinder = entity.getPathFinder(false);
 		this.world = world;
 
 		if (!entity.hasActed()) {
-			this.action = new MoveUnitAction(entity.getX(), entity.getY());
-			world.getView().setOverlay(new PathFinderOverlay(action.getPathfinder()));
+			world.getView().setOverlay(new PathFinderOverlay(pathfinder));
 		} else {
-			this.action = null;
+			closed = true;
 		}
 	}
 
@@ -41,18 +42,16 @@ public class UnitInteractor extends Interactor {
 		int x = Main.window.input().getMouseTileX(world.getView());
 		int y = Main.window.input().getMouseTileY(world.getView());
 
-		if (action != null && world.isPositionValid(x, y) && action.getPathfinder().canReach(x, y)) {
-			action.getPathfinder().getPathTo(x, y).draw(color);
+		if (!closed && world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
+			pathfinder.getPathTo(x, y).draw(color);
 		}
 	}
 
 	@Override
 	public void onClick(ClickEvent event, int x, int y) {
 		if (event.isPressed()) {
-			if (this.action != null && world.isPositionValid(x, y)) {
-				if (this.action.setTarget(x, y)) {
-					world.getLedger().push(this.action);
-				}
+			if (!closed && world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
+				world.getLedger().push(new MoveUnitAction(entity.getX(), entity.getY(), x, y));
 			}
 
 			closed = true;

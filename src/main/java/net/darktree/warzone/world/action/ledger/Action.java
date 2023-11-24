@@ -18,14 +18,18 @@ public abstract class Action {
 	}
 
 	public UndoBehaviour getUndoBehaviour() {
-		return UndoBehaviour.REPLAY;
+		return UndoBehaviour.REPLAY_ACTIONS;
 	}
 
 	public boolean isToggleable(Action previous) {
 		return false;
 	}
 
-	public boolean apply(WorldSnapshot world, boolean animated) {
+	public boolean redo(WorldSnapshot world, boolean animate) {
+		return true;
+	}
+
+	public boolean undo(WorldSnapshot world) {
 		return true;
 	}
 

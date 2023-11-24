@@ -47,7 +47,7 @@ public class WorldAccess implements NbtSerializable {
 	}
 
 	public Symbol getCurrentSymbol() {
-		return ledger.getFrame().getSymbol();
+		return ledger.getTrackingWorld().getCurrentSymbol();
 	}
 
 	public boolean isActiveSymbol() {
@@ -107,7 +107,7 @@ public class WorldAccess implements NbtSerializable {
 //
 //		sendPlayerTurnEvent(TurnEvent.TURN_START, getCurrentSymbol());
 
-		ledger.beginNextFrame(info);
+		ledger.beginNextFrame();
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class WorldAccess implements NbtSerializable {
 		WorldAccess world = new WorldAccess(info);
 
 		// load the root world
-		WorldSnapshot root = new WorldSnapshot(world, null);
+		WorldSnapshot root = new WorldSnapshot(world);
 		root.fromNbt(nbt.getCompoundTag("root"));
 		world.root = root;
 
@@ -141,7 +141,7 @@ public class WorldAccess implements NbtSerializable {
 
 	public static WorldAccess createOf(WorldInfo info) {
 		WorldAccess world = new WorldAccess(info);
-		world.root = new WorldSnapshot(world, null);
+		world.root = new WorldSnapshot(world);
 		return world;
 	}
 

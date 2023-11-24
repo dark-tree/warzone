@@ -8,21 +8,24 @@ import net.darktree.warzone.country.Symbol;
 import net.darktree.warzone.world.WorldAccess;
 import net.darktree.warzone.world.WorldSnapshot;
 import net.darktree.warzone.world.action.SummonAction;
-import net.darktree.warzone.world.entity.building.Building;
+import net.darktree.warzone.world.entity.building.CapitolBuilding;
 import net.darktree.warzone.world.overlay.PathFinderOverlay;
+import net.darktree.warzone.world.path.PathFinder;
 
 public class CityInteractor extends Interactor {
 
-	private final SummonAction action;
+	private final CapitolBuilding building;
+	private final PathFinder pathfinder;
 	private final WorldAccess world;
 
 	public CityInteractor(Symbol symbol, WorldAccess world) {
 		WorldSnapshot snapshot = world.getTrackingWorld();
-		Building building = snapshot.getCountry(symbol).getCapitol();
-		this.action = new SummonAction(building.getX(), building.getY());
-		this.world = world;
 
-		world.getView().setOverlay(new PathFinderOverlay(action.getPathfinder()));
+		this.building = snapshot.getCountry(symbol).getCapitol();
+		this.world = world;
+		this.pathfinder = building.getPathFinder();
+
+		world.getView().setOverlay(new PathFinderOverlay(pathfinder));
 	}
 
 	@Override
@@ -31,18 +34,16 @@ public class CityInteractor extends Interactor {
 		final int x = input.getMouseTileX(world.getView());
 		final int y = input.getMouseTileY(world.getView());
 
-		if (world.isPositionValid(x, y) && action.getPathfinder().canReach(x, y)) {
-			action.getPathfinder().getPathTo(x, y).draw(color);
+		if (!closed && world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
+			pathfinder.getPathTo(x, y).draw(color);
 		}
 	}
 
 	@Override
 	public void onClick(ClickEvent event, int x, int y) {
-		if (world.isPositionValid(x, y)) {
-			if (this.action.setTarget(x, y)) {
-				world.getLedger().push(this.action);
-				closed = true;
-			}
+		if (!closed && world.isPositionValid(x, y) && pathfinder.canReach(x, y)) {
+			world.getLedger().push(new SummonAction(building.getX(), building.getY(), x, y));
+			closed = true;
 		}
 	}
 
